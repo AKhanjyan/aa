@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Home, Filter, Heart, UserRound, Shuffle } from 'lucide-react';
+import { Home, Filter, Heart, UserRound, Shuffle, ShoppingCart, Store } from 'lucide-react';
 import { getCompareCount, getWishlistCount } from '../lib/storageCounts';
 import { MOBILE_FILTERS_EVENT } from '../lib/events';
 
@@ -49,11 +49,10 @@ export function MobileBottomNav() {
   const navItems: MobileNavItem[] = useMemo(
     () => [
       { 
-        label: 'Shop', 
-        href: '/products', 
+        label: 'Home', 
+        href: '/', 
         icon: Home, 
         visible: true,
-        onClick: () => console.info('🛒 [MobileBottomNav] Shop tapped, navigating to /products'),
       },
       { 
         label: 'Filters', 
@@ -64,9 +63,22 @@ export function MobileBottomNav() {
           window.dispatchEvent(new Event(MOBILE_FILTERS_EVENT));
         },
       },
-      { label: 'Wishlist', href: '/wishlist', icon: Heart, badge: 'wishlist', visible: true },
+      // On mobile we show Cart instead of Wishlist
+      { 
+        label: 'Cart', 
+        href: '/cart', 
+        icon: ShoppingCart, 
+        visible: true,
+      },
       { label: 'My account', href: '/profile', icon: UserRound, visible: true },
-      { label: 'Compare', href: '/compare', icon: Shuffle, badge: 'compare', visible: true },
+      // Shop with Store icon
+      { 
+        label: 'Shop', 
+        href: '/products', 
+        icon: Store, 
+        visible: true,
+        onClick: () => console.info('🛒 [MobileBottomNav] Shop tapped, navigating to /products'),
+      },
     ],
     [isProductsPage]
   );
