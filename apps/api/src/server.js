@@ -1,4 +1,4 @@
-// server.js — CLEAN & RENDER PRODUCTION VERSION
+// server.js — FULLY FIXED FOR RENDER + VERCEL
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
@@ -25,23 +25,31 @@ app.use(
 
 
 // -----------------------
-// CORS CONFIG
+// CORS CONFIG — FIXED!!!
 // -----------------------
 const corsOptions = {
   credentials: true,
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
 
-    const allowed = [
-      process.env.APP_URL,
-      'https://white-shop-1.onrender.com'
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Allow server-to-server calls
+
+    const allowedOrigins = [
+      process.env.APP_URL,                             // your frontend (env)
+      'https://white-shop-1.onrender.com',             // your API domain
+      'https://white-shop-web-yp3o.vercel.app',        // your Vercel frontend domain
     ];
 
-    if (allowed.includes(origin)) {
+    // allow wildcard *.vercel.app (preview deployments)
+    const vercelWildcard = /\.vercel\.app$/;
+
+    if (
+      allowedOrigins.includes(origin) ||
+      vercelWildcard.test(origin)
+    ) {
       return callback(null, true);
     }
 
-    console.warn('❌ CORS blocked:', origin);
+    console.warn('❌ CORS BLOCKED:', origin);
     return callback(new Error('Not allowed by CORS'));
   },
 };
@@ -118,9 +126,7 @@ app.use((err, req, res, next) => {
 // -----------------------
 const startServer = async () => {
   try {
-    // CONNECT TO MONGODB
-    await connectDB(); // Important: we do not check return value
-
+    await connectDB();
     console.log("✅ MongoDB connection initialized");
 
     app.listen(PORT, () =>
@@ -132,5 +138,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
- console.log("hello")
+
 startServer();
