@@ -39,6 +39,28 @@ type ProductWithRelations = Prisma.ProductGetPayload<{
   };
 }>;
 
+/**
+ * Normalize comma-separated filter values and drop placeholders like "undefined" or "null".
+ */
+const normalizeFilterList = (
+  value?: string,
+  transform?: (v: string) => string
+): string[] => {
+  if (!value || typeof value !== "string") return [];
+
+  const invalidTokens = new Set(["undefined", "null", ""]);
+  const items = value
+    .split(",")
+    .map((v) => v.trim())
+    .filter((v) => !invalidTokens.has(v.toLowerCase()));
+
+  if (transform) {
+    return items.map(transform);
+  }
+
+  return items;
+};
+
 class ProductsService {
   /**
    * Get all products with filters
@@ -204,16 +226,12 @@ class ProductsService {
       );
     }
 
-    // Filter by colors and sizes together if both are provided
-    // This ensures we find products that have variants with BOTH the specified color AND size
-    if (colors || sizes) {
-      const colorList = colors 
-        ? colors.split(",").map((c: string) => c.trim().toLowerCase()).filter((c: string) => c.length > 0)
-        : null;
-      const sizeList = sizes 
-        ? sizes.split(",").map((s: string) => s.trim().toUpperCase()).filter((s: string) => s.length > 0)
-        : null;
-      
+    // Filter by colors and sizes together if both are provided.
+    // Skip filtering when only placeholder values (e.g., "undefined") are passed.
+    const colorList = normalizeFilterList(colors, (v) => v.toLowerCase());
+    const sizeList = normalizeFilterList(sizes, (v) => v.toUpperCase());
+
+    if (colorList.length > 0 || sizeList.length > 0) {
       console.log('🔍 [PRODUCTS SERVICE] Filtering by:', {
         colors: colorList,
         sizes: sizeList,
@@ -237,7 +255,7 @@ class ProductsService {
           }
           
           // Check color match if colors filter is provided
-          if (colorList && colorList.length > 0) {
+          if (colorList.length > 0) {
             const colorOption = options.find(
               (opt: { attributeKey?: string | null }) => opt.attributeKey === "color"
             );
@@ -260,7 +278,7 @@ class ProductsService {
           }
           
           // Check size match if sizes filter is provided
-          if (sizeList && sizeList.length > 0) {
+          if (sizeList.length > 0) {
             const sizeOption = options.find(
               (opt: { attributeKey?: string | null }) => opt.attributeKey === "size"
             );
@@ -284,7 +302,7 @@ class ProductsService {
             matchingVariantsCount: matchingVariants.length,
             totalVariants: variants.length
           });
-        } else if (colorList || sizeList) {
+        } else {
           console.log('❌ [PRODUCTS SERVICE] Product does not match filters:', {
             productId: product.id,
             totalVariants: variants.length,
