@@ -41,6 +41,7 @@ interface ProductsResponse {
 
 /**
  * Մատչելի API-ից բերում է ապրանքների ցանկը՝ կիրառելով բոլոր ֆիլտրերը։
+ * Server-side-ում օգտագործում է Next.js-ի ներկառուցված fetch-ը, որպեսզի ավտոմատ կառուցի ճիշտ URL-ը։
  */
 async function getProducts(
   page: number = 1,
@@ -88,9 +89,39 @@ async function getProducts(
       params.brand = brand.trim();
     }
     
-    const response = await apiClient.get<ProductsResponse>('/api/v1/products', {
-      params,
-    });
+    // Server-side-ում օգտագործում ենք Next.js-ի fetch-ը, որը ավտոմատ կառուցում է ճիշտ URL-ը
+    const isServer = typeof window === 'undefined';
+    
+    let response: ProductsResponse;
+    
+    if (isServer) {
+      // Server-side: օգտագործում ենք Next.js-ի fetch-ը, որը ավտոմատ կառուցում է absolute URL-ը
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
+                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+      
+      const queryString = new URLSearchParams(params).toString();
+      const url = `${baseUrl}/api/v1/products?${queryString}`;
+      
+      console.log('🌐 [PRODUCTS] Server-side fetch:', url);
+      
+      const fetchResponse = await fetch(url, {
+        cache: 'no-store', // Disable caching for server components
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!fetchResponse.ok) {
+        throw new Error(`API request failed: ${fetchResponse.status} ${fetchResponse.statusText}`);
+      }
+      
+      response = await fetchResponse.json();
+    } else {
+      // Client-side: օգտագործում ենք apiClient-ը
+      response = await apiClient.get<ProductsResponse>('/api/v1/products', {
+        params,
+      });
+    }
     
     // Ensure response has required structure
     if (!response) {
