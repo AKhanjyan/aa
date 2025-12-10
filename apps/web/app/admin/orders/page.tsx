@@ -145,16 +145,44 @@ export default function OrdersPage() {
     setBulkDeleting(true);
     try {
       const ids = Array.from(selectedIds);
+      console.log('🗑️ [ADMIN] Starting bulk delete for orders:', ids);
+      
       const results = await Promise.allSettled(
-        ids.map(id => apiClient.delete(`/api/v1/admin/orders/${id}`))
+        ids.map(async (id) => {
+          try {
+            const response = await apiClient.delete(`/api/v1/admin/orders/${id}`);
+            console.log('✅ [ADMIN] Order deleted successfully:', id, response);
+            return { id, success: true };
+          } catch (error: any) {
+            console.error('❌ [ADMIN] Failed to delete order:', id, error);
+            return { id, success: false, error: error.message || 'Unknown error' };
+          }
+        })
       );
-      const failed = results.filter(r => r.status === 'rejected');
+      
+      const successful = results.filter(r => r.status === 'fulfilled' && r.value.success);
+      const failed = results.filter(r => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success));
+      
+      console.log('📊 [ADMIN] Bulk delete results:', {
+        total: ids.length,
+        successful: successful.length,
+        failed: failed.length,
+      });
+      
       setSelectedIds(new Set());
       await fetchOrders();
-      alert(`Bulk delete finished. Success: ${ids.length - failed.length}/${ids.length}`);
+      
+      if (failed.length > 0) {
+        const failedIds = failed.map(r => 
+          r.status === 'fulfilled' ? r.value.id : 'unknown'
+        );
+        alert(`Bulk delete finished. Success: ${successful.length}/${ids.length}\n\nFailed orders: ${failedIds.join(', ')}`);
+      } else {
+        alert(`Bulk delete finished. Success: ${successful.length}/${ids.length}`);
+      }
     } catch (err) {
       console.error('❌ [ADMIN] Bulk delete orders error:', err);
-      alert('Failed to delete selected orders');
+      alert('Failed to delete selected orders. Please try again.');
     } finally {
       setBulkDeleting(false);
     }

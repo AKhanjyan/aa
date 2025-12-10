@@ -4,10 +4,10 @@
 
 ### Database (PostgreSQL)
 ```bash
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&client_encoding=UTF8"
 ```
 **Required:** Yes  
-**Description:** PostgreSQL connection string for Prisma
+**Description:** PostgreSQL connection string for Prisma. **Important:** Include `client_encoding=UTF8` parameter to support Armenian and other UTF-8 characters.
 
 ### Authentication
 ```bash

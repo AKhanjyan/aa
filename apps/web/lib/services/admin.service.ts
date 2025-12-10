@@ -160,6 +160,50 @@ class AdminService {
   }
 
   /**
+   * Delete order
+   */
+  async deleteOrder(orderId: string) {
+    try {
+      console.log('🗑️ [ADMIN] Deleting order:', orderId);
+      
+      // Check if order exists
+      const existing = await db.order.findUnique({
+        where: { id: orderId },
+      });
+
+      if (!existing) {
+        throw {
+          status: 404,
+          type: "https://api.shop.am/problems/not-found",
+          title: "Order not found",
+          detail: `Order with id '${orderId}' does not exist`,
+        };
+      }
+
+      // Delete order (cascade will delete related items, payments, events)
+      await db.order.delete({
+        where: { id: orderId },
+      });
+
+      console.log('✅ [ADMIN] Order deleted successfully:', orderId);
+      return { success: true };
+    } catch (error: any) {
+      console.error('❌ [ADMIN] Error deleting order:', error);
+      // If it's already our custom error, re-throw it
+      if (error.status && error.type) {
+        throw error;
+      }
+      // Otherwise, wrap it
+      throw {
+        status: error.status || 500,
+        type: "https://api.shop.am/problems/internal-error",
+        title: "Internal Server Error",
+        detail: error.message || "Failed to delete order",
+      };
+    }
+  }
+
+  /**
    * Update order
    */
   async updateOrder(orderId: string, data: any) {
