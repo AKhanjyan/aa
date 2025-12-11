@@ -15,6 +15,7 @@ class UsersService {
         firstName: true,
         lastName: true,
         locale: true,
+        roles: true,
         addresses: true,
       },
     });
@@ -34,6 +35,7 @@ class UsersService {
       firstName: user.firstName,
       lastName: user.lastName,
       locale: user.locale,
+      roles: user.roles,
       addresses: user.addresses,
     };
   }

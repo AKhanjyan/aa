@@ -197,7 +197,13 @@ class AuthService {
       },
       select: {
         id: true,
+        email: true,
+        phone: true,
+        firstName: true,
+        lastName: true,
         passwordHash: true,
+        roles: true,
+        blocked: true,
       },
     });
 
