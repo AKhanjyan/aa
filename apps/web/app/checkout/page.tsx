@@ -51,7 +51,7 @@ const checkoutSchema = z.object({
   shippingMethod: z.enum(['pickup', 'delivery'], {
     message: 'Please select a shipping method',
   }),
-  paymentMethod: z.enum(['idram', 'arca'], {
+  paymentMethod: z.enum(['idram', 'arca', 'cash_on_delivery'], {
     message: 'Please select a payment method',
   }),
   // Shipping address fields - required only for delivery
@@ -149,8 +149,14 @@ const checkoutSchema = z.object({
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
-// Payment methods configuration (only Idram and ArCa)
+// Payment methods configuration
 const paymentMethods = [
+  {
+    id: 'cash_on_delivery' as const,
+    name: 'Cash on Delivery',
+    description: 'Pay with cash when you receive your order',
+    logo: null,
+  },
   {
     id: 'idram' as const,
     name: 'Idram',
@@ -198,7 +204,7 @@ export default function CheckoutPage() {
       email: '',
       phone: '',
       shippingMethod: 'pickup',
-      paymentMethod: 'idram',
+      paymentMethod: 'cash_on_delivery',
       shippingAddress: '',
       shippingCity: '',
       shippingPostalCode: '',
@@ -531,15 +537,15 @@ export default function CheckoutPage() {
       return;
     }
     
-    // If guest checkout and not card payment, show modal to confirm/add shipping details
+    // If guest checkout and cash on delivery, show modal to confirm/add shipping details
     if (!isLoggedIn) {
       console.log('[Checkout] Opening modal for guest checkout');
       setShowShippingModal(true);
       return;
     }
     
-    // Otherwise submit directly (logged in user, not card payment)
-    console.log('[Checkout] Submitting directly (logged in user)');
+    // Otherwise submit directly (logged in user, cash on delivery)
+    console.log('[Checkout] Submitting directly (logged in user, cash on delivery)');
     handleSubmit(onSubmit)(e);
   };
 
@@ -857,15 +863,15 @@ export default function CheckoutPage() {
                       {...register('paymentMethod')}
                       value={method.id}
                       checked={paymentMethod === method.id}
-                      onChange={(e) => setValue('paymentMethod', e.target.value as 'idram' | 'arca')}
+                      onChange={(e) => setValue('paymentMethod', e.target.value as 'idram' | 'arca' | 'cash_on_delivery')}
                       className="mr-4"
                       disabled={isSubmitting}
                     />
                     <div className="flex items-center gap-4 flex-1">
                       <div className="relative w-20 h-12 flex-shrink-0 bg-white rounded border border-gray-200 flex items-center justify-center overflow-hidden">
-                        {logoErrors[method.id] ? (
+                        {!method.logo || logoErrors[method.id] ? (
                           <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                           </svg>
                         ) : (
                           <img
@@ -1070,12 +1076,13 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                {/* Payment Details */}
-                <div className="space-y-4 mb-6 mt-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Payment Details ({paymentMethod === 'idram' ? 'Idram' : 'ArCa'})
-                  </h3>
-                  <div>
+                {/* Payment Details - Only show for card payments */}
+                {(paymentMethod === 'arca' || paymentMethod === 'idram') && (
+                  <div className="space-y-4 mb-6 mt-6">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Payment Details ({paymentMethod === 'idram' ? 'Idram' : 'ArCa'})
+                    </h3>
+                    <div>
                     <Input
                       label="Card Number"
                       type="text"
@@ -1136,7 +1143,17 @@ export default function CheckoutPage() {
                       disabled={isSubmitting}
                     />
                   </div>
-                </div>
+                  </div>
+                )}
+
+                {/* Cash on Delivery Info */}
+                {paymentMethod === 'cash_on_delivery' && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 mt-6">
+                    <p className="text-sm text-green-800">
+                      <strong>Cash on Delivery:</strong> You will pay with cash when you receive your order. No card details required.
+                    </p>
+                  </div>
+                )}
 
                 {cart && (
                   <div className="bg-gray-50 rounded-lg p-4 space-y-2 mt-4">
@@ -1171,73 +1188,84 @@ export default function CheckoutPage() {
                   </p>
                 </div>
 
-                {/* Payment Details for Pickup */}
-                <div className="space-y-4 mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Payment Details ({paymentMethod === 'idram' ? 'Idram' : 'ArCa'})
-                  </h3>
-                  <div>
-                    <Input
-                      label="Card Number"
-                      type="text"
-                      placeholder="1234 5678 9012 3456"
-                      maxLength={19}
-                      {...register('cardNumber')}
-                      error={errors.cardNumber?.message}
-                      disabled={isSubmitting}
-                      onChange={(e) => {
-                        let value = e.target.value.replace(/\s/g, '');
-                        value = value.replace(/(.{4})/g, '$1 ').trim();
-                        setValue('cardNumber', value);
-                      }}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+                {/* Payment Details for Pickup - Only show for card payments */}
+                {(paymentMethod === 'arca' || paymentMethod === 'idram') && (
+                  <div className="space-y-4 mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Payment Details ({paymentMethod === 'idram' ? 'Idram' : 'ArCa'})
+                    </h3>
                     <div>
                       <Input
-                        label="Expiry Date"
+                        label="Card Number"
                         type="text"
-                        placeholder="MM/YY"
-                        maxLength={5}
-                        {...register('cardExpiry')}
-                        error={errors.cardExpiry?.message}
+                        placeholder="1234 5678 9012 3456"
+                        maxLength={19}
+                        {...register('cardNumber')}
+                        error={errors.cardNumber?.message}
                         disabled={isSubmitting}
                         onChange={(e) => {
-                          let value = e.target.value.replace(/\D/g, '');
-                          if (value.length >= 2) {
-                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                          }
-                          setValue('cardExpiry', value);
+                          let value = e.target.value.replace(/\s/g, '');
+                          value = value.replace(/(.{4})/g, '$1 ').trim();
+                          setValue('cardNumber', value);
                         }}
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Input
+                          label="Expiry Date"
+                          type="text"
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          {...register('cardExpiry')}
+                          error={errors.cardExpiry?.message}
+                          disabled={isSubmitting}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, '');
+                            if (value.length >= 2) {
+                              value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                            }
+                            setValue('cardExpiry', value);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Input
+                          label="CVV"
+                          type="text"
+                          placeholder="123"
+                          maxLength={4}
+                          {...register('cardCvv')}
+                          error={errors.cardCvv?.message}
+                          disabled={isSubmitting}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            setValue('cardCvv', value);
+                          }}
+                        />
+                      </div>
+                    </div>
                     <div>
                       <Input
-                        label="CVV"
+                        label="Card Holder Name"
                         type="text"
-                        placeholder="123"
-                        maxLength={4}
-                        {...register('cardCvv')}
-                        error={errors.cardCvv?.message}
+                        placeholder="John Doe"
+                        {...register('cardHolderName')}
+                        error={errors.cardHolderName?.message}
                         disabled={isSubmitting}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '');
-                          setValue('cardCvv', value);
-                        }}
                       />
                     </div>
                   </div>
-                  <div>
-                    <Input
-                      label="Card Holder Name"
-                      type="text"
-                      placeholder="John Doe"
-                      {...register('cardHolderName')}
-                      error={errors.cardHolderName?.message}
-                      disabled={isSubmitting}
-                    />
+                )}
+
+                {/* Cash on Delivery Info for Pickup */}
+                {paymentMethod === 'cash_on_delivery' && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-green-800">
+                      <strong>Cash on Delivery:</strong> You will pay with cash when you pick up your order. No card details required.
+                    </p>
                   </div>
-                </div>
+                )}
 
                 {cart && (
                   <div className="bg-gray-50 rounded-lg p-4 space-y-2">
