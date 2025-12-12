@@ -955,8 +955,27 @@ const handleCompareToggle = (e: MouseEvent) => {
                       // Check if this product is already in cart
                       const existingItem = cart.find(item => item.productId === product.id && item.variantId === currentVariant.id);
                       
+                      // Calculate total quantity that will be in cart after adding
+                      const currentQuantityInCart = existingItem?.quantity || 0;
+                      const totalQuantity = currentQuantityInCart + quantity;
+                      
+                      // Check if total quantity exceeds available stock
+                      if (totalQuantity > currentVariant.stock) {
+                        console.log('🚫 [GUEST CART] Stock limit exceeded:', {
+                          variantId: currentVariant.id,
+                          currentInCart: currentQuantityInCart,
+                          requestedQuantity: quantity,
+                          totalQuantity,
+                          availableStock: currentVariant.stock
+                        });
+                        setShowMessage('No more stock available');
+                        setTimeout(() => setShowMessage(null), 3000);
+                        setIsAddingToCart(false);
+                        return;
+                      }
+                      
                       if (existingItem) {
-                        existingItem.quantity += quantity;
+                        existingItem.quantity = totalQuantity;
                       } else {
                         cart.push({
                           productId: product.id,
@@ -985,7 +1004,18 @@ const handleCompareToggle = (e: MouseEvent) => {
                     setTimeout(() => setShowMessage(null), 2000);
                     window.dispatchEvent(new Event('cart-updated'));
                   } catch (error: any) {
-                    console.error('Error adding to cart:', error);
+                    console.error('❌ [ADD TO CART] Error:', error);
+                    
+                    // Check if error is about insufficient stock
+                    if (error.response?.data?.detail?.includes('No more stock available') || 
+                        error.response?.data?.detail?.includes('exceeds available stock') ||
+                        error.response?.data?.title === 'Insufficient stock') {
+                      setShowMessage('No more stock available');
+                      setTimeout(() => setShowMessage(null), 3000);
+                      setIsAddingToCart(false);
+                      return;
+                    }
+                    
                     if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
                       // If error occurred, try with localStorage
                       if (typeof window !== 'undefined' && product && currentVariant) {
@@ -996,8 +1026,19 @@ const handleCompareToggle = (e: MouseEvent) => {
                           
                           const existingItem = cart.find(item => item.productId === product.id && item.variantId === currentVariant.id);
                           
+                          // Check stock for guest cart too
+                          const currentQuantityInCart = existingItem?.quantity || 0;
+                          const totalQuantity = currentQuantityInCart + quantity;
+                          
+                          if (totalQuantity > currentVariant.stock) {
+                            setShowMessage('No more stock available');
+                            setTimeout(() => setShowMessage(null), 3000);
+                            setIsAddingToCart(false);
+                            return;
+                          }
+                          
                           if (existingItem) {
-                            existingItem.quantity += quantity;
+                            existingItem.quantity = totalQuantity;
                           } else {
                             cart.push({
                               productId: product.id,
@@ -1012,7 +1053,7 @@ const handleCompareToggle = (e: MouseEvent) => {
                           setShowMessage(`Added ${quantity} pcs to cart`);
                           setTimeout(() => setShowMessage(null), 2000);
                         } catch (localError) {
-                          console.error('Error adding to guest cart:', localError);
+                          console.error('❌ [GUEST CART] Error:', localError);
                           setShowMessage('Failed to add to cart');
                           setTimeout(() => setShowMessage(null), 3000);
                         }

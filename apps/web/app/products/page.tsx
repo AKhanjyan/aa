@@ -139,8 +139,10 @@ export default async function ProductsPage({ searchParams }: any) {
   // FILTERS
   const colors = params?.colors;
   const sizes = params?.sizes;
+  const brands = params?.brand;
   const selectedColors = colors ? colors.split(',').map(c => c.trim().toLowerCase()) : [];
   const selectedSizes = sizes ? sizes.split(',').map(s => s.trim()) : [];
+  const selectedBrands = brands ? brands.split(',').map(b => b.trim()) : [];
 
   // PAGINATION
   const buildPaginationUrl = (num: number) => {
@@ -166,7 +168,7 @@ export default async function ProductsPage({ searchParams }: any) {
               <PriceFilter currentMinPrice={params?.minPrice} currentMaxPrice={params?.maxPrice} category={params?.category} search={params?.search} />
               <ColorFilter category={params?.category} search={params?.search} minPrice={params?.minPrice} maxPrice={params?.maxPrice} selectedColors={selectedColors} />
               <SizeFilter category={params?.category} search={params?.search} minPrice={params?.minPrice} maxPrice={params?.maxPrice} selectedSizes={selectedSizes} />
-              <BrandFilter category={params?.category} search={params?.search} minPrice={params?.minPrice} maxPrice={params?.maxPrice} selectedBrand={params?.brand} />
+              <BrandFilter category={params?.category} search={params?.search} minPrice={params?.minPrice} maxPrice={params?.maxPrice} selectedBrands={selectedBrands} />
             </Suspense>
           </div>
         </aside>

@@ -246,12 +246,31 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
         }
 
         const variantId = productDetails.variants[0].id;
+        const variant = productDetails.variants[0];
         
         // Проверяем, есть ли уже этот товар в корзине
         const existingItem = cart.find(item => item.productId === product.id && item.variantId === variantId);
         
+        // Calculate total quantity that will be in cart after adding
+        const currentQuantityInCart = existingItem?.quantity || 0;
+        const totalQuantity = currentQuantityInCart + 1;
+        
+        // Check if total quantity exceeds available stock
+        if (totalQuantity > variant.stock) {
+          console.log('🚫 [PRODUCT CARD - GUEST CART] Stock limit exceeded:', {
+            variantId,
+            currentInCart: currentQuantityInCart,
+            requestedQuantity: 1,
+            totalQuantity,
+            availableStock: variant.stock
+          });
+          alert('No more stock available');
+          setIsAddingToCart(false);
+          return;
+        }
+        
         if (existingItem) {
-          existingItem.quantity += 1;
+          existingItem.quantity = totalQuantity;
           // Обновляем slug, если его не было
           if (!existingItem.productSlug) {
             existingItem.productSlug = productDetails.slug;
@@ -313,7 +332,17 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
       // Триггерим обновление корзины
       window.dispatchEvent(new Event('cart-updated'));
     } catch (error: any) {
-      console.error('Error adding to cart:', error);
+      console.error('❌ [PRODUCT CARD] Error adding to cart:', error);
+      
+      // Check if error is about insufficient stock
+      if (error.response?.data?.detail?.includes('No more stock available') || 
+          error.response?.data?.detail?.includes('exceeds available stock') ||
+          error.response?.data?.title === 'Insufficient stock') {
+        alert('No more stock available');
+        setIsAddingToCart(false);
+        return;
+      }
+      
       // Если ошибка авторизации, перенаправляем на login
       if (error.message?.includes('401') || error.message?.includes('Unauthorized') || error?.status === 401 || error?.statusCode === 401) {
         router.push(`/login?redirect=/products`);

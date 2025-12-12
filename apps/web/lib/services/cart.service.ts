@@ -249,27 +249,49 @@ class CartService {
       };
     }
 
-    if (variant.stock < quantity) {
+    // Check if item already exists
+    const existingItem = cart.items.find((item: { variantId: string }) => item.variantId === variantId);
+
+    // Calculate total quantity that will be in cart after adding
+    const totalQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+
+    // Check if total quantity exceeds available stock
+    if (totalQuantity > variant.stock) {
+      console.log('🚫 [CART SERVICE] Stock limit exceeded:', {
+        variantId,
+        currentInCart: existingItem?.quantity || 0,
+        requestedQuantity: quantity,
+        totalQuantity,
+        availableStock: variant.stock
+      });
       throw {
         status: 422,
         type: "https://api.shop.am/problems/validation-error",
         title: "Insufficient stock",
-        detail: `Requested quantity (${quantity}) exceeds available stock (${variant.stock})`,
+        detail: `No more stock available. Maximum available: ${variant.stock}, already in cart: ${existingItem?.quantity || 0}, requested: ${quantity}`,
       };
     }
 
-    // Check if item already exists
-    const existingItem = cart.items.find((item: { variantId: string }) => item.variantId === variantId);
-
     let item;
     if (existingItem) {
+      console.log('✅ [CART SERVICE] Updating existing cart item:', {
+        itemId: existingItem.id,
+        oldQuantity: existingItem.quantity,
+        newQuantity: totalQuantity,
+        variantStock: variant.stock
+      });
       item = await db.cartItem.update({
         where: { id: existingItem.id },
         data: {
-          quantity: existingItem.quantity + quantity,
+          quantity: totalQuantity,
         },
       });
     } else {
+      console.log('✅ [CART SERVICE] Creating new cart item:', {
+        variantId,
+        quantity,
+        variantStock: variant.stock
+      });
       item = await db.cartItem.create({
         data: {
           cartId: cart.id,

@@ -276,10 +276,17 @@ class ProductsService {
       });
     }
 
-    if (brand) {
+    // Filter by brand(s) - support multiple brands (comma-separated)
+    const brandList = normalizeFilterList(brand);
+    if (brandList.length > 0) {
       products = products.filter(
-        (product: ProductWithRelations) => product.brandId === brand
+        (product: ProductWithRelations) => 
+          product.brandId && brandList.includes(product.brandId)
       );
+      console.log('🔍 [PRODUCTS SERVICE] Filtering by brands:', {
+        brands: brandList,
+        productsAfter: products.length
+      });
     }
 
     // Filter by colors and sizes together if both are provided.

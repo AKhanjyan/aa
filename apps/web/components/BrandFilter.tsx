@@ -11,7 +11,7 @@ interface BrandFilterProps {
   search?: string;
   minPrice?: string;
   maxPrice?: string;
-  selectedBrand?: string;
+  selectedBrands?: string[];
 }
 
 interface BrandOption {
@@ -38,7 +38,7 @@ interface ProductsResponse {
   };
 }
 
-export function BrandFilter({ category, search, minPrice, maxPrice, selectedBrand }: BrandFilterProps) {
+export function BrandFilter({ category, search, minPrice, maxPrice, selectedBrands = [] }: BrandFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [brands, setBrands] = useState<BrandOption[]>([]);
@@ -108,20 +108,40 @@ export function BrandFilter({ category, search, minPrice, maxPrice, selectedBran
   };
 
   const handleBrandSelect = (brandId: string) => {
+    console.log('🎯 [BRAND FILTER] Brand clicked:', { brandId, currentSelectedBrands: selectedBrands });
+    
     // Ստեղծում ենք նոր URLSearchParams URL-ի հիման վրա, որպեսզի պահպանենք բոլոր params-ները
     const params = new URLSearchParams(searchParams.toString());
     
-    if (selectedBrand === brandId) {
-      // Deselect if already selected
-      params.delete('brand');
+    // Ստեղծում ենք ընտրված brand-երի array
+    const currentBrands = selectedBrands || [];
+    let newBrands: string[];
+    
+    if (currentBrands.includes(brandId)) {
+      // Եթե brand-ը արդեն ընտրված է, հեռացնում ենք
+      newBrands = currentBrands.filter(id => id !== brandId);
+      console.log('➖ [BRAND FILTER] Brand deselected:', { brandId, newBrands });
     } else {
-      params.set('brand', brandId);
+      // Եթե brand-ը ընտրված չէ, ավելացնում ենք
+      newBrands = [...currentBrands, brandId];
+      console.log('➕ [BRAND FILTER] Brand selected:', { brandId, newBrands });
+    }
+    
+    // URL-ում պահում ենք comma-separated string
+    if (newBrands.length > 0) {
+      params.set('brand', newBrands.join(','));
+      console.log('✅ [BRAND FILTER] Setting brand param:', newBrands.join(','));
+    } else {
+      params.delete('brand');
+      console.log('🗑️ [BRAND FILTER] Removing brand param');
     }
     
     // Reset page to 1 when filters change
     params.delete('page');
 
-    router.push(`/products?${params.toString()}`);
+    const newUrl = `/products?${params.toString()}`;
+    console.log('🔗 [BRAND FILTER] Navigating to:', newUrl);
+    router.push(newUrl);
   };
 
   if (loading) {
@@ -169,20 +189,30 @@ export function BrandFilter({ category, search, minPrice, maxPrice, selectedBran
       {filteredBrands.length > 0 ? (
         <div className="space-y-2 max-h-64 overflow-y-auto">
           {filteredBrands.map((brand) => {
-            const isSelected = selectedBrand === brand.id;
+            const isSelected = selectedBrands.includes(brand.id);
 
             return (
               <button
                 key={brand.id}
                 onClick={() => handleBrandSelect(brand.id)}
-                className={`w-full flex items-center justify-between py-2 px-1 rounded transition-colors group ${
-                  isSelected ? 'bg-gray-100' : 'hover:bg-gray-50'
+                className={`w-full flex items-center justify-between py-2 px-3 rounded transition-all duration-200 group ${
+                  isSelected 
+                    ? 'bg-blue-100 border-2 border-blue-400 shadow-sm' 
+                    : 'hover:bg-gray-50 border-2 border-transparent'
                 }`}
               >
-                <span className={`text-sm ${isSelected ? 'text-gray-900 font-semibold' : 'text-gray-900 group-hover:text-gray-700'}`}>
+                <span className={`text-sm transition-colors ${
+                  isSelected 
+                    ? 'text-blue-700 font-semibold' 
+                    : 'text-gray-900 group-hover:text-gray-700'
+                }`}>
                   {brand.name}
                 </span>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                <span className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
+                  isSelected 
+                    ? 'text-blue-700 bg-blue-200' 
+                    : 'text-gray-500 bg-gray-100'
+                }`}>
                   {brand.count}
                 </span>
               </button>
