@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import type { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
@@ -96,7 +96,8 @@ export default function ProductsPage() {
         params.maxPrice = maxPrice.trim();
       }
 
-      if (sortBy) {
+      // Սերվերի սորտավորում сейчас աջակցում է միայն createdAt դաշտով
+      if (sortBy && sortBy.startsWith('createdAt')) {
         params.sort = sortBy;
       }
 
@@ -169,6 +170,82 @@ export default function ProductsPage() {
     setPage(1);
     // fetchProducts will be called automatically by useEffect
   };
+
+  /**
+   * Սորտավորում սյունակի վերնագրերի սեղմման ժամանակ
+   * field === 'price' → price-asc / price-desc
+   * field === 'createdAt' → createdAt-asc / createdAt-desc
+   * field === 'title' → title-asc / title-desc
+   */
+  const handleHeaderSort = (field: 'price' | 'createdAt' | 'title') => {
+    setPage(1);
+
+    setSortBy((current) => {
+      let next = current;
+
+      if (field === 'price') {
+        if (current === 'price-asc') {
+          next = 'price-desc';
+        } else {
+          next = 'price-asc';
+        }
+      }
+
+      if (field === 'createdAt') {
+        if (current === 'createdAt-asc') {
+          next = 'createdAt-desc';
+        } else {
+          next = 'createdAt-asc';
+        }
+      }
+
+      if (field === 'title') {
+        if (current === 'title-asc') {
+          next = 'title-desc';
+        } else {
+          next = 'title-asc';
+        }
+      }
+
+      console.log('📊 [ADMIN] Sort changed from', current, 'to', next, 'by header click');
+      return next;
+    });
+  };
+
+  // Լոկալ սորտավորում client-side Product / Price սյունակների համար
+  const sortedProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
+
+    // createdAt սորտավորումը թողնում ենք սերվերին (default), այստեղ չենք դիպչում
+    if (!sortBy || sortBy.startsWith('createdAt')) {
+      return products;
+    }
+
+    const [field, directionRaw] = sortBy.split('-');
+    const direction = directionRaw === 'asc' ? 1 : -1;
+
+    console.log('📊 [ADMIN] Applying client-side sort:', { field, direction: directionRaw });
+
+    const cloned = [...products];
+
+    if (field === 'price') {
+      cloned.sort((a, b) => {
+        const aPrice = a.price ?? 0;
+        const bPrice = b.price ?? 0;
+        if (aPrice === bPrice) return 0;
+        return aPrice > bPrice ? direction : -direction;
+      });
+    } else if (field === 'title') {
+      cloned.sort((a, b) => {
+        const aTitle = (a.title || '').toLowerCase();
+        const bTitle = (b.title || '').toLowerCase();
+        if (aTitle === bTitle) return 0;
+        return aTitle > bTitle ? direction : -direction;
+      });
+    }
+
+    return cloned;
+  }, [products, sortBy]);
 
   const handleDeleteProduct = async (productId: string, productTitle: string) => {
     if (!confirm(`Are you sure you want to delete "${productTitle}"? This action cannot be undone.`)) {
@@ -388,31 +465,6 @@ export default function ProductsPage() {
             </form>
           </Card>
 
-          {/* Sort Options */}
-          <Card className="p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Sort Products</h3>
-            <div className="flex items-center gap-3">
-              <label className="block text-xs font-medium text-gray-700">
-                Sort by:
-              </label>
-              <select
-                value={sortBy}
-                onChange={(e) => {
-                  setSortBy(e.target.value);
-                  setPage(1);
-                }}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              >
-                <option value="createdAt-desc">Newest First</option>
-                <option value="createdAt-asc">Oldest First</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="title-asc">Title: A to Z</option>
-                <option value="title-desc">Title: Z to A</option>
-              </select>
-            </div>
-          </Card>
-
         </div>
 
         {/* Products Table */}
@@ -422,7 +474,7 @@ export default function ProductsPage() {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
               <p className="text-gray-600">Loading products...</p>
             </div>
-          ) : products.length === 0 ? (
+          ) : sortedProducts.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-gray-600">No products found</p>
             </div>
@@ -441,47 +493,100 @@ export default function ProductsPage() {
                         />
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Product
+                        <button
+                          type="button"
+                          onClick={() => handleHeaderSort('title')}
+                          className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-800"
+                        >
+                          <span>Product</span>
+                          <span className="flex flex-col leading-none text-[10px] text-gray-400">
+                            <span
+                              className={
+                                sortBy === 'title-asc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▲
+                            </span>
+                            <span
+                              className={
+                                sortBy === 'title-desc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▼
+                            </span>
+                          </span>
+                        </button>
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Colors & Stock
+                        Stock
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Price
+                        <button
+                          type="button"
+                          onClick={() => handleHeaderSort('price')}
+                          className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-800"
+                        >
+                          <span>Price</span>
+                          <span className="flex flex-col leading-none text-[10px] text-gray-400">
+                            <span
+                              className={
+                                sortBy === 'price-asc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▲
+                            </span>
+                            <span
+                              className={
+                                sortBy === 'price-desc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▼
+                            </span>
+                          </span>
+                        </button>
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <div className="flex items-center justify-center gap-2">
-                          <span>Featured</span>
-                          <button
-                            onClick={handleToggleAllFeatured}
-                            disabled={togglingAllFeatured || products.length === 0}
-                            className="inline-flex items-center justify-center transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            title={products.every(p => p.featured) ? 'Remove all from featured' : 'Mark all as featured'}
-                          >
-                            <svg
-                              className={`w-5 h-5 transition-all duration-200 ${
-                                products.length > 0 && products.every(p => p.featured)
-                                  ? 'fill-blue-500 text-blue-500 drop-shadow-sm'
-                                  : 'fill-none stroke-blue-400 text-blue-400 opacity-70 hover:opacity-100'
-                              }`}
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                              />
-                            </svg>
-                          </button>
-                        </div>
+                        Featured
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Created
+                        <button
+                          type="button"
+                          onClick={() => handleHeaderSort('createdAt')}
+                          className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-800"
+                        >
+                          <span>Created</span>
+                          <span className="flex flex-col leading-none text-[10px] text-gray-400">
+                            <span
+                              className={
+                                sortBy === 'createdAt-asc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▲
+                            </span>
+                            <span
+                              className={
+                                sortBy === 'createdAt-desc'
+                                  ? 'text-gray-900'
+                                  : ''
+                              }
+                            >
+                              ▼
+                            </span>
+                          </span>
+                        </button>
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -489,7 +594,7 @@ export default function ProductsPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {products.map((product) => (
+                    {sortedProducts.map((product) => (
                       <tr key={product.id} className="hover:bg-gray-50">
                         <td className="px-4 py-4">
                           <input
@@ -515,7 +620,7 @@ export default function ProductsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          {product.colorStocks && product.colorStocks.length > 0 ? (
+                          {product.colorStocks && product.  colorStocks.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
                               {product.colorStocks.map((colorStock) => (
                                 <div
