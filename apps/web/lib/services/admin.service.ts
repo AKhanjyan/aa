@@ -96,11 +96,16 @@ class AdminService {
         roles: true,
         blocked: true,
         createdAt: true,
+        _count: {
+          select: {
+            orders: true,
+          },
+        },
       },
     });
 
     return {
-      data: users.map((user: { id: string; email: string | null; phone: string | null; firstName: string | null; lastName: string | null; roles: string[] | null; blocked: boolean; createdAt: Date }) => ({
+      data: users.map((user: { id: string; email: string | null; phone: string | null; firstName: string | null; lastName: string | null; roles: string[] | null; blocked: boolean; createdAt: Date; _count?: { orders?: number } }) => ({
         id: user.id,
         email: user.email,
         phone: user.phone,
@@ -109,6 +114,7 @@ class AdminService {
         roles: user.roles,
         blocked: user.blocked,
         createdAt: user.createdAt,
+        ordersCount: user._count?.orders ?? 0,
       })),
     };
   }

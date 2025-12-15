@@ -43,6 +43,12 @@ interface AnalyticsData {
   }>;
 }
 
+interface AdminStatsSummary {
+  users?: {
+    total?: number;
+  };
+}
+
 export default function AnalyticsPage() {
   const { isLoggedIn, isAdmin, isLoading } = useAuth();
   const router = useRouter();
@@ -52,6 +58,7 @@ export default function AnalyticsPage() {
   const [period, setPeriod] = useState<string>('week');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isLoading) {
@@ -65,6 +72,7 @@ export default function AnalyticsPage() {
   useEffect(() => {
     if (isLoggedIn && isAdmin) {
       fetchAnalytics();
+      fetchAdminStats();
     }
   }, [isLoggedIn, isAdmin, period, startDate, endDate]);
 
@@ -84,6 +92,7 @@ export default function AnalyticsPage() {
         params,
       });
       
+      console.log('📊 [ADMIN][Analytics] Analytics data loaded:', response);
       setAnalytics(response);
     } catch (err: any) {
       console.error('❌ [ADMIN] Error fetching analytics:', err);
@@ -107,6 +116,22 @@ export default function AnalyticsPage() {
       alert(`Սխալ: ${errorMessage}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  /**
+   * Fetch admin summary stats (including total users)
+   */
+  const fetchAdminStats = async () => {
+    try {
+      console.log('👥 [ADMIN][Analytics] Fetching admin stats for Total Users card...');
+      const stats = await apiClient.get<AdminStatsSummary>('/api/v1/admin/stats');
+      const usersCount = stats?.users?.total ?? null;
+      setTotalUsers(usersCount);
+      console.log('✅ [ADMIN][Analytics] Admin stats loaded for Total Users:', { usersCount });
+    } catch (err: any) {
+      console.error('❌ [ADMIN][Analytics] Error fetching admin stats:', err);
+      setTotalUsers(null);
     }
   };
 
@@ -639,8 +664,8 @@ export default function AnalyticsPage() {
               </div>
             ) : analytics ? (
               <>
-                {/* Orders Overview - Modern Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                {/* Orders & Users Overview - Modern Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   <Card 
                     className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg hover:scale-105 hover:border-blue-400 transition-all duration-200 group cursor-pointer relative"
                     onClick={() => router.push('/admin/orders')}
@@ -684,65 +709,19 @@ export default function AnalyticsPage() {
                   </Card>
 
                   <Card 
-                    className="p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 hover:shadow-lg hover:scale-105 hover:border-emerald-400 transition-all duration-200 group cursor-pointer relative"
-                    onClick={() => router.push('/admin/orders?paymentStatus=paid')}
-                    title="Click to view paid orders"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <svg className="w-4 h-4 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                    <p className="text-sm font-medium text-emerald-700 mb-1">Paid Orders</p>
-                    <p className="text-3xl font-bold text-emerald-900">
-                      {analytics.orders.paidOrders}
-                    </p>
-                  </Card>
-
-                  <Card 
-                    className="p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200 hover:shadow-lg hover:scale-105 hover:border-yellow-400 transition-all duration-200 group cursor-pointer relative"
-                    onClick={() => router.push('/admin/orders?status=pending')}
-                    title="Click to view pending orders"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <svg className="w-4 h-4 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                    <p className="text-sm font-medium text-yellow-700 mb-1">Pending Orders</p>
-                    <p className="text-3xl font-bold text-yellow-900">
-                      {analytics.orders.pendingOrders}
-                    </p>
-                  </Card>
-
-                  <Card 
-                    className="p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:shadow-lg hover:scale-105 hover:border-indigo-400 transition-all duration-200 group cursor-pointer relative"
-                    onClick={() => router.push('/admin/orders?status=completed')}
-                    title="Click to view completed orders"
+                    className="p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:shadow-lg hover:scale-105 hover:border-indigo-400 transition-all duration-200 group cursor-default relative"
+                    title="Total registered users"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-1a4 4 0 00-4-4h-1M7 20H2v-1a4 4 0 014-4h1m4-9a3 3 0 110 6 3 3 0 010-6zm6 3a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
-                      <svg className="w-4 h-4 text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
                     </div>
-                    <p className="text-sm font-medium text-indigo-700 mb-1">Completed</p>
+                    <p className="text-sm font-medium text-indigo-700 mb-1">Total Users</p>
                     <p className="text-3xl font-bold text-indigo-900">
-                      {analytics.orders.completedOrders}
+                      {totalUsers !== null ? totalUsers : '—'}
                     </p>
                   </Card>
                 </div>
