@@ -9,6 +9,7 @@ import { formatPrice, getStoredCurrency } from '../lib/currency';
 import { apiClient } from '../lib/api-client';
 import { useAuth } from '../lib/auth/AuthContext';
 import { CompareIcon } from './icons/CompareIcon';
+import { CartIcon as CartPngIcon } from './icons/CartIcon';
 
 interface ProductLabel {
   id: string;
@@ -101,18 +102,6 @@ const WishlistIcon = ({ filled = false }: { filled?: boolean }) => (
       strokeLinecap="round" 
       strokeLinejoin="round" 
       fill={filled ? "currentColor" : "none"} 
-    />
-  </svg>
-);
-
-const CartIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path 
-      d="M3 3H5L5.5 5M7 13H15L18 5H5.5M7 13L5.5 5M7 13L5.5 15.5M7 13H15M15 13C14.4 13 13.9 13.4 13.8 14M15 13C15.6 13 16.1 13.4 16.2 14M5.5 15.5H16.5M5.5 15.5C5.2 15.5 5 15.7 5 16C5 16.3 5.2 16.5 5.5 16.5H16.5C16.8 16.5 17 16.3 17 16C17 15.7 16.8 15.5 16.5 15.5" 
-      stroke="currentColor" 
-      strokeWidth="1.8" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
     />
   </svg>
 );
@@ -561,7 +550,7 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 ) : (
-                  <CartIcon />
+                  <CartPngIcon size={24} />
                 )}
               </button>
             </div>
@@ -768,19 +757,7 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             ) : (
-              isCompact ? (
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path 
-                    d="M3 3H5L5.5 5M7 13H15L18 5H5.5M7 13L5.5 5M7 13L5.5 15.5M7 13H15M15 13C14.4 13 13.9 13.4 13.8 14M15 13C15.6 13 16.1 13.4 16.2 14M5.5 15.5H16.5M5.5 15.5C5.2 15.5 5 15.7 5 16C5 16.3 5.2 16.5 5.5 16.5H16.5C16.8 16.5 17 16.3 17 16C17 15.7 16.8 15.5 16.5 15.5" 
-                    stroke="currentColor" 
-                    strokeWidth="1.8" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                  />
-                </svg>
-              ) : (
-                <CartIcon />
-              )
+              <CartPngIcon size={isCompact ? 18 : 24} />
             )}
           </button>
         </div>

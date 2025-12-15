@@ -196,23 +196,27 @@ export function BrandFilter({ category, search, minPrice, maxPrice, selectedBran
                 key={brand.id}
                 onClick={() => handleBrandSelect(brand.id)}
                 className={`w-full flex items-center justify-between py-2 px-3 rounded transition-all duration-200 group ${
-                  isSelected 
-                    ? 'bg-blue-100 border-2 border-blue-400 shadow-sm' 
-                    : 'hover:bg-gray-50 border-2 border-transparent'
+                  isSelected
+                    ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200'
+                    : 'hover:bg-gray-50 border border-transparent'
                 }`}
               >
-                <span className={`text-sm transition-colors ${
-                  isSelected 
-                    ? 'text-blue-700 font-semibold' 
-                    : 'text-gray-900 group-hover:text-gray-700'
-                }`}>
+                <span
+                  className={`text-sm transition-colors ${
+                    isSelected
+                      ? 'text-blue-900 font-medium'
+                      : 'text-gray-900 group-hover:text-gray-700'
+                  }`}
+                >
                   {brand.name}
                 </span>
-                <span className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
-                  isSelected 
-                    ? 'text-blue-700 bg-blue-200' 
-                    : 'text-gray-500 bg-gray-100'
-                }`}>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
+                    isSelected
+                      ? 'text-blue-700 bg-blue-100'
+                      : 'text-gray-500 bg-gray-100'
+                  }`}
+                >
                   {brand.count}
                 </span>
               </button>

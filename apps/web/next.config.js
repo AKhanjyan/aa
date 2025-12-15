@@ -46,6 +46,11 @@ const nextConfig = {
         hostname: '127.0.0.1',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
+        pathname: '/**',
+      },
     ],
     // Allow unoptimized images for development (images will use unoptimized prop)
     // Ensure image optimization is enabled for production

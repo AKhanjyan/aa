@@ -107,25 +107,37 @@ export function SizeFilter({ category, search, minPrice, maxPrice, selectedSizes
       ) : (
         <div className="space-y-2">
           {sizes.map((size) => {
-          const isSelected = selected.includes(size.value);
+            const isSelected = selected.includes(size.value);
 
-          return (
-            <button
-              key={size.value}
-              onClick={() => handleSizeToggle(size.value)}
-              className={`w-full flex items-center justify-between py-2 px-1 rounded transition-colors group ${
-                isSelected ? 'bg-gray-100' : 'hover:bg-gray-50'
-              }`}
-            >
-              <span className={`text-sm ${isSelected ? 'text-gray-900 font-semibold' : 'text-gray-900 group-hover:text-gray-700'}`}>
-                {size.value}
-              </span>
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                {size.count}
-              </span>
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={size.value}
+                onClick={() => handleSizeToggle(size.value)}
+                className={`w-full flex items-center justify-between py-2 px-1 rounded transition-colors group ${
+                  isSelected
+                    ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200'
+                    : 'hover:bg-gray-50'
+                }`}
+              >
+                <span
+                  className={`text-sm group-hover:text-gray-700 ${
+                    isSelected ? 'text-blue-900 font-medium' : 'text-gray-900'
+                  }`}
+                >
+                  {size.value}
+                </span>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full ${
+                    isSelected
+                      ? 'text-blue-700 bg-blue-100'
+                      : 'text-gray-500 bg-gray-100'
+                  }`}
+                >
+                  {size.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       )}
     </Card>

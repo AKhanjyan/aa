@@ -187,6 +187,7 @@
 - ✅ Header icons restyled: removed rounded backgrounds, enlarged search icon to match reference, simplified hover states
 - ✅ Featured Products tabs updated to New/Bestseller/Featured with bestseller logic from sales; admin product form now includes Featured checkbox to control homepage tab
 - ✅ Added password reset fields to Prisma User model to fix missing column error (`passwordResetToken`, `passwordResetExpires`) — run Prisma migration/db push to apply
+- ✅ Updated all cart icons (header, mobile bottom nav, empty cart page) to use unified PNG icon from Flaticon (`https://cdn-icons-png.flaticon.com/512/3081/3081986.png`)
 
 ## Ամփոփում
 

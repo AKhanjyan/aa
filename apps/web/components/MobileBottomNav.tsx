@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Home, Filter, UserRound, ShoppingCart, Store } from 'lucide-react';
+import { Home, Filter, UserRound, Store } from 'lucide-react';
 import { getCompareCount, getWishlistCount } from '../lib/storageCounts';
 import { MOBILE_FILTERS_EVENT } from '../lib/events';
+import { CartIcon } from './icons/CartIcon';
 
 interface MobileNavItem {
   label: string;
@@ -76,7 +77,7 @@ export function MobileBottomNav() {
       { 
         label: 'Cart', 
         href: '/cart', 
-        icon: ShoppingCart, 
+        icon: CartIcon, 
         visible: true,
       },
     ],

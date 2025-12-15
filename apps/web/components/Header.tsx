@@ -13,6 +13,7 @@ import { GoogleTranslate } from './GoogleTranslate';
 import contactData from '../../../config/contact.json';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import { CompareIcon } from './icons/CompareIcon';
+import { CartIcon } from './icons/CartIcon';
 
 type SocialLinks = {
   instagram?: string;
@@ -84,12 +85,6 @@ const ProfileIconFilled = () => (
 const WishlistIcon = () => (
   <svg width="19" height="19" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 17L8.55 15.7C4.4 12.2 2 10.1 2 7.5C2 5.4 3.4 4 5.5 4C6.8 4 8.1 4.6 9 5.5C9.9 4.6 11.2 4 12.5 4C14.6 4 16 5.4 16 7.5C16 10.1 13.6 12.2 9.45 15.7L10 17Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-  </svg>
-);
-
-const CartIcon = () => (
-  <svg width="19" height="19" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 3H5L5.5 5M7 13H15L18 5H5.5M7 13L5.5 5M7 13L5.5 15.5M7 13H15M15 13C14.4 13 13.9 13.4 13.8 14M15 13C15.6 13 16.1 13.4 16.2 14M5.5 15.5H16.5M5.5 15.5C5.2 15.5 5 15.7 5 16C5 16.3 5.2 16.5 5.5 16.5H16.5C16.8 16.5 17 16.3 17 16C17 15.7 16.8 15.5 16.5 15.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -865,7 +860,7 @@ export function Header() {
               {/* Shopping Cart */}
               <Link href="/cart" className="flex items-center gap-[0.hpx] group">
                 <div className="w-11 h-11 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors duration-150 relative">
-                  <BadgeIcon icon={<CartIcon />} badge={cartCount} />
+                  <BadgeIcon icon={<CartIcon size={19} />} badge={cartCount} />
                 </div>
                 <span className="text-gray-800 font-bold text-sm hidden sm:block min-w-[3.25rem] group-hover:text-gray-900 transition-colors">
                   {formatPrice(cartTotal, selectedCurrency)}
@@ -957,7 +952,7 @@ export function Header() {
                     className="flex items-center justify-between px-4 py-3 hover:bg-gray-50"
                   >
                     <span className="flex items-center gap-2 normal-case font-medium text-gray-700">
-                      <CartIcon />
+                      <CartIcon size={19} />
                       Cart
                     </span>
                     {cartCount > 0 && (
