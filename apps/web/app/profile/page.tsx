@@ -180,6 +180,7 @@ function ProfilePageContent() {
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
   const [orderDetailsLoading, setOrderDetailsLoading] = useState(false);
   const [orderDetailsError, setOrderDetailsError] = useState<string | null>(null);
+  const [isReordering, setIsReordering] = useState(false);
 
 
   // Redirect if not logged in
@@ -529,6 +530,72 @@ function ProfilePageContent() {
       loadOrderDetails(orderNumber);
     }
     // On mobile, let the Link navigate normally
+  };
+
+  const handleReOrder = async () => {
+    if (!selectedOrder || !isLoggedIn) {
+      router.push('/login?redirect=/profile?tab=orders');
+      return;
+    }
+
+    setIsReordering(true);
+    try {
+      console.log('[Profile][ReOrder] Starting re-order for order:', selectedOrder.number);
+      
+      let addedCount = 0;
+      let skippedCount = 0;
+
+      // Add each item from the order to cart
+      for (const item of selectedOrder.items) {
+        try {
+          // Get variant details to find productId
+          interface VariantDetails {
+            id: string;
+            productId: string;
+            stock: number;
+            available: boolean;
+          }
+
+          const variantDetails = await apiClient.get<VariantDetails>(`/api/v1/products/variants/${item.variantId}`);
+          
+          if (!variantDetails.available || variantDetails.stock < item.quantity) {
+            console.warn(`[Profile][ReOrder] Item ${item.productTitle} is not available or insufficient stock`);
+            skippedCount++;
+            continue;
+          }
+
+          await apiClient.post('/api/v1/cart/items', {
+            productId: variantDetails.productId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+          });
+          addedCount++;
+          console.log('[Profile][ReOrder] Added item to cart:', item.productTitle);
+        } catch (error: any) {
+          console.error('[Profile][ReOrder] Error adding item to cart:', error);
+          skippedCount++;
+          // Continue with other items even if one fails
+        }
+      }
+
+      // Trigger cart update
+      window.dispatchEvent(new Event('cart-updated'));
+      
+      // Show success message
+      if (addedCount > 0) {
+        setSuccess(`${addedCount} item(s) added to cart${skippedCount > 0 ? `, ${skippedCount} skipped` : ''}`);
+        setTimeout(() => {
+          router.push('/cart');
+        }, 1500);
+      } else {
+        setError('Failed to add items to cart. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('[Profile][ReOrder] Error during re-order:', error);
+      setError('Failed to add items to cart. Please try again.');
+    } finally {
+      setIsReordering(false);
+    }
   };
 
 
@@ -1206,14 +1273,24 @@ function ProfilePageContent() {
                     Placed on {new Date(selectedOrder.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <div className="flex items-center gap-3">
+                  <Button
+                    onClick={handleReOrder}
+                    disabled={isReordering}
+                    variant="primary"
+                    size="sm"
+                  >
+                    {isReordering ? 'Adding...' : 'Re-order'}
+                  </Button>
+                  <button
+                    onClick={() => setSelectedOrder(null)}
+                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               {/* Content */}
@@ -1241,9 +1318,6 @@ function ProfilePageContent() {
                           </span>
                           <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPaymentStatusColor(selectedOrder.paymentStatus)}`}>
                             Payment: {selectedOrder.paymentStatus}
-                          </span>
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedOrder.fulfillmentStatus)}`}>
-                            Fulfillment: {selectedOrder.fulfillmentStatus}
                           </span>
                         </div>
                       </Card>
@@ -1312,31 +1386,10 @@ function ProfilePageContent() {
                         </div>
                       </Card>
 
-                      {/* Shipping Address */}
-                      {selectedOrder.shippingAddress && (
-                        <Card className="p-6">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Address</h3>
-                          <div className="text-gray-600">
-                            {selectedOrder.shippingAddress.firstName && selectedOrder.shippingAddress.lastName && (
-                              <p>{selectedOrder.shippingAddress.firstName} {selectedOrder.shippingAddress.lastName}</p>
-                            )}
-                            {selectedOrder.shippingAddress.addressLine1 && <p>{selectedOrder.shippingAddress.addressLine1}</p>}
-                            {selectedOrder.shippingAddress.addressLine2 && <p>{selectedOrder.shippingAddress.addressLine2}</p>}
-                            {selectedOrder.shippingAddress.city && (
-                              <p>
-                                {selectedOrder.shippingAddress.city}
-                                {selectedOrder.shippingAddress.postalCode && `, ${selectedOrder.shippingAddress.postalCode}`}
-                              </p>
-                            )}
-                            {selectedOrder.shippingAddress.countryCode && <p>{selectedOrder.shippingAddress.countryCode}</p>}
-                            {selectedOrder.shippingAddress.phone && <p className="mt-2">Phone: {selectedOrder.shippingAddress.phone}</p>}
-                          </div>
-                        </Card>
-                      )}
                     </div>
 
-                    {/* Order Summary */}
-                    <div>
+                    {/* Order Summary + Shipping */}
+                    <div className="space-y-4">
                       <Card className="p-6 sticky top-4">
                         <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h3>
                         <div className="space-y-4 mb-6">
@@ -1371,15 +1424,29 @@ function ProfilePageContent() {
                             <div className="text-gray-600">Loading totals...</div>
                           )}
                         </div>
-
-                        <div className="space-y-3">
-                          <Link href="/products">
-                            <Button variant="primary" className="w-full">
-                              Continue Shopping
-                            </Button>
-                          </Link>
-                        </div>
                       </Card>
+
+                      {/* Shipping Address (moved under Order Summary) */}
+                      {selectedOrder.shippingAddress && (
+                        <Card className="p-6">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Address</h3>
+                          <div className="text-gray-600">
+                            {selectedOrder.shippingAddress.firstName && selectedOrder.shippingAddress.lastName && (
+                              <p>{selectedOrder.shippingAddress.firstName} {selectedOrder.shippingAddress.lastName}</p>
+                            )}
+                            {selectedOrder.shippingAddress.addressLine1 && <p>{selectedOrder.shippingAddress.addressLine1}</p>}
+                            {selectedOrder.shippingAddress.addressLine2 && <p>{selectedOrder.shippingAddress.addressLine2}</p>}
+                            {selectedOrder.shippingAddress.city && (
+                              <p>
+                                {selectedOrder.shippingAddress.city}
+                                {selectedOrder.shippingAddress.postalCode && `, ${selectedOrder.shippingAddress.postalCode}`}
+                              </p>
+                            )}
+                            {selectedOrder.shippingAddress.countryCode && <p>{selectedOrder.shippingAddress.countryCode}</p>}
+                            {selectedOrder.shippingAddress.phone && <p className="mt-2">Phone: {selectedOrder.shippingAddress.phone}</p>}
+                          </div>
+                        </Card>
+                      )}
                     </div>
                   </div>
                 )}
