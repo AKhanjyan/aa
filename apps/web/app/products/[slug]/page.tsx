@@ -12,6 +12,7 @@ import { RelatedProducts } from '../../../components/RelatedProducts';
 import { ProductReviews } from '../../../components/ProductReviews';
 import { Heart, Minus, Plus } from 'lucide-react';
 import { CompareIcon } from '../../../components/icons/CompareIcon';
+import { ProductLabels } from '../../../components/ProductLabels';
 
 interface ProductPageProps {
   params: Promise<{ slug?: string }>;
@@ -752,48 +753,9 @@ const handleCompareToggle = (e: MouseEvent) => {
                 unoptimized
               />
                   
-                  {/* Product Labels */}
+                  {/* Product Labels - reuse shared UI component with stacked layout */}
                   {product.labels && product.labels.length > 0 && (
-                    <div className="absolute inset-0 pointer-events-none z-20">
-                      {product.labels.map((label) => {
-                        const positionStyles = {
-                          'top-left': 'top-4 left-4',
-                          'top-right': 'top-4 right-4',
-                          'bottom-left': 'bottom-4 left-4',
-                          'bottom-right': 'bottom-4 right-4',
-                        };
-                        
-                        let colorStyle = '';
-                        if (label.color) {
-                          colorStyle = `background-color: ${label.color}; color: white;`;
-                        } else {
-                          if (label.type === 'percentage') {
-                            colorStyle = 'bg-red-600 text-white';
-                          } else {
-                            const value = label.value.toLowerCase();
-                            if (value.includes('new') || value.includes('նոր')) {
-                              colorStyle = 'bg-green-600 text-white';
-                            } else if (value.includes('hot') || value.includes('տաք')) {
-                              colorStyle = 'bg-orange-600 text-white';
-                            } else if (value.includes('sale') || value.includes('զեղչ')) {
-                              colorStyle = 'bg-red-600 text-white';
-                            } else {
-                              colorStyle = 'bg-blue-600 text-white';
-                            }
-                          }
-                        }
-                        
-                        return (
-                          <div
-                            key={label.id}
-                            className={`absolute z-20 px-3 py-1.5 text-sm font-bold rounded-md ${positionStyles[label.position]} ${!label.color ? colorStyle : ''}`}
-                            style={label.color ? { backgroundColor: label.color, color: 'white' } : undefined}
-                          >
-                            {label.type === 'percentage' ? `${label.value}%` : label.value}
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <ProductLabels labels={product.labels} />
                   )}
                   
                   {/* Zoom Button */}

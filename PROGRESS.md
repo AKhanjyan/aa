@@ -188,6 +188,8 @@
 - ✅ Featured Products tabs updated to New/Bestseller/Featured with bestseller logic from sales; admin product form now includes Featured checkbox to control homepage tab
 - ✅ Added password reset fields to Prisma User model to fix missing column error (`passwordResetToken`, `passwordResetExpires`) — run Prisma migration/db push to apply
 - ✅ Updated all cart icons (header, mobile bottom nav, empty cart page) to use unified PNG icon from Flaticon (`https://cdn-icons-png.flaticon.com/512/3081/3081986.png`)
+ - ✅ Admin մենյուից հեռացվել է `Filter by Price` / `price-filter-settings` կետը, logging ավելացված է `admin-menu.config.tsx`-ում (`[AdminMenu][Config] Loaded admin tabs`)
+ - ✅ Unified product labels UI: created shared `ProductLabels` component with vertical stacking per corner and connected it to `ProductCard` and single product page for consistent labels across Home/Shop/listings
 
 ## Ամփոփում
 

@@ -10,14 +10,7 @@ import { apiClient } from '../lib/api-client';
 import { useAuth } from '../lib/auth/AuthContext';
 import { CompareIcon } from './icons/CompareIcon';
 import { CartIcon as CartPngIcon } from './icons/CartIcon';
-
-interface ProductLabel {
-  id: string;
-  type: 'text' | 'percentage';
-  value: string;
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  color: string | null;
-}
+import { ProductLabels } from './ProductLabels';
 
 interface Product {
   id: string;
@@ -30,7 +23,7 @@ interface Product {
     id: string;
     name: string;
   } | null;
-  labels?: ProductLabel[];
+  labels?: import('./ProductLabels').ProductLabel[];
   compareAtPrice?: number | null;
   originalPrice?: number | null;
   globalDiscount?: number | null;
@@ -560,41 +553,6 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
     );
   }
 
-  // Helper function to get label style based on position and type
-  const getLabelStyle = (label: ProductLabel) => {
-    const baseStyle = 'absolute z-20 px-2 py-1 text-xs font-bold rounded-md';
-    const positionStyles = {
-      'top-left': 'top-2 left-2',
-      'top-right': 'top-2 right-2',
-      'bottom-left': 'bottom-2 left-2',
-      'bottom-right': 'bottom-2 right-2',
-    };
-    
-    let colorStyle = '';
-    if (label.color) {
-      colorStyle = `background-color: ${label.color}; color: white;`;
-    } else {
-      // Default colors based on type
-      if (label.type === 'percentage') {
-        colorStyle = 'bg-red-600 text-white';
-      } else {
-        // Text labels - different colors based on value
-        const value = label.value.toLowerCase();
-        if (value.includes('new') || value.includes('նոր')) {
-          colorStyle = 'bg-green-600 text-white';
-        } else if (value.includes('hot') || value.includes('տաք')) {
-          colorStyle = 'bg-orange-600 text-white';
-        } else if (value.includes('sale') || value.includes('զեղչ')) {
-          colorStyle = 'bg-red-600 text-white';
-        } else {
-          colorStyle = 'bg-blue-600 text-white';
-        }
-      }
-    }
-    
-    return `${baseStyle} ${positionStyles[label.position]} ${!label.color ? colorStyle : ''}`;
-  };
-
   // Grid view layout (original)
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative group">
@@ -618,20 +576,8 @@ export function ProductCard({ product, viewMode = 'grid-3' }: ProductCardProps) 
           )}
         </Link>
         
-        {/* Product Labels */}
-        {product.labels && product.labels.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none">
-            {product.labels.map((label) => (
-              <div
-                key={label.id}
-                className={getLabelStyle(label)}
-                style={label.color ? { backgroundColor: label.color, color: 'white' } : undefined}
-              >
-                {label.type === 'percentage' ? `${label.value}%` : label.value}
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Product Labels - stacked per corner */}
+        {product.labels && product.labels.length > 0 && <ProductLabels labels={product.labels} />}
         
         {/* Action Icons - появляются при наведении */}
         <div className={`absolute ${isCompact ? 'top-1.5 right-1.5' : 'top-3 right-3'} flex flex-col ${isCompact ? 'gap-1.5' : 'gap-2'} opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10`}>
