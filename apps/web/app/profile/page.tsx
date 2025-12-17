@@ -9,6 +9,7 @@ import { useAuth } from '../../lib/auth/AuthContext';
 import { apiClient } from '../../lib/api-client';
 import { formatPrice, type CurrencyCode } from '../../lib/currency';
 import { ProfileMenuDrawer } from '../../components/ProfileMenuDrawer';
+import { UserAvatar } from '../../components/UserAvatar';
 
 interface Address {
   _id?: string;
@@ -677,10 +678,40 @@ function ProfilePageContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-        <p className="text-gray-600 mt-2">Manage your account information and preferences</p>
-      </div>
+      {/* Profile Header Section */}
+      <Card className="mb-8 p-6">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          {/* Avatar */}
+          <UserAvatar
+            firstName={profile?.firstName}
+            lastName={profile?.lastName}
+            size="xl"
+            className="mx-auto sm:mx-0"
+          />
+          
+          {/* User Info */}
+          <div className="flex-1 text-center sm:text-left">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {profile?.firstName && profile?.lastName
+                ? `${profile.firstName} ${profile.lastName}`
+                : profile?.firstName
+                ? profile.firstName
+                : profile?.lastName
+                ? profile.lastName
+                : 'My Profile'}
+            </h1>
+            {profile?.email && (
+              <p className="text-gray-600 text-lg mb-1">{profile.email}</p>
+            )}
+            {profile?.phone && (
+              <p className="text-gray-500 text-sm">{profile.phone}</p>
+            )}
+            <p className="text-gray-600 mt-3 text-sm">
+              Manage your account information and preferences
+            </p>
+          </div>
+        </div>
+      </Card>
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:hidden mb-6">
