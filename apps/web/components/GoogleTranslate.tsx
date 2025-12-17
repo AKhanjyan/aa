@@ -152,17 +152,61 @@ export function GoogleTranslate() {
       }
     }
 
-    // Hide Google Translate banner and elements
+    // Hide Google Translate banner and elements - AGGRESSIVE HIDING
     const style = document.createElement('style');
     style.id = 'google-translate-styles';
     style.textContent = `
-      .goog-te-banner-frame {
+      /* Hide Google Translate banners and UI frames, but keep hidden element for functionality */
+      .goog-te-banner-frame,
+      .goog-te-banner-frame *,
+      iframe.goog-te-banner-frame,
+      .goog-te-menu-frame,
+      .goog-te-menu-frame *,
+      .goog-te-balloon-frame,
+      .goog-te-balloon-frame *,
+      iframe#goog-gt-tt,
+      iframe#goog-gt-tt *,
+      .goog-tooltip,
+      .goog-tooltip *,
+      .skiptranslate,
+      .skiptranslate *,
+      iframe[src*="translate.googleapis.com"]:not([id*="google_translate_element"]),
+      iframe[src*="translate.google.com"]:not([id*="google_translate_element"]),
+      iframe[class*="goog-te"]:not([id*="google_translate_element"]),
+      iframe[id*="goog"]:not([id*="google_translate_element"]) {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        max-height: 0 !important;
+        max-width: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
       }
-      body {
-        top: 0 !important;
+      
+      /* Hide visible Google Translate gadgets but keep hidden element */
+      .goog-te-gadget:not(#google_translate_element),
+      .goog-te-gadget-simple:not(#google_translate_element),
+      div[id*="google_translate"]:not(#google_translate_element),
+      div[class*="goog-te"]:not(#google_translate_element):not(.goog-te-combo) {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
       }
+      
+      /* Keep hidden translate element but hide it visually */
       #google_translate_element {
         position: absolute !important;
         left: -9999px !important;
@@ -170,23 +214,26 @@ export function GoogleTranslate() {
         pointer-events: none !important;
         height: 0 !important;
         width: 0 !important;
-      }
-      .goog-te-menu-frame {
-        display: none !important;
         visibility: hidden !important;
       }
-      .goog-tooltip,
-      .goog-tooltip:hover,
-      .goog-te-balloon-frame {
-        display: none !important;
+      
+      /* Reset body top offset */
+      body {
+        top: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
       }
-      .skiptranslate {
-        display: none !important;
-      }
-      iframe#goog-gt-tt,
-      .goog-te-balloon-frame {
+      
+      /* Hide any Google Translate related divs at the top */
+      body > div:first-child[class*="goog"],
+      body > iframe:first-child[src*="translate"],
+      html > body > div:first-child[class*="goog"],
+      html > body > iframe:first-child[src*="translate"] {
         display: none !important;
         visibility: hidden !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
       }
     `;
     document.head.appendChild(style);
@@ -199,29 +246,168 @@ export function GoogleTranslate() {
     };
   }, []);
 
-  // Force-hide Google banner/balloon even when language changes
+  // Force-hide Google banner/balloon even when language changes - AGGRESSIVE REMOVAL
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const hideGoogleElements = () => {
-      const selectors = [
+      // Only hide banner and UI elements, NOT the hidden translate element
+      const selectorsToRemove = [
         '.goog-te-banner-frame',
         '.goog-te-menu-frame',
         '.goog-te-balloon-frame',
         '#goog-gt-tt',
+        '.skiptranslate',
+        'iframe.goog-te-banner-frame',
       ];
-      selectors.forEach((selector) => {
-        const el = document.querySelector(selector);
-        if (el && el.parentElement) {
-          el.parentElement.removeChild(el);
+      
+      // Selectors to hide but NOT remove (keep for functionality)
+      const selectorsToHide = [
+        '.goog-te-gadget:not(#google_translate_element)',
+        '.goog-te-gadget-simple:not(#google_translate_element)',
+        'div[id*="google_translate"]:not(#google_translate_element)',
+        'div[class*="goog-te"]:not(#google_translate_element):not(.goog-te-combo)',
+      ];
+      
+      // Remove banner elements completely
+      selectorsToRemove.forEach((selector) => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((el) => {
+            if (el && el.parentElement) {
+              try {
+                el.parentElement.removeChild(el);
+              } catch (e) {
+                // If removal fails, hide it with CSS
+                (el as HTMLElement).style.display = 'none';
+                (el as HTMLElement).style.visibility = 'hidden';
+                (el as HTMLElement).style.height = '0';
+                (el as HTMLElement).style.width = '0';
+                (el as HTMLElement).style.opacity = '0';
+                (el as HTMLElement).style.position = 'absolute';
+                (el as HTMLElement).style.left = '-9999px';
+                (el as HTMLElement).style.top = '-9999px';
+                (el as HTMLElement).style.pointerEvents = 'none';
+                (el as HTMLElement).style.zIndex = '-9999';
+              }
+            }
+          });
+        } catch (e) {
+          console.warn('[GoogleTranslate] Error hiding element:', selector, e);
         }
       });
+      
+      // Hide UI elements but keep them in DOM (for functionality)
+      selectorsToHide.forEach((selector) => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((el) => {
+            // Only hide, don't remove
+            (el as HTMLElement).style.display = 'none';
+            (el as HTMLElement).style.visibility = 'hidden';
+            (el as HTMLElement).style.opacity = '0';
+            (el as HTMLElement).style.height = '0';
+            (el as HTMLElement).style.width = '0';
+            (el as HTMLElement).style.position = 'absolute';
+            (el as HTMLElement).style.left = '-9999px';
+            (el as HTMLElement).style.top = '-9999px';
+            (el as HTMLElement).style.pointerEvents = 'none';
+            (el as HTMLElement).style.zIndex = '-9999';
+          });
+        } catch (e) {
+          console.warn('[GoogleTranslate] Error hiding element:', selector, e);
+        }
+      });
+      
+      // Reset body styles
       document.body.style.top = '0px';
+      document.body.style.marginTop = '0px';
+      document.body.style.paddingTop = '0px';
+      
+      // Remove banner iframes only (not the hidden translate element)
+      const allIframes = document.querySelectorAll('iframe');
+      allIframes.forEach((iframe) => {
+        const src = iframe.getAttribute('src') || '';
+        const id = iframe.getAttribute('id') || '';
+        const className = iframe.getAttribute('class') || '';
+        
+        // Only remove banner iframes, not the hidden translate element
+        if ((src.includes('translate.googleapis.com') || src.includes('translate.google.com')) 
+            && !id.includes('google_translate_element')
+            && !className.includes('goog-te-combo')) {
+          try {
+            // Check if it's a banner frame
+            if (className.includes('banner') || src.includes('banner')) {
+              if (iframe.parentElement) {
+                iframe.parentElement.removeChild(iframe);
+              }
+            } else {
+              // Just hide non-banner iframes
+              iframe.style.display = 'none';
+              iframe.style.visibility = 'hidden';
+              iframe.style.height = '0';
+              iframe.style.width = '0';
+            }
+          } catch (e) {
+            iframe.style.display = 'none';
+            iframe.style.visibility = 'hidden';
+            iframe.style.height = '0';
+            iframe.style.width = '0';
+          }
+        }
+      });
     };
 
+    // Run immediately
     hideGoogleElements();
-    const observer = new MutationObserver(() => hideGoogleElements());
-    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // Run after a short delay to catch dynamically added elements
+    setTimeout(hideGoogleElements, 100);
+    setTimeout(hideGoogleElements, 500);
+    setTimeout(hideGoogleElements, 1000);
+    
+    // Observe DOM changes - but be careful not to interfere with Google Translate functionality
+    const observer = new MutationObserver((mutations) => {
+      // Only hide elements if they are banner-related, not the hidden translate element
+      let shouldHide = false;
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            const el = node as HTMLElement;
+            const className = el.className || '';
+            const id = el.id || '';
+            const tagName = el.tagName?.toLowerCase() || '';
+            
+            // Only hide if it's a banner or UI element, not the hidden translate element
+            if ((className.includes('banner') || className.includes('balloon') || className.includes('menu-frame'))
+                && !id.includes('google_translate_element')
+                && !className.includes('goog-te-combo')) {
+              shouldHide = true;
+            }
+            
+            // Check iframes
+            if (tagName === 'iframe') {
+              const src = el.getAttribute('src') || '';
+              if ((src.includes('translate.googleapis.com') || src.includes('translate.google.com'))
+                  && (src.includes('banner') || className.includes('banner'))
+                  && !id.includes('google_translate_element')) {
+                shouldHide = true;
+              }
+            }
+          }
+        });
+      });
+      
+      if (shouldHide) {
+        hideGoogleElements();
+      }
+    });
+    
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true,
+      attributes: false // Don't observe attributes to avoid interfering
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -295,24 +481,33 @@ export function GoogleTranslate() {
       setShowMenu(false);
       
       // Try to find and use Google Translate select
-      const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-      
-      if (select) {
-        // Wait a bit for menu to close
-        setTimeout(() => {
+      // Wait a bit for Google Translate to initialize
+      const findAndChangeSelect = (attempts = 0) => {
+        const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+        
+        if (select) {
+          console.info('[GoogleTranslate] Found select element, changing language');
           if (select.value !== langValue) {
             select.value = langValue;
             const event = new Event('change', { bubbles: true });
             select.dispatchEvent(event);
           }
-        }, 100);
-      } else {
-        // Fallback: set cookie directly and reload
-        document.cookie = `googtrans=/en/${langValue}; path=/; max-age=31536000`;
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      }
+        } else if (attempts < 10) {
+          // Retry up to 10 times (1 second total)
+          console.debug('[GoogleTranslate] Select not found, retrying...', attempts);
+          setTimeout(() => findAndChangeSelect(attempts + 1), 100);
+        } else {
+          // Fallback: set cookie directly and reload
+          console.warn('[GoogleTranslate] Select not found after retries, using cookie fallback');
+          document.cookie = `googtrans=/en/${langValue}; path=/; max-age=31536000`;
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        }
+      };
+      
+      // Start trying to find select
+      findAndChangeSelect();
     }
   };
 

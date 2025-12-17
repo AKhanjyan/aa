@@ -55,15 +55,6 @@ export function MobileBottomNav() {
         icon: Home, 
         visible: true,
       },
-      { 
-        label: 'Filters', 
-        icon: Filter, 
-        visible: isProductsPage,
-        action: () => {
-          console.debug('[MobileBottomNav] dispatching filters event');
-          window.dispatchEvent(new Event(MOBILE_FILTERS_EVENT));
-        },
-      },
       // Shop with Store icon
       { 
         label: 'Shop', 
@@ -72,13 +63,22 @@ export function MobileBottomNav() {
         visible: true,
         onClick: () => console.info('🛒 [MobileBottomNav] Shop tapped, navigating to /products'),
       },
-      { label: 'My account', href: '/profile', icon: UserRound, visible: true },
       // On mobile we show Cart instead of Wishlist
       { 
         label: 'Cart', 
         href: '/cart', 
         icon: CartIcon, 
         visible: true,
+      },
+      { label: 'My account', href: '/profile', icon: UserRound, visible: true },
+      { 
+        label: 'Filters', 
+        icon: Filter, 
+        visible: isProductsPage,
+        action: () => {
+          console.debug('[MobileBottomNav] dispatching filters event');
+          window.dispatchEvent(new Event(MOBILE_FILTERS_EVENT));
+        },
       },
     ],
     [isProductsPage]

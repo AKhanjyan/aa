@@ -2,6 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide Google Translate Banner - Global CSS */
+.goog-te-banner-frame,
+.goog-te-banner-frame *,
+iframe.goog-te-banner-frame,
+iframe[src*="translate.googleapis.com"],
+iframe[src*="translate.google.com"],
+#google_translate_element,
+#google_translate_element *,
+.goog-te-menu-frame,
+.goog-te-menu-frame *,
+.goog-te-balloon-frame,
+.goog-te-balloon-frame *,
+iframe#goog-gt-tt,
+iframe#goog-gt-tt *,
+.goog-tooltip,
+.goog-tooltip *,
+.skiptranslate,
+.skiptranslate *,
+.goog-te-gadget,
+.goog-te-gadget *,
+.goog-te-gadget-simple,
+.goog-te-gadget-simple *,
+div[id*="google_translate"],
+div[class*="goog-te"],
+iframe[class*="goog-te"],
+iframe[id*="goog"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
+}
+
+/* Reset body top offset from Google Translate */
+body {
+  top: 0 !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 @layer base {
   body {
     @apply bg-white text-gray-900;
