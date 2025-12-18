@@ -91,9 +91,11 @@ interface ColorData {
   images: string[]; // Массив изображений для этого цвета (file upload)
   stock: string; // Base stock for color (if no sizes)
   price?: string; // Цена для этого конкретного цвета (опционально)
+  compareAtPrice?: string; // Старая цена для этого конкретного цвета (скидка)
   sizes: string[]; // Размеры для этого цвета
   sizeStocks: Record<string, string>; // Stock для каждого размера этого цвета: { "S": "10", "M": "5" }
   sizeLabels?: Record<string, string>; // Original labels for manually added sizes: { "s": "S" }
+  isFeatured?: boolean; // Является ли этот цвет основным для товара
 }
 
 // Unified variant structure - один variant с несколькими цветами
@@ -275,15 +277,22 @@ function AddProductPageContent() {
                   colorLabel: colorLabel,
                   images: smartSplitUrls(variant.imageUrl),
                   stock: size ? '' : stockValue, // Base stock only if no size
+                  price: variant.price !== undefined && variant.price !== null ? String(variant.price) : '',
+                  compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? String(variant.compareAtPrice) : '',
                   sizes: [],
                   sizeStocks: {},
                   sizeLabels: {},
+                  isFeatured: !!variant.isFeatured,
                 };
                 
                 // If variant has size, add it to color's sizes
                 if (size) {
                   colorData.sizes = [size];
                   colorData.sizeStocks = { [size]: stockValue };
+                  // Get size label if it's a custom size (not from attributes)
+                  if (variant.sizeLabel) {
+                    colorData.sizeLabels = { [size]: variant.sizeLabel };
+                  }
                 }
                 
                 colorDataMap.set(color, colorData);
@@ -318,11 +327,21 @@ function AddProductPageContent() {
                   }
                   // Update stock for this size
                   existingColorData.sizeStocks[size] = stockValue;
+                  // Update size label if available
+                  if (variant.sizeLabel) {
+                    if (!existingColorData.sizeLabels) existingColorData.sizeLabels = {};
+                    existingColorData.sizeLabels[size] = variant.sizeLabel;
+                  }
                 } else {
                   // If no size, update base stock (sum if multiple variants without sizes)
                   const currentStockNum = parseInt(existingColorData.stock) || 0;
                   const variantStockNum = parseInt(stockValue) || 0;
                   existingColorData.stock = String(currentStockNum + variantStockNum);
+                }
+
+                // Update featured status if this variant is marked as featured
+                if (variant.isFeatured) {
+                  existingColorData.isFeatured = true;
                 }
               }
             }
@@ -604,6 +623,23 @@ function AddProductPageContent() {
     }));
   };
 
+  const updateColorCompareAtPrice = (variantId: string, colorValue: string, compareAtPrice: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      variants: prev.variants.map((v) => {
+        if (v.id === variantId) {
+          return {
+            ...v,
+            colors: v.colors.map((c) =>
+              c.colorValue === colorValue ? { ...c, compareAtPrice } : c
+            ),
+          };
+        }
+        return v;
+      }),
+    }));
+  };
+
   // Toggle size selection for a specific color in variant
   const toggleColorSize = (variantId: string, colorValue: string, sizeValue: string) => {
     setFormData((prev) => ({
@@ -835,80 +871,32 @@ function AddProductPageContent() {
   };
 
   /**
-   * Get primary price from the first variant.
-   * This is used for the main Price field in the basic information block.
+   * Set a specific color as featured/main for the product
    */
-  const getPrimaryPrice = () => {
-    if (!formData.variants || formData.variants.length === 0) return '';
-    return formData.variants[0].price || '';
-  };
-
-  /**
-   * Update price for all variants from the main Price field.
-   * If there are no variants yet, create a default one so price is not lost.
-   */
-  const handlePrimaryPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-
-    // Allow only digits and one dot, same behavior as variant price input
-    value = value.replace(/[^\d.]/g, '');
-    const parts = value.split('.');
-    if (parts.length > 2) {
-      value = parts[0] + '.' + parts.slice(1).join('');
-    }
-    if (parts.length === 2 && parts[1].length > 2) {
-      value = parts[0] + '.' + parts[1].substring(0, 2);
-    }
-
-    setFormData((prev) => {
-      // If no variants yet, create one so price is stored correctly
-      if (!prev.variants || prev.variants.length === 0) {
-        const newVariant: Variant = {
-          id: `variant-${Date.now()}`,
-          price: value,
-          compareAtPrice: '',
-          sku: '',
-          sizes: [],
-          sizeStocks: {},
-          sizeLabels: {},
-          colors: [],
-        };
-        return {
-          ...prev,
-          variants: [newVariant],
-        };
-      }
-
-      return {
-        ...prev,
-        variants: prev.variants.map((v) => ({
-          ...v,
-          price: value,
-        })),
-      };
-    });
-  };
-
-  /**
-   * Format price on blur and sync to all variants.
-   */
-  const handlePrimaryPriceBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value.trim();
-    if (!rawValue || isNaN(parseFloat(rawValue))) return;
-
-    const numValue = parseFloat(rawValue);
-    if (numValue <= 0) return;
-
-    const formatted = numValue.toFixed(2);
-
+  const setFeaturedColor = (variantId: string, colorValue: string) => {
     setFormData((prev) => ({
       ...prev,
-      variants: (prev.variants || []).map((v) => ({
-        ...v,
-        price: formatted,
-      })),
+      variants: prev.variants.map((v) => {
+        if (v.id === variantId) {
+          return {
+            ...v,
+            colors: v.colors.map((c) => ({
+              ...c,
+              isFeatured: c.colorValue === colorValue
+            }))
+          };
+        }
+        return v;
+      })
     }));
   };
+
+  /**
+   * Helper functions for price management (deprecated but kept for structure)
+   */
+  const getPrimaryPrice = () => '';
+  const handlePrimaryPriceChange = (_e: any) => {};
+  const handlePrimaryPriceBlur = (_e: any) => {};
 
   const addImageUrl = () => {
     setFormData((prev) => ({
@@ -1228,13 +1216,7 @@ function AddProductPageContent() {
       for (const variant of formData.variants) {
         const variantIndex = formData.variants.indexOf(variant) + 1;
         
-        // Validate price
-        const priceValue = parseFloat(variant.price);
-        if (!variant.price || isNaN(priceValue) || priceValue <= 0) {
-          alert(`Վարիանտ ${variantIndex}: Խնդրում ենք մուտքագրել վավեր գին, որը 0-ից մեծ է`);
-          setLoading(false);
-          return;
-        }
+        // Skip base price validation as we now use color-specific prices
         
         // Validate that at least one color is selected
         if (!variant.colors || variant.colors.length === 0) {
@@ -1267,6 +1249,14 @@ function AddProductPageContent() {
             const colorSizes = colorDataItem.sizes || [];
             const colorSizeStocks = colorDataItem.sizeStocks || {};
             
+            // Validate price for this color
+            const colorPriceValue = parseFloat(colorDataItem.price || '0');
+            if (!colorDataItem.price || isNaN(colorPriceValue) || colorPriceValue <= 0) {
+              alert(`Վարիանտ ${variantIndex}: Խնդրում ենք մուտքագրել վավեր գին "${colorDataItem.colorLabel}" գույնի համար`);
+              setLoading(false);
+              return;
+            }
+
             // If category requires sizes, check if color has at least one size
             if (categoryRequiresSizes) {
               if (colorSizes.length === 0) {
@@ -1301,26 +1291,45 @@ function AddProductPageContent() {
         }
       }
 
-      // Prepare media array - включаем изображения из основных imageUrls и изображения цветов
-      const orderedImageUrls = [...formData.imageUrls];
-      if (
-        orderedImageUrls.length > 0 &&
-        formData.featuredImageIndex >= 0 &&
-        formData.featuredImageIndex < orderedImageUrls.length
-      ) {
-        const [featured] = orderedImageUrls.splice(formData.featuredImageIndex, 1);
-        orderedImageUrls.unshift(featured);
+      // Prepare media array
+      const allColorImages: { url: string; isFeatured: boolean }[] = [];
+      formData.variants.forEach((v) => {
+        v.colors.forEach((c) => {
+          if (c.images && c.images.length > 0) {
+            c.images.forEach((url, idx) => {
+              allColorImages.push({
+                url,
+                // A color image is "featured" if the color itself is featured AND it's the first image of that color
+                isFeatured: !!c.isFeatured && idx === 0
+              });
+            });
+          }
+        });
+      });
+
+      // Sort allColorImages so that featured images come first
+      allColorImages.sort((a, b) => (a.isFeatured === b.isFeatured ? 0 : a.isFeatured ? -1 : 1));
+
+      // If no color image is featured, but we have color images, make the first one featured
+      const hasFeaturedColorImage = allColorImages.some(img => img.isFeatured);
+      if (!hasFeaturedColorImage && allColorImages.length > 0) {
+        allColorImages[0].isFeatured = true;
       }
 
-      // Prepare media array - ONLY include general product images
-      const media = orderedImageUrls
-        .filter((url) => url.trim())
-        .map((url, index) => ({
+      const media = [
+        ...formData.imageUrls.map((url, index) => ({
           url: url.trim(),
           type: 'image',
           position: index,
-          isFeatured: index === 0,
-        }));
+          isFeatured: index === 0 && allColorImages.length === 0,
+        })),
+        ...allColorImages.map((img, index) => ({
+          url: img.url.trim(),
+          type: 'image',
+          position: formData.imageUrls.length + index,
+          isFeatured: img.isFeatured,
+        }))
+      ].filter(m => m.url);
 
       // Prepare variants array
       // Create variants for all combinations of colors and their sizes
@@ -1329,7 +1338,7 @@ function AddProductPageContent() {
       
       formData.variants.forEach((variant) => {
         const baseVariantData: any = {
-          price: parseFloat(variant.price),
+          price: parseFloat(variant.price || '0'),
           published: true,
         };
 
@@ -1379,14 +1388,20 @@ function AddProductPageContent() {
                 ? parseFloat(colorData.price) 
                 : baseVariantData.price;
               
+              const finalCompareAtPrice = colorData.compareAtPrice && colorData.compareAtPrice.trim() !== ''
+                ? parseFloat(colorData.compareAtPrice)
+                : baseVariantData.compareAtPrice;
+              
               variants.push({
                 ...baseVariantData,
                 price: finalPrice,
+                compareAtPrice: finalCompareAtPrice,
                 color: colorData.colorValue,
                 size: size,
                 stock: parseInt(stockForVariant) || 0,
                 sku: finalSku,
                 imageUrl: variantImageUrl,
+                isFeatured: !!colorData.isFeatured,
               });
             });
           } 
@@ -1394,30 +1409,39 @@ function AddProductPageContent() {
           else {
             const skuSuffix = colorDataArray.length > 1 ? `-${colorIndex + 1}` : '';
             
+            // Use base color stock
+            const stockForVariant = colorData.stock || '0';
+            
             // Generate SKU if not provided
             let finalSku = variant.sku ? `${variant.sku.trim()}${skuSuffix}` : undefined;
             if (!finalSku || finalSku === '') {
               const baseSlug = formData.slug || 'PROD';
               finalSku = `${baseSlug.toUpperCase()}-${Date.now()}-${colorIndex + 1}`;
             }
-            
+
             // Сохраняем все изображения цвета через запятую в imageUrl
             const variantImageUrl = colorData.images && colorData.images.length > 0 
               ? colorData.images.join(',') 
               : undefined;
-            
+
             // Используем цену цвета, если указана, иначе цену варианта
             const finalPrice = colorData.price && colorData.price.trim() !== '' 
               ? parseFloat(colorData.price) 
               : baseVariantData.price;
-            
+
+            const finalCompareAtPrice = colorData.compareAtPrice && colorData.compareAtPrice.trim() !== ''
+              ? parseFloat(colorData.compareAtPrice)
+              : baseVariantData.compareAtPrice;
+
             variants.push({
               ...baseVariantData,
               price: finalPrice,
+              compareAtPrice: finalCompareAtPrice,
               color: colorData.colorValue,
-              stock: parseInt(colorData.stock) || 0,
+              stock: parseInt(stockForVariant) || 0,
               sku: finalSku,
               imageUrl: variantImageUrl,
+              isFeatured: !!colorData.isFeatured,
             });
           }
         });
@@ -1494,17 +1518,15 @@ function AddProductPageContent() {
         payload.media = media;
       }
 
-      // Add labels if provided
-      if (formData.labels && formData.labels.length > 0) {
-        payload.labels = formData.labels
-          .filter((label) => label.value && label.value.trim() !== '')
-          .map((label) => ({
-            type: label.type,
-            value: label.value.trim(),
-            position: label.position,
-            color: label.color || null,
-          }));
-      }
+      // Add labels
+      payload.labels = (formData.labels || [])
+        .filter((label) => label.value && label.value.trim() !== '')
+        .map((label) => ({
+          type: label.type,
+          value: label.value.trim(),
+          position: label.position,
+          color: label.color || null,
+        }));
 
       console.log('📤 [ADMIN] Sending payload:', JSON.stringify(payload, null, 2));
       
@@ -1643,21 +1665,6 @@ function AddProductPageContent() {
                     value={formData.descriptionHtml}
                     onChange={(e) => setFormData((prev) => ({ ...prev, descriptionHtml: e.target.value }))}
                     placeholder="Product description (HTML supported)"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price *
-                  </label>
-                  <Input
-                    type="text"
-                    inputMode="decimal"
-                    value={getPrimaryPrice()}
-                    onChange={handlePrimaryPriceChange}
-                    onBlur={handlePrimaryPriceBlur}
-                    required
-                    placeholder="0.00"
                   />
                 </div>
               </div>
@@ -1842,112 +1849,6 @@ function AddProductPageContent() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Images */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Product Images</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Upload images directly or paste image URLs. Mark one image as the main/featured photo to show everywhere first.
-              </p>
-
-              {imageUploadError && (
-                <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                  {imageUploadError}
-                </div>
-              )}
-
-              <div className="space-y-3">
-                {formData.imageUrls.length === 0 ? (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-500">
-                    No images added yet. Upload files or paste image URLs to get started.
-                  </div>
-                ) : (
-                  formData.imageUrls.map((url, index) => (
-                    <div
-                      key={`${url}-${index}`}
-                      className="rounded-lg border border-gray-200 bg-gray-50 p-4"
-                    >
-                      <div className="flex flex-col gap-4 sm:flex-row">
-                        <div className="sm:w-40">
-                          <div className="aspect-square w-full rounded-md border border-gray-200 bg-white flex items-center justify-center overflow-hidden">
-                            {url ? (
-                              <>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={processImageUrl(url)}
-                                  alt={`Preview ${index + 1}`}
-                                  className="h-full w-full object-cover"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                  }}
-                                />
-                              </>
-                            ) : (
-                              <span className="text-xs text-gray-400">No preview</span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex-1 space-y-3">
-                          <Input
-                            type="url"
-                            value={url}
-                            onChange={(e) => updateImageUrl(index, e.target.value)}
-                            placeholder="https://example.com/image.jpg"
-                          />
-                          <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
-                            <label className="flex items-center gap-2">
-                              <input
-                                type="radio"
-                                name="featured-image"
-                                checked={formData.featuredImageIndex === index}
-                                onChange={() => setFeaturedImage(index)}
-                              />
-                              Set as main image
-                            </label>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => removeImageUrl(index)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              Remove
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={imageUploadLoading}
-                  className="w-full sm:w-auto"
-                >
-                  {imageUploadLoading ? 'Processing...' : 'Upload Images'}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addImageUrl}
-                  className="w-full sm:w-auto"
-                >
-                  + Add Image URL
-                </Button>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleUploadImages}
-              />
             </div>
 
             {/* Product Labels */}
@@ -2262,6 +2163,21 @@ function AddProductPageContent() {
                                   <div key={colorData.colorValue} className="border-2 border-gray-300 rounded-lg p-4 bg-white">
                                     <div className="flex items-center justify-between mb-4">
                                       <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-2 mr-2">
+                                          <input
+                                            type="checkbox"
+                                            id={`featured-${colorData.colorValue}`}
+                                            checked={!!colorData.isFeatured}
+                                            onChange={() => setFeaturedColor(variant.id, colorData.colorValue)}
+                                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                                          />
+                                          <label 
+                                            htmlFor={`featured-${colorData.colorValue}`}
+                                            className="text-xs text-gray-500 cursor-pointer hover:text-blue-600 transition-colors"
+                                          >
+                                            Main
+                                          </label>
+                                        </div>
                                         <span
                                           className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
                                           style={{ backgroundColor: colorHex }}
@@ -2369,23 +2285,40 @@ function AddProductPageContent() {
                                           </div>
                                         )}
                                         
-                                        {/* Price for this color (optional) */}
-                                        <div>
-                                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Price for {colorData.colorLabel} (optional)
-                                          </label>
-                                          <Input
-                                            type="number"
-                                            value={colorData.price || ''}
-                                            onChange={(e) => updateColorPrice(variant.id, colorData.colorValue, e.target.value)}
-                                            placeholder={variant.price || "0.00"}
-                                            className="w-full"
-                                            min="0"
-                                            step="0.01"
-                                          />
-                                          <p className="text-xs text-gray-500 mt-1">
-                                            Leave empty to use variant price ({variant.price || '0.00'})
-                                          </p>
+                                        {/* Price and Discount for this color */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                          <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                              Price for {colorData.colorLabel} *
+                                            </label>
+                                            <Input
+                                              type="number"
+                                              value={colorData.price || ''}
+                                              onChange={(e) => updateColorPrice(variant.id, colorData.colorValue, e.target.value)}
+                                              placeholder="0.00"
+                                              className="w-full"
+                                              required
+                                              min="0"
+                                              step="0.01"
+                                            />
+                                          </div>
+                                          <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                              Compare at price (Discount)
+                                            </label>
+                                            <Input
+                                              type="number"
+                                              value={colorData.compareAtPrice || ''}
+                                              onChange={(e) => updateColorCompareAtPrice(variant.id, colorData.colorValue, e.target.value)}
+                                              placeholder="0.00"
+                                              className="w-full"
+                                              min="0"
+                                              step="0.01"
+                                            />
+                                            <p className="text-[10px] text-gray-500 mt-1">
+                                              Show a strike-through price (original price)
+                                            </p>
+                                          </div>
                                         </div>
                                       </div>
                                       
