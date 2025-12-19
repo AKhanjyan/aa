@@ -125,7 +125,7 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
     // Reset page when page size changes
     params.delete('page');
 
-    router.push(`/products?${params.toString()}`);
+    router.replace(`/products?${params.toString()}`, { scroll: false });
   };
 
   return (

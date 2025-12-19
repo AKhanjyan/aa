@@ -119,9 +119,10 @@ async function getProducts(
 export default async function ProductsPage({ searchParams }: any) {
   const params = searchParams ? await searchParams : {};
   const page = parseInt(params?.page || "1", 10);
-  const perPage = Number.isNaN(parseInt(params?.limit, 10))
-    ? 24
-    : parseInt(params?.limit, 10);
+  const limitParam = params?.limit?.toString().trim();
+  const perPage = limitParam && !Number.isNaN(parseInt(limitParam, 10))
+    ? parseInt(limitParam, 10)
+    : 24;
 
   const productsData = await getProducts(
     page,
