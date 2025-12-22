@@ -120,9 +120,14 @@ export default async function ProductsPage({ searchParams }: any) {
   const params = searchParams ? await searchParams : {};
   const page = parseInt(params?.page || "1", 10);
   const limitParam = params?.limit?.toString().trim();
-  const perPage = limitParam && !Number.isNaN(parseInt(limitParam, 10))
+  const parsedLimit = limitParam && !Number.isNaN(parseInt(limitParam, 10))
     ? parseInt(limitParam, 10)
-    : 24;
+    : null;
+  // Default to 9999 (all) if no limit specified, or use the parsed limit
+  // If limit is >= 1000, treat as "all" (show all products)
+  const perPage = parsedLimit 
+    ? (parsedLimit >= 1000 ? 9999 : parsedLimit)
+    : 9999;
 
   const productsData = await getProducts(
     page,

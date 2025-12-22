@@ -34,11 +34,14 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const mobileSortDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Derive current "show per page" value from URL or fallback to perPage prop
+  // Derive current "show per page" value from URL or fallback to "all" (default)
   const limitFromUrl = searchParams.get('limit');
-  const currentLimit = Number.isNaN(parseInt(limitFromUrl || '', 10))
-    ? perPage
-    : parseInt(limitFromUrl as string, 10);
+  const parsedLimit = limitFromUrl ? parseInt(limitFromUrl, 10) : null;
+  // If limit is very large (>= 1000), treat as "all"
+  // If no limit in URL, default to "all"
+  const currentLimit = parsedLimit 
+    ? (parsedLimit >= 1000 ? 'all' : parsedLimit)
+    : 'all';
 
   const hasActiveFilters = (() => {
     const filterKeys = ['search', 'category', 'minPrice', 'maxPrice', 'colors', 'sizes', 'brand'];
@@ -119,9 +122,19 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
     router.push(queryString ? `/products?${queryString}` : '/products');
   };
 
-  const handleLimitChange = (value: number) => {
+  const handleLimitChange = (value: string | number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('limit', value.toString());
+    
+    if (value === 'all' || value === 'All') {
+      // For "all", set a very large limit (9999) or remove limit to show all
+      params.set('limit', '9999');
+    } else {
+      const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+      if (!Number.isNaN(numValue)) {
+        params.set('limit', numValue.toString());
+      }
+    }
+    
     // Reset page when page size changes
     params.delete('page');
 
@@ -171,15 +184,15 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-900">Show</span>
             <select
-              value={currentLimit}
-              onChange={(event) => handleLimitChange(parseInt(event.target.value, 10))}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 min-w-[60px]"
+              value={currentLimit === 'all' ? 'all' : currentLimit}
+              onChange={(event) => handleLimitChange(event.target.value)}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200 min-w-[70px]"
             >
-              {[10, 20, 50, 100].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
+              <option value="all">All</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
             </select>
           </div>
 
@@ -296,15 +309,15 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-600">Show</span>
             <select
-              value={currentLimit}
-              onChange={(event) => handleLimitChange(parseInt(event.target.value, 10))}
+              value={currentLimit === 'all' ? 'all' : currentLimit}
+              onChange={(event) => handleLimitChange(event.target.value)}
               className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-200"
             >
-              {[10, 20, 50, 100].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
+              <option value="all">All</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
             </select>
           </div>
         </div>
