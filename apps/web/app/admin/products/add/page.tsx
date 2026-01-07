@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense, useRef } from 'react';
+import { useState, useEffect, Suspense, useRef, useMemo } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../../lib/auth/AuthContext';
@@ -204,8 +204,11 @@ function AddProductPageContent() {
     compareAtPrice: string;
     stock: string;
     sku: string;
+    image: string | null; // Single image for this matrix cell
   }>>({}); // Key: "colorValue-sizeValue", Value: variant data
   const [useMatrixBuilder, setUseMatrixBuilder] = useState(false);
+  const matrixImageFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [matrixImageTarget, setMatrixImageTarget] = useState<string | null>(null); // Key of the matrix cell
 
   useEffect(() => {
     if (!isLoading) {
@@ -233,6 +236,30 @@ function AddProductPageContent() {
           categories: categoriesRes.data?.length || 0,
           attributes: attributesRes.data?.length || 0,
         });
+        // Debug: Log attributes details
+        if (attributesRes.data && attributesRes.data.length > 0) {
+          console.log('📋 [ADMIN] Attributes loaded:', attributesRes.data.map(attr => ({
+            id: attr.id,
+            key: attr.key,
+            name: attr.name,
+            valuesCount: attr.values?.length || 0,
+            values: attr.values?.map(v => ({ value: v.value, label: v.label })) || []
+          })));
+          const colorAttr = attributesRes.data.find(a => a.key === 'color');
+          const sizeAttr = attributesRes.data.find(a => a.key === 'size');
+          if (!colorAttr) {
+            console.warn('⚠️ [ADMIN] Color attribute not found in loaded attributes!');
+          } else {
+            console.log('✅ [ADMIN] Color attribute found:', { id: colorAttr.id, valuesCount: colorAttr.values?.length || 0 });
+          }
+          if (!sizeAttr) {
+            console.warn('⚠️ [ADMIN] Size attribute not found in loaded attributes!');
+          } else {
+            console.log('✅ [ADMIN] Size attribute found:', { id: sizeAttr.id, valuesCount: sizeAttr.values?.length || 0 });
+          }
+        } else {
+          console.warn('⚠️ [ADMIN] No attributes loaded! This may cause issues with variant builder.');
+        }
         // Debug: Log categories with requiresSizes
         if (categoriesRes.data) {
           console.log('📋 [ADMIN] Categories with requiresSizes:', 
@@ -271,8 +298,29 @@ function AddProductPageContent() {
           let firstSku = '';
           
           (product.variants || []).forEach((variant: any, index: number) => {
-            const color = variant.color || '';
-            const size = variant.size || '';
+            // Try to get color from variant.color (old format) or from variant.options (new format)
+            let color = variant.color || '';
+            let size = variant.size || '';
+            
+            // If color is empty, try to get from options
+            if (!color && variant.options && Array.isArray(variant.options)) {
+              const colorOption = variant.options.find((opt: any) => 
+                opt.attributeKey === 'color' || opt.key === 'color' || opt.attribute === 'color'
+              );
+              if (colorOption) {
+                color = colorOption.value || '';
+              }
+            }
+            
+            // If size is empty, try to get from options
+            if (!size && variant.options && Array.isArray(variant.options)) {
+              const sizeOption = variant.options.find((opt: any) => 
+                opt.attributeKey === 'size' || opt.key === 'size' || opt.attribute === 'size'
+              );
+              if (sizeOption) {
+                size = sizeOption.value || '';
+              }
+            }
             
             // Convert stock to string, handling 0 correctly
             const stockValue = variant.stock !== undefined && variant.stock !== null 
@@ -1046,6 +1094,79 @@ function AddProductPageContent() {
     }
   };
 
+  // Upload image for a specific matrix cell (single image only)
+  const handleUploadMatrixImages = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length || !matrixImageTarget) {
+      console.log('⚠️ [ADMIN] No files or no matrix target:', { filesLength: files.length, matrixImageTarget });
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    const imageFile = files.find((file) => file.type.startsWith('image/'));
+    if (!imageFile) {
+      alert('Please select an image file');
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    try {
+      setImageUploadLoading(true);
+      console.log('📤 [ADMIN] Starting upload for matrix cell:', matrixImageTarget);
+      
+      const uploadedImage = await fileToBase64(imageFile);
+      console.log('✅ [ADMIN] Image converted to base64, length:', uploadedImage.length);
+
+      console.log('📥 [ADMIN] Image converted, adding to matrix cell:', {
+        cellKey: matrixImageTarget
+      });
+      
+      setMatrixVariants((prev) => {
+        // When colors and sizes both exist, store image with colorValue key (row-based)
+        // Otherwise, store with the provided key (cell-based or single)
+        const currentVariant = prev[matrixImageTarget] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+        
+        return {
+          ...prev,
+          [matrixImageTarget]: {
+            ...currentVariant,
+            image: uploadedImage
+          }
+        };
+      });
+      
+      console.log('✅ [ADMIN] Matrix image added to state');
+    } catch (error: any) {
+      console.error('❌ [ADMIN] Error uploading matrix image:', error);
+      alert(error?.message || 'Failed to process selected image');
+    } finally {
+      setImageUploadLoading(false);
+      if (event.target) {
+        event.target.value = '';
+      }
+      setMatrixImageTarget(null);
+    }
+  };
+
+  // Remove image from a specific matrix cell
+  const removeMatrixImage = (cellKey: string) => {
+    setMatrixVariants((prev) => {
+      const currentVariant = prev[cellKey] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+      
+      return {
+        ...prev,
+        [cellKey]: {
+          ...currentVariant,
+          image: null
+        }
+      };
+    });
+  };
+
   // Label management functions
   const addLabel = () => {
     const newLabel: ProductLabel = {
@@ -1075,8 +1196,36 @@ function AddProductPageContent() {
     });
   };
 
-  const getColorAttribute = () => attributes.find((attr) => attr.key === 'color');
-  const getSizeAttribute = () => attributes.find((attr) => attr.key === 'size');
+  // Memoize color and size attributes to avoid unnecessary recalculations
+  const colorAttribute = useMemo(() => {
+    if (!attributes || attributes.length === 0) {
+      return undefined;
+    }
+    const colorAttr = attributes.find((attr) => attr.key === 'color');
+    if (!colorAttr) {
+      console.log('⚠️ [ADMIN] Color attribute not found. Available attributes:', attributes.map(a => ({ key: a.key, name: a.name })));
+    } else {
+      console.log('✅ [ADMIN] Color attribute found:', { id: colorAttr.id, key: colorAttr.key, valuesCount: colorAttr.values?.length || 0 });
+    }
+    return colorAttr;
+  }, [attributes]);
+
+  const sizeAttribute = useMemo(() => {
+    if (!attributes || attributes.length === 0) {
+      return undefined;
+    }
+    const sizeAttr = attributes.find((attr) => attr.key === 'size');
+    if (!sizeAttr) {
+      console.log('⚠️ [ADMIN] Size attribute not found. Available attributes:', attributes.map(a => ({ key: a.key, name: a.name })));
+    } else {
+      console.log('✅ [ADMIN] Size attribute found:', { id: sizeAttr.id, key: sizeAttr.key, valuesCount: sizeAttr.values?.length || 0 });
+    }
+    return sizeAttr;
+  }, [attributes]);
+
+  // Keep getColorAttribute and getSizeAttribute for backward compatibility
+  const getColorAttribute = () => colorAttribute;
+  const getSizeAttribute = () => sizeAttribute;
 
   // Add new color to color attribute
   const handleAddColor = async () => {
@@ -1221,8 +1370,18 @@ function AddProductPageContent() {
       }
 
       // Validate that at least one variant exists
+      console.log('🔍 [ADMIN] Validating variants before submit:', {
+        variantsCount: formData.variants.length,
+        variants: formData.variants,
+        useMatrixBuilder,
+      });
+      
       if (formData.variants.length === 0) {
-        alert('Please add at least one product variant');
+        if (useMatrixBuilder) {
+          alert('Please use "Generate Variants from Matrix" button to create variants from the matrix builder.');
+        } else {
+          alert('Please add at least one product variant. You can use the Matrix Builder (recommended) or add variants manually.');
+        }
         setLoading(false);
         return;
       }
@@ -1522,6 +1681,18 @@ function AddProductPageContent() {
       }
       console.log('✅ [VALIDATION] Final color validation passed');
 
+      // Collect attribute IDs from variants (color and size attributes)
+      const attributeIdsSet = new Set<string>();
+      const colorAttribute = getColorAttribute();
+      const sizeAttribute = getSizeAttribute();
+      if (colorAttribute) {
+        attributeIdsSet.add(colorAttribute.id);
+      }
+      if (sizeAttribute) {
+        attributeIdsSet.add(sizeAttribute.id);
+      }
+      const attributeIds = Array.from(attributeIdsSet);
+
       // Prepare payload
       const payload: any = {
         title: formData.title,
@@ -1534,7 +1705,7 @@ function AddProductPageContent() {
         featured: formData.featured,
         locale: 'en',
         variants: variants,
-        attributeIds: undefined,
+        attributeIds: attributeIds.length > 0 ? attributeIds : undefined,
       };
 
       // Add media if provided
@@ -2203,6 +2374,100 @@ function AddProductPageContent() {
               </div>
             </div>
 
+            {/* Product Variants Display */}
+            {!useMatrixBuilder && formData.variants.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-gray-900">Product Variants</h2>
+                  <span className="text-sm text-gray-500">
+                    {formData.variants.length} variant(s) created
+                  </span>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
+                  {formData.variants.map((variant, variantIndex) => (
+                    <div key={variant.id} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Variant {variantIndex + 1}
+                        </h3>
+                        <div className="text-sm text-gray-600">
+                          {variant.sku && <span>SKU: {variant.sku}</span>}
+                        </div>
+                      </div>
+                      {variant.colors && variant.colors.length > 0 ? (
+                        <div className="space-y-4">
+                          {variant.colors.map((colorData, colorIndex) => {
+                            const colorHex = getColorHex(colorData.colorLabel);
+                            return (
+                              <div key={colorIndex} className="border border-gray-200 rounded-lg p-4 bg-white">
+                                <div className="flex items-center gap-3 mb-3">
+                                  <span
+                                    className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
+                                    style={{ backgroundColor: colorHex }}
+                                  />
+                                  <span className="text-base font-semibold text-gray-900">
+                                    {colorData.colorLabel}
+                                  </span>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                                  {colorData.price && (
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Price</label>
+                                      <div className="text-sm font-medium text-gray-900">{colorData.price}</div>
+                                    </div>
+                                  )}
+                                  {colorData.stock && (
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Stock</label>
+                                      <div className="text-sm font-medium text-gray-900">{colorData.stock}</div>
+                                    </div>
+                                  )}
+                                </div>
+                                {colorData.sizes && colorData.sizes.length > 0 && (
+                                  <div>
+                                    <label className="block text-xs text-gray-500 mb-2">Sizes & Stock</label>
+                                    <div className="flex flex-wrap gap-2">
+                                      {colorData.sizes.map((sizeValue) => {
+                                        const sizeLabel = getSizeAttribute()?.values.find(v => v.value === sizeValue)?.label || sizeValue;
+                                        const sizeStock = colorData.sizeStocks?.[sizeValue] || '0';
+                                        return (
+                                          <div key={sizeValue} className="px-3 py-1 bg-blue-50 border border-blue-200 rounded text-sm">
+                                            <span className="font-medium text-gray-900">{sizeLabel}</span>
+                                            {sizeStock && <span className="text-gray-600 ml-2">({sizeStock})</span>}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                                {colorData.images && colorData.images.length > 0 && (
+                                  <div className="mt-3">
+                                    <label className="block text-xs text-gray-500 mb-2">Images</label>
+                                    <div className="flex gap-2 flex-wrap">
+                                      {colorData.images.map((img, imgIndex) => (
+                                        <img
+                                          key={imgIndex}
+                                          src={img}
+                                          alt={`${colorData.colorLabel} ${imgIndex + 1}`}
+                                          className="w-20 h-20 object-cover rounded border border-gray-300"
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500">No colors added</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Matrix Variant Builder */}
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -2237,9 +2502,9 @@ function AddProductPageContent() {
                       <label className="block text-sm font-medium text-gray-700 mb-3">
                         Select Colors (Optional)
                       </label>
-                      {getColorAttribute() && getColorAttribute()!.values.length > 0 ? (
+                      {colorAttribute && colorAttribute.values && colorAttribute.values.length > 0 ? (
                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 border-2 border-gray-300 rounded-lg bg-white max-h-64 overflow-y-auto">
-                          {getColorAttribute()?.values.map((val) => {
+                          {colorAttribute.values.map((val) => {
                             const isSelected = matrixSelectedColors.includes(val.value);
                             const colorHex = getColorHex(val.label);
                             return (
@@ -2294,9 +2559,9 @@ function AddProductPageContent() {
                       <label className="block text-sm font-medium text-gray-700 mb-3">
                         Select Sizes {isClothingCategory() ? '*' : '(Optional)'}
                       </label>
-                      {getSizeAttribute() && getSizeAttribute()!.values.length > 0 ? (
+                      {sizeAttribute && sizeAttribute.values && sizeAttribute.values.length > 0 ? (
                         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-4 border-2 border-gray-300 rounded-lg bg-white max-h-64 overflow-y-auto">
-                          {getSizeAttribute()?.values.map((val) => {
+                          {sizeAttribute.values.map((val) => {
                             const isSelected = matrixSelectedSizes.includes(val.value);
                             return (
                               <label
@@ -2359,11 +2624,64 @@ function AddProductPageContent() {
                               : '(Single variant)'
                           }
                         </h3>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              // Generate SKU for all variants
+                              const baseSlug = formData.slug || generateSlug(formData.title) || 'PROD';
+                              const newMatrixVariants = { ...matrixVariants };
+                              
+                              if (matrixSelectedColors.length > 0) {
+                                matrixSelectedColors.forEach((colorValue) => {
+                                  if (matrixSelectedSizes.length > 0) {
+                                    matrixSelectedSizes.forEach((sizeValue) => {
+                                      const key = `${colorValue}-${sizeValue}`;
+                                      const currentVariant = newMatrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+                                      newMatrixVariants[key] = {
+                                        ...currentVariant,
+                                        sku: `${baseSlug.toUpperCase()}-${colorValue.toUpperCase()}-${sizeValue.toUpperCase()}`,
+                                      };
+                                    });
+                                  } else {
+                                    const key = colorValue;
+                                    const currentVariant = newMatrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+                                    newMatrixVariants[key] = {
+                                      ...currentVariant,
+                                      sku: `${baseSlug.toUpperCase()}-${colorValue.toUpperCase()}`,
+                                    };
+                                  }
+                                });
+                              } else if (matrixSelectedSizes.length > 0) {
+                                // Only sizes, no colors
+                                matrixSelectedSizes.forEach((sizeValue) => {
+                                  const key = sizeValue;
+                                  const currentVariant = newMatrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+                                  newMatrixVariants[key] = {
+                                    ...currentVariant,
+                                    sku: `${baseSlug.toUpperCase()}-${sizeValue.toUpperCase()}`,
+                                  };
+                                });
+                              } else {
+                                // Single variant
+                                const currentVariant = newMatrixVariants['single'] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
+                                newMatrixVariants['single'] = {
+                                  ...currentVariant,
+                                  sku: baseSlug.toUpperCase(),
+                                };
+                              }
+                              setMatrixVariants(newMatrixVariants);
+                            }}
+                          >
+                            Generate SKU
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
                             // Bulk fill all variants with same values
                             const defaultPrice = prompt('Enter default price for all variants:') || '';
                             const defaultStock = prompt('Enter default stock for all variants:') || '';
@@ -2382,6 +2700,7 @@ function AddProductPageContent() {
                                         compareAtPrice: newMatrixVariants[key]?.compareAtPrice || '',
                                         stock: defaultStock || newMatrixVariants[key]?.stock || '',
                                         sku: defaultSku ? `${defaultSku}-${colorValue}-${sizeValue}` : (newMatrixVariants[key]?.sku || ''),
+                                        image: newMatrixVariants[key]?.image || null,
                                       };
                                     });
                                   } else {
@@ -2391,6 +2710,7 @@ function AddProductPageContent() {
                                       compareAtPrice: newMatrixVariants[key]?.compareAtPrice || '',
                                       stock: defaultStock || newMatrixVariants[key]?.stock || '',
                                       sku: defaultSku ? `${defaultSku}-${colorValue}` : (newMatrixVariants[key]?.sku || ''),
+                                      image: newMatrixVariants[key]?.image || null,
                                     };
                                   }
                                 });
@@ -2403,6 +2723,7 @@ function AddProductPageContent() {
                                     compareAtPrice: newMatrixVariants[key]?.compareAtPrice || '',
                                     stock: defaultStock || newMatrixVariants[key]?.stock || '',
                                     sku: defaultSku ? `${defaultSku}-${sizeValue}` : (newMatrixVariants[key]?.sku || ''),
+                                    image: newMatrixVariants[key]?.image || null,
                                   };
                                 });
                               } else {
@@ -2412,6 +2733,7 @@ function AddProductPageContent() {
                                   compareAtPrice: newMatrixVariants['single']?.compareAtPrice || '',
                                   stock: defaultStock || newMatrixVariants['single']?.stock || '',
                                   sku: defaultSku || (newMatrixVariants['single']?.sku || ''),
+                                  image: newMatrixVariants['single']?.image || null,
                                 };
                               }
                               setMatrixVariants(newMatrixVariants);
@@ -2420,6 +2742,7 @@ function AddProductPageContent() {
                         >
                           Bulk Fill
                         </Button>
+                        </div>
                       </div>
 
                       <div className="overflow-x-auto border border-gray-300 rounded-lg">
@@ -2454,19 +2777,59 @@ function AddProductPageContent() {
                               return (
                                 <tr key={colorValue} className="hover:bg-gray-50">
                                   <td className="px-4 py-3 sticky left-0 bg-white z-10 border-r">
-                                    <div className="flex items-center gap-2">
-                                      <span
-                                        className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
-                                        style={{ backgroundColor: colorHex }}
-                                      />
-                                      <span className="text-sm font-medium text-gray-900">{colorLabel}</span>
+                                    <div className="space-y-3">
+                                      <div className="flex items-center gap-2">
+                                        <span
+                                          className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
+                                          style={{ backgroundColor: colorHex }}
+                                        />
+                                        <span className="text-sm font-medium text-gray-900">{colorLabel}</span>
+                                      </div>
+                                      {/* Image Upload Section - Per Row */}
+                                      <div>
+                                        <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                        <div className="space-y-2">
+                                          {/* Preview existing image */}
+                                          {matrixVariants[colorValue]?.image && (
+                                            <div className="relative group mb-2">
+                                              <img
+                                                src={matrixVariants[colorValue].image || ''}
+                                                alt="Preview"
+                                                className="w-full h-24 object-cover rounded border border-gray-300"
+                                              />
+                                              <button
+                                                type="button"
+                                                onClick={() => removeMatrixImage(colorValue)}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                                title="Remove image"
+                                              >
+                                                ×
+                                              </button>
+                                            </div>
+                                          )}
+                                          {/* Upload button */}
+                                          <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                              setMatrixImageTarget(colorValue);
+                                              matrixImageFileInputRef.current?.click();
+                                            }}
+                                            disabled={imageUploadLoading}
+                                            className="w-full text-xs"
+                                          >
+                                            {imageUploadLoading && matrixImageTarget === colorValue ? 'Uploading...' : matrixVariants[colorValue]?.image ? 'Change Image' : '+ Add Image'}
+                                          </Button>
+                                        </div>
+                                      </div>
                                     </div>
                                   </td>
                                   {matrixSelectedSizes.length > 0 ? (
                                     matrixSelectedSizes.map((sizeValue) => {
                                       const sizeLabel = getSizeAttribute()?.values.find(v => v.value === sizeValue)?.label || sizeValue;
                                       const key = `${colorValue}-${sizeValue}`;
-                                      const variant = matrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '' };
+                                      const variant = matrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
                                       
                                       return (
                                         <td key={sizeValue} className="px-4 py-3 border-r last:border-r-0">
@@ -2554,7 +2917,7 @@ function AddProductPageContent() {
                                               setMatrixVariants({
                                                 ...matrixVariants,
                                                 [colorValue]: { 
-                                                  ...(matrixVariants[colorValue] || { compareAtPrice: '', stock: '', sku: '' }), 
+                                                  ...(matrixVariants[colorValue] || { compareAtPrice: '', stock: '', sku: '', image: null }), 
                                                   price: e.target.value 
                                                 }
                                               });
@@ -2575,7 +2938,7 @@ function AddProductPageContent() {
                                               setMatrixVariants({
                                                 ...matrixVariants,
                                                 [colorValue]: { 
-                                                  ...(matrixVariants[colorValue] || { price: '', stock: '', sku: '' }), 
+                                                  ...(matrixVariants[colorValue] || { price: '', stock: '', sku: '', image: null }), 
                                                   compareAtPrice: e.target.value 
                                                 }
                                               });
@@ -2595,7 +2958,7 @@ function AddProductPageContent() {
                                               setMatrixVariants({
                                                 ...matrixVariants,
                                                 [colorValue]: { 
-                                                  ...(matrixVariants[colorValue] || { price: '', compareAtPrice: '', sku: '' }), 
+                                                  ...(matrixVariants[colorValue] || { price: '', compareAtPrice: '', sku: '', image: null }), 
                                                   stock: e.target.value 
                                                 }
                                               });
@@ -2615,7 +2978,7 @@ function AddProductPageContent() {
                                               setMatrixVariants({
                                                 ...matrixVariants,
                                                 [colorValue]: { 
-                                                  ...(matrixVariants[colorValue] || { price: '', compareAtPrice: '', stock: '' }), 
+                                                  ...(matrixVariants[colorValue] || { price: '', compareAtPrice: '', stock: '', image: null }), 
                                                   sku: e.target.value 
                                                 }
                                               });
@@ -2639,7 +3002,7 @@ function AddProductPageContent() {
                                 {matrixSelectedSizes.map((sizeValue) => {
                                   const sizeLabel = getSizeAttribute()?.values.find(v => v.value === sizeValue)?.label || sizeValue;
                                   const key = sizeValue;
-                                  const variant = matrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '' };
+                                  const variant = matrixVariants[key] || { price: '', compareAtPrice: '', stock: '', sku: '', image: null };
                                   
                                   return (
                                     <td key={sizeValue} className="px-4 py-3 border-r last:border-r-0">
@@ -2774,7 +3137,7 @@ function AddProductPageContent() {
                                           setMatrixVariants({
                                             ...matrixVariants,
                                             'single': { 
-                                              ...(matrixVariants['single'] || { price: '', compareAtPrice: '', sku: '' }), 
+                                              ...(matrixVariants['single'] || { price: '', compareAtPrice: '', sku: '', images: [] }), 
                                               stock: e.target.value 
                                             }
                                           });
@@ -2794,7 +3157,7 @@ function AddProductPageContent() {
                                           setMatrixVariants({
                                             ...matrixVariants,
                                             'single': { 
-                                              ...(matrixVariants['single'] || { price: '', compareAtPrice: '', stock: '' }), 
+                                              ...(matrixVariants['single'] || { price: '', compareAtPrice: '', stock: '', images: [] }), 
                                               sku: e.target.value 
                                             }
                                           });
@@ -2802,6 +3165,44 @@ function AddProductPageContent() {
                                         placeholder="Auto-generated"
                                         className="w-full text-sm"
                                       />
+                                    </div>
+                                    {/* Image Upload Section */}
+                                    <div>
+                                      <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                      <div className="space-y-2">
+                                        {/* Preview existing image */}
+                                        {matrixVariants['single']?.image && (
+                                          <div className="relative group mb-2">
+                                            <img
+                                              src={matrixVariants['single'].image}
+                                              alt="Preview"
+                                              className="w-full h-24 object-cover rounded border border-gray-300"
+                                            />
+                                            <button
+                                              type="button"
+                                              onClick={() => removeMatrixImage('single')}
+                                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                              title="Remove image"
+                                            >
+                                              ×
+                                            </button>
+                                          </div>
+                                        )}
+                                        {/* Upload button */}
+                                        <Button
+                                          type="button"
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            setMatrixImageTarget('single');
+                                            matrixImageFileInputRef.current?.click();
+                                          }}
+                                          disabled={imageUploadLoading}
+                                          className="w-full text-xs"
+                                        >
+                                          {imageUploadLoading && matrixImageTarget === 'single' ? 'Uploading...' : matrixVariants['single']?.image ? 'Change Image' : '+ Add Image'}
+                                        </Button>
+                                      </div>
                                     </div>
                                   </div>
                                 </td>
@@ -2842,7 +3243,7 @@ function AddProductPageContent() {
                                 }],
                               };
 
-                              // If sizes exist, add size stocks, prices, and SKUs
+                              // If sizes exist, add size stocks, prices, SKUs, and images
                               if (matrixSelectedSizes.length > 0) {
                                 // Use first size's price as base price (or average if needed)
                                 const firstSizeKey = `${colorValue}-${matrixSelectedSizes[0]}`;
@@ -2850,7 +3251,14 @@ function AddProductPageContent() {
                                 if (firstSizeVariant) {
                                   variant.colors[0].price = firstSizeVariant.price;
                                   variant.colors[0].compareAtPrice = firstSizeVariant.compareAtPrice;
+                                  // Use first size's SKU as base SKU for validation
                                   variant.sku = firstSizeVariant.sku || '';
+                                }
+                                
+                                // Use image from color row (stored with colorValue key)
+                                const colorRowImage = matrixVariants[colorValue]?.image;
+                                if (colorRowImage) {
+                                  variant.colors[0].images = [colorRowImage];
                                 }
                                 
                                 matrixSelectedSizes.forEach((sizeValue) => {
@@ -2864,16 +3272,24 @@ function AddProductPageContent() {
                                     }
                                     if (matrixVariant.sku) {
                                       variant.colors[0].sizeLabels![sizeValue] = matrixVariant.sku;
+                                      // If variant.sku is empty, use first size's SKU
+                                      if (!variant.sku || variant.sku === '') {
+                                        variant.sku = matrixVariant.sku;
+                                      }
                                     }
                                   }
                                 });
                               } else {
-                                // No sizes - use color's price and SKU directly
+                                // No sizes - use color's price, SKU, and image directly
                                 const colorVariant = matrixVariants[colorValue];
                                 if (colorVariant) {
                                   variant.colors[0].price = colorVariant.price;
                                   variant.colors[0].compareAtPrice = colorVariant.compareAtPrice;
                                   variant.sku = colorVariant.sku || '';
+                                  // Add color's image
+                                  if (colorVariant.image) {
+                                    variant.colors[0].images = [colorVariant.image];
+                                  }
                                 }
                               }
 
@@ -2897,16 +3313,32 @@ function AddProductPageContent() {
                                 }],
                               };
 
+                              // Use first size's price (sizes are stored individually)
+                              const firstSizeKey = matrixSelectedSizes[0];
+                              const firstSizeVariant = matrixVariants[firstSizeKey];
+                              if (firstSizeVariant) {
+                                variant.colors[0].price = firstSizeVariant.price;
+                                variant.colors[0].compareAtPrice = firstSizeVariant.compareAtPrice;
+                                // Use first size's SKU as base SKU for validation
+                                variant.sku = firstSizeVariant.sku || '';
+                              }
+                              
                               // Add size stocks and SKUs
                               matrixSelectedSizes.forEach((sizeValue) => {
                                 const key = sizeValue;
-                                const matrixVariant = matrixVariants[key];
+                                const matrixVariant = matrixVariants[key]
                                 if (matrixVariant) {
                                   variant.colors[0].sizeStocks![sizeValue] = matrixVariant.stock;
-                                  variant.colors[0].price = matrixVariant.price;
-                                  variant.colors[0].compareAtPrice = matrixVariant.compareAtPrice;
                                   if (matrixVariant.sku) {
                                     variant.colors[0].sizeLabels![sizeValue] = matrixVariant.sku;
+                                    // If variant.sku is empty, use first size's SKU
+                                    if (!variant.sku || variant.sku === '') {
+                                      variant.sku = matrixVariant.sku;
+                                    }
+                                  }
+                                  // Use image from size row (stored with sizeValue key)
+                                  if (matrixVariant.image && !variant.colors[0].images.length) {
+                                    variant.colors[0].images = [matrixVariant.image];
                                   }
                                 }
                               });
@@ -2923,7 +3355,7 @@ function AddProductPageContent() {
                                 colors: [{
                                   colorValue: '',
                                   colorLabel: 'Default',
-                                  images: [],
+                                  images: singleVariant?.image ? [singleVariant.image] : [],
                                   stock: singleVariant?.stock || '',
                                   price: singleVariant?.price || undefined,
                                   compareAtPrice: singleVariant?.compareAtPrice || undefined,
@@ -2935,11 +3367,23 @@ function AddProductPageContent() {
                               newVariants.push(variant);
                             }
 
+                            // Validate that variants were created
+                            if (newVariants.length === 0) {
+                              alert('No variants were created. Please select at least one color or size.');
+                              return;
+                            }
+
+                            console.log('✅ [ADMIN] Generated variants:', newVariants.length, newVariants);
+
                             // Update formData with new variants
-                            setFormData((prev) => ({
-                              ...prev,
-                              variants: newVariants,
-                            }));
+                            setFormData((prev) => {
+                              const updated = {
+                                ...prev,
+                                variants: newVariants,
+                              };
+                              console.log('✅ [ADMIN] Updated formData.variants:', updated.variants.length);
+                              return updated;
+                            });
 
                             // Disable matrix builder and show success
                             setUseMatrixBuilder(false);
@@ -3024,6 +3468,15 @@ function AddProductPageContent() {
               multiple
               className="hidden"
               onChange={handleUploadColorImages}
+            />
+            {/* Hidden input for matrix image uploads */}
+            <input
+              ref={matrixImageFileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleUploadMatrixImages}
             />
           </form>
           </Card>

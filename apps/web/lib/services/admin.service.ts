@@ -1108,14 +1108,25 @@ class AdminService {
 
         // Create ProductAttribute relations if attributeIds provided
         if (data.attributeIds && data.attributeIds.length > 0) {
-          await tx.productAttribute.createMany({
-            data: data.attributeIds.map((attributeId) => ({
-              productId: product.id,
-              attributeId,
-            })),
-            skipDuplicates: true,
-          });
-          console.log('✅ [ADMIN SERVICE] Created ProductAttribute relations:', data.attributeIds);
+          try {
+            console.log('🔗 [ADMIN SERVICE] Creating ProductAttribute relations for product:', product.id, 'attributes:', data.attributeIds);
+            await tx.productAttribute.createMany({
+              data: data.attributeIds.map((attributeId) => ({
+                productId: product.id,
+                attributeId,
+              })),
+              skipDuplicates: true,
+            });
+            console.log('✅ [ADMIN SERVICE] Created ProductAttribute relations:', data.attributeIds);
+          } catch (error: any) {
+            console.error('❌ [ADMIN SERVICE] Failed to create ProductAttribute relations:', error);
+            console.error('   Product ID:', product.id);
+            console.error('   Attribute IDs:', data.attributeIds);
+            console.error('   Error code:', error.code);
+            console.error('   Error message:', error.message);
+            // Re-throw to fail the transaction
+            throw error;
+          }
         }
 
         return await tx.product.findUnique({

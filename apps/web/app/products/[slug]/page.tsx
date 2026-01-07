@@ -332,18 +332,18 @@ export default function ProductPage({ params }: ProductPageProps) {
     ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
     : 0;
 
+  // Helper function to get option value (supports both new and old format)
+  const getOptionValue = useCallback((options: VariantOption[] | undefined, key: string): string | null => {
+    if (!options) return null;
+    const opt = options.find(o => o.key === key || o.attribute === key);
+    return opt?.value?.toLowerCase().trim() || null;
+  }, []);
+
   const findVariantByColorAndSize = useCallback((color: string | null, size: string | null): ProductVariant | null => {
     if (!product?.variants || product.variants.length === 0) return null;
     
     const normalizedColor = color?.toLowerCase().trim();
     const normalizedSize = size?.toLowerCase().trim();
-
-    // Helper function to get option value (supports both new and old format)
-    const getOptionValue = (options: VariantOption[] | undefined, key: string): string | null => {
-      if (!options) return null;
-      const opt = options.find(o => o.key === key || o.attribute === key);
-      return opt?.value?.toLowerCase().trim() || null;
-    };
 
     // 1. Try exact match (Case-insensitive)
     if (normalizedColor && normalizedSize) {

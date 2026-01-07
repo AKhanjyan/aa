@@ -215,6 +215,17 @@ CREATE TABLE "product_labels" (
 );
 
 -- CreateTable
+CREATE TABLE "product_attributes" (
+    "id" TEXT NOT NULL,
+    "productId" TEXT NOT NULL,
+    "attributeId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "product_attributes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "carts" (
     "id" TEXT NOT NULL,
     "userId" TEXT,
@@ -492,6 +503,21 @@ ALTER TABLE "product_variant_options" ADD CONSTRAINT "product_variant_options_va
 
 -- AddForeignKey
 ALTER TABLE "product_labels" ADD CONSTRAINT "product_labels_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- CreateIndex
+CREATE UNIQUE INDEX "product_attributes_productId_attributeId_key" ON "product_attributes"("productId", "attributeId");
+
+-- CreateIndex
+CREATE INDEX "product_attributes_productId_idx" ON "product_attributes"("productId");
+
+-- CreateIndex
+CREATE INDEX "product_attributes_attributeId_idx" ON "product_attributes"("attributeId");
+
+-- AddForeignKey
+ALTER TABLE "product_attributes" ADD CONSTRAINT "product_attributes_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "product_attributes" ADD CONSTRAINT "product_attributes_attributeId_fkey" FOREIGN KEY ("attributeId") REFERENCES "attributes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "carts" ADD CONSTRAINT "carts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

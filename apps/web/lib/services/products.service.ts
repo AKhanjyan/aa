@@ -257,13 +257,36 @@ class ProductsService {
             published: true,
           },
           include: {
-            options: true,
+            options: {
+              include: {
+                attributeValue: {
+                  include: {
+                    attribute: true,
+                    translations: true,
+                  },
+                },
+              },
+            },
           },
         },
         labels: true,
         categories: {
           include: {
             translations: true,
+          },
+        },
+        productAttributes: {
+          include: {
+            attribute: {
+              include: {
+                translations: true,
+                values: {
+                  include: {
+                    translations: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -475,9 +498,16 @@ class ProductsService {
             // New format: get from translation or value
             const translation = colorOption.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || colorOption.attributeValue.translations?.[0];
             colorValue = translation?.label || colorOption.attributeValue.value || "";
+            console.log('🎨 [PRODUCTS SERVICE] Found color from AttributeValue:', { 
+              valueId: colorOption.attributeValue.id, 
+              value: colorOption.attributeValue.value, 
+              label: translation?.label,
+              finalColor: colorValue 
+            });
           } else {
             // Old format: use value directly
             colorValue = colorOption.value || "";
+            console.log('🎨 [PRODUCTS SERVICE] Found color from old format:', { value: colorValue });
           }
           if (colorValue) {
             colorSet.add(colorValue.trim().toLowerCase());
@@ -485,6 +515,11 @@ class ProductsService {
         }
       });
       const availableColors = Array.from(colorSet);
+      console.log('🎨 [PRODUCTS SERVICE] Available colors for product:', { 
+        productId: product.id, 
+        colors: availableColors,
+        productAttributes: product.productAttributes?.length || 0 
+      });
 
       const originalPrice = variant?.price || 0;
       let finalPrice = originalPrice;
@@ -951,10 +986,33 @@ class ProductsService {
             published: true,
           },
           include: {
-            options: true,
+            options: {
+              include: {
+                attributeValue: {
+                  include: {
+                    attribute: true,
+                    translations: true,
+                  },
+                },
+              },
+            },
           },
         },
         labels: true,
+        productAttributes: {
+          include: {
+            attribute: {
+              include: {
+                translations: true,
+                values: {
+                  include: {
+                    translations: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
