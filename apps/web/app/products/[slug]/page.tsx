@@ -542,8 +542,26 @@ export default function ProductPage({ params }: ProductPageProps) {
   const discountPercent = currentVariant?.productDiscount || product?.productDiscount || null;
   const maxQuantity = currentVariant?.stock && currentVariant.stock > 0 ? currentVariant.stock : 0;
   const isOutOfStock = !currentVariant || currentVariant.stock <= 0;
-  const isVariationRequired = (colorGroups.filter(g => g.stock > 0).length > 0 && !selectedColor) || 
-                               (sizeGroups.filter(g => g.stock > 0).length > 0 && !selectedSize);
+  
+  // Check which attributes are available and required
+  const hasColorAttribute = colorGroups.length > 0 && colorGroups.some(g => g.stock > 0);
+  const hasSizeAttribute = sizeGroups.length > 0 && sizeGroups.some(g => g.stock > 0);
+  const needsColor = hasColorAttribute && !selectedColor;
+  const needsSize = hasSizeAttribute && !selectedSize;
+  const isVariationRequired = needsColor || needsSize;
+  
+  // Generate user-friendly message for required attributes
+  const getRequiredAttributesMessage = (): string => {
+    if (needsColor && needsSize) {
+      return 'Please select size and color';
+    } else if (needsColor) {
+      return 'Please select color';
+    } else if (needsSize) {
+      return 'Please select size';
+    }
+    return 'Select Options';
+  };
+  
   const canAddToCart = !isOutOfStock && !isVariationRequired;
 
   useEffect(() => {
@@ -1034,13 +1052,21 @@ export default function ProductPage({ params }: ProductPageProps) {
           
           {/* Action Buttons - Aligned with bottom of image */}
           <div className="mt-auto pt-6">
+            {/* Show required attributes message if needed */}
+            {isVariationRequired && (
+              <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800 font-medium">
+                  {getRequiredAttributesMessage()}
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-3 pt-4 border-t">
               <div className="flex items-center border rounded-xl overflow-hidden bg-gray-50">
                 <button onClick={() => adjustQuantity(-1)} className="w-12 h-12 flex items-center justify-center">-</button>
                 <div className="w-12 text-center font-bold">{quantity}</div>
                 <button onClick={() => adjustQuantity(1)} className="w-12 h-12 flex items-center justify-center">+</button>
               </div>
-              <button disabled={!canAddToCart || isAddingToCart} className="flex-1 h-12 bg-gray-900 text-white rounded-xl uppercase font-bold disabled:bg-gray-300"
+              <button disabled={!canAddToCart || isAddingToCart} className="flex-1 h-12 bg-gray-900 text-white rounded-xl uppercase font-bold disabled:bg-gray-300 disabled:cursor-not-allowed"
                 onClick={async () => {
                   if (!canAddToCart || !product || !currentVariant) return;
                   setIsAddingToCart(true);
@@ -1060,7 +1086,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                   } catch (err) { setShowMessage('Error adding to cart'); }
                   finally { setIsAddingToCart(false); setTimeout(() => setShowMessage(null), 2000); }
                 }}>
-                {isAddingToCart ? 'Adding...' : (isOutOfStock ? 'Out of Stock' : (isVariationRequired ? 'Select Options' : 'Add to Cart'))}
+                {isAddingToCart ? 'Adding...' : (isOutOfStock ? 'Out of Stock' : (isVariationRequired ? getRequiredAttributesMessage() : 'Add to Cart'))}
               </button>
               <button onClick={handleAddToWishlist} className={`w-12 h-12 rounded-xl border-2 flex items-center justify-center ${isInWishlist ? 'border-gray-900 bg-gray-50' : 'border-gray-200'}`}>
                 <Heart fill={isInWishlist ? 'currentColor' : 'none'} />
