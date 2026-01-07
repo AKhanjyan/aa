@@ -1,4 +1,4 @@
-գիտe client';
+'use client';
 
 import { useState, useEffect, useRef, type MouseEvent, type TouchEvent } from 'react';
 import Link from 'next/link';
