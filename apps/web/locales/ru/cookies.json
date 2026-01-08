@@ -51,17 +51,17 @@
       "description1": "Большинство веб-браузеров позволяют контролировать файлы cookie через настройки предпочтений. Однако ограничение файлов cookie может повлиять на ваш опыт использования нашего веб-сайта.",
       "description2": "Вот ссылки на инструкции по управлению файлами cookie в популярных браузерах:",
       "browsers": {
-        "chrome": "Google Chrome",
-        "firefox": "Mozilla Firefox",
-        "safari": "Safari",
-        "edge": "Microsoft Edge"
+        "chrome": "Google Chrome (Гугл Хром)",
+        "firefox": "Mozilla Firefox (Мозилла Фаерфокс)",
+        "safari": "Safari (Сафари)",
+        "edge": "Microsoft Edge (Майкрософт Эдж)"
       }
     },
     "optOutTools": {
       "title": "Инструменты отказа",
       "description": "Вы также можете отказаться от определенных сторонних файлов cookie, посетив {digitalAdvertisingAlliance} или {yourOnlineChoices}.",
-      "digitalAdvertisingAlliance": "Альянс цифровой рекламы",
-      "yourOnlineChoices": "Ваш онлайн-выбор"
+      "digitalAdvertisingAlliance": "Альянс цифровой рекламы (Digital Advertising Alliance)",
+      "yourOnlineChoices": "Ваш онлайн-выбор (Your Online Choices)"
     }
   },
   "cookiesWeUse": {

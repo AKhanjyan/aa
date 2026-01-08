@@ -469,14 +469,9 @@ export function getAttributeLabel(
  * ```
  */
 export function useTranslation() {
-  // Initialize language state - start with stored language or 'en'
-  const getInitialLang = (): LanguageCode => {
-    if (typeof window === 'undefined') return 'en';
-    const storedLang = getStoredLanguage();
-    return (storedLang && storedLang in translations) ? storedLang : 'en';
-  };
-
-  const [lang, setLang] = useState<LanguageCode>(getInitialLang);
+  // Always start with 'en' to prevent hydration mismatch
+  // The language will be updated after mount in useEffect
+  const [lang, setLang] = useState<LanguageCode>('en');
 
   // Listen to language changes and update state reactively
   useEffect(() => {

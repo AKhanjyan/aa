@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../../../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../../../lib/currency';
-import { getStoredLanguage } from '../../../lib/language';
+import { getStoredLanguage, type LanguageCode } from '../../../lib/language';
 import { t, getProductText, getAttributeLabel } from '../../../lib/i18n';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { RelatedProducts } from '../../../components/RelatedProducts';
@@ -106,8 +106,9 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currency, setCurrency] = useState(getStoredCurrency());
   // Language state - used in handleLanguageUpdate function (setLanguage)
+  // Initialize with 'en' to match server-side default and prevent hydration mismatch
   // eslint-disable-next-line no-unused-vars
-  const [language, setLanguage] = useState(getStoredLanguage());
+  const [language, setLanguage] = useState<LanguageCode>('en');
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -233,9 +234,31 @@ export default function ProductPage({ params }: ProductPageProps) {
     try {
       setLoading(true);
       const currentLang = getStoredLanguage();
-      const data = await apiClient.get<Product>(`/api/v1/products/${slug}`, {
-        params: { lang: currentLang }
-      });
+      
+      // Try to fetch with current language first
+      let data: Product;
+      try {
+        data = await apiClient.get<Product>(`/api/v1/products/${slug}`, {
+          params: { lang: currentLang }
+        });
+      } catch (error: any) {
+        // If 404 and not English, try fallback to English
+        if (error?.status === 404 && currentLang !== 'en') {
+          console.warn(`[PRODUCT PAGE] Product not found in ${currentLang}, trying English fallback`);
+          try {
+            data = await apiClient.get<Product>(`/api/v1/products/${slug}`, {
+              params: { lang: 'en' }
+            });
+          } catch (fallbackError) {
+            // If English also fails, throw the original error
+            throw error;
+          }
+        } else {
+          // Re-throw if it's not a 404 or if we're already trying English
+          throw error;
+        }
+      }
+      
       setProduct(data);
       setCurrentImageIndex(0);
       setThumbnailStartIndex(0);
@@ -255,10 +278,17 @@ export default function ProductPage({ params }: ProductPageProps) {
       }
     } catch (error) {
       console.error('Error fetching product:', error);
+      // Don't clear existing product on error - keep showing the last successfully loaded product
+      // This prevents losing the product when switching languages if translation doesn't exist
     } finally {
       setLoading(false);
     }
   }, [slug, variantIdFromUrl]);
+
+  // Initialize language from localStorage after mount to prevent hydration mismatch
+  useEffect(() => {
+    setLanguage(getStoredLanguage());
+  }, []);
 
   useEffect(() => {
     if (!slug || RESERVED_ROUTES.includes(slug.toLowerCase())) return;

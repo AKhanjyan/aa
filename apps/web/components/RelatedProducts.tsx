@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../lib/currency';
-import { getStoredLanguage } from '../lib/language';
+import { getStoredLanguage, type LanguageCode } from '../lib/language';
+import { t } from '../lib/i18n';
 import { useAuth } from '../lib/auth/AuthContext';
 import { CartIcon as CartPngIcon } from './icons/CartIcon';
 
@@ -59,12 +60,28 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
   const [scrollLeft, setScrollLeft] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  // Initialize language with 'en' to match server-side default and prevent hydration mismatch
+  const [language, setLanguage] = useState<LanguageCode>('en');
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+
+  // Initialize language from localStorage after mount to prevent hydration mismatch
+  useEffect(() => {
+    setLanguage(getStoredLanguage());
+    
+    const handleLanguageUpdate = () => {
+      setLanguage(getStoredLanguage());
+    };
+    
+    window.addEventListener('language-updated', handleLanguageUpdate);
+    return () => {
+      window.removeEventListener('language-updated', handleLanguageUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRelatedProducts = async () => {
       try {
         setLoading(true);
-        const language = getStoredLanguage();
         
         // Build params - if no categorySlug, fetch all products
         const params: Record<string, string> = {
@@ -388,7 +405,7 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
                 }}
               >
                 {products.map((product) => {
-                  const imageUrl = product.image || 'https://via.placeholder.com/400/CCCCCC/FFFFFF?text=No+Image';
+                  const hasImage = product.image && !imageErrors.has(product.id);
                   // Get category name from product categories
                   const categoryName = product.categories && product.categories.length > 0 
                     ? product.categories.map(c => c.title).join(', ')
@@ -418,14 +435,23 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
                           <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
                             {/* Product Image */}
                             <div className="relative aspect-square bg-gray-100 overflow-hidden flex-shrink-0">
-                              <Image
-                                src={imageUrl}
-                                alt={product.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                unoptimized
-                              />
+                              {hasImage ? (
+                                <Image
+                                  src={product.image!}
+                                  alt={product.title}
+                                  fill
+                                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                  unoptimized
+                                  onError={() => {
+                                    setImageErrors(prev => new Set(prev).add(product.id));
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                  <span className="text-gray-400 text-sm">{t(language, 'common.messages.noImage')}</span>
+                                </div>
+                              )}
                             </div>
 
                             {/* Product Info */}

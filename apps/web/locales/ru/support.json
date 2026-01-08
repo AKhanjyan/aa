@@ -3,7 +3,7 @@
   "description": "Мы здесь, чтобы помочь! Выберите лучший способ связаться с нами.",
   "contactUs": {
     "title": "Свяжитесь с нами",
-    "email": "Email",
+    "email": "Электронная почта",
     "phone": "Телефон",
     "businessHours": "Часы работы",
     "hours": {
@@ -24,7 +24,7 @@
     "form": {
       "name": "Имя",
       "namePlaceholder": "Ваше имя",
-      "email": "Email",
+      "email": "Электронная почта",
       "emailPlaceholder": "your@email.com",
       "subject": "Тема",
       "subjectPlaceholder": "С чем мы можем помочь?",

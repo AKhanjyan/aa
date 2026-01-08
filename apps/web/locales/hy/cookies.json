@@ -51,17 +51,17 @@
       "description1": "Վեբ բրաուզերների մեծ մասը թույլ է տալիս վերահսկել Cookie-ները իրենց կարգավորումների նախասիրությունների միջոցով: Այնուամենայնիվ, Cookie-ների սահմանափակումը կարող է ազդել ձեր փորձի վրա մեր կայքում:",
       "description2": "Ահա հղումներ հրահանգների համար Cookie-ների կառավարման համար հայտնի բրաուզերներում:",
       "browsers": {
-        "chrome": "Google Chrome",
-        "firefox": "Mozilla Firefox",
-        "safari": "Safari",
-        "edge": "Microsoft Edge"
+        "chrome": "Google Chrome (Գուգլ Քրոմ)",
+        "firefox": "Mozilla Firefox (Մոզիլա Ֆայրֆոքս)",
+        "safari": "Safari (Սաֆարի)",
+        "edge": "Microsoft Edge (Մայքրոսոֆթ Էջ)"
       }
     },
     "optOutTools": {
       "title": "Հրաժարման գործիքներ",
       "description": "Դուք նաև կարող եք հրաժարվել որոշ երրորդ կողմի Cookie-ներից՝ այցելելով {digitalAdvertisingAlliance} կամ {yourOnlineChoices}:",
-      "digitalAdvertisingAlliance": "Digital Advertising Alliance",
-      "yourOnlineChoices": "Your Online Choices"
+      "digitalAdvertisingAlliance": "Թվային գովազդային դաշինք (Digital Advertising Alliance)",
+      "yourOnlineChoices": "Ձեր առցանց ընտրությունները (Your Online Choices)"
     }
   },
   "cookiesWeUse": {
