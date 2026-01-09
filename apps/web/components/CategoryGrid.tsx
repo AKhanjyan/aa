@@ -194,6 +194,7 @@ export function CategoryGrid() {
       const categoryPromises = allCategories.map(async (category) => {
         try {
           // Fetch products to get count and find one with image
+          console.log(`🔍 [CategoryGrid] Fetching products for category: "${category.title}" (slug: "${category.slug}")`);
           const productsResponse = await apiClient.get<ProductsResponse>('/api/v1/products', {
             params: {
               category: category.slug,
@@ -201,11 +202,29 @@ export function CategoryGrid() {
               lang: language,
             },
           });
+          
+          console.log(`📦 [CategoryGrid] Response for "${category.title}":`, {
+            total: productsResponse.meta?.total || 0,
+            productsCount: productsResponse.data?.length || 0,
+            firstProductId: productsResponse.data?.[0]?.id,
+            firstProductImage: productsResponse.data?.[0]?.image,
+            allProductIds: productsResponse.data?.map(p => p.id),
+          });
+          
+          // If category has 0 products, it might mean category was not found
+          if (productsResponse.meta?.total === 0) {
+            console.warn(`⚠️ [CategoryGrid] Category "${category.title}" (${category.slug}) has 0 products - category might not exist in database`);
+          }
+          
           counts[category.slug] = productsResponse.meta?.total || 0;
           // Get first product with image, or first product if no image available
-          const productWithImage = productsResponse.data?.find(p => p.image) || productsResponse.data?.[0] || null;
+          // Only assign product if we have products for this category
+          const productWithImage = productsResponse.data && productsResponse.data.length > 0
+            ? (productsResponse.data.find(p => p.image) || productsResponse.data[0] || null)
+            : null;
           products[category.slug] = productWithImage;
-          console.log(`✅ [CategoryGrid] Category "${category.title}": ${counts[category.slug]} products, image: ${productWithImage?.image ? 'yes' : 'no'}`);
+          
+          console.log(`✅ [CategoryGrid] Category "${category.title}" (${category.slug}): ${counts[category.slug]} products, selected product: ${productWithImage?.id} (image: ${productWithImage?.image ? 'yes' : 'no'})`);
         } catch (err) {
           console.error(`❌ [CategoryGrid] Error fetching products for category ${category.slug}:`, err);
           // Keep default values (0 and null)
@@ -219,7 +238,26 @@ export function CategoryGrid() {
       setProductCounts(counts);
       setCategoryProducts(products);
       
+      // Log final state to verify each category has unique product
       console.log('✅ [CategoryGrid] All categories processed. Total:', allCategories.length);
+      console.log('📊 [CategoryGrid] Final category products mapping:', 
+        Object.entries(products).map(([slug, product]) => ({
+          slug,
+          productId: product?.id || 'null',
+          productImage: product?.image || 'null',
+        }))
+      );
+      
+      // Check for duplicate products
+      const productIds = Object.values(products).map(p => p?.id).filter(Boolean);
+      const uniqueProductIds = new Set(productIds);
+      if (productIds.length !== uniqueProductIds.size) {
+        console.warn('⚠️ [CategoryGrid] WARNING: Some categories have the same product!', {
+          totalProducts: productIds.length,
+          uniqueProducts: uniqueProductIds.size,
+          duplicates: productIds.filter((id, index) => productIds.indexOf(id) !== index)
+        });
+      }
     } catch (err: any) {
       console.error('Error fetching categories:', err);
     } finally {

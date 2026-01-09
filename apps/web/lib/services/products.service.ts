@@ -140,7 +140,7 @@ class ProductsService {
     // Add category filter
     if (category) {
       console.log('🔍 [PRODUCTS SERVICE] Looking for category:', { category, lang });
-      const categoryDoc = await db.category.findFirst({
+      let categoryDoc = await db.category.findFirst({
         where: {
           translations: {
             some: {
@@ -152,6 +152,31 @@ class ProductsService {
           deletedAt: null,
         },
       });
+
+      // If category not found in current language, try to find it in other languages (fallback)
+      if (!categoryDoc) {
+        console.warn('⚠️ [PRODUCTS SERVICE] Category not found in language:', { category, lang });
+        console.log('🔄 [PRODUCTS SERVICE] Trying to find category in other languages...');
+        categoryDoc = await db.category.findFirst({
+          where: {
+            translations: {
+              some: {
+                slug: category,
+              },
+            },
+            published: true,
+            deletedAt: null,
+          },
+        });
+        
+        if (categoryDoc) {
+          console.log('✅ [PRODUCTS SERVICE] Category found in different language:', { 
+            id: categoryDoc.id, 
+            slug: category,
+            foundIn: categoryDoc.translations?.find(t => t.slug === category)?.locale || 'unknown'
+          });
+        }
+      }
 
       if (categoryDoc) {
         console.log('✅ [PRODUCTS SERVICE] Category found:', { id: categoryDoc.id, slug: category });
@@ -173,7 +198,17 @@ class ProductsService {
           ];
         }
       } else {
-        console.warn('⚠️ [PRODUCTS SERVICE] Category not found:', { category, lang });
+        console.warn('⚠️ [PRODUCTS SERVICE] Category not found in any language:', { category, lang });
+        // Return empty result if category not found
+        return {
+          data: [],
+          meta: {
+            total: 0,
+            page,
+            limit,
+            totalPages: 0,
+          },
+        };
       }
     }
 

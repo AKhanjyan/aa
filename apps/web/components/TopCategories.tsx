@@ -115,6 +115,7 @@ export function TopCategories() {
       const categoryDataPromises = allCategories.map(async (category): Promise<CategoryWithData> => {
         try {
           // Fetch products to get count and find one with image
+          console.log(`🔍 [TopCategories] Fetching products for category: "${category.title}" (slug: "${category.slug}")`);
           const productsResponse = await apiClient.get<ProductsResponse>('/api/v1/products', {
             params: {
               category: category.slug,
@@ -123,11 +124,26 @@ export function TopCategories() {
             },
           });
           
+          console.log(`📦 [TopCategories] Response for "${category.title}":`, {
+            total: productsResponse.meta?.total || 0,
+            productsCount: productsResponse.data?.length || 0,
+            firstProductId: productsResponse.data?.[0]?.id,
+            firstProductImage: productsResponse.data?.[0]?.image,
+          });
+          
+          // If category has 0 products, it might mean category was not found
+          if (productsResponse.meta?.total === 0) {
+            console.warn(`⚠️ [TopCategories] Category "${category.title}" (${category.slug}) has 0 products - category might not exist in database`);
+          }
+          
           const productCount = productsResponse.meta?.total || 0;
           // Get first product with image, or first product if no image available
-          const productWithImage = productsResponse.data?.find(p => p.image) || productsResponse.data?.[0] || null;
+          // Only assign product if we have products for this category
+          const productWithImage = productsResponse.data && productsResponse.data.length > 0
+            ? (productsResponse.data.find(p => p.image) || productsResponse.data[0] || null)
+            : null;
           
-          console.log(`✅ [TopCategories] Category "${category.title}": ${productCount} products, image: ${productWithImage?.image ? 'yes' : 'no'}`);
+          console.log(`✅ [TopCategories] Category "${category.title}" (${category.slug}): ${productCount} products, selected product: ${productWithImage?.id} (image: ${productWithImage?.image ? 'yes' : 'no'})`);
           
           return {
             category,
