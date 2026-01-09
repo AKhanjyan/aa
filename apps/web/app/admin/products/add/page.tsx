@@ -173,11 +173,13 @@ function AddProductPageContent() {
     featured: false,
     imageUrls: [] as string[],
     featuredImageIndex: 0,
+    mainProductImage: '' as string, // Main product image (base64)
     variants: [] as Variant[],
     labels: [] as ProductLabel[],
   });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const colorImageFileInputRef = useRef<HTMLInputElement | null>(null);
+  const mainProductImageInputRef = useRef<HTMLInputElement | null>(null);
   const [colorImageTarget, setColorImageTarget] = useState<{ variantId: string; colorValue: string } | null>(null);
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
@@ -639,6 +641,10 @@ function AddProductPageContent() {
               })
             : -1;
 
+          // Extract main product image (first image in media that's not in variants, or from mainProductImage field)
+          const mainProductImage = (product as any).mainProductImage 
+            || (normalizedMedia.length > 0 ? normalizedMedia[0] : '');
+
           setFormData({
             title: product.title || '',
             slug: product.slug || '',
@@ -653,6 +659,7 @@ function AddProductPageContent() {
               featuredIndexFromApi >= 0 && featuredIndexFromApi < normalizedMedia.length
                 ? featuredIndexFromApi
                 : 0,
+            mainProductImage: mainProductImage || '',
             variants: [mergedVariant], // Single variant with all colors and sizes
             labels: (product.labels || []).map((label: any) => ({
               id: label.id || '',
@@ -1351,6 +1358,40 @@ function AddProductPageContent() {
     }
   };
 
+  // Upload main product image
+  const handleUploadMainProductImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) {
+      return;
+    }
+
+    const file = files[0]; // Only take the first file
+    if (!file.type.startsWith('image/')) {
+      setImageUploadError(`"${file.name}" is not an image file`);
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    setImageUploadLoading(true);
+    setImageUploadError(null);
+    try {
+      const base64 = await fileToBase64(file);
+      setFormData((prev) => ({
+        ...prev,
+        mainProductImage: base64,
+      }));
+    } catch (error: any) {
+      setImageUploadError(error?.message || 'Failed to process selected image');
+    } finally {
+      setImageUploadLoading(false);
+      if (event.target) {
+        event.target.value = '';
+      }
+    }
+  };
+
   // Upload images for a specific color in variant
   const handleUploadColorImages = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -2024,9 +2065,26 @@ function AddProductPageContent() {
         attributeIds: attributeIds.length > 0 ? attributeIds : undefined,
       };
 
-      // Add media if provided
+      // Add main product image and media
+      const finalMedia: string[] = [];
+      
+      // Add main product image first if provided
+      if (formData.mainProductImage) {
+        finalMedia.push(formData.mainProductImage);
+      }
+      
+      // Add other media
       if (media.length > 0) {
-        payload.media = media;
+        finalMedia.push(...media);
+      }
+      
+      if (finalMedia.length > 0) {
+        payload.media = finalMedia;
+      }
+      
+      // Also add mainProductImage as separate field for easier access
+      if (formData.mainProductImage) {
+        payload.mainProductImage = formData.mainProductImage;
       }
 
       // Add labels
@@ -2278,6 +2336,83 @@ function AddProductPageContent() {
                     onChange={(e) => setFormData((prev) => ({ ...prev, descriptionHtml: e.target.value }))}
                     placeholder={t('admin.products.add.productDescriptionPlaceholder')}
                   />
+                </div>
+              </div>
+            </div>
+
+            {/* Main Product Image */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.mainProductImage')}</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('admin.products.add.mainProductImage')}
+                    <span className="text-xs text-gray-500 ml-2">({t('admin.products.add.mainProductImageDescription')})</span>
+                  </label>
+                  
+                  {formData.mainProductImage ? (
+                    <div className="space-y-3">
+                      <div className="relative inline-block">
+                        <img
+                          src={formData.mainProductImage}
+                          alt="Main product image"
+                          className="max-w-xs max-h-64 object-contain border border-gray-300 rounded-md p-2 bg-gray-50"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData((prev) => ({ ...prev, mainProductImage: '' }));
+                            if (mainProductImageInputRef.current) {
+                              mainProductImageInputRef.current.value = '';
+                            }
+                          }}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                          title={t('admin.products.add.removeImage')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => mainProductImageInputRef.current?.click()}
+                          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          {t('admin.products.add.changeImage')}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => mainProductImageInputRef.current?.click()}
+                        disabled={imageUploadLoading}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        {imageUploadLoading ? t('admin.products.add.uploading') : t('admin.products.add.uploadMainProductImage')}
+                      </button>
+                    </div>
+                  )}
+                  
+                  <input
+                    ref={mainProductImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUploadMainProductImage}
+                    className="hidden"
+                  />
+                  
+                  {imageUploadError && (
+                    <div className="mt-2 text-sm text-red-600">
+                      {imageUploadError}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
