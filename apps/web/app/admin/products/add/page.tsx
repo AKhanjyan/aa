@@ -211,11 +211,8 @@ function AddProductPageContent() {
   // State for managing open dropdowns in the variants table
   const [openValueDropdown, setOpenValueDropdown] = useState<string | null>(null); // attributeId of the open dropdown
   const [generatedVariants, setGeneratedVariants] = useState<Array<{
-    id: string; // Unique ID for this variant (attributeId)
-    attributeId: string; // The attribute this variant belongs to
-    attributeKey: string; // Attribute key (e.g., 'color', 'size')
-    attributeName: string; // Attribute name (e.g., 'Color', 'Size')
-    selectedValueIds: string[]; // Array of selected value IDs for this attribute
+      id: string; // Unique ID for this variant
+    selectedValueIds: string[]; // Array of selected value IDs from all attributes
     price: string;
     compareAtPrice: string;
     stock: string;
@@ -805,9 +802,9 @@ function AddProductPageContent() {
   };
 
   // Generate variants from selected attributes
-  // NEW LOGIC: One variant per attribute (not per combination)
+  // NEW LOGIC: One variant with all selected attributes
   const generateVariantsFromAttributes = () => {
-    console.log('🚀 [VARIANT BUILDER] Generating variants from attributes (one per attribute)...');
+    console.log('🚀 [VARIANT BUILDER] Generating single variant with all attributes...');
     
     const selectedAttrs = Array.from(selectedAttributesForVariants);
     if (selectedAttrs.length === 0) {
@@ -816,65 +813,58 @@ function AddProductPageContent() {
       return;
     }
 
-    // Preserve existing variants' data (price, stock, etc.) when regenerating
+    // Preserve existing variant's data (price, stock, etc.) when regenerating
     setGeneratedVariants(prev => {
-      const existingVariantsMap = new Map(prev.map(v => [v.id, v]));
+      const existingVariant = prev.length > 0 ? prev[0] : null;
+      const variantId = 'variant-all'; // Single variant ID
       
-      // Create one variant per attribute
-      const variants = selectedAttrs.map((attributeId) => {
-        const attribute = attributes.find(a => a.id === attributeId);
-        if (!attribute) return null;
-        
-        // Get selected value IDs for this attribute from state
-        const selectedValueIdsForAttribute = selectedAttributeValueIds[attributeId] || [];
-        
-        // Get existing variant if it exists
-        const existingVariant = existingVariantsMap.get(attributeId);
-        
-        // Preserve all selectedValueIds from existing variant (includes values from other attributes)
-        // Merge with newly selected values for this attribute
-        const existingSelectedValueIds = existingVariant?.selectedValueIds || [];
-        const otherAttributeValueIds = existingSelectedValueIds.filter(id => {
-          // Keep values that don't belong to this attribute
-          return !attribute.values.some(v => v.id === id);
-        });
-        // Merge: other attributes' values + this attribute's selected values
-        const allSelectedValueIds = [...new Set([...otherAttributeValueIds, ...selectedValueIdsForAttribute])];
-        
-        // Generate SKU based on attribute and selected values
-        const baseSlug = formData.slug || generateSlug(formData.title) || 'PROD';
-        const attributeKey = attribute.key.toUpperCase();
-        let sku = `${baseSlug}-${attributeKey}`;
-        
-        // If values are selected for this attribute, add them to SKU
-        if (selectedValueIdsForAttribute.length > 0) {
-          const valueParts = selectedValueIdsForAttribute.map(valueId => {
+      // Collect all selected value IDs from all attributes
+      const allSelectedValueIds: string[] = [];
+      selectedAttrs.forEach((attributeId) => {
+        const selectedIds = selectedAttributeValueIds[attributeId] || [];
+        allSelectedValueIds.push(...selectedIds);
+      });
+      
+      // Generate SKU based on all selected values
+      const baseSlug = formData.slug || generateSlug(formData.title) || 'PROD';
+      let sku = `${baseSlug}`;
+      
+      // Add selected values to SKU
+      if (allSelectedValueIds.length > 0) {
+        const valueParts: string[] = [];
+        selectedAttrs.forEach((attributeId) => {
+          const attribute = attributes.find(a => a.id === attributeId);
+          if (!attribute) return;
+          
+          const selectedIds = selectedAttributeValueIds[attributeId] || [];
+          selectedIds.forEach(valueId => {
             const value = attribute.values.find(v => v.id === valueId);
-            return value ? value.value.toUpperCase().replace(/\s+/g, '-') : '';
-          }).filter(Boolean);
-          if (valueParts.length > 0) {
-            sku = `${baseSlug}-${valueParts.join('-')}`;
-          }
+            if (value) {
+              valueParts.push(value.value.toUpperCase().replace(/\s+/g, '-'));
+            }
+          });
+        });
+        
+        if (valueParts.length > 0) {
+          sku = `${baseSlug}-${valueParts.join('-')}`;
         }
+      }
 
-        return {
-          id: attributeId, // Use attributeId as variant ID
-          attributeId: attribute.id,
-          attributeKey: attribute.key,
-          attributeName: attribute.name,
-          selectedValueIds: allSelectedValueIds, // All selected values (from all attributes)
-          price: existingVariant?.price || '',
-          compareAtPrice: existingVariant?.compareAtPrice || '',
-          stock: existingVariant?.stock || '',
-          sku: existingVariant?.sku || sku, // Preserve existing SKU if set, otherwise use generated
-          image: existingVariant?.image || null,
-        };
-      }).filter((v): v is NonNullable<typeof v> => v !== null);
+      // Create single variant with all attributes
+      const variant = {
+        id: variantId,
+        selectedValueIds: allSelectedValueIds, // All selected values from all attributes
+        price: existingVariant?.price || '',
+        compareAtPrice: existingVariant?.compareAtPrice || '',
+        stock: existingVariant?.stock || '',
+        sku: existingVariant?.sku || sku, // Preserve existing SKU if set, otherwise use generated
+        image: existingVariant?.image || null,
+      };
 
-      return variants;
+      return [variant];
     });
     
-    console.log('✅ [VARIANT BUILDER] Variants generated (one per attribute):', selectedAttrs.length);
+    console.log('✅ [VARIANT BUILDER] Single variant generated with', selectedAttrs.length, 'attributes');
   };
 
   // Update variants when attributes or values change
@@ -1717,52 +1707,56 @@ function AddProductPageContent() {
       }
 
       // Convert new variant builder variants to formData.variants if attributes are selected
-      // NEW LOGIC: One variant per attribute, multiple values per variant
+      // NEW LOGIC: Single variant with all attributes
       if (selectedAttributesForVariants.size > 0 && generatedVariants.length > 0) {
         console.log('🔄 [ADMIN] Converting new variant builder variants to formData format...');
         
+        const variant = generatedVariants[0]; // Single variant with all attributes
         const colorAttribute = attributes.find(a => a.key === 'color');
-        const colorAttributeId = colorAttribute?.id;
-        const colorVariant = generatedVariants.find(v => v.attributeId === colorAttributeId);
-        
         const sizeAttribute = attributes.find(a => a.key === 'size');
-        const sizeAttributeId = sizeAttribute?.id;
-        const sizeVariant = generatedVariants.find(v => v.attributeId === sizeAttributeId);
         
-        // Create colors from color variant (if exists)
+        // Get selected color and size values from variant
+        const selectedColorValueIds = colorAttribute 
+          ? variant.selectedValueIds.filter(id => colorAttribute.values.some(v => v.id === id))
+          : [];
+        const selectedSizeValueIds = sizeAttribute 
+          ? variant.selectedValueIds.filter(id => sizeAttribute.values.some(v => v.id === id))
+          : [];
+        
+        // Create colors from selected color values
         const colors: ColorData[] = [];
         
-        if (colorVariant && colorAttribute) {
+        if (colorAttribute && selectedColorValueIds.length > 0) {
           // Create one ColorData per selected color value
-          colorVariant.selectedValueIds.forEach((valueId) => {
+          selectedColorValueIds.forEach((valueId) => {
             const value = colorAttribute.values.find(v => v.id === valueId);
             if (value) {
               const colorData: ColorData = {
                 colorValue: value.value,
                 colorLabel: value.label,
                 images: [],
-                stock: colorVariant.stock || '0',
+                stock: variant.stock || '0',
                 sizes: [],
                 sizeStocks: {},
               };
               
               // Add price if set
-              if (colorVariant.price) {
-                colorData.price = colorVariant.price;
+              if (variant.price) {
+                colorData.price = variant.price;
               }
-              if (colorVariant.compareAtPrice) {
-                colorData.compareAtPrice = colorVariant.compareAtPrice;
+              if (variant.compareAtPrice) {
+                colorData.compareAtPrice = variant.compareAtPrice;
               }
               
-              // Add sizes from size variant (if exists)
-              if (sizeVariant && sizeAttribute) {
-                sizeVariant.selectedValueIds.forEach((sizeValueId) => {
+              // Add sizes from selected size values
+              if (sizeAttribute && selectedSizeValueIds.length > 0) {
+                selectedSizeValueIds.forEach((sizeValueId) => {
                   const sizeValue = sizeAttribute.values.find(v => v.id === sizeValueId);
                   if (sizeValue) {
                     colorData.sizes.push(sizeValue.value);
-                    colorData.sizeStocks[sizeValue.value] = sizeVariant.stock || '0';
+                    colorData.sizeStocks[sizeValue.value] = variant.stock || '0';
                     if (!colorData.sizePrices) colorData.sizePrices = {};
-                    colorData.sizePrices[sizeValue.value] = sizeVariant.price || '0';
+                    colorData.sizePrices[sizeValue.value] = variant.price || '0';
                   }
                 });
               }
@@ -1770,62 +1764,38 @@ function AddProductPageContent() {
               colors.push(colorData);
             }
           });
-        }
-        
-        // Create variant(s)
-        const newVariants: Variant[] = [];
-        
-        if (colors.length > 0) {
-          // Use first color variant's price/sku as base, or use size variant's if no color variant
-          const baseVariant = colorVariant || sizeVariant || generatedVariants[0];
-          
-          newVariants.push({
-            id: `variant-${Date.now()}-${Math.random()}`,
-            price: baseVariant?.price || '0',
-            compareAtPrice: baseVariant?.compareAtPrice || '',
-            sku: baseVariant?.sku || '',
-            colors: colors,
-          });
-        } else if (sizeVariant && sizeAttribute) {
-          // No color, but has size - create variant with empty colors but sizes in a default structure
-          // This is a fallback for non-color attributes
+        } else if (sizeAttribute && selectedSizeValueIds.length > 0) {
+          // No color, but has size - create variant with empty colors but sizes
           const colorData: ColorData = {
             colorValue: '',
             colorLabel: '',
             images: [],
-            stock: sizeVariant.stock || '0',
+            stock: variant.stock || '0',
             sizes: [],
             sizeStocks: {},
           };
           
-          sizeVariant.selectedValueIds.forEach((sizeValueId) => {
+          selectedSizeValueIds.forEach((sizeValueId) => {
             const sizeValue = sizeAttribute.values.find(v => v.id === sizeValueId);
             if (sizeValue) {
               colorData.sizes.push(sizeValue.value);
-              colorData.sizeStocks[sizeValue.value] = sizeVariant.stock || '0';
+              colorData.sizeStocks[sizeValue.value] = variant.stock || '0';
               if (!colorData.sizePrices) colorData.sizePrices = {};
-              colorData.sizePrices[sizeValue.value] = sizeVariant.price || '0';
+              colorData.sizePrices[sizeValue.value] = variant.price || '0';
             }
           });
           
-          newVariants.push({
-            id: `variant-${Date.now()}-${Math.random()}`,
-            price: sizeVariant.price || '0',
-            compareAtPrice: sizeVariant.compareAtPrice || '',
-            sku: sizeVariant.sku || '',
-            colors: [colorData],
-          });
-        } else {
-          // No color or size - create minimal variant
-          const firstVariant = generatedVariants[0];
-          newVariants.push({
-            id: `variant-${Date.now()}-${Math.random()}`,
-            price: firstVariant?.price || '0',
-            compareAtPrice: firstVariant?.compareAtPrice || '',
-            sku: firstVariant?.sku || '',
-            colors: [],
-          });
+          colors.push(colorData);
         }
+        
+        // Create variant
+        const newVariants: Variant[] = [{
+          id: `variant-${Date.now()}-${Math.random()}`,
+          price: variant.price || '0',
+          compareAtPrice: variant.compareAtPrice || '',
+          sku: variant.sku || '',
+          colors: colors.length > 0 ? colors : [],
+        }];
         
         formData.variants = newVariants;
         console.log('✅ [ADMIN] Converted variants:', formData.variants.length);
@@ -3091,17 +3061,27 @@ function AddProductPageContent() {
                               if (skuPrefix !== null) {
                                 const baseSlug = skuPrefix || formData.slug || generateSlug(formData.title) || 'PROD';
                                 setGeneratedVariants(prev => prev.map((variant) => {
-                                  const attribute = attributes.find(a => a.id === variant.attributeId);
-                                  if (!attribute) return variant;
+                                  // Collect all selected values from all attributes
+                                  const valueParts: string[] = [];
+                                  Array.from(selectedAttributesForVariants).forEach((attributeId) => {
+                                    const attribute = attributes.find(a => a.id === attributeId);
+                                    if (!attribute) return;
+                                    
+                                    const selectedIds = variant.selectedValueIds.filter(id => 
+                                      attribute.values.some(v => v.id === id)
+                                    );
+                                    
+                                    selectedIds.forEach(valueId => {
+                                      const value = attribute.values.find(v => v.id === valueId);
+                                      if (value) {
+                                        valueParts.push(value.value.toUpperCase().replace(/\s+/g, '-'));
+                                      }
+                                    });
+                                  });
                                   
-                                  const selectedValues = variant.selectedValueIds.map(valueId => {
-                                    const value = attribute.values.find(v => v.id === valueId);
-                                    return value ? value.value.toUpperCase().replace(/\s+/g, '-') : '';
-                                  }).filter(Boolean);
-                                  
-                                  const sku = selectedValues.length > 0 
-                                    ? `${baseSlug.toUpperCase()}-${selectedValues.join('-')}`
-                                    : `${baseSlug.toUpperCase()}-${variant.attributeKey.toUpperCase()}`;
+                                  const sku = valueParts.length > 0 
+                                    ? `${baseSlug.toUpperCase()}-${valueParts.join('-')}`
+                                    : `${baseSlug.toUpperCase()}`;
                                   
                                   return { ...variant, sku };
                                 }));
@@ -3140,403 +3120,248 @@ function AddProductPageContent() {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {generatedVariants.map((variant) => {
-                              const attribute = attributes.find(a => a.id === variant.attributeId);
-                              const isColor = attribute?.key === 'color';
-                              const selectedValues = variant.selectedValueIds.map(valueId => {
-                                const value = attribute?.values.find(v => v.id === valueId);
-                                return value ? {
-                                  id: value.id,
-                                  label: value.label,
-                                  value: value.value,
-                                  colorHex: isColor ? (value.colors?.[0] || getColorHex(value.label)) : null,
-                                } : null;
-                              }).filter((v): v is NonNullable<typeof v> => v !== null);
-                              
-                              return (
-                                <tr key={variant.id} className="hover:bg-gray-50">
-                                  {Array.from(selectedAttributesForVariants).map((attributeId) => {
-                                    // If this is the variant's attribute, show the clickable value selector
-                                    if (attributeId === variant.attributeId) {
-                                      return (
-                                        <td key={attributeId} className="px-4 py-3 whitespace-nowrap">
-                                          <div className="relative" ref={(el) => { valueDropdownRefs.current[attributeId] = el; }}>
-                                            <button
-                                              type="button"
-                                              onClick={() => {
-                                                setOpenValueDropdown(openValueDropdown === attributeId ? null : attributeId);
-                                              }}
-                                              className="w-full text-left flex items-center gap-2 p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            >
-                                              <div className="flex-1 flex flex-wrap items-center gap-1 min-w-0">
-                                                {selectedValues.length > 0 ? (
-                                                  selectedValues.map((val) => (
+                            {generatedVariants.length > 0 && generatedVariants.map((variant) => (
+                              <tr key={variant.id} className="hover:bg-gray-50">
+                                {Array.from(selectedAttributesForVariants).map((attributeId) => {
+                                  const attribute = attributes.find(a => a.id === attributeId);
+                                  if (!attribute) return null;
+                                  
+                                  const isColor = attribute.key === 'color';
+                                  // Get selected values for this attribute in this variant
+                                  const selectedValueIds = variant.selectedValueIds.filter(id => {
+                                    return attribute.values.some(v => v.id === id);
+                                  });
+                                  const selectedValues = selectedValueIds.map(valueId => {
+                                    const value = attribute.values.find(v => v.id === valueId);
+                                    return value ? {
+                                      id: value.id,
+                                      label: value.label,
+                                      value: value.value,
+                                      colorHex: isColor ? (value.colors?.[0] || getColorHex(value.label)) : null,
+                                    } : null;
+                                  }).filter((v): v is NonNullable<typeof v> => v !== null);
+                                  
+                                  // Create unique key for this cell's dropdown
+                                  const cellDropdownKey = `${variant.id}-${attributeId}`;
+                                  
+                                  return (
+                                    <td key={attributeId} className="px-4 py-3 whitespace-nowrap">
+                                      <div className="relative" ref={(el) => { valueDropdownRefs.current[cellDropdownKey] = el; }}>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setOpenValueDropdown(openValueDropdown === cellDropdownKey ? null : cellDropdownKey);
+                                          }}
+                                          className="w-full text-left flex items-center gap-2 p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                          <div className="flex-1 flex flex-wrap items-center gap-1 min-w-0">
+                                            {selectedValues.length > 0 ? (
+                                              selectedValues.map((val) => (
+                                                <span
+                                                  key={val.id}
+                                                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-sm"
+                                                >
+                                                  {isColor && val.colorHex && (
                                                     <span
-                                                      key={val.id}
-                                                      className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-sm"
-                                                    >
-                                                      {isColor && val.colorHex && (
-                                                        <span
-                                                          className="inline-block w-4 h-4 rounded-full border border-gray-300"
-                                                          style={{ backgroundColor: val.colorHex }}
-                                                        />
-                                                      )}
-                                                      {val.label}
-                                                    </span>
-                                                  ))
-                                                ) : (
-                                                  <span className="text-sm text-gray-500">Click to select values</span>
-                                                )}
-                                              </div>
-                                              <svg
-                                                className={`w-4 h-4 text-gray-400 transition-transform ${openValueDropdown === attributeId ? 'rotate-180' : ''}`}
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                              >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                              </svg>
-                                            </button>
-                                            
-                                            {openValueDropdown === attributeId && attribute && (
-                                              <div className="absolute z-50 mt-1 w-64 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto">
-                                                <div className="p-2">
-                                                  {/* "All" option */}
-                                                  <label className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-50">
+                                                      className="inline-block w-4 h-4 rounded-full border border-gray-300"
+                                                      style={{ backgroundColor: val.colorHex }}
+                                                    />
+                                                  )}
+                                                  {val.label}
+                                                </span>
+                                              ))
+                                            ) : (
+                                              <span className="text-sm text-gray-500">Click to select values</span>
+                                            )}
+                                          </div>
+                                          <svg
+                                            className={`w-4 h-4 text-gray-400 transition-transform ${openValueDropdown === cellDropdownKey ? 'rotate-180' : ''}`}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                          </svg>
+                                        </button>
+                                        
+                                        {openValueDropdown === cellDropdownKey && attribute && (
+                                          <div className="absolute z-50 mt-1 w-64 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                                            <div className="p-2">
+                                              {/* "All" option */}
+                                              <label className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-50">
+                                                <input
+                                                  type="checkbox"
+                                                  checked={attribute.values.length > 0 && selectedValueIds.length === attribute.values.length}
+                                                  onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                      // Select all values
+                                                      const allValueIds = attribute.values.map(v => v.id);
+                                                      // Add to variant's selectedValueIds (merge with existing)
+                                                      const currentIds = variant.selectedValueIds;
+                                                      const newIds = [...new Set([...currentIds, ...allValueIds])];
+                                                      
+                                                      setSelectedAttributeValueIds(prev => ({
+                                                        ...prev,
+                                                        [attributeId]: allValueIds,
+                                                      }));
+                                                      
+                                                      // Update variant - merge with existing selectedValueIds
+                                                      setGeneratedVariants(prev => prev.map(v => 
+                                                        v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
+                                                      ));
+                                                    } else {
+                                                      // Deselect all values for this attribute
+                                                      const valueIdsToRemove = attribute.values.map(v => v.id);
+                                                      const newIds = variant.selectedValueIds.filter(id => !valueIdsToRemove.includes(id));
+                                                      
+                                                      setSelectedAttributeValueIds(prev => ({
+                                                        ...prev,
+                                                        [attributeId]: [],
+                                                      }));
+                                                      
+                                                      setGeneratedVariants(prev => prev.map(v => 
+                                                        v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
+                                                      ));
+                                                    }
+                                                  }}
+                                                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm font-medium text-gray-900">All</span>
+                                              </label>
+                                              
+                                              <div className="border-t border-gray-200 my-1"></div>
+                                              
+                                              {/* Individual value checkboxes */}
+                                              {attribute.values.map((value) => {
+                                                const isSelected = variant.selectedValueIds.includes(value.id);
+                                                const valueColorHex = isColor && value.colors && value.colors.length > 0 
+                                                  ? value.colors[0] 
+                                                  : isColor 
+                                                    ? getColorHex(value.label) 
+                                                    : null;
+                                                
+                                                return (
+                                                  <label
+                                                    key={value.id}
+                                                    className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
+                                                      isSelected
+                                                        ? 'bg-blue-50 border-2 border-blue-600'
+                                                        : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                                                    }`}
+                                                  >
                                                     <input
                                                       type="checkbox"
-                                                      checked={attribute.values.length > 0 && variant.selectedValueIds.length === attribute.values.length}
+                                                      checked={isSelected}
                                                       onChange={(e) => {
+                                                        const currentIds = variant.selectedValueIds;
+                                                        let newIds: string[];
+                                                        
                                                         if (e.target.checked) {
-                                                          // Select all values
-                                                          const allValueIds = attribute.values.map(v => v.id);
-                                                          setSelectedAttributeValueIds(prev => ({
-                                                            ...prev,
-                                                            [attributeId]: allValueIds,
-                                                          }));
-                                                          // Update variant
-                                                          setGeneratedVariants(prev => prev.map(v => 
-                                                            v.id === variant.id ? { ...v, selectedValueIds: allValueIds } : v
-                                                          ));
+                                                          // Add value if not already selected
+                                                          newIds = [...currentIds, value.id];
                                                         } else {
-                                                          // Deselect all
-                                                          setSelectedAttributeValueIds(prev => ({
-                                                            ...prev,
-                                                            [attributeId]: [],
-                                                          }));
-                                                          setGeneratedVariants(prev => prev.map(v => 
-                                                            v.id === variant.id ? { ...v, selectedValueIds: [] } : v
-                                                          ));
+                                                          // Remove value
+                                                          newIds = currentIds.filter(id => id !== value.id);
                                                         }
+                                                        
+                                                        // Update selectedAttributeValueIds for this attribute
+                                                        const currentAttrIds = selectedAttributeValueIds[attributeId] || [];
+                                                        let newAttrIds: string[];
+                                                        if (e.target.checked) {
+                                                          newAttrIds = [...currentAttrIds, value.id];
+                                                        } else {
+                                                          newAttrIds = currentAttrIds.filter(id => id !== value.id);
+                                                        }
+                                                        
+                                                        // Update variant first (to preserve dropdown state)
+                                                        setGeneratedVariants(prev => prev.map(v => 
+                                                          v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
+                                                        ));
+                                                        
+                                                        // Then update selectedAttributeValueIds (this will trigger useEffect but variant is already updated)
+                                                        setSelectedAttributeValueIds(prev => ({
+                                                          ...prev,
+                                                          [attributeId]: newAttrIds,
+                                                        }));
                                                       }}
                                                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                                     />
-                                                    <span className="text-sm font-medium text-gray-900">All</span>
-                                                  </label>
-                                                  
-                                                  <div className="border-t border-gray-200 my-1"></div>
-                                                  
-                                                  {/* Individual value checkboxes */}
-                                                  {attribute.values.map((value) => {
-                                                    const isSelected = variant.selectedValueIds.includes(value.id);
-                                                    const valueColorHex = isColor && value.colors && value.colors.length > 0 
-                                                      ? value.colors[0] 
-                                                      : isColor 
-                                                        ? getColorHex(value.label) 
-                                                        : null;
-                                                    
-                                                    return (
-                                                      <label
-                                                        key={value.id}
-                                                        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
-                                                          isSelected
-                                                            ? 'bg-blue-50 border-2 border-blue-600'
-                                                            : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                                                        }`}
-                                                      >
-                                                        <input
-                                                          type="checkbox"
-                                                          checked={isSelected}
-                                                          onChange={(e) => {
-                                                            const currentIds = variant.selectedValueIds;
-                                                            let newIds: string[];
-                                                            
-                                                            if (e.target.checked) {
-                                                              newIds = [...currentIds, value.id];
-                                                            } else {
-                                                              newIds = currentIds.filter(id => id !== value.id);
-                                                            }
-                                                            
-                                                            // Update variant first (to preserve dropdown state)
-                                                            setGeneratedVariants(prev => prev.map(v => 
-                                                              v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
-                                                            ));
-                                                            
-                                                            // Then update selectedAttributeValueIds (this will trigger useEffect but variant is already updated)
-                                                            setSelectedAttributeValueIds(prev => ({
-                                                              ...prev,
-                                                              [attributeId]: newIds,
-                                                            }));
-                                                          }}
-                                                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                        />
-                                                        {isColor && valueColorHex && (
-                                                          <span
-                                                            className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
-                                                            style={{ backgroundColor: valueColorHex }}
-                                                          />
-                                                        )}
-                                                        <span className="text-sm text-gray-900 flex-1">{value.label}</span>
-                                                      </label>
-                                                    );
-                                                  })}
-                                                </div>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </td>
-                                      );
-                                    }
-                                    
-                                    // For other attributes, show clickable dropdown to select values
-                                    const otherAttribute = attributes.find(a => a.id === attributeId);
-                                    const otherIsColor = otherAttribute?.key === 'color';
-                                    // Get selected values for this attribute in this variant (if any)
-                                    const otherSelectedValueIds = variant.selectedValueIds.filter(id => {
-                                      return otherAttribute?.values.some(v => v.id === id);
-                                    });
-                                    const otherSelectedValues = otherSelectedValueIds.map(valueId => {
-                                      const value = otherAttribute?.values.find(v => v.id === valueId);
-                                      return value ? {
-                                        id: value.id,
-                                        label: value.label,
-                                        value: value.value,
-                                        colorHex: otherIsColor ? (value.colors?.[0] || getColorHex(value.label)) : null,
-                                      } : null;
-                                    }).filter((v): v is NonNullable<typeof v> => v !== null);
-                                    
-                                    // Create unique key for this cell's dropdown
-                                    const cellDropdownKey = `${variant.id}-${attributeId}`;
-                                    
-                                    return (
-                                      <td key={attributeId} className="px-4 py-3 whitespace-nowrap">
-                                        <div className="relative" ref={(el) => { valueDropdownRefs.current[cellDropdownKey] = el; }}>
-                                          <button
-                                            type="button"
-                                            onClick={() => {
-                                              setOpenValueDropdown(openValueDropdown === cellDropdownKey ? null : cellDropdownKey);
-                                            }}
-                                            className="w-full text-left flex items-center gap-2 p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                          >
-                                            <div className="flex-1 flex flex-wrap items-center gap-1 min-w-0">
-                                              {otherSelectedValues.length > 0 ? (
-                                                otherSelectedValues.map((val) => (
-                                                  <span
-                                                    key={val.id}
-                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-sm"
-                                                  >
-                                                    {otherIsColor && val.colorHex && (
+                                                    {isColor && valueColorHex && (
                                                       <span
-                                                        className="inline-block w-4 h-4 rounded-full border border-gray-300"
-                                                        style={{ backgroundColor: val.colorHex }}
+                                                        className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
+                                                        style={{ backgroundColor: valueColorHex }}
                                                       />
                                                     )}
-                                                    {val.label}
-                                                  </span>
-                                                ))
-                                              ) : (
-                                                <span className="text-sm text-gray-400">-</span>
-                                              )}
+                                                    <span className="text-sm text-gray-900 flex-1">{value.label}</span>
+                                                  </label>
+                                                );
+                                              })}
                                             </div>
-                                            <svg
-                                              className={`w-4 h-4 text-gray-400 transition-transform ${openValueDropdown === cellDropdownKey ? 'rotate-180' : ''}`}
-                                              fill="none"
-                                              stroke="currentColor"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                          </button>
-                                          
-                                          {openValueDropdown === cellDropdownKey && otherAttribute && (
-                                            <div className="absolute z-50 mt-1 w-64 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto">
-                                              <div className="p-2">
-                                                {/* "All" option */}
-                                                <label className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-50">
-                                                  <input
-                                                    type="checkbox"
-                                                    checked={otherAttribute.values.length > 0 && otherSelectedValueIds.length === otherAttribute.values.length}
-                                                    onChange={(e) => {
-                                                      if (e.target.checked) {
-                                                        // Select all values
-                                                        const allValueIds = otherAttribute.values.map(v => v.id);
-                                                        // Add to variant's selectedValueIds (merge with existing)
-                                                        const currentIds = variant.selectedValueIds;
-                                                        const newIds = [...new Set([...currentIds, ...allValueIds])];
-                                                        
-                                                        setSelectedAttributeValueIds(prev => ({
-                                                          ...prev,
-                                                          [attributeId]: allValueIds,
-                                                        }));
-                                                        
-                                                        // Update variant - merge with existing selectedValueIds
-                                                        setGeneratedVariants(prev => prev.map(v => 
-                                                          v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
-                                                        ));
-                                                      } else {
-                                                        // Deselect all values for this attribute
-                                                        const valueIdsToRemove = otherAttribute.values.map(v => v.id);
-                                                        const newIds = variant.selectedValueIds.filter(id => !valueIdsToRemove.includes(id));
-                                                        
-                                                        setSelectedAttributeValueIds(prev => ({
-                                                          ...prev,
-                                                          [attributeId]: prev[attributeId]?.filter(id => !valueIdsToRemove.includes(id)) || [],
-                                                        }));
-                                                        
-                                                        setGeneratedVariants(prev => prev.map(v => 
-                                                          v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
-                                                        ));
-                                                      }
-                                                    }}
-                                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                  />
-                                                  <span className="text-sm font-medium text-gray-900">All</span>
-                                                </label>
-                                                
-                                                <div className="border-t border-gray-200 my-1"></div>
-                                                
-                                                {/* Individual value checkboxes */}
-                                                {otherAttribute.values.map((value) => {
-                                                  const isSelected = variant.selectedValueIds.includes(value.id);
-                                                  const valueColorHex = otherIsColor && value.colors && value.colors.length > 0 
-                                                    ? value.colors[0] 
-                                                    : otherIsColor 
-                                                      ? getColorHex(value.label) 
-                                                      : null;
-                                                  
-                                                  return (
-                                                    <label
-                                                      key={value.id}
-                                                      className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
-                                                        isSelected
-                                                          ? 'bg-blue-50 border-2 border-blue-600'
-                                                          : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                                                      }`}
-                                                    >
-                                                      <input
-                                                        type="checkbox"
-                                                        checked={isSelected}
-                                                        onChange={(e) => {
-                                                          const currentIds = variant.selectedValueIds;
-                                                          let newIds: string[];
-                                                          
-                                                          if (e.target.checked) {
-                                                            // Add value if not already selected
-                                                            newIds = [...currentIds, value.id];
-                                                          } else {
-                                                            // Remove value
-                                                            newIds = currentIds.filter(id => id !== value.id);
-                                                          }
-                                                          
-                                                          // Update selectedAttributeValueIds for this attribute
-                                                          const currentAttrIds = selectedAttributeValueIds[attributeId] || [];
-                                                          let newAttrIds: string[];
-                                                          if (e.target.checked) {
-                                                            newAttrIds = [...currentAttrIds, value.id];
-                                                          } else {
-                                                            newAttrIds = currentAttrIds.filter(id => id !== value.id);
-                                                          }
-                                                          
-                                                          // Update variant first (to preserve dropdown state)
-                                                          setGeneratedVariants(prev => prev.map(v => 
-                                                            v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
-                                                          ));
-                                                          
-                                                          // Then update selectedAttributeValueIds (this will trigger useEffect but variant is already updated)
-                                                          setSelectedAttributeValueIds(prev => ({
-                                                            ...prev,
-                                                            [attributeId]: newAttrIds,
-                                                          }));
-                                                        }}
-                                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                      />
-                                                      {otherIsColor && valueColorHex && (
-                                                        <span
-                                                          className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
-                                                          style={{ backgroundColor: valueColorHex }}
-                                                        />
-                                                      )}
-                                                      <span className="text-sm text-gray-900 flex-1">{value.label}</span>
-                                                    </label>
-                                                  );
-                                                })}
-                                              </div>
-                                            </div>
-                                          )}
-                                        </div>
-                                      </td>
-                                    );
-                                  })}
-                                  <td className="px-4 py-3 whitespace-nowrap">
-                                    <Input
-                                      type="number"
-                                      value={variant.price}
-                                      onChange={(e) => {
-                                        setGeneratedVariants(prev => prev.map(v => 
-                                          v.id === variant.id ? { ...v, price: e.target.value } : v
-                                        ));
-                                      }}
-                                      placeholder="0.00"
-                                      className="w-24 text-sm"
-                                      min="0"
-                                      step="0.01"
-                                    />
-                                  </td>
-                                  <td className="px-4 py-3 whitespace-nowrap">
-                                    <Input
-                                      type="number"
-                                      value={variant.compareAtPrice}
-                                      onChange={(e) => {
-                                        setGeneratedVariants(prev => prev.map(v => 
-                                          v.id === variant.id ? { ...v, compareAtPrice: e.target.value } : v
-                                        ));
-                                      }}
-                                      placeholder="0.00"
-                                      className="w-24 text-sm"
-                                      min="0"
-                                      step="0.01"
-                                    />
-                                  </td>
-                                  <td className="px-4 py-3 whitespace-nowrap">
-                                    <Input
-                                      type="number"
-                                      value={variant.stock}
-                                      onChange={(e) => {
-                                        setGeneratedVariants(prev => prev.map(v => 
-                                          v.id === variant.id ? { ...v, stock: e.target.value } : v
-                                        ));
-                                      }}
-                                      placeholder="0"
-                                      className="w-24 text-sm"
-                                      min="0"
-                                    />
-                                  </td>
-                                  <td className="px-4 py-3 whitespace-nowrap">
-                                    <Input
-                                      type="text"
-                                      value={variant.sku}
-                                      onChange={(e) => {
-                                        setGeneratedVariants(prev => prev.map(v => 
-                                          v.id === variant.id ? { ...v, sku: e.target.value } : v
-                                        ));
-                                      }}
-                                      placeholder="Auto-generated"
-                                      className="w-32 text-sm"
-                                    />
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </td>
+                                  );
+                                })}
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                  <Input
+                                    type="number"
+                                    value={variant.price}
+                                    onChange={(e) => {
+                                      setGeneratedVariants(prev => prev.map(v => 
+                                        v.id === variant.id ? { ...v, price: e.target.value } : v
+                                      ));
+                                    }}
+                                    placeholder="0.00"
+                                    className="w-24 text-sm"
+                                    min="0"
+                                    step="0.01"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                  <Input
+                                    type="number"
+                                    value={variant.compareAtPrice}
+                                    onChange={(e) => {
+                                      setGeneratedVariants(prev => prev.map(v => 
+                                        v.id === variant.id ? { ...v, compareAtPrice: e.target.value } : v
+                                      ));
+                                    }}
+                                    placeholder="0.00"
+                                    className="w-24 text-sm"
+                                    min="0"
+                                    step="0.01"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                  <Input
+                                    type="number"
+                                    value={variant.stock}
+                                    onChange={(e) => {
+                                      setGeneratedVariants(prev => prev.map(v => 
+                                        v.id === variant.id ? { ...v, stock: e.target.value } : v
+                                      ));
+                                    }}
+                                    placeholder="0"
+                                    className="w-24 text-sm"
+                                    min="0"
+                                  />
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                  <Input
+                                    type="text"
+                                    value={variant.sku}
+                                    onChange={(e) => {
+                                      setGeneratedVariants(prev => prev.map(v => 
+                                        v.id === variant.id ? { ...v, sku: e.target.value } : v
+                                      ));
+                                    }}
+                                    placeholder="Auto-generated"
+                                    className="w-32 text-sm"
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
