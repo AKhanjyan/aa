@@ -878,9 +878,10 @@ function AddProductPageContent() {
   };
 
   // Update variants when attributes or values change
-  // NEW LOGIC: Generate one variant per selected attribute, even if no values selected yet
+  // NEW LOGIC: Generate variants when at least one attribute is selected (even without values)
   useEffect(() => {
     if (selectedAttributesForVariants.size > 0) {
+      // Generate variants for all selected attributes, even if no values selected yet
       generateVariantsFromAttributes();
     } else {
       setGeneratedVariants([]);
@@ -3047,90 +3048,12 @@ function AddProductPageContent() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.variantBuilder') || 'Տարբերակների կառուցիչ'}</h2>
                 <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
 
-                  {/* Step 2: Select Values for Each Attribute */}
-                  {selectedAttributesForVariants.size > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        {t('admin.products.add.selectAttributeValues') || '2. Select Values for Each Attribute'}
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Array.from(selectedAttributesForVariants).map((attributeId) => {
-                          const attribute = attributes.find(a => a.id === attributeId);
-                          if (!attribute) return null;
-                          
-                          const selectedValueIds = selectedAttributeValueIds[attributeId] || [];
-                          
-                          return (
-                            <div key={attributeId} className="border border-gray-200 rounded-lg p-4">
-                              <h4 className="font-semibold text-gray-900 mb-3">{attribute.name}</h4>
-                              <div className="space-y-2 max-h-64 overflow-y-auto">
-                                {attribute.values && attribute.values.length > 0 ? (
-                                  attribute.values.map((value) => {
-                                    const isSelected = selectedValueIds.includes(value.id);
-                                    const isColor = attribute.key === 'color';
-                                    const colorHex = isColor && value.colors && value.colors.length > 0 
-                                      ? value.colors[0] 
-                                      : isColor 
-                                        ? getColorHex(value.label) 
-                                        : null;
-                                    
-                                    return (
-                                      <label
-                                        key={value.id}
-                                        className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
-                                          isSelected
-                                            ? 'bg-blue-50 border-2 border-blue-600'
-                                            : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                                        }`}
-                                      >
-                                        <input
-                                          type="checkbox"
-                                          checked={isSelected}
-                                          onChange={(e) => {
-                                            const currentIds = selectedAttributeValueIds[attributeId] || [];
-                                            if (e.target.checked) {
-                                              setSelectedAttributeValueIds({
-                                                ...selectedAttributeValueIds,
-                                                [attributeId]: [...currentIds, value.id],
-                                              });
-                                            } else {
-                                              setSelectedAttributeValueIds({
-                                                ...selectedAttributeValueIds,
-                                                [attributeId]: currentIds.filter(id => id !== value.id),
-                                              });
-                                            }
-                                          }}
-                                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                        />
-                                        {isColor && colorHex && (
-                                          <span
-                                            className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
-                                            style={{ backgroundColor: colorHex }}
-                                          />
-                                        )}
-                                        <span className="text-sm text-gray-900 flex-1">{value.label}</span>
-                                      </label>
-                                    );
-                                  })
-                                ) : (
-                                  <p className="text-sm text-gray-500 text-center py-4">
-                                    {t('admin.products.add.noValuesAvailable') || 'No values available'}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Step 3: Generated Variants Table */}
+                  {/* Generated Variants Table */}
                   {generatedVariants.length > 0 && (
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {t('admin.products.add.generatedVariants') || '3. Generated Variants'} ({generatedVariants.length.toString()})
+                          {t('admin.products.add.generatedVariants') || 'Generated Variants'} ({generatedVariants.length.toString()})
                         </h3>
                         <div className="flex gap-2">
                           <Button
