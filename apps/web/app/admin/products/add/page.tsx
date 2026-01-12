@@ -185,6 +185,7 @@ function AddProductPageContent() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const colorImageFileInputRef = useRef<HTMLInputElement | null>(null);
   const mainProductImageInputRef = useRef<HTMLInputElement | null>(null);
+  const attributesDropdownRef = useRef<HTMLDivElement | null>(null);
   const [colorImageTarget, setColorImageTarget] = useState<{ variantId: string; colorValue: string } | null>(null);
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
@@ -214,7 +215,8 @@ function AddProductPageContent() {
     sku: string;
     image: string | null;
   }>>([]);
-  const [useNewVariantBuilder, setUseNewVariantBuilder] = useState(false);
+  // Dropdown state for attribute selection
+  const [attributesDropdownOpen, setAttributesDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading) {
@@ -224,6 +226,23 @@ function AddProductPageContent() {
       }
     }
   }, [isLoggedIn, isAdmin, isLoading, router]);
+
+  // Close attributes dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (attributesDropdownRef.current && !attributesDropdownRef.current.contains(event.target as Node)) {
+        setAttributesDropdownOpen(false);
+      }
+    };
+
+    if (attributesDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [attributesDropdownOpen]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -844,7 +863,7 @@ function AddProductPageContent() {
 
   // Update variants when attributes or values change
   useEffect(() => {
-    if (useNewVariantBuilder && selectedAttributesForVariants.size > 0) {
+    if (selectedAttributesForVariants.size > 0) {
       // Check if at least one attribute has selected values
       const hasSelectedValues = Array.from(selectedAttributesForVariants).some(attrId => {
         const selectedIds = selectedAttributeValueIds[attrId] || [];
@@ -856,9 +875,11 @@ function AddProductPageContent() {
       } else {
         setGeneratedVariants([]);
       }
+    } else {
+      setGeneratedVariants([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAttributesForVariants, selectedAttributeValueIds, useNewVariantBuilder, attributes, formData.slug, formData.title]);
+  }, [selectedAttributesForVariants, selectedAttributeValueIds, attributes, formData.slug, formData.title]);
 
   // Apply value to all variants
   const applyToAllVariants = (field: 'price' | 'compareAtPrice' | 'stock' | 'sku', value: string) => {
@@ -1687,8 +1708,8 @@ function AddProductPageContent() {
         }
       }
 
-      // Convert new variant builder variants to formData.variants if using new builder
-      if (useNewVariantBuilder && generatedVariants.length > 0) {
+      // Convert new variant builder variants to formData.variants if attributes are selected
+      if (selectedAttributesForVariants.size > 0 && generatedVariants.length > 0) {
         console.log('🔄 [ADMIN] Converting new variant builder variants to formData format...');
         
         // Group variants by color (if color attribute exists)
@@ -1798,11 +1819,11 @@ function AddProductPageContent() {
       console.log('🔍 [ADMIN] Validating variants before submit:', {
         variantsCount: formData.variants.length,
         variants: formData.variants,
-        useNewVariantBuilder,
+        selectedAttributesCount: selectedAttributesForVariants.size,
       });
       
       if (formData.variants.length === 0) {
-        if (useNewVariantBuilder) {
+        if (selectedAttributesForVariants.size > 0) {
           alert(t('admin.products.add.pleaseGenerateVariants') || 'Please generate variants using the variant builder');
         } else {
           alert(t('admin.products.add.pleaseAddAtLeastOneVariant'));
@@ -2884,71 +2905,133 @@ function AddProductPageContent() {
               </div>
             )}
 
-            {/* New Multi-Attribute Variant Builder */}
+            {/* Select Attributes for Variants */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">{t('admin.products.add.variantBuilder') || 'Variant Builder'}</h2>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={useNewVariantBuilder}
-                    onChange={(e) => {
-                      setUseNewVariantBuilder(e.target.checked);
-                      if (!e.target.checked) {
-                        setSelectedAttributesForVariants(new Set());
-                        setSelectedAttributeValueIds({});
-                        setGeneratedVariants([]);
-                      }
-                    }}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">{t('admin.products.add.useNewVariantBuilder') || 'Use Variant Builder'}</span>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.selectAttributesForVariants') || 'Ընտրել ատրիբուտներ'}</h2>
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  {t('admin.products.add.attributes') || 'Ատրիբուտներ'} <span className="text-gray-500 font-normal">{t('admin.products.add.selectMultiple') || '(ընտրել մի քանիսը)'}</span>
                 </label>
-              </div>
-
-              {useNewVariantBuilder && (
-                <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
-                  {/* Step 1: Select Attributes */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      {t('admin.products.add.selectAttributes') || '1. Select Attributes'}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {attributes.map((attribute) => (
-                        <label
-                          key={attribute.id}
-                          className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                            selectedAttributesForVariants.has(attribute.id)
-                              ? 'bg-blue-50 border-blue-600 shadow-md'
-                              : 'bg-white border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={selectedAttributesForVariants.has(attribute.id)}
-                            onChange={(e) => {
-                              const newSet = new Set(selectedAttributesForVariants);
-                              if (e.target.checked) {
-                                newSet.add(attribute.id);
-                              } else {
-                                newSet.delete(attribute.id);
-                                // Remove selected values for this attribute
+                <div className="relative" ref={attributesDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setAttributesDropdownOpen(!attributesDropdownOpen)}
+                    className="w-full px-3 py-2 text-left border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm flex items-center justify-between"
+                  >
+                    <span className="text-gray-700">
+                      {selectedAttributesForVariants.size === 0
+                        ? t('admin.products.add.selectAttributes') || 'Ընտրել ատրիբուտներ'
+                        : selectedAttributesForVariants.size === 1
+                          ? t('admin.products.add.attributeSelected').replace('{count}', '1') || '1 ատրիբուտ ընտրված'
+                          : t('admin.products.add.attributesSelected').replace('{count}', selectedAttributesForVariants.size.toString()) || `${selectedAttributesForVariants.size} ատրիբուտ ընտրված`}
+                    </span>
+                    <svg
+                      className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+                        attributesDropdownOpen ? 'transform rotate-180' : ''
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {attributesDropdownOpen && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-96 overflow-y-auto">
+                      <div className="p-4">
+                        <div className="mb-3 pb-3 border-b border-gray-200">
+                          <h3 className="text-sm font-semibold text-gray-900">
+                            {t('admin.products.add.selectAttributes') || 'Ընտրել ատրիբուտներ'}
+                          </h3>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {t('admin.products.add.selectAttributesDescription') || 'Ընտրեք ատրիբուտներ ապրանքի տարբերակներ ստեղծելու համար'}
+                          </p>
+                        </div>
+                        <div className="space-y-2">
+                          {attributes.length === 0 ? (
+                            <p className="text-sm text-gray-500 text-center py-4">
+                              {t('admin.products.add.noAttributesAvailable') || 'Ատրիբուտներ չկան'}
+                            </p>
+                          ) : (
+                            attributes.map((attribute) => (
+                              <label
+                                key={attribute.id}
+                                className={`flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded ${
+                                  selectedAttributesForVariants.has(attribute.id) ? 'bg-blue-50' : ''
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedAttributesForVariants.has(attribute.id)}
+                                  onChange={(e) => {
+                                    const newSet = new Set(selectedAttributesForVariants);
+                                    if (e.target.checked) {
+                                      newSet.add(attribute.id);
+                                    } else {
+                                      newSet.delete(attribute.id);
+                                      // Remove selected values for this attribute
+                                      const newValueIds = { ...selectedAttributeValueIds };
+                                      delete newValueIds[attribute.id];
+                                      setSelectedAttributeValueIds(newValueIds);
+                                    }
+                                    setSelectedAttributesForVariants(newSet);
+                                  }}
+                                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-sm font-medium text-gray-900">{attribute.name}</div>
+                                  <div className="text-xs text-gray-500 truncate">{attribute.key}</div>
+                                </div>
+                              </label>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {selectedAttributesForVariants.size > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from(selectedAttributesForVariants).map((attributeId) => {
+                        const attribute = attributes.find(a => a.id === attributeId);
+                        if (!attribute) return null;
+                        return (
+                          <span
+                            key={attributeId}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-200"
+                          >
+                            {attribute.name}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newSet = new Set(selectedAttributesForVariants);
+                                newSet.delete(attributeId);
                                 const newValueIds = { ...selectedAttributeValueIds };
-                                delete newValueIds[attribute.id];
+                                delete newValueIds[attributeId];
                                 setSelectedAttributeValueIds(newValueIds);
-                              }
-                              setSelectedAttributesForVariants(newSet);
-                            }}
-                            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                          />
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-900">{attribute.name}</div>
-                            <div className="text-xs text-gray-500">{attribute.key}</div>
-                          </div>
-                        </label>
-                      ))}
+                                setSelectedAttributesForVariants(newSet);
+                              }}
+                              className="ml-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
+                )}
+              </div>
+            </div>
+
+            {/* New Multi-Attribute Variant Builder */}
+            {selectedAttributesForVariants.size > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.variantBuilder') || 'Տարբերակների կառուցիչ'}</h2>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
 
                   {/* Step 2: Select Values for Each Attribute */}
                   {selectedAttributesForVariants.size > 0 && (
@@ -3033,7 +3116,7 @@ function AddProductPageContent() {
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {t('admin.products.add.generatedVariants') || '3. Generated Variants'} ({generatedVariants.length})
+                          {t('admin.products.add.generatedVariants') || '3. Generated Variants'} ({generatedVariants.length.toString()})
                         </h3>
                         <div className="flex gap-2">
                           <Button
@@ -3205,7 +3288,7 @@ function AddProductPageContent() {
                             // Convert generated variants to formData.variants structure
                             // This will be handled in handleSubmit
                             console.log('✅ [VARIANT BUILDER] Variants ready for submission:', generatedVariants);
-                            alert(t('admin.products.add.variantsReady') || `Ready to submit ${generatedVariants.length} variants!`);
+                            alert(t('admin.products.add.variantsReady') || `Ready to submit ${generatedVariants.length.toString()} variants!`);
                           }}
                         >
                           {t('admin.products.add.variantsReady') || 'Variants Ready'}
@@ -3214,8 +3297,8 @@ function AddProductPageContent() {
                     </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Publishing */}
             <div>
