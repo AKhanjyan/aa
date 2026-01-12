@@ -186,6 +186,7 @@ function AddProductPageContent() {
   const colorImageFileInputRef = useRef<HTMLInputElement | null>(null);
   const mainProductImageInputRef = useRef<HTMLInputElement | null>(null);
   const attributesDropdownRef = useRef<HTMLDivElement | null>(null);
+  const [attributesDropdownOpen, setAttributesDropdownOpen] = useState(false);
   const [colorImageTarget, setColorImageTarget] = useState<{ variantId: string; colorValue: string } | null>(null);
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
@@ -215,9 +216,6 @@ function AddProductPageContent() {
     sku: string;
     image: string | null;
   }>>([]);
-  // Dropdown state for attribute selection
-  const [attributesDropdownOpen, setAttributesDropdownOpen] = useState(false);
-
   useEffect(() => {
     if (!isLoading) {
       if (!isLoggedIn || !isAdmin) {
@@ -2907,10 +2905,10 @@ function AddProductPageContent() {
 
             {/* Select Attributes for Variants */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.selectAttributesForVariants') || 'Ընտրել ատրիբուտներ'}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.selectAttributesForVariants')}</h2>
               <div className="bg-white border border-gray-200 rounded-lg p-6">
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t('admin.products.add.attributes') || 'Ատրիբուտներ'} <span className="text-gray-500 font-normal">{t('admin.products.add.selectMultiple') || '(ընտրել մի քանիսը)'}</span>
+                  {t('admin.products.add.attributes')} <span className="text-gray-500 font-normal">{t('admin.products.add.selectMultiple')}</span>
                 </label>
                 <div className="relative" ref={attributesDropdownRef}>
                   <button
@@ -2920,10 +2918,10 @@ function AddProductPageContent() {
                   >
                     <span className="text-gray-700">
                       {selectedAttributesForVariants.size === 0
-                        ? t('admin.products.add.selectAttributes') || 'Ընտրել ատրիբուտներ'
+                        ? t('admin.products.add.selectAttributes')
                         : selectedAttributesForVariants.size === 1
-                          ? t('admin.products.add.attributeSelected').replace('{count}', '1') || '1 ատրիբուտ ընտրված'
-                          : t('admin.products.add.attributesSelected').replace('{count}', selectedAttributesForVariants.size.toString()) || `${selectedAttributesForVariants.size} ատրիբուտ ընտրված`}
+                          ? t('admin.products.add.attributeSelected').replace('{count}', '1')
+                          : t('admin.products.add.attributesSelected').replace('{count}', selectedAttributesForVariants.size.toString())}
                     </span>
                     <svg
                       className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
@@ -2941,23 +2939,25 @@ function AddProductPageContent() {
                       <div className="p-4">
                         <div className="mb-3 pb-3 border-b border-gray-200">
                           <h3 className="text-sm font-semibold text-gray-900">
-                            {t('admin.products.add.selectAttributes') || 'Ընտրել ատրիբուտներ'}
+                            {t('admin.products.add.selectAttributes')}
                           </h3>
                           <p className="text-xs text-gray-500 mt-1">
-                            {t('admin.products.add.selectAttributesDescription') || 'Ընտրեք ատրիբուտներ ապրանքի տարբերակներ ստեղծելու համար'}
+                            {t('admin.products.add.selectAttributesDescription')}
                           </p>
                         </div>
-                        <div className="space-y-2">
-                          {attributes.length === 0 ? (
-                            <p className="text-sm text-gray-500 text-center py-4">
-                              {t('admin.products.add.noAttributesAvailable') || 'Ատրիբուտներ չկան'}
-                            </p>
-                          ) : (
-                            attributes.map((attribute) => (
+                        {attributes.length === 0 ? (
+                          <p className="text-sm text-gray-500 text-center py-4">
+                            {t('admin.products.add.noAttributesAvailable')}
+                          </p>
+                        ) : (
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                            {attributes.map((attribute) => (
                               <label
                                 key={attribute.id}
-                                className={`flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded ${
-                                  selectedAttributesForVariants.has(attribute.id) ? 'bg-blue-50' : ''
+                                className={`flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-3 rounded-lg border transition-colors ${
+                                  selectedAttributesForVariants.has(attribute.id)
+                                    ? 'bg-blue-50 border-blue-300'
+                                    : 'border-gray-200 bg-white'
                                 }`}
                               >
                                 <input
@@ -2978,14 +2978,11 @@ function AddProductPageContent() {
                                   }}
                                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                                 />
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm font-medium text-gray-900">{attribute.name}</div>
-                                  <div className="text-xs text-gray-500 truncate">{attribute.key}</div>
-                                </div>
+                                <span className="text-sm font-medium text-gray-900">{attribute.name}</span>
                               </label>
-                            ))
-                          )}
-                        </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
