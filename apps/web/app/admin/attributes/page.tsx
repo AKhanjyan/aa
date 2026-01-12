@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef, ChangeEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { apiClient } from '../../../lib/api-client';
 import { AdminMenuDrawer } from '../../../components/AdminMenuDrawer';
 import { getAdminMenuTABS } from '../admin-menu.config';
 import { useTranslation } from '../../../lib/i18n-client';
-import { AttributeValueEditModal } from '../../../components/AttributeValueEditModal';
 import { showToast } from '../../../components/Toast';
+import { ColorPaletteSelector } from '../../../components/ColorPaletteSelector';
 
 interface AttributeValue {
   id: string;
@@ -45,6 +45,15 @@ function AttributesPageContent() {
   const [deletingValue, setDeletingValue] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState<{ attributeId: string; value: AttributeValue } | null>(null);
   const [valueError, setValueError] = useState<string | null>(null);
+  const [expandedValueId, setExpandedValueId] = useState<string | null>(null);
+  
+  // Inline edit form states
+  const [editingLabel, setEditingLabel] = useState('');
+  const [editingColors, setEditingColors] = useState<string[]>([]);
+  const [editingImageUrl, setEditingImageUrl] = useState<string | null>(null);
+  const [savingValue, setSavingValue] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchAttributes = useCallback(async () => {
     try {
@@ -222,6 +231,87 @@ function AttributesPageContent() {
       const errorMessage = err?.data?.detail || err?.message || 'Failed to update value';
       showToast(t('admin.attributes.errorUpdatingValue')?.replace('{message}', errorMessage) || errorMessage, 'error');
       throw err;
+    }
+  };
+
+  const toggleValueEdit = (attributeId: string, value: AttributeValue) => {
+    if (expandedValueId === value.id) {
+      // Close
+      setExpandedValueId(null);
+      setEditingValue(null);
+      setEditingLabel('');
+      setEditingColors([]);
+      setEditingImageUrl(null);
+    } else {
+      // Open
+      setExpandedValueId(value.id);
+      setEditingValue({ attributeId, value });
+      setEditingLabel(value.label);
+      setEditingColors(value.colors || []);
+      setEditingImageUrl(value.imageUrl || null);
+    }
+  };
+
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    const imageFile = files.find((file) => file.type.startsWith('image/'));
+    if (!imageFile) {
+      showToast(t('admin.attributes.valueModal.selectImageFile'), 'warning');
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    try {
+      setImageUploading(true);
+      const base64 = await fileToBase64(imageFile);
+      setEditingImageUrl(base64);
+    } catch (error: any) {
+      console.error('❌ [ADMIN] Error uploading image:', error);
+      showToast(error?.message || t('admin.attributes.valueModal.failedToProcessImage'), 'error');
+    } finally {
+      setImageUploading(false);
+      if (event.target) {
+        event.target.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setEditingImageUrl(null);
+  };
+
+  const handleSaveInlineValue = async () => {
+    if (!editingValue) return;
+
+    try {
+      setSavingValue(true);
+      await handleUpdateValue({
+        label: editingLabel.trim() !== editingValue.value.label ? editingLabel.trim() : undefined,
+        colors: editingColors.length > 0 ? editingColors : undefined,
+        imageUrl: editingImageUrl,
+      });
+      // Close the expanded form
+      setExpandedValueId(null);
+      setEditingValue(null);
+      setEditingLabel('');
+      setEditingColors([]);
+      setEditingImageUrl(null);
+    } catch (error: any) {
+      console.error('❌ [ADMIN] Error saving value:', error);
+    } finally {
+      setSavingValue(false);
     }
   };
 
@@ -451,40 +541,171 @@ function AttributesPageContent() {
                       {attribute.values.length === 0 ? (
                         <p className="text-sm text-gray-500 py-4 text-center">{t('admin.attributes.noValuesYet')}</p>
                       ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                          {attribute.values.map((value) => (
-                            <div
-                              key={value.id}
-                              className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
-                            >
-                              <span className="text-sm font-medium text-gray-900 flex-1">{value.label}</span>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  onClick={() => setEditingValue({ attributeId: attribute.id, value })}
-                                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                                  title={t('admin.attributes.configureValue') || 'Configure value'}
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                  </svg>
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteValue(attribute.id, value.id, value.label)}
-                                  disabled={deletingValue === value.id}
-                                  className="text-red-600 hover:text-red-800 disabled:opacity-50 transition-colors"
-                                  title={t('admin.attributes.deleteValue')}
-                                >
-                                  {deletingValue === value.id ? (
-                                    <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
-                                  ) : (
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                  )}
-                                </button>
+                        <div className="space-y-2">
+                          {attribute.values.map((value) => {
+                            const isExpanded = expandedValueId === value.id;
+                            return (
+                              <div key={value.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                {/* Value Card */}
+                                <div className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
+                                  <span className="text-sm font-medium text-gray-900 flex-1">{value.label}</span>
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={() => toggleValueEdit(attribute.id, value)}
+                                      className="text-gray-600 hover:text-gray-900 transition-colors"
+                                      title={t('admin.attributes.configureValue') || 'Configure value'}
+                                    >
+                                      <svg
+                                        className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                      </svg>
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteValue(attribute.id, value.id, value.label)}
+                                      disabled={deletingValue === value.id}
+                                      className="text-red-600 hover:text-red-800 disabled:opacity-50 transition-colors"
+                                      title={t('admin.attributes.deleteValue')}
+                                    >
+                                      {deletingValue === value.id ? (
+                                        <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+                                      ) : (
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                      )}
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Inline Edit Form */}
+                                {isExpanded && (
+                                  <div className="border-t border-gray-200 p-4 bg-gray-50 space-y-4">
+                                    {/* Label */}
+                                    <div>
+                                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        {t('admin.attributes.valueModal.label')}
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={editingLabel}
+                                        onChange={(e) => setEditingLabel(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                                        placeholder={t('admin.attributes.valueModal.labelPlaceholder')}
+                                      />
+                                    </div>
+
+                                    {/* Colors and Image Section */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      {/* Colors Section */}
+                                      <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                                          {t('admin.attributes.valueModal.colors')}
+                                        </label>
+                                        <ColorPaletteSelector colors={editingColors} onColorsChange={setEditingColors} />
+                                      </div>
+
+                                      {/* Image Section */}
+                                      <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                                          {t('admin.attributes.valueModal.image')}
+                                        </label>
+                                        {editingImageUrl ? (
+                                          <div className="space-y-3">
+                                            <div className="relative inline-block">
+                                              <img
+                                                src={editingImageUrl}
+                                                alt={t('admin.attributes.valueModal.imagePreview')}
+                                                className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                                              />
+                                              <button
+                                                type="button"
+                                                onClick={handleRemoveImage}
+                                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors flex items-center justify-center"
+                                                title={t('admin.attributes.valueModal.removeImage')}
+                                              >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                              </button>
+                                            </div>
+                                            <button
+                                              type="button"
+                                              onClick={() => fileInputRef.current?.click()}
+                                              disabled={imageUploading}
+                                              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                              {imageUploading ? t('admin.attributes.valueModal.uploading') : t('admin.attributes.valueModal.changeImage')}
+                                            </button>
+                                          </div>
+                                        ) : (
+                                          <div>
+                                            <button
+                                              type="button"
+                                              onClick={() => fileInputRef.current?.click()}
+                                              disabled={imageUploading}
+                                              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                            >
+                                              {imageUploading ? (
+                                                <>
+                                                  <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
+                                                  {t('admin.attributes.valueModal.uploading')}
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                  </svg>
+                                                  {t('admin.attributes.valueModal.uploadImage')}
+                                                </>
+                                              )}
+                                            </button>
+                                          </div>
+                                        )}
+                                        <input
+                                          ref={fileInputRef}
+                                          type="file"
+                                          accept="image/*"
+                                          className="hidden"
+                                          onChange={handleImageUpload}
+                                        />
+                                      </div>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-200">
+                                      <button
+                                        type="button"
+                                        onClick={() => toggleValueEdit(attribute.id, value)}
+                                        disabled={savingValue}
+                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                      >
+                                        {t('admin.attributes.valueModal.cancel')}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={handleSaveInlineValue}
+                                        disabled={savingValue || !editingLabel.trim()}
+                                        className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                      >
+                                        {savingValue ? (
+                                          <>
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            {t('admin.attributes.valueModal.saving')}
+                                          </>
+                                        ) : (
+                                          t('admin.attributes.valueModal.save')
+                                        )}
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -496,21 +717,6 @@ function AttributesPageContent() {
         )}
       </div>
 
-      {/* Value Configuration Modal */}
-      {editingValue && (
-        <AttributeValueEditModal
-          isOpen={!!editingValue}
-          onClose={() => setEditingValue(null)}
-          value={{
-            id: editingValue.value.id,
-            label: editingValue.value.label,
-            colors: editingValue.value.colors || [],
-            imageUrl: editingValue.value.imageUrl || null,
-          }}
-          attributeId={editingValue.attributeId}
-          onSave={handleUpdateValue}
-        />
-      )}
     </div>
   );
 }
