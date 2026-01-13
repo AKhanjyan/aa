@@ -3165,6 +3165,9 @@ function AddProductPageContent() {
                               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {t('admin.products.add.image')}
                               </th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                                {t('admin.products.add.actions') || 'Actions'}
+                              </th>
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
@@ -3233,10 +3236,10 @@ function AddProductPageContent() {
                                         </button>
                                         
                                         {openValueDropdown === cellDropdownKey && attribute && (
-                                          <div className="absolute z-50 mt-1 w-64 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto">
-                                            <div className="p-2">
+                                          <div className="absolute z-[100] mt-1 w-auto min-w-64 bg-white border border-gray-300 rounded-lg shadow-lg variant-builder-dropdown" style={{ maxHeight: 'none', overflowY: 'visible' }}>
+                                            <div className="p-2" style={{ overflowY: 'visible' }}>
                                               {/* "All" option */}
-                                              <label className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-50">
+                                              <label className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-50 mb-2">
                                                 <input
                                                   type="checkbox"
                                                   checked={attribute.values.length > 0 && selectedValueIds.length === attribute.values.length}
@@ -3277,73 +3280,75 @@ function AddProductPageContent() {
                                                 <span className="text-sm font-medium text-gray-900">All</span>
                                               </label>
                                               
-                                              <div className="border-t border-gray-200 my-1"></div>
+                                              <div className="border-t border-gray-200 my-2"></div>
                                               
-                                              {/* Individual value checkboxes */}
-                                              {attribute.values.map((value) => {
-                                                const isSelected = variant.selectedValueIds.includes(value.id);
-                                                const valueColorHex = isColor && value.colors && value.colors.length > 0 
-                                                  ? value.colors[0] 
-                                                  : isColor 
-                                                    ? getColorHex(value.label) 
-                                                    : null;
-                                                
-                                                return (
-                                                  <label
-                                                    key={value.id}
-                                                    className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
-                                                      isSelected
-                                                        ? 'bg-blue-50 border-2 border-blue-600'
-                                                        : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
-                                                    }`}
-                                                  >
-                                                    <input
-                                                      type="checkbox"
-                                                      checked={isSelected}
-                                                      onChange={(e) => {
-                                                        const currentIds = variant.selectedValueIds;
-                                                        let newIds: string[];
-                                                        
-                                                        if (e.target.checked) {
-                                                          // Add value if not already selected
-                                                          newIds = [...currentIds, value.id];
-                                                        } else {
-                                                          // Remove value
-                                                          newIds = currentIds.filter(id => id !== value.id);
-                                                        }
-                                                        
-                                                        // Update selectedAttributeValueIds for this attribute
-                                                        const currentAttrIds = selectedAttributeValueIds[attributeId] || [];
-                                                        let newAttrIds: string[];
-                                                        if (e.target.checked) {
-                                                          newAttrIds = [...currentAttrIds, value.id];
-                                                        } else {
-                                                          newAttrIds = currentAttrIds.filter(id => id !== value.id);
-                                                        }
-                                                        
-                                                        // Update variant first (to preserve dropdown state)
-                                                        setGeneratedVariants(prev => prev.map(v => 
-                                                          v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
-                                                        ));
-                                                        
-                                                        // Then update selectedAttributeValueIds (this will trigger useEffect but variant is already updated)
-                                                        setSelectedAttributeValueIds(prev => ({
-                                                          ...prev,
-                                                          [attributeId]: newAttrIds,
-                                                        }));
-                                                      }}
-                                                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                    />
-                                                    {isColor && valueColorHex && (
-                                                      <span
-                                                        className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
-                                                        style={{ backgroundColor: valueColorHex }}
+                                              {/* Individual value checkboxes - horizontal layout - single row */}
+                                              <div className="flex flex-nowrap gap-2 overflow-x-auto">
+                                                {attribute.values.map((value) => {
+                                                  const isSelected = variant.selectedValueIds.includes(value.id);
+                                                  const valueColorHex = isColor && value.colors && value.colors.length > 0 
+                                                    ? value.colors[0] 
+                                                    : isColor 
+                                                      ? getColorHex(value.label) 
+                                                      : null;
+                                                  
+                                                  return (
+                                                    <label
+                                                      key={value.id}
+                                                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg cursor-pointer transition-all ${
+                                                        isSelected
+                                                          ? 'bg-blue-50 border-2 border-blue-600'
+                                                          : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                                                      }`}
+                                                    >
+                                                      <input
+                                                        type="checkbox"
+                                                        checked={isSelected}
+                                                        onChange={(e) => {
+                                                          const currentIds = variant.selectedValueIds;
+                                                          let newIds: string[];
+                                                          
+                                                          if (e.target.checked) {
+                                                            // Add value if not already selected
+                                                            newIds = [...currentIds, value.id];
+                                                          } else {
+                                                            // Remove value
+                                                            newIds = currentIds.filter(id => id !== value.id);
+                                                          }
+                                                          
+                                                          // Update selectedAttributeValueIds for this attribute
+                                                          const currentAttrIds = selectedAttributeValueIds[attributeId] || [];
+                                                          let newAttrIds: string[];
+                                                          if (e.target.checked) {
+                                                            newAttrIds = [...currentAttrIds, value.id];
+                                                          } else {
+                                                            newAttrIds = currentAttrIds.filter(id => id !== value.id);
+                                                          }
+                                                          
+                                                          // Update variant first (to preserve dropdown state)
+                                                          setGeneratedVariants(prev => prev.map(v => 
+                                                            v.id === variant.id ? { ...v, selectedValueIds: newIds } : v
+                                                          ));
+                                                          
+                                                          // Then update selectedAttributeValueIds (this will trigger useEffect but variant is already updated)
+                                                          setSelectedAttributeValueIds(prev => ({
+                                                            ...prev,
+                                                            [attributeId]: newAttrIds,
+                                                          }));
+                                                        }}
+                                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 flex-shrink-0"
                                                       />
-                                                    )}
-                                                    <span className="text-sm text-gray-900 flex-1">{value.label}</span>
-                                                  </label>
-                                                );
-                                              })}
+                                                      {isColor && valueColorHex && (
+                                                        <span
+                                                          className="inline-block w-5 h-5 rounded-full border-2 border-gray-300 shadow-sm flex-shrink-0"
+                                                          style={{ backgroundColor: valueColorHex }}
+                                                        />
+                                                      )}
+                                                      <span className="text-sm text-gray-900 whitespace-nowrap">{value.label}</span>
+                                                    </label>
+                                                  );
+                                                })}
+                                              </div>
                                             </div>
                                           </div>
                                         )}
@@ -3456,6 +3461,21 @@ function AddProductPageContent() {
                                       className="hidden"
                                     />
                                   </div>
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setGeneratedVariants(prev => prev.filter(v => v.id !== variant.id));
+                                    }}
+                                    className="px-3 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-300 rounded-md hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors flex items-center gap-1"
+                                    title={t('admin.products.add.deleteVariant') || 'Delete variant'}
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    {t('admin.products.add.delete') || 'Delete'}
+                                  </button>
                                 </td>
                               </tr>
                             ))}

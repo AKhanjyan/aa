@@ -438,7 +438,10 @@
       "failedToProcessImage": "Не удалось обработать выбранное изображение",
       "enterDefaultPrice": "Введите цену по умолчанию для всех вариантов:",
       "enterDefaultStock": "Введите наличие по умолчанию для всех вариантов:",
-      "enterSkuPrefix": "Введите префикс SKU (будет добавлено -color-size, если применимо):"
+      "enterSkuPrefix": "Введите префикс SKU (будет добавлено -color-size, если применимо):",
+      "actions": "Действия",
+      "delete": "Удалить",
+      "deleteVariant": "Удалить вариант"
     }
   },
   "settings": {
