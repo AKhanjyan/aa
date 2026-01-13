@@ -61,6 +61,26 @@ function AttributesPageContent() {
       setLoading(true);
       console.log('📋 [ADMIN] Fetching attributes...');
       const response = await apiClient.get<{ data: Attribute[] }>('/api/v1/admin/attributes');
+      console.log('📋 [ADMIN] Attributes response:', response.data);
+      // Log colors for each value to debug
+      if (response.data && Array.isArray(response.data)) {
+        response.data.forEach((attr) => {
+          if (attr.values && Array.isArray(attr.values)) {
+            attr.values.forEach((val) => {
+              console.log('🎨 [ADMIN] Attribute value colors:', {
+                attributeId: attr.id,
+                attributeName: attr.name,
+                valueId: val.id,
+                valueLabel: val.label,
+                colors: val.colors,
+                colorsType: typeof val.colors,
+                colorsIsArray: Array.isArray(val.colors),
+                colorsLength: val.colors?.length
+              });
+            });
+          }
+        });
+      }
       setAttributes(response.data || []);
       console.log('✅ [ADMIN] Attributes loaded:', response.data?.length || 0);
     } catch (err) {
@@ -219,12 +239,19 @@ function AttributesPageContent() {
     if (!editingValue) return;
 
     try {
-      console.log('✏️ [ADMIN] Updating value:', { valueId: editingValue.value.id, data });
-      await apiClient.patch(`/api/v1/admin/attributes/${editingValue.attributeId}/values/${editingValue.value.id}`, {
+      console.log('✏️ [ADMIN] Updating value:', { 
+        valueId: editingValue.value.id, 
+        attributeId: editingValue.attributeId,
+        data,
+        colorsType: typeof data.colors,
+        colorsIsArray: Array.isArray(data.colors),
+        colorsLength: data.colors?.length
+      });
+      const response = await apiClient.patch(`/api/v1/admin/attributes/${editingValue.attributeId}/values/${editingValue.value.id}`, {
         ...data,
         locale: 'en',
       });
-      console.log('✅ [ADMIN] Value updated successfully');
+      console.log('✅ [ADMIN] Value updated successfully:', response.data);
       fetchAttributes();
       showToast(t('admin.attributes.valueUpdatedSuccess'), 'success');
     } catch (err: any) {

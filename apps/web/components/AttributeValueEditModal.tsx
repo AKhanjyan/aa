@@ -89,11 +89,21 @@ export function AttributeValueEditModal({
   const handleSave = async () => {
     try {
       setSaving(true);
-      await onSave({
+      const saveData = {
         label: label.trim() !== value.label ? label.trim() : undefined,
         colors: colors.length > 0 ? colors : undefined,
         imageUrl: imageUrl,
+      };
+      console.log('💾 [ATTRIBUTE VALUE MODAL] Saving value:', {
+        valueId: value.id,
+        saveData,
+        colorsLength: colors.length,
+        colors: colors,
+        colorsType: typeof colors,
+        colorsIsArray: Array.isArray(colors)
       });
+      await onSave(saveData);
+      console.log('✅ [ATTRIBUTE VALUE MODAL] Value saved successfully');
       onClose();
     } catch (error: any) {
       console.error('❌ [ADMIN] Error saving value:', error);

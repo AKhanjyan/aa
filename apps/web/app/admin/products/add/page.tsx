@@ -274,6 +274,9 @@ function AddProductPageContent() {
               value: v.value, 
               label: v.label,
               colors: v.colors,
+              colorsType: typeof v.colors,
+              colorsIsArray: Array.isArray(v.colors),
+              colorsLength: v.colors?.length,
               imageUrl: v.imageUrl 
             })) || []
           })));
@@ -3852,6 +3855,18 @@ function AddProductPageContent() {
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                   {attribute.values.map((value) => {
                     const isSelected = variant.selectedValueIds.includes(value.id);
+                    // Debug: Log color information for each value
+                    if (isColor) {
+                      console.log('🎨 [ADD PRODUCT] Color value:', {
+                        valueId: value.id,
+                        valueLabel: value.label,
+                        colors: value.colors,
+                        colorsType: typeof value.colors,
+                        colorsIsArray: Array.isArray(value.colors),
+                        colorsLength: value.colors?.length,
+                        hasColors: value.colors && value.colors.length > 0
+                      });
+                    }
                     const valueColorHex = isColor && value.colors && value.colors.length > 0 
                       ? value.colors[0] 
                       : isColor 

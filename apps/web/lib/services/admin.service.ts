@@ -2862,9 +2862,37 @@ class AdminService {
             const valueTranslations = Array.isArray(value.translations) ? value.translations : [];
             const valueTranslation = valueTranslations[0] || null;
             const colorsData = value.colors;
-            const colorsArray = Array.isArray(colorsData) 
-              ? colorsData 
-              : (colorsData ? JSON.parse(colorsData as string) : []);
+            let colorsArray: string[] = [];
+            
+            if (colorsData) {
+              if (Array.isArray(colorsData)) {
+                colorsArray = colorsData;
+              } else if (typeof colorsData === 'string') {
+                try {
+                  colorsArray = JSON.parse(colorsData);
+                } catch (e) {
+                  console.warn('⚠️ [ADMIN SERVICE] Failed to parse colors JSON:', e);
+                  colorsArray = [];
+                }
+              } else if (typeof colorsData === 'object') {
+                // If it's already an object (from Prisma JSONB), use it directly
+                colorsArray = Array.isArray(colorsData) ? colorsData : [];
+              }
+            }
+            
+            // Ensure colorsArray is always an array of strings
+            if (!Array.isArray(colorsArray)) {
+              colorsArray = [];
+            }
+            
+            console.log('🎨 [ADMIN SERVICE] Parsed colors for value:', {
+              valueId: value.id,
+              valueLabel: valueTranslation?.label || value.value,
+              colorsData,
+              colorsDataType: typeof colorsData,
+              colorsArray,
+              colorsArrayLength: colorsArray.length
+            });
             
             return {
               id: value.id,
@@ -3106,7 +3134,15 @@ class AdminService {
 
     // Update colors if provided
     if (data.colors !== undefined) {
-      updateData.colors = data.colors.length > 0 ? data.colors : [];
+      // Ensure colors is always an array (even if empty)
+      // Prisma JSONB field expects an array format
+      updateData.colors = Array.isArray(data.colors) ? data.colors : [];
+      console.log('🎨 [ADMIN SERVICE] Setting colors:', { 
+        valueId, 
+        colors: updateData.colors, 
+        colorsType: typeof updateData.colors,
+        isArray: Array.isArray(updateData.colors)
+      });
     }
 
     // Update imageUrl if provided
@@ -3138,9 +3174,19 @@ class AdminService {
 
     // Update attribute value if colors or imageUrl changed
     if (Object.keys(updateData).length > 0) {
-      await db.attributeValue.update({
+      console.log('💾 [ADMIN SERVICE] Updating attribute value in database:', { 
+        valueId, 
+        updateData,
+        updateDataKeys: Object.keys(updateData)
+      });
+      const updatedValue = await db.attributeValue.update({
         where: { id: valueId },
         data: updateData,
+      });
+      console.log('✅ [ADMIN SERVICE] Attribute value updated:', { 
+        valueId, 
+        savedColors: updatedValue.colors,
+        savedColorsType: typeof updatedValue.colors
       });
     }
 
@@ -3183,9 +3229,27 @@ class AdminService {
       values: values.map((val: any) => {
         const valTranslation = val.translations?.[0];
         const colorsData = val.colors;
-        const colorsArray = Array.isArray(colorsData) 
-          ? colorsData 
-          : (colorsData ? JSON.parse(colorsData as string) : []);
+        let colorsArray: string[] = [];
+        
+        if (colorsData) {
+          if (Array.isArray(colorsData)) {
+            colorsArray = colorsData;
+          } else if (typeof colorsData === 'string') {
+            try {
+              colorsArray = JSON.parse(colorsData);
+            } catch (e) {
+              console.warn('⚠️ [ADMIN SERVICE] Failed to parse colors JSON in updateAttributeValue:', e);
+              colorsArray = [];
+            }
+          } else if (typeof colorsData === 'object') {
+            colorsArray = Array.isArray(colorsData) ? colorsData : [];
+          }
+        }
+        
+        // Ensure colorsArray is always an array of strings
+        if (!Array.isArray(colorsArray)) {
+          colorsArray = [];
+        }
         
         return {
           id: val.id,
