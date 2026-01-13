@@ -1114,6 +1114,78 @@ class AdminService {
   }
 
   /**
+   * Generate unique SKU for product variant
+   * Checks database to ensure uniqueness
+   */
+  private async generateUniqueSku(
+    tx: any,
+    baseSku: string | undefined,
+    productSlug: string,
+    variantIndex: number,
+    usedSkus: Set<string>
+  ): Promise<string> {
+    // If base SKU is provided and unique, use it
+    if (baseSku && baseSku.trim() !== '') {
+      const trimmedSku = baseSku.trim();
+      
+      // Check if already used in this transaction
+      if (!usedSkus.has(trimmedSku)) {
+        // Check if exists in database
+        const existing = await tx.productVariant.findUnique({
+          where: { sku: trimmedSku },
+        });
+        
+        if (!existing) {
+          usedSkus.add(trimmedSku);
+          console.log(`✅ [ADMIN SERVICE] Using provided SKU: ${trimmedSku}`);
+          return trimmedSku;
+        } else {
+          console.log(`⚠️ [ADMIN SERVICE] SKU already exists in DB: ${trimmedSku}, generating new one`);
+        }
+      } else {
+        console.log(`⚠️ [ADMIN SERVICE] SKU already used in transaction: ${trimmedSku}, generating new one`);
+      }
+    }
+
+    // Generate new unique SKU
+    const baseSlug = productSlug || 'PROD';
+    let attempt = 0;
+    let newSku: string;
+    
+    do {
+      const timestamp = Date.now();
+      const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const suffix = attempt > 0 ? `-${attempt}` : '';
+      newSku = `${baseSlug.toUpperCase()}-${timestamp}-${variantIndex + 1}${suffix}-${random}`;
+      attempt++;
+      
+      // Check if already used in this transaction
+      if (usedSkus.has(newSku)) {
+        continue;
+      }
+      
+      // Check if exists in database
+      const existing = await tx.productVariant.findUnique({
+        where: { sku: newSku },
+      });
+      
+      if (!existing) {
+        usedSkus.add(newSku);
+        console.log(`✅ [ADMIN SERVICE] Generated unique SKU: ${newSku}`);
+        return newSku;
+      }
+      
+      console.log(`⚠️ [ADMIN SERVICE] Generated SKU exists in DB: ${newSku}, trying again...`);
+    } while (attempt < 100); // Safety limit
+    
+    // Fallback: use timestamp + random if all attempts failed
+    const finalSku = `${baseSlug.toUpperCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+    usedSkus.add(finalSku);
+    console.log(`✅ [ADMIN SERVICE] Using fallback SKU: ${finalSku}`);
+    return finalSku;
+  }
+
+  /**
    * Create product
    */
   async createProduct(data: {
@@ -1155,11 +1227,14 @@ class AdminService {
       console.log('🆕 [ADMIN SERVICE] Creating product:', data.title);
 
       const result = await db.$transaction(async (tx: any) => {
+        // Track used SKUs within this transaction to ensure uniqueness
+        const usedSkus = new Set<string>();
+        
         // Generate variants with options
         // Support both old format (color/size strings) and new format (AttributeValue IDs)
         // Also support generic options array for any attribute type
         const variantsData = await Promise.all(
-          data.variants.map(async (variant: any) => {
+          data.variants.map(async (variant: any, variantIndex: number) => {
             const options: any[] = [];
             
             // If variant has explicit options array, use it (new format)
@@ -1208,8 +1283,17 @@ class AdminService {
               ? (typeof variant.compareAtPrice === 'number' ? variant.compareAtPrice : parseFloat(String(variant.compareAtPrice)))
               : undefined;
 
+            // Generate unique SKU for this variant
+            const uniqueSku = await this.generateUniqueSku(
+              tx,
+              variant.sku,
+              data.slug,
+              variantIndex,
+              usedSkus
+            );
+
             return {
-              sku: variant.sku || undefined,
+              sku: uniqueSku,
               price,
               compareAtPrice,
               stock: isNaN(stock) ? 0 : stock,
@@ -1221,6 +1305,22 @@ class AdminService {
             };
           })
         );
+
+        // Final validation: log all SKUs to ensure uniqueness
+        const allSkus = variantsData.map(v => v.sku).filter(Boolean);
+        const uniqueSkus = new Set(allSkus);
+        console.log(`📋 [ADMIN SERVICE] Generated ${variantsData.length} variants with SKUs:`, allSkus);
+        
+        if (allSkus.length !== uniqueSkus.size) {
+          console.error('❌ [ADMIN SERVICE] Duplicate SKUs detected!', {
+            total: allSkus.length,
+            unique: uniqueSkus.size,
+            duplicates: allSkus.filter((sku, index) => allSkus.indexOf(sku) !== index)
+          });
+          throw new Error('Duplicate SKUs detected in variants. This should not happen.');
+        }
+        
+        console.log('✅ [ADMIN SERVICE] All variant SKUs are unique');
 
         const product = await tx.product.create({
           data: {
