@@ -1106,9 +1106,9 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
             <div className="text-gray-600 mb-8 prose prose-sm" dangerouslySetInnerHTML={{ __html: getProductText(language, product.id, 'longDescription') || product.description || '' }} />
 
-            <div className="mt-8 p-6 bg-white border border-gray-200 rounded-2xl space-y-5">
+            <div className="mt-8 p-4 bg-white border border-gray-200 rounded-2xl space-y-4">
             {/* Rating Section */}
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+            <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -1149,14 +1149,14 @@ export default function ProductPage({ params }: ProductPageProps) {
                 if (attrGroups.length === 0) return null;
 
                 return (
-                  <div key={attrKey} className="space-y-2">
-                    <label className="text-sm font-bold uppercase">
+                  <div key={attrKey} className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase">
                       {attrKey === 'color' ? t(language, 'product.color') : 
                        attrKey === 'size' ? t(language, 'product.size') : 
                        attributeName}:
                     </label>
                     {isColor ? (
-                      <div className="flex flex-wrap gap-2 items-center">
+                      <div className="flex flex-wrap gap-1.5 items-center">
                         {attrGroups.map((g) => {
                           const isSelected = selectedColor === g.value.toLowerCase().trim();
                           const isDisabled = g.stock <= 0;
@@ -1165,14 +1165,23 @@ export default function ProductPage({ params }: ProductPageProps) {
                             ? g.colors[0] 
                             : getColorValue(g.value);
                           
+                          // Dynamic sizing based on number of values
+                          // Keep size consistent for 2 values, reduce for more
+                          const totalValues = attrGroups.length;
+                          const sizeClass = totalValues > 6 
+                            ? 'w-8 h-8' 
+                            : totalValues > 3 
+                            ? 'w-9 h-9' 
+                            : 'w-10 h-10';
+                          
                           return (
-                            <div key={g.valueId || g.value} className="flex flex-col items-center gap-1">
+                            <div key={g.valueId || g.value} className="flex flex-col items-center gap-0.5">
                               <button 
                                 onClick={() => !isDisabled && handleColorSelect(g.value)}
                                 disabled={isDisabled}
-                                className={`w-10 h-10 rounded-full border-2 transition-all overflow-hidden ${
+                                className={`${sizeClass} rounded-full border-2 transition-all overflow-hidden ${
                                   isSelected 
-                                    ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-900 scale-110' 
+                                    ? 'border-gray-900 ring-2 ring-offset-1 ring-gray-900 scale-110' 
                                     : isDisabled 
                                       ? 'border-gray-100 opacity-30 grayscale cursor-not-allowed' 
                                       : 'border-gray-300 hover:scale-105'
@@ -1189,14 +1198,14 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 ) : null}
                               </button>
                               {g.stock > 0 && (
-                                <span className="text-xs text-gray-500">{g.stock}</span>
+                                <span className={`${totalValues > 8 ? 'text-[10px]' : 'text-xs'} text-gray-500`}>{g.stock}</span>
                               )}
                             </div>
                           );
                         })}
                       </div>
                     ) : isSize ? (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {attrGroups.map((g) => {
                           let displayStock = g.stock;
                           if (selectedColor) {
@@ -1209,13 +1218,31 @@ export default function ProductPage({ params }: ProductPageProps) {
                           const isSelected = selectedSize === g.value.toLowerCase().trim();
                           const isDisabled = displayStock <= 0;
                           const hasImage = g.imageUrl;
+                          
+                          // Dynamic sizing based on number of values
+                          // Keep size consistent for 2 values, reduce for more
+                          const totalValues = attrGroups.length;
+                          const paddingClass = totalValues > 6 
+                            ? 'px-2 py-1' 
+                            : totalValues > 3 
+                            ? 'px-2.5 py-1.5' 
+                            : 'px-3 py-2';
+                          const textSizeClass = totalValues > 6 
+                            ? 'text-xs' 
+                            : 'text-sm';
+                          const imageSizeClass = totalValues > 6 
+                            ? 'w-4 h-4' 
+                            : 'w-5 h-5';
+                          const minWidthClass = totalValues > 6 
+                            ? 'min-w-[40px]' 
+                            : 'min-w-[50px]';
 
                           return (
                             <button 
                               key={g.valueId || g.value}
                               onClick={() => !isDisabled && handleSizeSelect(g.value)}
                               disabled={isDisabled}
-                              className={`min-w-[50px] px-3 py-2 rounded-lg border-2 transition-all flex items-center gap-2 ${
+                              className={`${minWidthClass} ${paddingClass} rounded-lg border-2 transition-all flex items-center gap-1.5 ${
                                 isSelected 
                                   ? 'border-gray-900 bg-gray-50' 
                                   : isDisabled 
@@ -1227,13 +1254,13 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 <img 
                                   src={g.imageUrl!} 
                                   alt={g.label}
-                                  className="w-5 h-5 object-cover rounded border border-gray-300"
+                                  className={`${imageSizeClass} object-cover rounded border border-gray-300 flex-shrink-0`}
                                 />
                               )}
                               <div className="flex flex-col text-center">
-                                <span className="text-sm font-medium">{getAttributeLabel(language, attrKey, g.value)}</span>
+                                <span className={`${textSizeClass} font-medium`}>{getAttributeLabel(language, attrKey, g.value)}</span>
                                 {displayStock > 0 && (
-                                  <span className="text-xs text-gray-500">({displayStock})</span>
+                                  <span className={`${totalValues > 10 ? 'text-[10px]' : 'text-xs'} text-gray-500`}>({displayStock})</span>
                                 )}
                               </div>
                             </button>
@@ -1242,12 +1269,32 @@ export default function ProductPage({ params }: ProductPageProps) {
                       </div>
                     ) : (
                       // Generic attribute selector
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {attrGroups.map((g) => {
                           const selectedValueId = selectedAttributeValues.get(attrKey);
                           const isSelected = selectedValueId === g.valueId || (!g.valueId && selectedColor === g.value);
                           const isDisabled = g.stock <= 0;
                           const hasImage = g.imageUrl && g.imageUrl.trim() !== '';
+                          
+                          // Dynamic sizing based on number of values
+                          // Keep size consistent for 2 values, reduce for more
+                          const totalValues = attrGroups.length;
+                          const paddingClass = totalValues > 6 
+                            ? 'px-2 py-1' 
+                            : totalValues > 3 
+                            ? 'px-3 py-1.5' 
+                            : 'px-4 py-2';
+                          const textSizeClass = totalValues > 6 
+                            ? 'text-xs' 
+                            : 'text-sm';
+                          const imageSizeClass = totalValues > 6 
+                            ? 'w-4 h-4' 
+                            : totalValues > 3 
+                            ? 'w-5 h-5' 
+                            : 'w-6 h-6';
+                          const gapClass = totalValues > 6 
+                            ? 'gap-1' 
+                            : 'gap-2';
 
                           // Debug logging for material attribute
                           if (attrKey === 'material' && g.imageUrl) {
@@ -1276,7 +1323,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 }
                               }}
                               disabled={isDisabled}
-                              className={`px-4 py-2 rounded-lg border-2 transition-all flex items-center gap-2 ${
+                              className={`${paddingClass} rounded-lg border-2 transition-all flex items-center ${gapClass} ${
                                 isSelected
                                   ? 'border-gray-900 bg-gray-50'
                                   : isDisabled
@@ -1288,14 +1335,14 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 <img 
                                   src={g.imageUrl!} 
                                   alt={g.label}
-                                  className="w-6 h-6 object-cover rounded border border-gray-300 flex-shrink-0"
+                                  className={`${imageSizeClass} object-cover rounded border border-gray-300 flex-shrink-0`}
                                   onError={(e) => {
                                     console.error('❌ [PRODUCT PAGE] Failed to load attribute image:', g.imageUrl);
                                     (e.target as HTMLImageElement).style.display = 'none';
                                   }}
                                 />
                               ) : null}
-                              <span>{getAttributeLabel(language, attrKey, g.value)}</span>
+                              <span className={textSizeClass}>{getAttributeLabel(language, attrKey, g.value)}</span>
                             </button>
                           );
                         })}
