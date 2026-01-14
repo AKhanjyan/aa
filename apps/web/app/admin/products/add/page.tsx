@@ -3065,71 +3065,116 @@ function AddProductPageContent() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
-                        {categoriesExpanded && (
-                          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                            <div className="p-2">
-                              <div className="space-y-1">
-                                {categories.map((category) => (
-                                  <label
-                                    key={category.id}
-                                    className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={formData.categoryIds.includes(category.id)}
-                                      onChange={(e) => {
-                                        const newCategoryIds = e.target.checked
-                                          ? [...formData.categoryIds, category.id]
-                                          : formData.categoryIds.filter((id) => id !== category.id);
-                                        
-                                        // Set primary category if it's the first one
-                                        const newPrimaryCategoryId = newCategoryIds.length > 0 ? newCategoryIds[0] : '';
-                                        
-                                        const selectedCategory = categories.find((cat) => cat.id === category.id);
-                                        const newIsSizeRequired = selectedCategory
-                                          ? (selectedCategory.requiresSizes !== undefined 
-                                              ? selectedCategory.requiresSizes 
-                                              : (() => {
-                                                  const sizeRequiredSlugs = ['clothing', 'odezhda', 'hagust', 'apparel', 'fashion', 'shoes', 'koshik', 'obuv'];
-                                                  const sizeRequiredTitles = ['clothing', 'одежда', 'հագուստ', 'apparel', 'fashion', 'shoes', 'կոշիկ', 'обувь'];
-                                                  return (
-                                                    sizeRequiredSlugs.some((slug) => selectedCategory.slug.toLowerCase().includes(slug)) ||
-                                                    sizeRequiredTitles.some((title) => selectedCategory.title.toLowerCase().includes(title))
-                                                  );
-                                                })())
-                                          : false;
-                                        
-                                        setFormData((prev) => {
-                                          const wasSizeRequired = isClothingCategory();
-                                          if (wasSizeRequired && !newIsSizeRequired && newCategoryIds.length === 0) {
+                        {categoriesExpanded && (() => {
+                          // Build category tree structure
+                          const categoryMap = new Map<string, Category & { children: Category[] }>();
+                          const rootCategories: (Category & { children: Category[] })[] = [];
+
+                          // First pass: create map and identify root categories
+                          categories.forEach((category) => {
+                            categoryMap.set(category.id, { ...category, children: [] });
+                          });
+
+                          // Second pass: build tree structure
+                          categories.forEach((category) => {
+                            if (category.parentId && categoryMap.has(category.parentId)) {
+                              const parent = categoryMap.get(category.parentId)!;
+                              const child = categoryMap.get(category.id)!;
+                              parent.children.push(child);
+                            } else {
+                              rootCategories.push(categoryMap.get(category.id)!);
+                            }
+                          });
+
+                          // Flatten tree for display (parent first, then children)
+                          const flattenTree = (nodes: (Category & { children: Category[] })[], result: (Category & { isSubcategory: boolean })[] = []): (Category & { isSubcategory: boolean })[] => {
+                            nodes.forEach((node) => {
+                              result.push({ ...node, isSubcategory: false });
+                              if (node.children && node.children.length > 0) {
+                                node.children.forEach((child) => {
+                                  result.push({ ...child, isSubcategory: true });
+                                });
+                              }
+                            });
+                            return result;
+                          };
+
+                          const displayCategories = flattenTree(rootCategories);
+
+                          return (
+                            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                              <div className="p-2">
+                                <div className="space-y-1">
+                                  {displayCategories.map((category) => (
+                                    <label
+                                      key={category.id}
+                                      className={`flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded ${
+                                        category.isSubcategory ? 'pl-6' : ''
+                                      }`}
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={formData.categoryIds.includes(category.id)}
+                                        onChange={(e) => {
+                                          const newCategoryIds = e.target.checked
+                                            ? [...formData.categoryIds, category.id]
+                                            : formData.categoryIds.filter((id) => id !== category.id);
+                                          
+                                          // Set primary category if it's the first one
+                                          const newPrimaryCategoryId = newCategoryIds.length > 0 ? newCategoryIds[0] : '';
+                                          
+                                          const selectedCategory = categories.find((cat) => cat.id === category.id);
+                                          const newIsSizeRequired = selectedCategory
+                                            ? (selectedCategory.requiresSizes !== undefined 
+                                                ? selectedCategory.requiresSizes 
+                                                : (() => {
+                                                    const sizeRequiredSlugs = ['clothing', 'odezhda', 'hagust', 'apparel', 'fashion', 'shoes', 'koshik', 'obuv'];
+                                                    const sizeRequiredTitles = ['clothing', 'одежда', 'հագուստ', 'apparel', 'fashion', 'shoes', 'կոշիկ', 'обувь'];
+                                                    return (
+                                                      sizeRequiredSlugs.some((slug) => selectedCategory.slug.toLowerCase().includes(slug)) ||
+                                                      sizeRequiredTitles.some((title) => selectedCategory.title.toLowerCase().includes(title))
+                                                    );
+                                                  })())
+                                            : false;
+                                          
+                                          setFormData((prev) => {
+                                            const wasSizeRequired = isClothingCategory();
+                                            if (wasSizeRequired && !newIsSizeRequired && newCategoryIds.length === 0) {
+                                              return {
+                                                ...prev,
+                                                categoryIds: newCategoryIds,
+                                                primaryCategoryId: newPrimaryCategoryId,
+                                                variants: prev.variants.map((v) => ({
+                                                  ...v,
+                                                  sizes: [],
+                                                  sizeStocks: {},
+                                                  size: '',
+                                                })),
+                                              };
+                                            }
                                             return {
                                               ...prev,
                                               categoryIds: newCategoryIds,
                                               primaryCategoryId: newPrimaryCategoryId,
-                                              variants: prev.variants.map((v) => ({
-                                                ...v,
-                                                sizes: [],
-                                                sizeStocks: {},
-                                                size: '',
-                                              })),
                                             };
-                                          }
-                                          return {
-                                            ...prev,
-                                            categoryIds: newCategoryIds,
-                                            primaryCategoryId: newPrimaryCategoryId,
-                                          };
-                                        });
-                                      }}
-                                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                    />
-                                    <span className="text-sm text-gray-700">{category.title}</span>
-                                  </label>
-                                ))}
+                                          });
+                                        }}
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                      />
+                                      <span className={`text-gray-700 ${
+                                        category.isSubcategory 
+                                          ? 'text-xs' 
+                                          : 'text-sm font-semibold'
+                                      }`}>
+                                        {category.title}
+                                      </span>
+                                    </label>
+                                  ))}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          );
+                        })()}
                       </div>
                     ) : (
                       <div className="space-y-3">
