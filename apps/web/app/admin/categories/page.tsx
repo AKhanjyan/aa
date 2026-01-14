@@ -301,11 +301,13 @@ function CategoriesSection() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">{t('admin.categories.rootCategory')}</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.title}
-                    </option>
-                  ))}
+                  {categories
+                    .filter((cat) => !cat.parentId) // Only show root categories as potential parents
+                    .map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.title}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -375,7 +377,10 @@ function CategoriesSection() {
                 >
                   <option value="">{t('admin.categories.rootCategory')}</option>
                   {categories
-                    .filter((cat) => cat.id !== editingCategory.id) // Exclude current category
+                    .filter((cat) => 
+                      cat.id !== editingCategory.id && // Exclude current category
+                      !cat.parentId // Only show root categories as potential parents
+                    )
                     .map((cat) => (
                       <option key={cat.id} value={cat.id}>
                         {cat.title}

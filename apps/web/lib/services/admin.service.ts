@@ -2227,6 +2227,22 @@ class AdminService {
   }) {
     const locale = data.locale || "en";
     
+    // Validate parent category exists if parentId is provided
+    if (data.parentId) {
+      const parentCategory = await db.category.findUnique({
+        where: { id: data.parentId },
+      });
+
+      if (!parentCategory) {
+        throw {
+          status: 404,
+          type: "https://api.shop.am/problems/not-found",
+          title: "Parent category not found",
+          detail: `Parent category with id '${data.parentId}' does not exist`,
+        };
+      }
+    }
+    
     // Generate slug from title
     const slug = data.title
       .toLowerCase()
