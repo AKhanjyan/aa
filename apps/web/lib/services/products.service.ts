@@ -74,6 +74,30 @@ const getOutOfStockLabel = (lang: string = "en"): string => {
 
 class ProductsService {
   /**
+   * Get all child category IDs recursively
+   */
+  private async getAllChildCategoryIds(parentId: string): Promise<string[]> {
+    const children = await db.category.findMany({
+      where: {
+        parentId: parentId,
+        published: true,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+    
+    let allChildIds = children.map((c: { id: string }) => c.id);
+    
+    // Recursively get children of children
+    for (const child of children) {
+      const grandChildren = await this.getAllChildCategoryIds(child.id);
+      allChildIds = [...allChildIds, ...grandChildren];
+    }
+    
+    return allChildIds;
+  }
+
+  /**
    * Get all products with filters
    */
   async findAll(filters: ProductFilters) {
@@ -180,22 +204,33 @@ class ProductsService {
 
       if (categoryDoc) {
         console.log('✅ [PRODUCTS SERVICE] Category found:', { id: categoryDoc.id, slug: category });
+        
+        // Get all child categories (subcategories) recursively
+        const childCategoryIds = await this.getAllChildCategoryIds(categoryDoc.id);
+        const allCategoryIds = [categoryDoc.id, ...childCategoryIds];
+        
+        console.log('📂 [PRODUCTS SERVICE] Category IDs to include:', {
+          parent: categoryDoc.id,
+          children: childCategoryIds,
+          total: allCategoryIds.length
+        });
+        
+        // Build OR conditions for all categories (parent + children)
+        const categoryConditions = allCategoryIds.flatMap((catId: string) => [
+          { primaryCategoryId: catId },
+          { categoryIds: { has: catId } },
+        ]);
+        
         if (where.OR) {
           where.AND = [
             { OR: where.OR },
             {
-              OR: [
-                { primaryCategoryId: categoryDoc.id },
-                { categoryIds: { has: categoryDoc.id } },
-              ],
+              OR: categoryConditions,
             },
           ];
           delete where.OR;
         } else {
-          where.OR = [
-            { primaryCategoryId: categoryDoc.id },
-            { categoryIds: { has: categoryDoc.id } },
-          ];
+          where.OR = categoryConditions;
         }
       } else {
         console.warn('⚠️ [PRODUCTS SERVICE] Category not found in any language:', { category, lang });
@@ -845,22 +880,32 @@ class ProductsService {
           });
 
           if (categoryDoc && categoryDoc.id) {
+            // Get all child categories (subcategories) recursively
+            const childCategoryIds = await this.getAllChildCategoryIds(categoryDoc.id);
+            const allCategoryIds = [categoryDoc.id, ...childCategoryIds];
+            
+            console.log('📂 [PRODUCTS SERVICE] Category IDs to include in filters:', {
+              parent: categoryDoc.id,
+              children: childCategoryIds,
+              total: allCategoryIds.length
+            });
+            
+            // Build OR conditions for all categories (parent + children)
+            const categoryConditions = allCategoryIds.flatMap((catId: string) => [
+              { primaryCategoryId: catId },
+              { categoryIds: { has: catId } },
+            ]);
+            
             if (where.OR) {
               where.AND = [
                 { OR: where.OR },
                 {
-                  OR: [
-                    { primaryCategoryId: categoryDoc.id },
-                    { categoryIds: { has: categoryDoc.id } },
-                  ],
+                  OR: categoryConditions,
                 },
               ];
               delete where.OR;
             } else {
-              where.OR = [
-                { primaryCategoryId: categoryDoc.id },
-                { categoryIds: { has: categoryDoc.id } },
-              ];
+              where.OR = categoryConditions;
             }
           }
         } catch (categoryError) {
