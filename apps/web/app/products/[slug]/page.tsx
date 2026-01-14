@@ -429,6 +429,14 @@ export default function ProductPage({ params }: ProductPageProps) {
     ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
     : 0;
 
+  // Scroll to reviews section
+  const scrollToReviews = useCallback(() => {
+    const reviewsElement = document.getElementById('product-reviews');
+    if (reviewsElement) {
+      reviewsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
   // Helper function to get option value (supports both new and old format)
   const getOptionValue = useCallback((options: VariantOption[] | undefined, key: string): string | null => {
     if (!options) return null;
@@ -1356,7 +1364,10 @@ export default function ProductPage({ params }: ProductPageProps) {
                   {averageRating > 0 ? averageRating.toFixed(1) : '0.0'}
                 </span>
               </div>
-              <span className="text-sm text-gray-600">
+              <span 
+                onClick={scrollToReviews}
+                className="text-sm text-gray-600 cursor-pointer hover:text-gray-900 hover:underline transition-colors"
+              >
                 ({reviews.length} {reviews.length === 1 ? t(language, 'common.reviews.review') : t(language, 'common.reviews.reviews')})
               </span>
             </div>
@@ -1727,7 +1738,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
       )}
 
-      <div className="mt-24">
+      <div id="product-reviews" className="mt-24 scroll-mt-24">
         <ProductReviews productId={product.id} />
       </div>
       <div className="mt-16">
