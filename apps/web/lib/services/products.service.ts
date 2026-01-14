@@ -499,12 +499,6 @@ class ProductsService {
     const sizeList = normalizeFilterList(sizes, (v) => v.toUpperCase());
 
     if (colorList.length > 0 || sizeList.length > 0) {
-      console.log('🔍 [PRODUCTS SERVICE] Filtering by:', {
-        colors: colorList,
-        sizes: sizeList,
-        productsBefore: products.length
-      });
-      
       products = products.filter((product: ProductWithRelations) => {
         const variants = Array.isArray(product.variants) ? product.variants : [];
         
@@ -514,46 +508,67 @@ class ProductsService {
         }
         
         // Find variants that match ALL specified filters
-        const matchingVariants = variants.filter((variant: { id?: string; options?: Array<{ attributeKey?: string | null; value?: string | null }> }) => {
+        const matchingVariants = variants.filter((variant: any) => {
           const options = Array.isArray(variant.options) ? variant.options : [];
           
           if (options.length === 0) {
-            console.log('⚠️ [PRODUCTS SERVICE] Variant has no options');
+            return false;
           }
+          
+          // Helper function to get color value from option (support all formats)
+          const getColorValue = (opt: any, lang: string = 'en'): string | null => {
+            // New format: Use AttributeValue if available
+            if (opt.attributeValue && opt.attributeValue.attribute?.key === "color") {
+              const translation = opt.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || opt.attributeValue.translations?.[0];
+              return (translation?.label || opt.attributeValue.value || "").trim().toLowerCase();
+            }
+            // Old format: check attributeKey, key, or attribute
+            if (opt.attributeKey === "color" || opt.key === "color" || opt.attribute === "color") {
+              return (opt.value || opt.label || "").trim().toLowerCase();
+            }
+            return null;
+          };
+          
+          // Helper function to get size value from option (support all formats)
+          const getSizeValue = (opt: any, lang: string = 'en'): string | null => {
+            // New format: Use AttributeValue if available
+            if (opt.attributeValue && opt.attributeValue.attribute?.key === "size") {
+              const translation = opt.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || opt.attributeValue.translations?.[0];
+              return (translation?.label || opt.attributeValue.value || "").trim().toUpperCase();
+            }
+            // Old format: check attributeKey, key, or attribute
+            if (opt.attributeKey === "size" || opt.key === "size" || opt.attribute === "size") {
+              return (opt.value || opt.label || "").trim().toUpperCase();
+            }
+            return null;
+          };
           
           // Check color match if colors filter is provided
           if (colorList.length > 0) {
-            const colorOption = options.find(
-              (opt: { attributeKey?: string | null }) => opt.attributeKey === "color"
-            );
-            if (!colorOption || !colorOption.value) {
-              console.log('⚠️ [PRODUCTS SERVICE] Variant missing color option:', {
-                variantId: variant.id || 'unknown',
-                options: options.map((o: { attributeKey?: string | null; value?: string | null }) => ({ key: o.attributeKey, value: o.value }))
-              });
-              return false;
+            let colorMatched = false;
+            for (const opt of options) {
+              const variantColorValue = getColorValue(opt, filters.lang || 'en');
+              if (variantColorValue && colorList.includes(variantColorValue)) {
+                colorMatched = true;
+                break;
+              }
             }
-            const variantColorValue = colorOption.value.trim().toLowerCase();
-            if (!colorList.includes(variantColorValue)) {
-              console.log('⚠️ [PRODUCTS SERVICE] Color mismatch:', {
-                variantId: variant.id || 'unknown',
-                variantColor: variantColorValue,
-                filterColors: colorList
-              });
+            if (!colorMatched) {
               return false;
             }
           }
           
           // Check size match if sizes filter is provided
           if (sizeList.length > 0) {
-            const sizeOption = options.find(
-              (opt: { attributeKey?: string | null }) => opt.attributeKey === "size"
-            );
-            if (!sizeOption || !sizeOption.value) {
-              return false;
+            let sizeMatched = false;
+            for (const opt of options) {
+              const variantSizeValue = getSizeValue(opt, filters.lang || 'en');
+              if (variantSizeValue && sizeList.includes(variantSizeValue)) {
+                sizeMatched = true;
+                break;
+              }
             }
-            const variantSizeValue = sizeOption.value.trim().toUpperCase();
-            if (!sizeList.includes(variantSizeValue)) {
+            if (!sizeMatched) {
               return false;
             }
           }
@@ -562,25 +577,8 @@ class ProductsService {
         });
         
         const hasMatch = matchingVariants.length > 0;
-        
-        if (hasMatch) {
-          console.log('✅ [PRODUCTS SERVICE] Product matches filters:', {
-            productId: product.id,
-            matchingVariantsCount: matchingVariants.length,
-            totalVariants: variants.length
-          });
-        } else {
-          console.log('❌ [PRODUCTS SERVICE] Product does not match filters:', {
-            productId: product.id,
-            totalVariants: variants.length,
-            filters: { colors: colorList, sizes: sizeList }
-          });
-        }
-        
         return hasMatch;
       });
-      
-      console.log('🔍 [PRODUCTS SERVICE] Products after filter:', products.length);
     }
 
     // Sort
@@ -953,7 +951,29 @@ class ProductsService {
                 published: true,
               },
               include: {
-                options: true,
+                options: {
+                  include: {
+                    attributeValue: {
+                      include: {
+                        attribute: true,
+                        translations: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            productAttributes: {
+              include: {
+                attribute: {
+                  include: {
+                    values: {
+                      include: {
+                        translations: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -985,22 +1005,52 @@ class ProductsService {
 
     // Collect colors and sizes from variants
     // Use Map with lowercase key to merge colors with different cases
-    // Store both count and canonical label (prefer capitalized version)
-    const colorMap = new Map<string, { count: number; label: string }>();
+    // Store both count, canonical label, imageUrl and colors hex
+    const lang = filters.lang || 'en';
+    const colorMap = new Map<string, { 
+      count: number; 
+      label: string; 
+      imageUrl?: string | null; 
+      colors?: string[] | null;
+    }>();
     const sizeMap = new Map<string, number>();
 
     products.forEach((product: ProductWithRelations) => {
       if (!product || !product.variants || !Array.isArray(product.variants)) {
         return;
       }
-      product.variants.forEach((variant: { options?: Array<{ attributeKey?: string | null; value?: string | null }> }) => {
+      product.variants.forEach((variant: any) => {
         if (!variant || !variant.options || !Array.isArray(variant.options)) {
           return;
         }
-        variant.options.forEach((option: { attributeKey?: string | null; value?: string | null }) => {
+        variant.options.forEach((option: any) => {
           if (!option) return;
-          if (option.attributeKey === "color" && option.value) {
-            const colorValue = option.value.trim();
+          
+          // Check if it's a color option (support multiple formats)
+          const isColor = option.attributeKey === "color" || 
+                         option.key === "color" ||
+                         option.attribute === "color" ||
+                         (option.attributeValue && option.attributeValue.attribute?.key === "color");
+          
+          if (isColor) {
+            let colorValue = "";
+            let imageUrl: string | null | undefined = null;
+            let colorsHex: string[] | null | undefined = null;
+            
+            // New format: Use AttributeValue if available
+            if (option.attributeValue) {
+              const translation = option.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || option.attributeValue.translations?.[0];
+              colorValue = translation?.label || option.attributeValue.value || "";
+              imageUrl = option.attributeValue.imageUrl || null;
+              colorsHex = option.attributeValue.colors || null;
+            } else if (option.value) {
+              // Old format: use value directly
+              colorValue = option.value.trim();
+            } else if (option.key === "color" || option.attribute === "color") {
+              // Fallback: try to get from option itself
+              colorValue = option.value || option.label || "";
+            }
+            
             if (colorValue) {
               const colorKey = colorValue.toLowerCase();
               const existing = colorMap.get(colorKey);
@@ -1011,28 +1061,83 @@ class ProductsService {
                 ? (colorValue[0] === colorValue[0].toUpperCase() ? colorValue : existing.label)
                 : colorValue;
               
+              // Prefer imageUrl and colors from AttributeValue if available
+              const finalImageUrl = imageUrl || existing?.imageUrl || null;
+              const finalColors = colorsHex || existing?.colors || null;
+              
               colorMap.set(colorKey, {
                 count: (existing?.count || 0) + 1,
                 label: preferredLabel,
+                imageUrl: finalImageUrl,
+                colors: finalColors,
               });
             }
-          } else if (option.attributeKey === "size" && option.value) {
-            const sizeValue = option.value.trim().toUpperCase();
-            if (sizeValue) {
-              sizeMap.set(sizeValue, (sizeMap.get(sizeValue) || 0) + 1);
+          } else {
+            // Check if it's a size option (support multiple formats)
+            const isSize = option.attributeKey === "size" || 
+                          option.key === "size" ||
+                          option.attribute === "size" ||
+                          (option.attributeValue && option.attributeValue.attribute?.key === "size");
+            
+            if (isSize) {
+              let sizeValue = "";
+              
+              // New format: Use AttributeValue if available
+              if (option.attributeValue) {
+                const translation = option.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || option.attributeValue.translations?.[0];
+                sizeValue = translation?.label || option.attributeValue.value || "";
+              } else if (option.value) {
+                // Old format: use value directly
+                sizeValue = option.value.trim();
+              } else if (option.key === "size" || option.attribute === "size") {
+                // Fallback: try to get from option itself
+                sizeValue = option.value || option.label || "";
+              }
+              
+              if (sizeValue) {
+                const normalizedSize = sizeValue.trim().toUpperCase();
+                sizeMap.set(normalizedSize, (sizeMap.get(normalizedSize) || 0) + 1);
+              }
             }
           }
         });
       });
+      
+      // Also check productAttributes for color attribute values with imageUrl and colors
+      if ((product as any).productAttributes && Array.isArray((product as any).productAttributes)) {
+        (product as any).productAttributes.forEach((productAttr: any) => {
+          if (productAttr.attribute?.key === 'color' && productAttr.attribute?.values) {
+            productAttr.attribute.values.forEach((attrValue: any) => {
+              const translation = attrValue.translations?.find((t: { locale: string }) => t.locale === lang) || attrValue.translations?.[0];
+              const colorValue = translation?.label || attrValue.value || "";
+              if (colorValue) {
+                const colorKey = colorValue.toLowerCase();
+                const existing = colorMap.get(colorKey);
+                // Update if we have imageUrl or colors hex and they're not already set
+                if (attrValue.imageUrl || attrValue.colors) {
+                  colorMap.set(colorKey, {
+                    count: existing?.count || 0,
+                    label: existing?.label || colorValue,
+                    imageUrl: attrValue.imageUrl || existing?.imageUrl || null,
+                    colors: attrValue.colors || existing?.colors || null,
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
     });
 
     // Convert maps to arrays
-    const colors: Array<{ value: string; label: string; count: number }> = Array.from(
+    const colors: Array<{ value: string; label: string; count: number; imageUrl?: string | null; colors?: string[] | null }> = Array.from(
       colorMap.entries()
-    ).map(([key, data]: [string, { count: number; label: string }]) => ({
+    ).map(([key, data]) => ({
       value: key, // lowercase for filtering
       label: data.label, // canonical label (prefer capitalized)
       count: data.count, // merged count
+      imageUrl: data.imageUrl || null,
+      colors: data.colors || null,
     }));
 
     const sizes: Array<{ value: string; count: number }> = Array.from(

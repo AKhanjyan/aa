@@ -53,11 +53,8 @@ export function SizeFilter({ category, search, minPrice, maxPrice, selectedSizes
       // Fetch filters from API
       const response = await apiClient.get<{ colors: any[]; sizes: SizeOption[] }>('/api/v1/products/filters', { params });
       
-      console.log('[SizeFilter] Filters response:', response.sizes?.length, 'sizes');
-      
       setSizes(response.sizes || []);
     } catch (error) {
-      console.error('Error fetching sizes:', error);
       setSizes([]);
     } finally {
       setLoading(false);
@@ -107,7 +104,7 @@ export function SizeFilter({ category, search, minPrice, maxPrice, selectedSizes
           {t('products.filters.size.noSizes')}
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-64 overflow-y-auto">
           {sizes.map((size) => {
             const isSelected = selected.includes(size.value);
 

@@ -20,6 +20,8 @@ interface ColorOption {
   value: string;
   label: string;
   count: number;
+  imageUrl?: string | null;
+  colors?: string[] | null;
 }
 
 export function ColorFilter({ category, search, minPrice, maxPrice, selectedColors = [] }: ColorFilterProps) {
@@ -54,11 +56,8 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
       // Fetch filters from API
       const response = await apiClient.get<{ colors: ColorOption[]; sizes: any[] }>('/api/v1/products/filters', { params });
       
-      console.log('[ColorFilter] Filters response:', response.colors?.length, 'colors');
-      
       setColors(response.colors || []);
     } catch (error) {
-      console.error('Error fetching colors:', error);
       setColors([]);
     } finally {
       setLoading(false);
@@ -111,7 +110,11 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
         <div className="space-y-2 max-h-64 overflow-y-auto">
           {colors.map((color) => {
             const isSelected = selected.includes(color.value);
-            const colorHex = getColorHex(color.label);
+            // Determine color hex: use colors[0] if available, otherwise use getColorHex
+            const colorHex = color.colors && Array.isArray(color.colors) && color.colors.length > 0 
+              ? color.colors[0] 
+              : getColorHex(color.label);
+            const hasImage = color.imageUrl && color.imageUrl.trim() !== '';
 
             return (
               <button
@@ -127,12 +130,25 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-4 h-4 rounded-full border flex-shrink-0 ${
+                    className={`w-4 h-4 rounded-full border flex-shrink-0 overflow-hidden ${
                       isSelected ? 'border-blue-500 border-2' : 'border-gray-300'
                     }`}
-                    style={{ backgroundColor: colorHex }}
+                    style={hasImage ? {} : { backgroundColor: colorHex }}
                     aria-label={color.label}
-                  />
+                  >
+                    {hasImage ? (
+                      <img 
+                        src={color.imageUrl!} 
+                        alt={color.label}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to color hex if image fails to load
+                          (e.target as HTMLImageElement).style.backgroundColor = colorHex;
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    ) : null}
+                  </div>
                   <span
                     className={`text-sm group-hover:text-gray-700 ${
                       isSelected ? 'text-blue-900 font-medium' : 'text-gray-900'
