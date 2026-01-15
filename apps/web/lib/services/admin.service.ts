@@ -1602,6 +1602,68 @@ class AdminService {
           }
         }
 
+        // Update attribute value imageUrls from variant images
+        // If a variant has an imageUrl, update the corresponding attribute value's imageUrl
+        try {
+          console.log('🖼️ [ADMIN SERVICE] Updating attribute value imageUrls from variant images...');
+          const createdVariants = await tx.productVariant.findMany({
+            where: { productId: product.id },
+            include: {
+              options: {
+                include: {
+                  attributeValue: true,
+                },
+              },
+            },
+          });
+
+          for (const variant of createdVariants) {
+            if (!variant.imageUrl) continue;
+
+            // Extract first image URL from comma-separated string
+            const variantImageUrl = variant.imageUrl.split(',')[0]?.trim();
+            if (!variantImageUrl) continue;
+
+            // Get all attribute value IDs from this variant's options
+            const attributeValueIds = new Set<string>();
+            variant.options.forEach((opt: any) => {
+              if (opt.valueId && opt.attributeValue) {
+                attributeValueIds.add(opt.valueId);
+              }
+            });
+
+            // Update each attribute value's imageUrl if it doesn't already have one
+            // or if the variant image is more specific (e.g., base64 or full URL)
+            for (const valueId of attributeValueIds) {
+              const attrValue = await tx.attributeValue.findUnique({
+                where: { id: valueId },
+              });
+
+              if (attrValue) {
+                // Only update if:
+                // 1. Attribute value doesn't have an imageUrl, OR
+                // 2. Variant image is a base64 (more specific) and attribute value has a URL
+                const shouldUpdate = !attrValue.imageUrl || 
+                  (variantImageUrl.startsWith('data:image/') && attrValue.imageUrl && !attrValue.imageUrl.startsWith('data:image/'));
+
+                if (shouldUpdate) {
+                  console.log(`📸 [ADMIN SERVICE] Updating attribute value ${valueId} imageUrl from variant ${variant.id}:`, variantImageUrl.substring(0, 50) + '...');
+                  await tx.attributeValue.update({
+                    where: { id: valueId },
+                    data: { imageUrl: variantImageUrl },
+                  });
+                } else {
+                  console.log(`⏭️ [ADMIN SERVICE] Skipping attribute value ${valueId} - already has imageUrl`);
+                }
+              }
+            }
+          }
+          console.log('✅ [ADMIN SERVICE] Finished updating attribute value imageUrls from variant images');
+        } catch (error: any) {
+          // Don't fail the transaction if this fails - it's a nice-to-have feature
+          console.warn('⚠️ [ADMIN SERVICE] Failed to update attribute value imageUrls from variant images:', error);
+        }
+
         return await tx.product.findUnique({
           where: { id: product.id },
           include: {
@@ -2021,6 +2083,68 @@ class AdminService {
             });
             console.log(`🗑️ [ADMIN SERVICE] Deleted ${variantsToDelete.length} variant(s):`, variantsToDelete);
           }
+        }
+
+        // Update attribute value imageUrls from variant images
+        // If a variant has an imageUrl, update the corresponding attribute value's imageUrl
+        try {
+          console.log('🖼️ [ADMIN SERVICE] Updating attribute value imageUrls from variant images...');
+          const allVariants = await tx.productVariant.findMany({
+            where: { productId },
+            include: {
+              options: {
+                include: {
+                  attributeValue: true,
+                },
+              },
+            },
+          });
+
+          for (const variant of allVariants) {
+            if (!variant.imageUrl) continue;
+
+            // Extract first image URL from comma-separated string
+            const variantImageUrl = variant.imageUrl.split(',')[0]?.trim();
+            if (!variantImageUrl) continue;
+
+            // Get all attribute value IDs from this variant's options
+            const attributeValueIds = new Set<string>();
+            variant.options.forEach((opt: any) => {
+              if (opt.valueId && opt.attributeValue) {
+                attributeValueIds.add(opt.valueId);
+              }
+            });
+
+            // Update each attribute value's imageUrl if it doesn't already have one
+            // or if the variant image is more specific (e.g., base64 or full URL)
+            for (const valueId of attributeValueIds) {
+              const attrValue = await tx.attributeValue.findUnique({
+                where: { id: valueId },
+              });
+
+              if (attrValue) {
+                // Only update if:
+                // 1. Attribute value doesn't have an imageUrl, OR
+                // 2. Variant image is a base64 (more specific) and attribute value has a URL
+                const shouldUpdate = !attrValue.imageUrl || 
+                  (variantImageUrl.startsWith('data:image/') && attrValue.imageUrl && !attrValue.imageUrl.startsWith('data:image/'));
+
+                if (shouldUpdate) {
+                  console.log(`📸 [ADMIN SERVICE] Updating attribute value ${valueId} imageUrl from variant ${variant.id}:`, variantImageUrl.substring(0, 50) + '...');
+                  await tx.attributeValue.update({
+                    where: { id: valueId },
+                    data: { imageUrl: variantImageUrl },
+                  });
+                } else {
+                  console.log(`⏭️ [ADMIN SERVICE] Skipping attribute value ${valueId} - already has imageUrl`);
+                }
+              }
+            }
+          }
+          console.log('✅ [ADMIN SERVICE] Finished updating attribute value imageUrls from variant images');
+        } catch (error: any) {
+          // Don't fail the transaction if this fails - it's a nice-to-have feature
+          console.warn('⚠️ [ADMIN SERVICE] Failed to update attribute value imageUrls from variant images:', error);
         }
 
         // 5. Finally update the product record itself

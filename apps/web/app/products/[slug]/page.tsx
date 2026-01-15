@@ -268,9 +268,10 @@ export default function ProductPage({ params }: ProductPageProps) {
         });
       } else if (typeof product.media === 'string') {
         // Handle single string (could be comma-separated)
-        console.log('🖼️ [PRODUCT IMAGES] Processing single string media:', product.media);
-        if (product.media.includes(',')) {
-          const urls = smartSplitUrls(product.media);
+        const mediaString = product.media as string;
+        console.log('🖼️ [PRODUCT IMAGES] Processing single string media:', mediaString);
+        if (mediaString.includes(',')) {
+          const urls = smartSplitUrls(mediaString);
           urls.forEach(url => {
             if (url.trim()) {
               console.log('🖼️ [PRODUCT IMAGES] Adding comma-separated URL:', url);
@@ -278,7 +279,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             }
           });
         } else {
-          allRawImages.push(product.media);
+          allRawImages.push(mediaString);
         }
       } else if (typeof product.media === 'object') {
         // Handle single object
@@ -900,15 +901,18 @@ export default function ProductPage({ params }: ProductPageProps) {
         product.variants?.forEach((variant) => {
           // Include ALL variants - don't filter by compatibility
           // This ensures all attribute values are shown
+          // IMPORTANT: Use filter() instead of find() to get ALL options for this attribute
+          // A variant can have multiple values for the same attribute (e.g., color: [red, blue])
 
-          const option = variant.options?.find((opt) => {
+          const options = variant.options?.filter((opt) => {
             if (opt.valueId && opt.attributeId === productAttr.attribute.id) {
               return true;
             }
             return opt.key === attrKey || opt.attribute === attrKey;
-          });
+          }) || [];
 
-          if (option) {
+          // Process ALL options for this attribute (not just the first one)
+          options.forEach((option) => {
             const valueId = option.valueId || '';
             const value = option.value || '';
             // Get label from AttributeValue if available, otherwise use value
@@ -929,8 +933,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                 variants: [],
               });
             }
-            valueMap.get(mapKey)!.variants.push(variant);
-          }
+            // Add variant to this value's variants list (avoid duplicates)
+            if (!valueMap.get(mapKey)!.variants.some(v => v.id === variant.id)) {
+              valueMap.get(mapKey)!.variants.push(variant);
+            }
+          });
         });
 
         // Get current selections for stock calculation (excluding this attribute)
@@ -1022,12 +1029,15 @@ export default function ProductPage({ params }: ProductPageProps) {
             product.variants?.forEach((variant) => {
               // Include ALL variants - don't filter by compatibility
               // This ensures all attribute values are shown
+              // IMPORTANT: Use filter() instead of find() to get ALL options for this attribute
+              // A variant can have multiple values for the same attribute (e.g., color: [red, blue])
 
-              const option = variant.options?.find((opt) => 
+              const options = variant.options?.filter((opt) => 
                 (opt.key === attrKey || opt.attribute === attrKey)
-              );
+              ) || [];
               
-              if (option) {
+              // Process ALL options for this attribute (not just the first one)
+              options.forEach((option) => {
                 const valueId = option.valueId || '';
                 const value = option.value || '';
                 const label = option.value || '';
@@ -1041,8 +1051,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                     variants: [],
                   });
                 }
-                valueMap.get(mapKey)!.variants.push(variant);
-              }
+                // Add variant to this value's variants list (avoid duplicates)
+                if (!valueMap.get(mapKey)!.variants.some(v => v.id === variant.id)) {
+                  valueMap.get(mapKey)!.variants.push(variant);
+                }
+              });
             });
             
             if (valueMap.size > 0) {
@@ -1120,34 +1133,47 @@ export default function ProductPage({ params }: ProductPageProps) {
         product.variants.forEach((variant) => {
           // For old format, show all variants (no filtering by compatibility)
           // This ensures all attribute values are shown
+          // IMPORTANT: Process ALL options for each attribute, not just the first one
+          // A variant can have multiple values for the same attribute (e.g., color: [red, blue])
 
-          const color = getOptionValue(variant.options, 'color');
-          const size = getOptionValue(variant.options, 'size');
-
-          if (color) {
-            if (!colorMap.has(color)) colorMap.set(color, []);
-            colorMap.get(color)!.push(variant);
-          }
-
-          if (size) {
-            if (!sizeMap.has(size)) sizeMap.set(size, []);
-            sizeMap.get(size)!.push(variant);
-          }
-          
-          // Extract other attributes
+          // Extract ALL color values (not just the first one)
           variant.options?.forEach((opt) => {
             const attrKey = opt.key || opt.attribute || '';
-            if (attrKey && attrKey !== 'color' && attrKey !== 'size') {
+            const value = opt.value || '';
+            
+            if (!value) return;
+            
+            if (attrKey === 'color') {
+              const normalizedColor = value.toLowerCase().trim();
+              if (!colorMap.has(normalizedColor)) {
+                colorMap.set(normalizedColor, []);
+              }
+              // Add variant to this color's variants list (avoid duplicates)
+              if (!colorMap.get(normalizedColor)!.some(v => v.id === variant.id)) {
+                colorMap.get(normalizedColor)!.push(variant);
+              }
+            } else if (attrKey === 'size') {
+              const normalizedSize = value.toLowerCase().trim();
+              if (!sizeMap.has(normalizedSize)) {
+                sizeMap.set(normalizedSize, []);
+              }
+              // Add variant to this size's variants list (avoid duplicates)
+              if (!sizeMap.get(normalizedSize)!.some(v => v.id === variant.id)) {
+                sizeMap.get(normalizedSize)!.push(variant);
+              }
+            } else if (attrKey) {
+              // Extract other attributes
               if (!otherAttributesMap.has(attrKey)) {
                 otherAttributesMap.set(attrKey, new Map());
               }
-              const value = opt.value || '';
-              if (value) {
-                const valueMap = otherAttributesMap.get(attrKey)!;
-                if (!valueMap.has(value)) {
-                  valueMap.set(value, []);
-                }
-                valueMap.get(value)!.push(variant);
+              const valueMap = otherAttributesMap.get(attrKey)!;
+              const normalizedValue = value.toLowerCase().trim();
+              if (!valueMap.has(normalizedValue)) {
+                valueMap.set(normalizedValue, []);
+              }
+              // Add variant to this value's variants list (avoid duplicates)
+              if (!valueMap.get(normalizedValue)!.some(v => v.id === variant.id)) {
+                valueMap.get(normalizedValue)!.push(variant);
               }
             }
           });
