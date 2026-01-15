@@ -8,6 +8,7 @@ import { apiClient } from '../../../lib/api-client';
 import { AdminMenuDrawer } from '../../../components/AdminMenuDrawer';
 import { getAdminMenuTABS } from '../admin-menu.config';
 import { useTranslation } from '../../../lib/i18n-client';
+import { showToast } from '../../../components/Toast';
 
 interface Category {
   id: string;
@@ -108,7 +109,7 @@ function CategoriesSection() {
 
   const handleAddCategory = async () => {
     if (!formData.title.trim()) {
-      alert(t('admin.categories.titleRequired'));
+      showToast(t('admin.categories.titleRequired'), 'warning');
       return;
     }
 
@@ -123,10 +124,10 @@ function CategoriesSection() {
       setShowAddModal(false);
       setFormData({ title: '', parentId: '', requiresSizes: false, subcategoryIds: [] });
       fetchCategories();
-      alert(t('admin.categories.createdSuccess'));
+      showToast(t('admin.categories.createdSuccess'), 'success');
     } catch (err: any) {
       console.error('❌ [ADMIN] Error creating category:', err);
-      alert(err?.data?.detail || err?.message || t('admin.categories.errorCreating'));
+      showToast(err?.data?.detail || err?.message || t('admin.categories.errorCreating'), 'error');
     } finally {
       setSaving(false);
     }
@@ -161,7 +162,7 @@ function CategoriesSection() {
 
   const handleUpdateCategory = async () => {
     if (!editingCategory || !formData.title.trim()) {
-      alert(t('admin.categories.titleRequired'));
+      showToast(t('admin.categories.titleRequired'), 'warning');
       return;
     }
 
@@ -178,10 +179,10 @@ function CategoriesSection() {
       setEditingCategory(null);
       setFormData({ title: '', parentId: '', requiresSizes: false, subcategoryIds: [] });
       fetchCategories();
-      alert(t('admin.categories.updatedSuccess'));
+      showToast(t('admin.categories.updatedSuccess'), 'success');
     } catch (err: any) {
       console.error('❌ [ADMIN] Error updating category:', err);
-      alert(err?.data?.detail || err?.message || t('admin.categories.errorUpdating'));
+      showToast(err?.data?.detail || err?.message || t('admin.categories.errorUpdating'), 'error');
     } finally {
       setSaving(false);
     }
@@ -197,7 +198,7 @@ function CategoriesSection() {
       await apiClient.delete(`/api/v1/admin/categories/${categoryId}`);
       console.log('✅ [ADMIN] Category deleted successfully');
       fetchCategories();
-      alert(t('admin.categories.deletedSuccess'));
+      showToast(t('admin.categories.deletedSuccess'), 'success');
     } catch (err: any) {
       console.error('❌ [ADMIN] Error deleting category:', err);
       let errorMessage = 'Unknown error occurred';
@@ -210,7 +211,7 @@ function CategoriesSection() {
       } else if (err.response?.data?.detail) {
         errorMessage = err.response.data.detail;
       }
-      alert(t('admin.categories.errorDeleting').replace('{message}', errorMessage));
+      showToast(t('admin.categories.errorDeleting').replace('{message}', errorMessage), 'error');
     }
   };
 
