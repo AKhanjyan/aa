@@ -1105,40 +1105,90 @@ class AdminService {
    * Get product by ID
    */
   async getProductById(productId: string) {
-    const product = await db.product.findUnique({
-      where: { id: productId },
-      include: {
-        translations: true,
-        brand: {
-          include: {
-            translations: true,
+    // Try to include productAttributes, but handle case where table might not exist
+    let product;
+    try {
+      product = await db.product.findUnique({
+        where: { id: productId },
+        include: {
+          translations: true,
+          brand: {
+            include: {
+              translations: true,
+            },
           },
-        },
-        categories: {
-          include: {
-            translations: true,
+          categories: {
+            include: {
+              translations: true,
+            },
           },
-        },
-        variants: {
-          include: {
-            options: {
-              include: {
-                attributeValue: {
-                  include: {
-                    attribute: true,
-                    translations: true,
+          variants: {
+            include: {
+              options: {
+                include: {
+                  attributeValue: {
+                    include: {
+                      attribute: true,
+                      translations: true,
+                    },
                   },
                 },
               },
             },
+            orderBy: {
+              position: 'asc',
+            },
           },
-          orderBy: {
-            position: 'asc',
+          labels: true,
+          productAttributes: {
+            include: {
+              attribute: true,
+            },
           },
         },
-        labels: true,
-      },
-    });
+      });
+    } catch (error: any) {
+      // If productAttributes table doesn't exist, retry without it
+      if (error?.code === 'P2021' || error?.message?.includes('productAttributes') || error?.message?.includes('does not exist')) {
+        console.warn('⚠️ [ADMIN SERVICE] productAttributes table not found, fetching without it:', error.message);
+        product = await db.product.findUnique({
+          where: { id: productId },
+          include: {
+            translations: true,
+            brand: {
+              include: {
+                translations: true,
+              },
+            },
+            categories: {
+              include: {
+                translations: true,
+              },
+            },
+            variants: {
+              include: {
+                options: {
+                  include: {
+                    attributeValue: {
+                      include: {
+                        attribute: true,
+                        translations: true,
+                      },
+                    },
+                  },
+                },
+              },
+              orderBy: {
+                position: 'asc',
+              },
+            },
+            labels: true,
+          },
+        });
+      } else {
+        throw error;
+      }
+    }
 
     if (!product) {
       throw {
@@ -1158,6 +1208,22 @@ class AdminService {
     
     // Безопасное получение variants с проверкой на существование массива
     const variants = Array.isArray(product.variants) ? product.variants : [];
+    
+    // Get all attribute IDs from productAttributes relation
+    const productAttributes = Array.isArray((product as any).productAttributes) 
+      ? (product as any).productAttributes 
+      : [];
+    const attributeIds = productAttributes
+      .map((pa: any) => pa.attributeId || pa.attribute?.id)
+      .filter((id: string | undefined): id is string => !!id);
+    
+    // Also include attributeIds from product.attributeIds if available (backward compatibility)
+    const legacyAttributeIds = Array.isArray((product as any).attributeIds) 
+      ? (product as any).attributeIds 
+      : [];
+    
+    // Merge both sources and remove duplicates
+    const allAttributeIds = Array.from(new Set([...attributeIds, ...legacyAttributeIds]));
 
     return {
       id: product.id,
@@ -1168,6 +1234,7 @@ class AdminService {
       brandId: product.brandId || null,
       primaryCategoryId: product.primaryCategoryId || null,
       categoryIds: product.categoryIds || [],
+      attributeIds: allAttributeIds, // All attribute IDs that this product has
       published: product.published,
       media: Array.isArray(product.media) ? product.media : [],
       labels: labels.map((label: { id: string; type: string; value: string; position: string; color: string | null }) => ({

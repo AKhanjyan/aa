@@ -143,6 +143,7 @@ interface ProductData {
   brandId?: string | null;
   primaryCategoryId?: string | null;
   categoryIds?: string[];
+  attributeIds?: string[]; // All attribute IDs that this product has
   published: boolean;
     featured?: boolean;
   media?: string[];
@@ -868,6 +869,12 @@ function AddProductPageContent() {
             (window as any).__productVariantsToConvert = product.variants;
           }
           
+          // Store product's attributeIds to show all attributes, not just ones used in variants
+          if (product.attributeIds && product.attributeIds.length > 0) {
+            (window as any).__productAttributeIds = product.attributeIds;
+            console.log('📋 [ADMIN] Product attributeIds loaded:', product.attributeIds);
+          }
+          
           console.log('✅ [ADMIN] Product loaded for edit');
         } catch (err: any) {
           console.error('❌ [ADMIN] Error loading product:', err);
@@ -926,8 +933,18 @@ function AddProductPageContent() {
         }
       });
       
-      // Set selected attributes for variants
+      // Also include product's attributeIds (all attributes that the product has, not just ones used in variants)
+      const productAttributeIds = (window as any).__productAttributeIds || [];
+      if (productAttributeIds.length > 0) {
+        console.log('📋 [ADMIN] Adding product attributeIds to selected attributes:', productAttributeIds);
+        productAttributeIds.forEach((attrId: string) => {
+          attributeIdsSet.add(attrId);
+        });
+      }
+      
+      // Set selected attributes for variants (includes both variant attributes and product attributes)
       if (attributeIdsSet.size > 0) {
+        console.log('📋 [ADMIN] Setting selectedAttributesForVariants with all attributes:', Array.from(attributeIdsSet));
         setSelectedAttributesForVariants(attributeIdsSet);
       }
       
