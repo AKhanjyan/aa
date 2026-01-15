@@ -1,7 +1,8 @@
+
 import { db } from "@white-shop/db";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { findOrCreateAttributeValue } from "../utils/variant-generator";
-import { ensureProductAttributesTable } from "../utils/db-ensure";
+import { ensureProductAttributesTable, ensureProductVariantAttributesColumn } from "../utils/db-ensure";
 
 class AdminService {
   /**
@@ -973,27 +974,76 @@ class AdminService {
       const queryTime = Date.now() - queryStartTime;
       console.log(`✅ [ADMIN SERVICE] All database queries completed in ${queryTime}ms`);
     } catch (error: any) {
-      const queryTime = Date.now() - queryStartTime;
-      console.error(`❌ [ADMIN SERVICE] Database query error after ${queryTime}ms:`, error);
-      console.error(`❌ [ADMIN SERVICE] Error details:`, {
-        message: error.message,
-        code: error.code,
-        meta: error.meta,
-        stack: error.stack?.substring(0, 500),
-      });
-      
-      // If count fails, try to get products without count
-      if (error.message === "Count query timeout" || error.message?.includes("count")) {
-        console.warn("⚠️ [ADMIN SERVICE] Count query failed, using estimated total");
-        total = products?.length || limit; // Use current page size as fallback
-      } else {
-        // If products query also failed, rethrow
-        if (!products) {
-          throw error;
+      // If product_variants.attributes column doesn't exist, try to create it and retry
+      if (error?.message?.includes('product_variants.attributes') || 
+          (error?.message?.includes('attributes') && error?.message?.includes('does not exist'))) {
+        console.warn('⚠️ [ADMIN SERVICE] product_variants.attributes column not found, attempting to create it...');
+        try {
+          await ensureProductVariantAttributesColumn();
+          // Retry the query after creating the column
+          products = await db.product.findMany({
+            where,
+            skip,
+            take: limit,
+            orderBy,
+            include: {
+              translations: {
+                where: { locale: "en" },
+                take: 1,
+              },
+              variants: {
+                where: { published: true },
+                take: 1,
+                orderBy: { price: "asc" },
+              },
+              labels: true,
+            },
+          });
+          
+          const productsTime = Date.now() - queryStartTime;
+          console.log(`✅ [ADMIN SERVICE] Products fetched in ${productsTime}ms. Found ${products.length} products (after creating attributes column)`);
+          
+          // Get count
+          const countStartTime = Date.now();
+          const countPromise = db.product.count({ where });
+          const timeoutPromise = new Promise<number>((_, reject) => 
+            setTimeout(() => reject(new Error("Count query timeout")), 10000)
+          );
+          
+          total = await Promise.race([countPromise, timeoutPromise]) as number;
+          const countTime = Date.now() - countStartTime;
+          console.log(`✅ [ADMIN SERVICE] Count completed in ${countTime}ms. Total: ${total}`);
+          
+          const queryTime = Date.now() - queryStartTime;
+          console.log(`✅ [ADMIN SERVICE] All database queries completed in ${queryTime}ms`);
+        } catch (retryError: any) {
+          const queryTime = Date.now() - queryStartTime;
+          console.error(`❌ [ADMIN SERVICE] Database query error after ${queryTime}ms (after retry):`, retryError);
+          throw retryError;
         }
-        // If only count failed, use estimated total
-        console.warn("⚠️ [ADMIN SERVICE] Count query failed, using estimated total");
-        total = products.length || limit;
+      } else {
+        const queryTime = Date.now() - queryStartTime;
+        console.error(`❌ [ADMIN SERVICE] Database query error after ${queryTime}ms:`, error);
+        console.error(`❌ [ADMIN SERVICE] Error details:`, {
+          message: error.message,
+          code: error.code,
+          meta: error.meta,
+          stack: error.stack?.substring(0, 500),
+        });
+        
+        // If count fails, try to get products without count
+        if (error.message === "Count query timeout" || error.message?.includes("count")) {
+          console.warn("⚠️ [ADMIN SERVICE] Count query failed, using estimated total");
+          total = products?.length || limit; // Use current page size as fallback
+        } else {
+          // If products query also failed, rethrow
+          if (!products) {
+            throw error;
+          }
+          // If only count failed, use estimated total
+          console.warn("⚠️ [ADMIN SERVICE] Count query failed, using estimated total");
+          total = products.length || limit;
+        }
       }
     }
 

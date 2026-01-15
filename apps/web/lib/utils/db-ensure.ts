@@ -8,6 +8,10 @@ let tableExists = false;
 let reviewsTableChecked = false;
 let reviewsTableExists = false;
 
+// Cache for product_variants.attributes column
+let attributesColumnChecked = false;
+let attributesColumnExists = false;
+
 /**
  * Ensures the product_attributes table exists in the database
  * This is a fallback mechanism for Vercel deployments where migrations might not run automatically
@@ -302,6 +306,68 @@ export async function ensureProductReviewsTable(): Promise<boolean> {
     });
     reviewsTableChecked = true;
     reviewsTableExists = false;
+    return false;
+  }
+}
+
+/**
+ * Ensures the attributes column exists in the product_variants table
+ * This is a fallback mechanism for Vercel deployments where migrations might not run automatically
+ * Uses lazy initialization - checks only once per process
+ * 
+ * @returns Promise<boolean> - true if column exists or was created, false if creation failed
+ */
+export async function ensureProductVariantAttributesColumn(): Promise<boolean> {
+  // If already checked and exists, return immediately
+  if (attributesColumnChecked && attributesColumnExists) {
+    return true;
+  }
+  
+  try {
+    // Try to query the column to check if it exists
+    await db.$queryRaw`SELECT "attributes" FROM "product_variants" LIMIT 1`;
+    attributesColumnChecked = true;
+    attributesColumnExists = true;
+    return true;
+  } catch (error: any) {
+    // If column doesn't exist, create it
+    if (
+      error?.code === 'P2022' || 
+      error?.message?.includes('does not exist') ||
+      error?.message?.includes('product_variants.attributes') ||
+      (error?.message?.includes('column') && error?.message?.includes('attributes'))
+    ) {
+      console.log('🔧 [DB UTILS] product_variants.attributes column not found, creating...');
+      
+      try {
+        // Add the attributes JSONB column if it doesn't exist
+        await db.$executeRaw`
+          ALTER TABLE "product_variants" 
+          ADD COLUMN IF NOT EXISTS "attributes" JSONB
+        `;
+        
+        console.log('✅ [DB UTILS] product_variants.attributes column created successfully');
+        attributesColumnChecked = true;
+        attributesColumnExists = true;
+        return true;
+      } catch (createError: any) {
+        console.error('❌ [DB UTILS] Failed to create product_variants.attributes column:', {
+          message: createError?.message,
+          code: createError?.code,
+        });
+        attributesColumnChecked = true;
+        attributesColumnExists = false;
+        return false;
+      }
+    }
+    
+    // Other errors - log and return false
+    console.error('❌ [DB UTILS] Unexpected error checking product_variants.attributes column:', {
+      message: error?.message,
+      code: error?.code,
+    });
+    attributesColumnChecked = true;
+    attributesColumnExists = false;
     return false;
   }
 }

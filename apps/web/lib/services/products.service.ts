@@ -2,6 +2,7 @@ import { db } from "@white-shop/db";
 import { Prisma } from "@prisma/client";
 import { adminService } from "./admin.service";
 import { translations } from "../translations";
+import { ensureProductVariantAttributesColumn } from "../utils/db-ensure";
 
 interface ProductFilters {
   category?: string;
@@ -387,8 +388,46 @@ class ProductsService {
           });
           console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (without productAttributes)`);
         } catch (retryError: any) {
-          // If attribute_values.colors column doesn't exist, retry without attributeValue include
-          if (retryError?.code === 'P2022' || retryError?.message?.includes('attribute_values.colors') || retryError?.message?.includes('does not exist')) {
+          // If product_variants.attributes column doesn't exist, try to create it and retry
+          if (retryError?.message?.includes('product_variants.attributes') || 
+              (retryError?.message?.includes('attributes') && retryError?.message?.includes('does not exist'))) {
+            console.warn('⚠️ [PRODUCTS SERVICE] product_variants.attributes column not found, attempting to create it...');
+            try {
+              await ensureProductVariantAttributesColumn();
+              // Retry the query after creating the column
+              products = await db.product.findMany({
+                where,
+                include: baseInclude,
+                skip,
+                take: limit * 10,
+              });
+              console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (after creating attributes column)`);
+            } catch (attributesError: any) {
+              // If still fails, try without attributeValue include
+              if (attributesError?.code === 'P2022' || attributesError?.message?.includes('attribute_values.colors') || attributesError?.message?.includes('does not exist')) {
+                console.warn('⚠️ [PRODUCTS SERVICE] attribute_values.colors column not found, fetching without attributeValue:', attributesError.message);
+                const baseIncludeWithoutAttributeValue = {
+                  ...baseInclude,
+                  variants: {
+                    ...baseInclude.variants,
+                    include: {
+                      options: true, // Include options without attributeValue relation
+                    },
+                  },
+                };
+                products = await db.product.findMany({
+                  where,
+                  include: baseIncludeWithoutAttributeValue,
+                  skip,
+                  take: limit * 10,
+                });
+                console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (without attributeValue relation)`);
+              } else {
+                throw attributesError;
+              }
+            }
+          } else if (retryError?.code === 'P2022' || retryError?.message?.includes('attribute_values.colors') || retryError?.message?.includes('does not exist')) {
+            // If attribute_values.colors column doesn't exist, retry without attributeValue include
             console.warn('⚠️ [PRODUCTS SERVICE] attribute_values.colors column not found, fetching without attributeValue:', retryError.message);
             const baseIncludeWithoutAttributeValue = {
               ...baseInclude,
@@ -1356,8 +1395,58 @@ class ProductsService {
             include: baseInclude,
           });
         } catch (retryError: any) {
-          // If attribute_values.colors column doesn't exist, retry without attributeValue include
-          if (retryError?.code === 'P2022' || retryError?.message?.includes('attribute_values.colors') || retryError?.message?.includes('does not exist')) {
+          // If product_variants.attributes column doesn't exist, try to create it and retry
+          if (retryError?.message?.includes('product_variants.attributes') || 
+              (retryError?.message?.includes('attributes') && retryError?.message?.includes('does not exist'))) {
+            console.warn('⚠️ [PRODUCTS SERVICE] product_variants.attributes column not found, attempting to create it...');
+            try {
+              await ensureProductVariantAttributesColumn();
+              // Retry the query after creating the column
+              product = await db.product.findFirst({
+                where: {
+                  translations: {
+                    some: {
+                      slug,
+                      locale: lang,
+                    },
+                  },
+                  published: true,
+                  deletedAt: null,
+                },
+                include: baseInclude,
+              });
+            } catch (attributesError: any) {
+              // If still fails, try without attributeValue include
+              if (attributesError?.code === 'P2022' || attributesError?.message?.includes('attribute_values.colors') || attributesError?.message?.includes('does not exist')) {
+                console.warn('⚠️ [PRODUCTS SERVICE] attribute_values.colors column not found, fetching without attributeValue:', attributesError.message);
+                const baseIncludeWithoutAttributeValue = {
+                  ...baseInclude,
+                  variants: {
+                    ...baseInclude.variants,
+                    include: {
+                      options: true, // Include options without attributeValue relation
+                    },
+                  },
+                };
+                product = await db.product.findFirst({
+                  where: {
+                    translations: {
+                      some: {
+                        slug,
+                        locale: lang,
+                      },
+                    },
+                    published: true,
+                    deletedAt: null,
+                  },
+                  include: baseIncludeWithoutAttributeValue,
+                });
+              } else {
+                throw attributesError;
+              }
+            }
+          } else if (retryError?.code === 'P2022' || retryError?.message?.includes('attribute_values.colors') || retryError?.message?.includes('does not exist')) {
+            // If attribute_values.colors column doesn't exist, retry without attributeValue include
             console.warn('⚠️ [PRODUCTS SERVICE] attribute_values.colors column not found, fetching without attributeValue:', retryError.message);
             const baseIncludeWithoutAttributeValue = {
               ...baseInclude,
@@ -1383,6 +1472,56 @@ class ProductsService {
             });
           } else {
             throw retryError;
+          }
+        }
+      } else if (error?.message?.includes('product_variants.attributes') || 
+                 (error?.message?.includes('attributes') && error?.message?.includes('does not exist'))) {
+        // If product_variants.attributes column doesn't exist, try to create it and retry
+        console.warn('⚠️ [PRODUCTS SERVICE] product_variants.attributes column not found, attempting to create it...');
+        try {
+          await ensureProductVariantAttributesColumn();
+          // Retry the query after creating the column
+          product = await db.product.findFirst({
+            where: {
+              translations: {
+                some: {
+                  slug,
+                  locale: lang,
+                },
+              },
+              published: true,
+              deletedAt: null,
+            },
+            include: baseInclude,
+          });
+        } catch (attributesError: any) {
+          // If still fails, try without attributeValue include
+          if (attributesError?.code === 'P2022' || attributesError?.message?.includes('attribute_values.colors') || attributesError?.message?.includes('does not exist')) {
+            console.warn('⚠️ [PRODUCTS SERVICE] attribute_values.colors column not found, fetching without attributeValue:', attributesError.message);
+            const baseIncludeWithoutAttributeValue = {
+              ...baseInclude,
+              variants: {
+                ...baseInclude.variants,
+                include: {
+                  options: true, // Include options without attributeValue relation
+                },
+              },
+            };
+            product = await db.product.findFirst({
+              where: {
+                translations: {
+                  some: {
+                    slug,
+                    locale: lang,
+                  },
+                },
+                published: true,
+                deletedAt: null,
+              },
+              include: baseIncludeWithoutAttributeValue,
+            });
+          } else {
+            throw attributesError;
           }
         }
       } else if (error?.code === 'P2022' || error?.message?.includes('attribute_values.colors') || error?.message?.includes('does not exist')) {
