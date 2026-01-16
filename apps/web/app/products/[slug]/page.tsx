@@ -670,8 +670,66 @@ export default function ProductPage({ params }: ProductPageProps) {
       }
     }
     
+    // Fallback: If variant image not found, try to find any variant with the same color
+    // and use its image if available in the gallery
+    if (product?.variants) {
+      const variantColor = getOptionValue(variant.options, 'color');
+      if (variantColor) {
+        const colorVariants = product.variants.filter(v => {
+          const vColor = getOptionValue(v.options, 'color');
+          return vColor === variantColor && v.imageUrl;
+        });
+        
+        // Try to find image from any variant with the same color
+        for (const colorVariant of colorVariants) {
+          if (!colorVariant.imageUrl) continue;
+          
+          const colorSplitUrls = smartSplitUrls(colorVariant.imageUrl);
+          for (const colorUrl of colorSplitUrls) {
+            if (!colorUrl || colorUrl.trim() === '') continue;
+            
+            const processedColorUrl = processImageUrl(colorUrl);
+            if (!processedColorUrl) continue;
+            
+            // Skip attribute value images
+            if (isAttributeValueImage(processedColorUrl)) continue;
+            
+            const colorImageIndex = images.findIndex(img => {
+              if (!img) return false;
+              const processedImg = processImageUrl(img);
+              if (!processedImg) return false;
+              
+              const normalizedImg = normalizeUrl(processedImg);
+              const normalizedColor = normalizeUrl(processedColorUrl);
+              
+              if (normalizedImg === normalizedColor) {
+                return true;
+              }
+              
+              // Try with/without slash
+              const imgWithSlash = processedImg.startsWith('/') ? processedImg : `/${processedImg}`;
+              const imgWithoutSlash = processedImg.startsWith('/') ? processedImg.substring(1) : processedImg;
+              const colorWithSlash = processedColorUrl.startsWith('/') ? processedColorUrl : `/${processedColorUrl}`;
+              const colorWithoutSlash = processedColorUrl.startsWith('/') ? processedColorUrl.substring(1) : processedColorUrl;
+              
+              return imgWithSlash === colorWithSlash || 
+                     imgWithoutSlash === colorWithoutSlash ||
+                     imgWithSlash === colorWithoutSlash ||
+                     imgWithoutSlash === colorWithSlash;
+            });
+            
+            if (colorImageIndex !== -1) {
+              console.log(`🖼️ [VARIANT IMAGE] Found fallback image from same color variant at index ${colorImageIndex}`);
+              setCurrentImageIndex(colorImageIndex);
+              return;
+            }
+          }
+        }
+      }
+    }
+    
     console.log(`⚠️ [VARIANT IMAGE] No variant image found in gallery for variant ${variant.id}`);
-  }, [images, processImageUrl, smartSplitUrls, product]);
+  }, [images, processImageUrl, smartSplitUrls, product, getOptionValue]);
 
   useEffect(() => {
     if (product && product.variants && product.variants.length > 0) {
@@ -694,9 +752,9 @@ export default function ProductPage({ params }: ProductPageProps) {
         if (sizeValue && sizeValue !== selectedSize?.toLowerCase().trim()) {
           setSelectedSize(sizeValue);
         }
-      } else if (newVariant && newVariant.id === selectedVariant?.id && newVariant.imageUrl) {
-        // Even if variant didn't change, check if we should switch to its image
-        // This handles cases where the same variant is selected but image wasn't shown
+      } else if (newVariant && newVariant.imageUrl) {
+        // Always try to switch to variant's image when color changes, even if variant didn't change
+        // This ensures the image updates when color is selected
         switchToVariantImage(newVariant);
       }
     }
@@ -1258,13 +1316,70 @@ export default function ProductPage({ params }: ProductPageProps) {
   }, [currentImageIndex, images.length, thumbnailStartIndex]);
 
   const handleColorSelect = (color: string) => {
-    if (!color) return;
+    if (!color || !product) return;
     const normalizedColor = color.toLowerCase().trim();
     if (selectedColor === normalizedColor) {
       setSelectedColor(null);
     } else {
       setSelectedColor(normalizedColor);
-      // Image switching will be handled by the useEffect that watches selectedColor
+      
+      // Immediately try to find and switch to a variant image with this color
+      const colorVariants = product.variants?.filter(v => {
+        const vColor = getOptionValue(v.options, 'color');
+        return vColor === normalizedColor && v.imageUrl;
+      }) || [];
+      
+      // Try to find image from variants with this color
+      for (const variant of colorVariants) {
+        if (!variant.imageUrl) continue;
+        
+        const splitUrls = smartSplitUrls(variant.imageUrl);
+        for (const url of splitUrls) {
+          if (!url || url.trim() === '') continue;
+          
+          const processedUrl = processImageUrl(url);
+          if (!processedUrl) continue;
+          
+          // Try to find this image in the images array
+          const imageIndex = images.findIndex(img => {
+            if (!img) return false;
+            const processedImg = processImageUrl(img);
+            if (!processedImg) return false;
+            
+            // Normalize both URLs for comparison
+            const normalizeUrl = (u: string): string => {
+              let n = u.trim().toLowerCase();
+              if (n.startsWith('/')) n = n.substring(1);
+              if (n.endsWith('/')) n = n.substring(0, n.length - 1);
+              return n;
+            };
+            
+            const normalizedImg = normalizeUrl(processedImg);
+            const normalizedUrl = normalizeUrl(processedUrl);
+            
+            if (normalizedImg === normalizedUrl) return true;
+            
+            // Try with/without leading slash
+            const imgWithSlash = processedImg.startsWith('/') ? processedImg : `/${processedImg}`;
+            const imgWithoutSlash = processedImg.startsWith('/') ? processedImg.substring(1) : processedImg;
+            const urlWithSlash = processedUrl.startsWith('/') ? processedUrl : `/${processedUrl}`;
+            const urlWithoutSlash = processedUrl.startsWith('/') ? processedUrl.substring(1) : processedUrl;
+            
+            return imgWithSlash === urlWithSlash || 
+                   imgWithoutSlash === urlWithoutSlash ||
+                   imgWithSlash === urlWithoutSlash ||
+                   imgWithoutSlash === urlWithSlash;
+          });
+          
+          if (imageIndex !== -1) {
+            console.log(`🎨 [COLOR SELECT] Switching to image index ${imageIndex} for color ${normalizedColor}`);
+            setCurrentImageIndex(imageIndex);
+            return; // Found and switched, exit early
+          }
+        }
+      }
+      
+      console.log(`⚠️ [COLOR SELECT] No image found for color ${normalizedColor}`);
     }
   };
 
