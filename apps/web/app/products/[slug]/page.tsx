@@ -1298,7 +1298,43 @@ export default function ProductPage({ params }: ProductPageProps) {
     return t(language, 'product.selectOptions');
   };
   
-  const canAddToCart = !isOutOfStock && !isVariationRequired;
+  // Check if selected variant's attribute values have stock
+  // Returns a map of attribute keys to whether they're unavailable (stock = 0)
+  const unavailableAttributes = useMemo(() => {
+    const unavailable = new Map<string, boolean>();
+    
+    if (!currentVariant || !product) return unavailable;
+    
+    // Check each attribute in the selected variant
+    currentVariant.options?.forEach((option) => {
+      const attrKey = option.key || option.attribute;
+      if (!attrKey) return;
+      
+      // Get the attribute group for this attribute
+      const attrGroup = attributeGroups.get(attrKey);
+      if (!attrGroup) return;
+      
+      // Find the attribute value in the group that matches the variant's option
+      const attrValue = attrGroup.find((g) => {
+        if (option.valueId && g.valueId) {
+          return g.valueId === option.valueId;
+        }
+        return g.value?.toLowerCase().trim() === option.value?.toLowerCase().trim();
+      });
+      
+      // If attribute value found and has no stock, mark as unavailable
+      if (attrValue && attrValue.stock <= 0) {
+        unavailable.set(attrKey, true);
+      }
+    });
+    
+    return unavailable;
+  }, [currentVariant, attributeGroups, product]);
+  
+  // Check if any attribute is unavailable
+  const hasUnavailableAttributes = unavailableAttributes.size > 0;
+  
+  const canAddToCart = !isOutOfStock && !isVariationRequired && !hasUnavailableAttributes;
 
   useEffect(() => {
     if (!currentVariant || currentVariant.stock <= 0) { setQuantity(0); return; }
@@ -1667,9 +1703,12 @@ export default function ProductPage({ params }: ProductPageProps) {
 
                 if (attrGroups.length === 0) return null;
 
+                // Check if this attribute is unavailable for the selected variant
+                const isUnavailable = unavailableAttributes.get(attrKey) || false;
+                
                 return (
                   <div key={attrKey} className="space-y-1.5">
-                    <label className="text-xs font-bold uppercase">
+                    <label className={`text-xs font-bold uppercase ${isUnavailable ? 'text-red-600' : ''}`}>
                       {attrKey === 'color' ? t(language, 'product.color') : 
                        attrKey === 'size' ? t(language, 'product.size') : 
                        attributeName}:
@@ -1949,6 +1988,20 @@ export default function ProductPage({ params }: ProductPageProps) {
                 </p>
               </div>
             )}
+            {/* Show unavailable attributes message if needed */}
+            {hasUnavailableAttributes && !isVariationRequired && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-800 font-medium">
+                  {Array.from(unavailableAttributes.entries()).map(([attrKey]) => {
+                    const productAttr = product?.productAttributes?.find((pa: any) => pa.attribute?.key === attrKey);
+                    const attributeName = productAttr?.attribute?.name || attrKey.charAt(0).toUpperCase() + attrKey.slice(1);
+                    return attrKey === 'color' ? t(language, 'product.color') : 
+                           attrKey === 'size' ? t(language, 'product.size') : 
+                           attributeName;
+                  }).join(', ')} {t(language, 'product.outOfStock')}
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-3 pt-4 border-t">
               <div className="flex items-center border rounded-xl overflow-hidden bg-gray-50">
                 <button onClick={() => adjustQuantity(-1)} className="w-12 h-12 flex items-center justify-center">-</button>
@@ -1975,7 +2028,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                   } catch (err) { setShowMessage(t(language, 'product.errorAddingToCart')); }
                   finally { setIsAddingToCart(false); setTimeout(() => setShowMessage(null), 2000); }
                 }}>
-                {isAddingToCart ? t(language, 'product.adding') : (isOutOfStock ? t(language, 'product.outOfStock') : (isVariationRequired ? getRequiredAttributesMessage() : t(language, 'product.addToCart')))}
+                {isAddingToCart ? t(language, 'product.adding') : (isOutOfStock ? t(language, 'product.outOfStock') : (isVariationRequired ? getRequiredAttributesMessage() : (hasUnavailableAttributes ? t(language, 'product.outOfStock') : t(language, 'product.addToCart'))))}
               </button>
               <button onClick={handleCompareToggle} className={`w-12 h-12 rounded-xl border-2 flex items-center justify-center transition-all duration-200 ${isInCompare ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
                 <CompareIcon isActive={isInCompare} />
