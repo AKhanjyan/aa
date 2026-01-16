@@ -402,6 +402,24 @@ export default function ProductPage({ params }: ProductPageProps) {
     return opt?.value?.toLowerCase().trim() || null;
   }, []);
 
+  // Helper function to check if variant has a specific color value (checks ALL color options)
+  // A variant can have multiple color values (e.g., color: ["red", "blue"])
+  const variantHasColor = useCallback((variant: ProductVariant, color: string): boolean => {
+    if (!variant.options || !color) return false;
+    const normalizedColor = color.toLowerCase().trim();
+    
+    // Check ALL options for color attribute
+    const colorOptions = variant.options.filter(opt => 
+      (opt.key === 'color' || opt.attribute === 'color')
+    );
+    
+    // Check if any color option matches
+    return colorOptions.some(opt => {
+      const optValue = opt.value?.toLowerCase().trim();
+      return optValue === normalizedColor;
+    });
+  }, []);
+
   const findVariantByColorAndSize = useCallback((color: string | null, size: string | null): ProductVariant | null => {
     if (!product?.variants || product.variants.length === 0) return null;
     
@@ -409,11 +427,12 @@ export default function ProductPage({ params }: ProductPageProps) {
     const normalizedSize = size?.toLowerCase().trim();
 
     // 1. Try exact match (Case-insensitive)
+    // IMPORTANT: Use variantHasColor to check ALL color options, not just the first one
     if (normalizedColor && normalizedSize) {
       const variant = product.variants.find(v => {
-        const vColor = getOptionValue(v.options, 'color');
+        const hasColor = variantHasColor(v, normalizedColor);
         const vSize = getOptionValue(v.options, 'size');
-        return vColor === normalizedColor && vSize === normalizedSize;
+        return hasColor && vSize === normalizedSize;
       });
       if (variant) return variant;
     }
@@ -421,10 +440,8 @@ export default function ProductPage({ params }: ProductPageProps) {
     // 2. If color selected but no exact match with size, find any variant of this color
     if (normalizedColor) {
       // Prefer in-stock variant of this color
-      const colorVariants = product.variants.filter(v => {
-        const vColor = getOptionValue(v.options, 'color');
-        return vColor === normalizedColor;
-      });
+      // IMPORTANT: Use variantHasColor to check ALL color options
+      const colorVariants = product.variants.filter(v => variantHasColor(v, normalizedColor));
       
       if (colorVariants.length > 0) {
         return colorVariants.find(v => v.stock > 0) || colorVariants[0];
@@ -445,7 +462,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
     // 4. Ultimate fallback
     return product.variants.find(v => v.stock > 0) || product.variants[0] || null;
-  }, [product?.variants, getOptionValue]);
+  }, [product?.variants, getOptionValue, variantHasColor]);
 
   /**
    * Find variant by all selected attributes (color, size, and other attributes)
@@ -473,10 +490,9 @@ export default function ProductPage({ params }: ProductPageProps) {
 
     // Helper to check if a variant matches all selected attributes
     const variantMatches = (variant: ProductVariant): boolean => {
-      // Check color
+      // Check color - IMPORTANT: Use variantHasColor to check ALL color options
       if (normalizedColor) {
-        const vColor = getOptionValue(variant.options, 'color');
-        if (vColor !== normalizedColor) return false;
+        if (!variantHasColor(variant, normalizedColor)) return false;
       }
 
       // Check size
@@ -537,7 +553,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
     // 4. Ultimate fallback
     return product.variants.find(v => v.stock > 0) || product.variants[0] || null;
-  }, [product?.variants, getOptionValue, findVariantByColorAndSize]);
+  }, [product?.variants, getOptionValue, findVariantByColorAndSize, variantHasColor]);
 
   /**
    * Switch to variant's image if it exists
@@ -672,12 +688,13 @@ export default function ProductPage({ params }: ProductPageProps) {
     
     // Fallback: If variant image not found, try to find any variant with the same color
     // and use its image if available in the gallery
+    // IMPORTANT: Use variantHasColor to check ALL color options
     if (product?.variants) {
+      // Get the first color value from variant to find matching variants
       const variantColor = getOptionValue(variant.options, 'color');
       if (variantColor) {
         const colorVariants = product.variants.filter(v => {
-          const vColor = getOptionValue(v.options, 'color');
-          return vColor === variantColor && v.imageUrl;
+          return variantHasColor(v, variantColor) && v.imageUrl;
         });
         
         // Try to find image from any variant with the same color
@@ -729,7 +746,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
     
     console.log(`⚠️ [VARIANT IMAGE] No variant image found in gallery for variant ${variant.id}`);
-  }, [images, processImageUrl, smartSplitUrls, product, getOptionValue]);
+  }, [images, processImageUrl, smartSplitUrls, product, getOptionValue, variantHasColor]);
 
   useEffect(() => {
     if (product && product.variants && product.variants.length > 0) {
@@ -1324,9 +1341,9 @@ export default function ProductPage({ params }: ProductPageProps) {
       setSelectedColor(normalizedColor);
       
       // Immediately try to find and switch to a variant image with this color
+      // IMPORTANT: Use variantHasColor to check ALL color options, not just the first one
       const colorVariants = product.variants?.filter(v => {
-        const vColor = getOptionValue(v.options, 'color');
-        return vColor === normalizedColor && v.imageUrl;
+        return variantHasColor(v, normalizedColor) && v.imageUrl;
       }) || [];
       
       // Try to find image from variants with this color
