@@ -1720,7 +1720,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                           // IMPORTANT: Don't disable based on stock - show all colors, even if stock is 0
                           // Stock is just informational, not a reason to hide the option
                           const isDisabled = false; // Always show all colors
-                          const hasImage = g.imageUrl;
+                          // Process imageUrl to ensure it's in the correct format
+                          const processedImageUrl = g.imageUrl ? processImageUrl(g.imageUrl) : null;
+                          const hasImage = processedImageUrl && processedImageUrl.trim() !== '';
                           const colorHex = g.colors && Array.isArray(g.colors) && g.colors.length > 0 
                             ? g.colors[0] 
                             : getColorValue(g.value);
@@ -1748,9 +1750,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 style={hasImage ? {} : { backgroundColor: colorHex }}
                                 title={`${getAttributeLabel(language, attrKey, g.value)}${g.stock > 0 ? ` (${g.stock} ${t(language, 'product.pcs')})` : ` (${t(language, 'product.outOfStock')})`}`} 
                               >
-                                {hasImage ? (
+                                {hasImage && processedImageUrl ? (
                                   <img 
-                                    src={processedImageUrl!} 
+                                    src={processedImageUrl} 
                                     alt={g.label}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
@@ -1817,9 +1819,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                                     : 'border-gray-200 hover:border-gray-400'
                               }`}
                             >
-                              {hasImage && (
+                              {hasImage && processedImageUrl && (
                                 <img 
-                                  src={processedImageUrl!} 
+                                  src={processedImageUrl} 
                                   alt={g.label}
                                   className={`${imageSizeClass} object-cover rounded border border-gray-300 flex-shrink-0`}
                                   onError={(e) => {
@@ -1905,9 +1907,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                               }`}
                               style={!hasImage && colorHex ? { backgroundColor: colorHex } : {}}
                             >
-                              {hasImage ? (
+                              {hasImage && processedImageUrl ? (
                                 <img 
-                                  src={processedImageUrl!} 
+                                  src={processedImageUrl} 
                                   alt={g.label}
                                   className={`${imageSizeClass} object-cover rounded border border-gray-300 flex-shrink-0`}
                                   onError={(e) => {

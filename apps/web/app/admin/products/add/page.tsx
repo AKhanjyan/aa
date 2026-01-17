@@ -182,6 +182,8 @@ function AddProductPageContent() {
     sku: string;
     image: string | null;
   }>>([]);
+  // Track if we're loading variants in edit mode (to show table immediately)
+  const [hasVariantsToLoad, setHasVariantsToLoad] = useState(false);
   useEffect(() => {
     if (!isLoading) {
       if (!isLoggedIn || !isAdmin) {
@@ -820,6 +822,8 @@ function AddProductPageContent() {
           if (product.variants && product.variants.length > 0) {
             // Store product data for later conversion
             (window as any).__productVariantsToConvert = product.variants;
+            // Set flag to show variants table immediately
+            setHasVariantsToLoad(true);
           }
           
           // Store product's attributeIds to show all attributes, not just ones used in variants
@@ -1225,13 +1229,16 @@ function AddProductPageContent() {
             sku: v.sku,
           })),
         });
-        // Clear the temporary storage
+        // Clear the temporary storage and loading flag
         delete (window as any).__productVariantsToConvert;
+        setHasVariantsToLoad(false);
       } else {
         console.warn('⚠️ [ADMIN] No variants converted. Check variant options structure:', {
           variantsCount: productVariants.length,
           firstVariantOptions: productVariants[0]?.options,
         });
+        // Reset flag if no variants were converted
+        setHasVariantsToLoad(false);
       }
     } else if (productId && attributes.length > 0) {
       console.log('ℹ️ [ADMIN] Waiting for variants to convert. Attributes loaded:', attributes.length);
@@ -4069,8 +4076,11 @@ function AddProductPageContent() {
             )}
 
             {/* New Multi-Attribute Variant Builder - Only shown when productType === 'variable' */}
-            {/* Show in edit mode if variants are loaded, or if attributes are selected */}
-            {productType === 'variable' && ((isEditMode && generatedVariants.length > 0) || selectedAttributesForVariants.size > 0) && (
+            {/* Show in edit mode if variants are loaded, or if attributes are selected, or if variants are being converted */}
+            {productType === 'variable' && (
+              (isEditMode && (generatedVariants.length > 0 || hasVariantsToLoad)) || 
+              selectedAttributesForVariants.size > 0
+            ) && (
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.variantBuilder')}</h2>
                 <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
