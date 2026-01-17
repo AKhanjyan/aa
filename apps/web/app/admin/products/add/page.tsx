@@ -6,65 +6,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../../lib/auth/AuthContext';
 import { Card, Button, Input } from '@shop/ui';
 import { apiClient } from '../../../../lib/api-client';
-import { getColorHex, COLOR_MAP } from '../../../../lib/colorMap';
+import { getColorHex } from '../../../../lib/colorMap';
 import { useTranslation } from '../../../../lib/i18n-client';
 import { convertPrice, CURRENCIES, type CurrencyCode } from '../../../../lib/currency';
 import {
-  processImageUrl,
   smartSplitUrls,
   cleanImageUrls,
   separateMainAndVariantImages,
 } from '../../../../lib/utils/image-utils';
-
-// Component for adding new color/size
-function NewColorSizeInput({ 
-  variantId: _variantId, 
-  type: _type, 
-  onAdd, 
-  placeholder 
-}: { 
-  variantId: string; 
-  type: 'color' | 'size'; 
-  onAdd: (_name: string) => void; 
-  placeholder: string;
-}) {
-  const { t } = useTranslation();
-  const [name, setName] = useState('');
-
-  const handleAdd = () => {
-    if (name.trim()) {
-      onAdd(name.trim());
-      setName('');
-    }
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <Input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1"
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            handleAdd();
-          }
-        }}
-      />
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleAdd}
-        disabled={!name.trim()}
-        className="whitespace-nowrap"
-      >
-        + {t('admin.common.add')}
-      </Button>
-    </div>
-  );
-}
 
 interface Brand {
   id: string;
@@ -118,8 +67,6 @@ interface Variant {
   price: string; // Общая цена для всех цветов (fallback, если color-ի price չկա)
   compareAtPrice: string;
   sku: string;
-  // Deprecated: sizes and sizeStocks are now in ColorData
-  // Keeping for backward compatibility during migration
   sizes?: string[]; 
   sizeStocks?: Record<string, string>;
   sizeLabels?: Record<string, string>;
@@ -191,7 +138,6 @@ function AddProductPageContent() {
   const [categoriesExpanded, setCategoriesExpanded] = useState(false);
   const [brandsExpanded, setBrandsExpanded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const colorImageFileInputRef = useRef<HTMLInputElement | null>(null);
   const variantImageInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const attributesDropdownRef = useRef<HTMLDivElement | null>(null);
   const [attributesDropdownOpen, setAttributesDropdownOpen] = useState(false);
@@ -209,8 +155,6 @@ function AddProductPageContent() {
   const [addingSize, setAddingSize] = useState(false);
   const [colorMessage, setColorMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [sizeMessage, setSizeMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  // Track which attributes have been selected (have values added to them)
-  const [selectedAttributesForProduct, setSelectedAttributesForProduct] = useState<Set<string>>(new Set());
   // Default currency from settings
   const [defaultCurrency, setDefaultCurrency] = useState<CurrencyCode>('AMD');
   
@@ -347,7 +291,6 @@ function AddProductPageContent() {
         }
       } catch (err: any) {
         console.error('❌ [ADMIN] Error fetching data:', err);
-        alert(t('admin.products.add.errorLoadingData').replace('{message}', err.message || t('admin.common.unknownErrorFallback')));
       }
     };
     fetchData();
@@ -418,7 +361,7 @@ function AddProductPageContent() {
               imageUrl: variant.imageUrl,
             });
             
-            // Try to get color from variant.color (old format) or from variant.options (new format)
+            // Try to get color from variant.options
             let color = variant.color || '';
             let size = variant.size || '';
             
@@ -736,7 +679,7 @@ function AddProductPageContent() {
           // IMPORTANT: Also collect variant images directly from variant.imageUrl (new format)
           const variantImages = new Set<string>();
           
-          // Collect images from mergedVariant.colors (old format)
+          // Collect images from mergedVariant.colors
           mergedVariant.colors.forEach(c => {
             c.images.forEach(img => {
               if (img) {
@@ -895,7 +838,7 @@ function AddProductPageContent() {
               if (variant.attributes && typeof variant.attributes === 'object' && Object.keys(variant.attributes).length > 0) {
                 return true;
               }
-              // Check if variant has options (old format)
+              // Check if variant has options
               if (variant.options && Array.isArray(variant.options) && variant.options.length > 0) {
                 return true;
               }
@@ -947,7 +890,6 @@ function AddProductPageContent() {
           console.log('✅ [ADMIN] Product loaded for edit');
         } catch (err: any) {
           console.error('❌ [ADMIN] Error loading product:', err);
-          alert(t('admin.products.add.errorLoadingProduct').replace('{message}', err.message || t('admin.common.unknownErrorFallback')));
           router.push('/admin/products');
         } finally {
           setLoadingProduct(false);
@@ -1438,49 +1380,6 @@ function AddProductPageContent() {
     })));
   };
 
-  /**
-   * Helper function to process image URLs
-   * Handles relative paths, absolute URLs and base64
-   */
-  const processImageUrl = (url: string) => {
-    if (!url) return '';
-    if (url.startsWith('data:') || url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    // For relative paths, ensure they start with a slash
-    return url.startsWith('/') ? url : `/${url}`;
-  };
-
-  /**
-   * Smart split for comma-separated image URLs that handles Base64 data URIs
-   */
-  const smartSplitUrls = (str: string | null | undefined): string[] => {
-    if (!str) return [];
-    if (!str.includes('data:')) {
-      return str.split(',').map(s => s.trim()).filter(Boolean);
-    }
-    
-    // If it contains data URIs, we need to be careful with commas
-    const parts = str.split(',');
-    const results: string[] = [];
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i].trim();
-      if (part.startsWith('data:')) {
-        // This is the start of a data URI (e.g., "data:image/png;base64")
-        // The next part is the actual base64 data
-        if (i + 1 < parts.length) {
-          results.push(part + ',' + parts[i + 1].trim());
-          i++; // Skip the next part as it's been consumed
-        } else {
-          results.push(part);
-        }
-      } else if (part) {
-        results.push(part);
-      }
-    }
-    return results;
-  };
-
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
     setFormData((prev) => ({
@@ -1519,278 +1418,6 @@ function AddProductPageContent() {
       requiresSizes: selectedCategory.requiresSizes
     });
     return requiresSizes;
-  };
-
-  // Variant management functions
-  const addVariant = () => {
-    const newVariant: Variant = {
-      id: `variant-${Date.now()}`,
-      price: '',
-      compareAtPrice: '',
-      sku: '',
-      colors: [], // Начинаем с пустого массива цветов
-    };
-    setFormData((prev) => ({
-      ...prev,
-      variants: [...prev.variants, newVariant],
-    }));
-  };
-
-  // Toggle color selection for variant - добавляет/удаляет цвет с пустыми данными
-  const toggleVariantColor = (variantId: string, colorValue: string, colorLabel: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          const colors = v.colors || [];
-          const colorIndex = colors.findIndex((c) => c.colorValue === colorValue);
-          
-          if (colorIndex > -1) {
-            // Remove color
-            return {
-              ...v,
-              colors: colors.filter((_, idx) => idx !== colorIndex),
-            };
-          } else {
-            // Add color with empty images, stock, sizes
-            const newColor: ColorData = {
-              colorValue,
-              colorLabel,
-              images: [],
-              stock: '',
-              sizes: [],
-              sizeStocks: {},
-              sizeLabels: {},
-            };
-            return {
-              ...v,
-              colors: [...colors, newColor],
-            };
-          }
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Update stock for a specific color
-  const updateColorStock = (variantId: string, colorValue: string, stock: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) =>
-              c.colorValue === colorValue ? { ...c, stock } : c
-            ),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Update price for a specific color
-  const updateColorPrice = (variantId: string, colorValue: string, price: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) =>
-              c.colorValue === colorValue ? { ...c, price } : c
-            ),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  const updateColorCompareAtPrice = (variantId: string, colorValue: string, compareAtPrice: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) =>
-              c.colorValue === colorValue ? { ...c, compareAtPrice } : c
-            ),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Toggle size selection for a specific color in variant
-  const toggleColorSize = (variantId: string, colorValue: string, sizeValue: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) => {
-              if (c.colorValue === colorValue) {
-                const sizes = c.sizes || [];
-                const sizeStocks = c.sizeStocks || {};
-                const sizeLabels = c.sizeLabels || {};
-                const sizeIndex = sizes.indexOf(sizeValue);
-                
-                if (sizeIndex > -1) {
-                  // Remove size
-                  const newSizes = sizes.filter((s) => s !== sizeValue);
-                  const newSizeStocks = { ...sizeStocks };
-                  const newSizeLabels = { ...sizeLabels };
-                  delete newSizeStocks[sizeValue];
-                  delete newSizeLabels[sizeValue];
-                  return {
-                    ...c,
-                    sizes: newSizes,
-                    sizeStocks: newSizeStocks,
-                    sizeLabels: newSizeLabels,
-                  };
-                } else {
-                  // Add size
-                  return {
-                    ...c,
-                    sizes: [...sizes, sizeValue],
-                    sizeStocks: { ...sizeStocks, [sizeValue]: '' },
-                  };
-                }
-              }
-              return c;
-            }),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Update stock for a specific size in a specific color
-  const updateColorSizeStock = (variantId: string, colorValue: string, sizeValue: string, stock: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) => {
-              if (c.colorValue === colorValue) {
-                return {
-                  ...c,
-                  sizeStocks: {
-                    ...(c.sizeStocks || {}),
-                    [sizeValue]: stock,
-                  },
-                };
-              }
-              return c;
-            }),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Add new color directly to variant (manual color entry)
-  const addNewColorToVariant = (variantId: string, colorName: string) => {
-    if (!colorName.trim()) return;
-    
-    const trimmedName = colorName.trim();
-    const colorValue = generateSlug(trimmedName);
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          const colors = v.colors || [];
-          
-          // Check if color already exists
-          if (colors.some((c) => c.colorValue === colorValue)) {
-            return v; // Color already exists, don't add again
-          }
-          
-          // Add new color with empty images, stock, and sizes
-          const newColor: ColorData = {
-            colorValue,
-            colorLabel: trimmedName,
-            images: [],
-            stock: '',
-            sizes: [],
-            sizeStocks: {},
-            sizeLabels: {},
-          };
-          
-          return {
-            ...v,
-            colors: [...colors, newColor],
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  // Add new size directly to a specific color in variant
-  const addNewSizeToColor = (variantId: string, colorValue: string, sizeName: string) => {
-    if (!sizeName.trim()) return;
-    
-    const trimmedName = sizeName.trim();
-    const sizeValue = generateSlug(trimmedName);
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) => {
-              if (c.colorValue === colorValue) {
-                const sizes = c.sizes || [];
-                const sizeStocks = c.sizeStocks || {};
-                const sizeLabels = c.sizeLabels || {};
-                
-                // Check if size already exists
-                if (sizes.includes(sizeValue)) {
-                  return c; // Size already exists, don't add again
-                }
-                
-                // Add new size with original label and empty stock
-                return {
-                  ...c,
-                  sizes: [...sizes, sizeValue],
-                  sizeStocks: { ...sizeStocks, [sizeValue]: '' },
-                  sizeLabels: { ...sizeLabels, [sizeValue]: trimmedName },
-                };
-              }
-              return c;
-            }),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  const removeVariant = (variantId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.filter((v) => v.id !== variantId),
-    }));
-  };
-
-  const updateVariant = (variantId: string, field: keyof Variant, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) =>
-        v.id === variantId ? { ...v, [field]: value } : v
-      ),
-    }));
   };
 
   // Add images to a specific color in variant
@@ -1835,54 +1462,6 @@ function AddProductPageContent() {
       return updated;
     });
   };
-
-  // Remove image from a specific color
-  const removeColorImage = (variantId: string, colorValue: string, imageIndex: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) =>
-              c.colorValue === colorValue
-                ? { ...c, images: c.images.filter((_, idx) => idx !== imageIndex) }
-                : c
-            ),
-          };
-        }
-        return v;
-      }),
-    }));
-  };
-
-  /**
-   * Set a specific color as featured/main for the product
-   */
-  const setFeaturedColor = (variantId: string, colorValue: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      variants: prev.variants.map((v) => {
-        if (v.id === variantId) {
-          return {
-            ...v,
-            colors: v.colors.map((c) => ({
-              ...c,
-              isFeatured: c.colorValue === colorValue
-            }))
-          };
-        }
-        return v;
-      })
-    }));
-  };
-
-  /**
-   * Helper functions for price management (deprecated but kept for structure)
-   */
-  const getPrimaryPrice = () => '';
-  const handlePrimaryPriceChange = (_e: any) => {};
-  const handlePrimaryPriceBlur = (_e: any) => {};
 
   const addImageUrl = () => {
     setFormData((prev) => ({
@@ -2084,7 +1663,6 @@ function AddProductPageContent() {
 
     const imageFiles = files.filter((file) => file.type.startsWith('image/'));
     if (imageFiles.length === 0) {
-      alert('Please select image files');
       if (event.target) {
         event.target.value = '';
       }
@@ -2113,7 +1691,6 @@ function AddProductPageContent() {
       console.log('✅ [ADMIN] Color images added to state:', uploadedImages.length);
     } catch (error: any) {
       console.error('❌ [ADMIN] Error uploading color images:', error);
-      alert(error?.message || t('admin.products.add.failedToProcessImages'));
     } finally {
       setImageUploadLoading(false);
       if (event.target) {
@@ -2294,8 +1871,6 @@ function AddProductPageContent() {
           }
         } catch (err: any) {
           console.error('❌ [ADMIN] Error creating brand:', err);
-          const errorMessage = err?.data?.detail || err?.message || t('admin.common.unknownErrorFallback');
-          alert(t('admin.products.add.errorCreatingBrand').replace('{message}', errorMessage));
           setLoading(false);
           return;
         }
@@ -2324,7 +1899,6 @@ function AddProductPageContent() {
           }
         } catch (err: any) {
           console.error('❌ [ADMIN] Error creating category:', err);
-          alert(t('admin.products.add.errorCreatingCategory').replace('{message}', err.message || t('admin.common.unknownErrorFallback')));
           setLoading(false);
           return;
         }
@@ -2527,11 +2101,6 @@ function AddProductPageContent() {
       
       // Skip variant validation for Simple products - they create variants later in the process
       if (productType === 'variable' && formData.variants.length === 0) {
-        if (selectedAttributesForVariants.size > 0) {
-          alert(t('admin.products.add.pleaseGenerateVariants') || 'Please generate variants using the variant builder');
-        } else {
-          alert(t('admin.products.add.pleaseAddAtLeastOneVariant'));
-        }
         setLoading(false);
         return;
       }
@@ -2547,13 +2116,11 @@ function AddProductPageContent() {
         // Validate SKU - must be unique within product
         const variantSku = variant.sku ? variant.sku.trim() : '';
         if (!variantSku || variantSku === '') {
-          alert(t('admin.products.add.variantSkuRequired').replace('{index}', variantIndex.toString()));
           setLoading(false);
           return;
         }
         
         if (skuSet.has(variantSku)) {
-          alert(t('admin.products.add.variantSkuDuplicate').replace('{index}', variantIndex.toString()).replace('{sku}', variantSku));
           setLoading(false);
           return;
         }
@@ -2577,8 +2144,6 @@ function AddProductPageContent() {
             if (hasColor) {
               const colorPriceValue = parseFloat(colorDataItem.price || '0');
               if (!colorDataItem.price || isNaN(colorPriceValue) || colorPriceValue <= 0) {
-                const colorLabel = colorDataItem.colorLabel || colorDataItem.colorValue || 'color';
-                alert(t('admin.products.add.variantPriceRequired').replace('{index}', variantIndex.toString()).replace('{color}', colorLabel));
                 setLoading(false);
                 return;
               }
@@ -2588,7 +2153,6 @@ function AddProductPageContent() {
               if (colorData.indexOf(colorDataItem) === 0) {
                 const variantPriceValue = parseFloat(variant.price || '0');
                 if (!variant.price || isNaN(variantPriceValue) || variantPriceValue <= 0) {
-                  alert(t('admin.products.add.variantPriceRequired').replace('{index}', variantIndex.toString()).replace('{color}', 'variant'));
                   setLoading(false);
                   return;
                 }
@@ -2601,10 +2165,6 @@ function AddProductPageContent() {
               for (const size of colorSizes) {
                 const stock = colorSizeStocks[size];
                 if (!stock || stock.trim() === '' || parseInt(stock) < 0) {
-                  const sizeLabel = getSizeAttribute()?.values.find((v) => v.value === size)?.label || 
-                    colorDataItem.sizeLabels?.[size] || 
-                    size.toUpperCase().replace(/-/g, ' ');
-                  alert(t('admin.products.add.variantStockRequired').replace('{index}', variantIndex.toString()).replace('{color}', colorDataItem.colorLabel).replace('{size}', sizeLabel));
                   setLoading(false);
                   return;
                 }
@@ -2612,7 +2172,6 @@ function AddProductPageContent() {
             } else {
               // If no sizes, validate base stock for color
               if (!colorDataItem.stock || colorDataItem.stock.trim() === '' || parseInt(colorDataItem.stock) < 0) {
-                alert(t('admin.products.add.variantColorStockRequired').replace('{index}', variantIndex.toString()).replace('{color}', colorDataItem.colorLabel));
                 setLoading(false);
                 return;
               }
@@ -2640,8 +2199,8 @@ function AddProductPageContent() {
       console.log('📸 [ADMIN] Color images will be stored ONLY in variant.imageUrl, NOT in main media');
 
       // Prepare variants array
-      // NEW: Use generatedVariants if available (new format with attributes JSONB)
-      // Otherwise fallback to formData.variants (old format)
+      // Use generatedVariants if available (new format with attributes JSONB)
+      // Otherwise fallback to formData.variants (legacy support)
       const variants: any[] = [];
       const variantSkuSet = new Set<string>(); // Track SKUs during variant creation
       
@@ -2651,17 +2210,14 @@ function AddProductPageContent() {
         
         // Validate simple product fields
         if (!simpleProductData.price || simpleProductData.price.trim() === '') {
-          alert('Please enter price for the product');
           setLoading(false);
           return;
         }
         if (!simpleProductData.sku || simpleProductData.sku.trim() === '') {
-          alert('Please enter SKU for the product');
           setLoading(false);
           return;
         }
         if (!simpleProductData.quantity || simpleProductData.quantity.trim() === '') {
-          alert('Please enter quantity for the product');
           setLoading(false);
           return;
         }
@@ -2846,7 +2402,7 @@ function AddProductPageContent() {
           }
         });
       } else {
-        // OLD FORMAT: Create variants from formData.variants (legacy support)
+        // Create variants from formData.variants (legacy support)
         console.log('📦 [ADMIN] Using formData.variants format (legacy)');
         console.log('🔍 [ADMIN] formData.variants count:', formData.variants.length);
         const sizeAttribute = getSizeAttribute();
@@ -2884,7 +2440,7 @@ function AddProductPageContent() {
                 : '';
               
               // Generate SKU if not provided
-              // First check if there's a specific SKU for this size in sizeLabels (from Matrix)
+              // First check if there's a specific SKU for this size in sizeLabels
               let finalSku = colorData.sizeLabels?.[size] || undefined;
               
               // If no specific SKU, use variant base SKU with suffix
@@ -3084,11 +2640,11 @@ function AddProductPageContent() {
         });
         } else {
           // No colors - create variant without color
-          // Check if we have sizes in old format (variant.sizes) or need to handle sizes separately
+          // Check if we have sizes in variant.sizes or need to handle sizes separately
           const variantSizes = variant.sizes || [];
           const variantSizeStocks = variant.sizeStocks || {};
           
-          // If variant has sizes in old format, create variants for each size
+          // If variant has sizes, create variants for each size
           if (variantSizes.length > 0) {
             variantSizes.forEach((size, sizeIndex) => {
               const stockForVariant = variantSizeStocks[size] || '0';
@@ -3194,8 +2750,7 @@ function AddProductPageContent() {
                 if (!attribute || attribute.key === 'color' || attribute.key === 'size') return;
                 
                 // Get selected value IDs for this attribute from generatedVariants
-                // Since we're in the old variant format, we need to check if there are any selected values
-                // For now, we'll collect images from all values of this attribute if it's selected
+                // Collect images from all values of this attribute if it's selected
                 attribute.values.forEach((value) => {
                   if (value.imageUrl) {
                     allAttributeImages.push(value.imageUrl);
@@ -3281,7 +2836,7 @@ function AddProductPageContent() {
         console.log('🔍 [VALIDATION] Checking size requirement for category:', finalPrimaryCategoryId);
         console.log('📦 [VALIDATION] Total variants to check:', variants.length);
         
-        // Check if any variant has size in options array (new format) or size field (old format)
+        // Check if any variant has size in options array or size field
         const variantsWithSize: any[] = [];
         const variantsWithoutSize: any[] = [];
         
@@ -3289,7 +2844,7 @@ function AddProductPageContent() {
           let hasSize = false;
           let sizeSource = '';
           
-          // Old format: check variant.size field
+          // Check variant.size field (legacy support)
           if (variant.size && variant.size.trim() !== "") {
             hasSize = true;
             sizeSource = 'variant.size';
@@ -3338,10 +2893,9 @@ function AddProductPageContent() {
             generatedVariantsCount: generatedVariants.length,
             formDataVariantsCount: formData.variants.length
           });
-          alert('Այս ապրանքի կատեգորիայի համար պահանջվում է առնվազն մեկ չափ: Խնդրում ենք ավելացնել չափեր ձեր ապրանքի տարբերակներին:\n\nAt least one size is required for this product category. Please add sizes to your product variants.');
-          setLoading(false);
-          return;
-        }
+        
+          
+                  }
         console.log('✅ [VALIDATION] Final size validation passed. Found', variantsWithSize.length, 'variant(s) with size.');
       } else {
         console.log('ℹ️ [VALIDATION] Size validation skipped (category does not require sizes)');
@@ -3492,7 +3046,6 @@ function AddProductPageContent() {
       // Warn user if images were skipped
       if (skippedImagesCount > 0) {
         console.warn(`⚠️ [ADMIN] ${skippedImagesCount} large image(s) were skipped to avoid 413 error.`);
-        alert(`Ուշադրություն: ${skippedImagesCount} մեծ պատկեր(ներ) բաց թողնվեցին 413 սխալից խուսափելու համար: Խնդրում ենք օգտագործել ավելի փոքր պատկերներ:`);
       }
 
       // Update variants with processed images
@@ -3617,8 +3170,7 @@ function AddProductPageContent() {
         }
       }
       
-      // Show user-friendly error message
-      alert(`Սխալ: ${errorMessage}`);
+      // Error logged to console
     } finally {
       setLoading(false);
     }
@@ -3965,18 +3517,7 @@ function AddProductPageContent() {
                                           const newPrimaryCategoryId = newCategoryIds.length > 0 ? newCategoryIds[0] : '';
                                           
                                           const selectedCategory = categories.find((cat) => cat.id === category.id);
-                                          const newIsSizeRequired = selectedCategory
-                                            ? (selectedCategory.requiresSizes !== undefined 
-                                                ? selectedCategory.requiresSizes 
-                                                : (() => {
-                                                    const sizeRequiredSlugs = ['clothing', 'odezhda', 'hagust', 'apparel', 'fashion', 'shoes', 'koshik', 'obuv'];
-                                                    const sizeRequiredTitles = ['clothing', 'одежда', 'հագուստ', 'apparel', 'fashion', 'shoes', 'կոշիկ', 'обувь'];
-                                                    return (
-                                                      sizeRequiredSlugs.some((slug) => selectedCategory.slug.toLowerCase().includes(slug)) ||
-                                                      sizeRequiredTitles.some((title) => selectedCategory.title.toLowerCase().includes(title))
-                                                    );
-                                                  })())
-                                            : false;
+                                          const newIsSizeRequired = selectedCategory?.requiresSizes ?? false;
                                           
                                           setFormData((prev) => {
                                             const wasSizeRequired = isClothingCategory();
@@ -4493,7 +4034,7 @@ function AddProductPageContent() {
             {/* Show in edit mode if variants are loaded, or if attributes are selected */}
             {productType === 'variable' && ((isEditMode && generatedVariants.length > 0) || selectedAttributesForVariants.size > 0) && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.variantBuilder') || 'Տարբերակների կառուցիչ'}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.products.add.variantBuilder')}</h2>
                 <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6">
 
                   {/* Generated Variants Table */}
@@ -4501,7 +4042,7 @@ function AddProductPageContent() {
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {t('admin.products.add.generatedVariants') || 'Generated Variants'} ({generatedVariants.length.toString()})
+                          {t('admin.products.add.generatedVariants')} ({generatedVariants.length.toString()})
                         </h3>
                         <div className="flex gap-2">
                           <Button
@@ -4509,33 +4050,33 @@ function AddProductPageContent() {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const price = prompt(t('admin.products.add.enterDefaultPrice') || 'Enter default price:');
+                              const price = prompt(t('admin.products.add.enterDefaultPrice'));
                               if (price !== null) {
                                 applyToAllVariants('price', price);
                               }
                             }}
                           >
-                            {t('admin.products.add.applyPriceToAll') || 'Apply Price to All'}
+                            {t('admin.products.add.applyPriceToAll')}
                           </Button>
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const stock = prompt(t('admin.products.add.enterDefaultStock') || 'Enter default stock:');
+                              const stock = prompt(t('admin.products.add.enterDefaultStock'));
                               if (stock !== null) {
                                 applyToAllVariants('stock', stock);
                               }
                             }}
                           >
-                            {t('admin.products.add.applyStockToAll') || 'Apply Stock to All'}
+                            {t('admin.products.add.applyStockToAll')}
                           </Button>
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const skuPrefix = prompt(t('admin.products.add.enterSkuPrefix') || 'Enter SKU prefix:');
+                              const skuPrefix = prompt(t('admin.products.add.enterSkuPrefix'));
                               if (skuPrefix !== null) {
                                 const baseSlug = skuPrefix || formData.slug || generateSlug(formData.title) || 'PROD';
                                 setGeneratedVariants(prev => prev.map((variant) => {
@@ -4566,7 +4107,7 @@ function AddProductPageContent() {
                               }
                             }}
                           >
-                            {t('admin.products.add.applySkuToAll') || 'Apply SKU Pattern to All'}
+                            {t('admin.products.add.applySkuToAll')}
                           </Button>
                         </div>
                       </div>
@@ -4701,7 +4242,7 @@ function AddProductPageContent() {
                                                 </span>
                                               ))
                                             ) : (
-                                              <span className="text-xs text-gray-500">{t('admin.products.add.valuesPlaceholder') || 'values'}</span>
+                                              <span className="text-xs text-gray-500">{t('admin.products.add.valuesPlaceholder')}</span>
                                             )}
                                           </div>
                                           <svg
@@ -4728,7 +4269,7 @@ function AddProductPageContent() {
                                           v.id === variant.id ? { ...v, price: e.target.value } : v
                                         ));
                                       }}
-                                      placeholder="0.00"
+                                      placeholder={t('admin.products.add.pricePlaceholder')}
                                       className="w-20 text-xs"
                                       min="0"
                                       step="0.01"
@@ -4746,7 +4287,7 @@ function AddProductPageContent() {
                                           v.id === variant.id ? { ...v, compareAtPrice: e.target.value } : v
                                         ));
                                       }}
-                                      placeholder="0.00"
+                                      placeholder={t('admin.products.add.pricePlaceholder')}
                                       className="w-20 text-xs"
                                       min="0"
                                       step="0.01"
@@ -4763,7 +4304,7 @@ function AddProductPageContent() {
                                         v.id === variant.id ? { ...v, stock: e.target.value } : v
                                       ));
                                     }}
-                                    placeholder="0"
+                                    placeholder={t('admin.products.add.quantityPlaceholder')}
                                     className="w-16 text-xs"
                                     min="0"
                                   />
@@ -4777,7 +4318,7 @@ function AddProductPageContent() {
                                         v.id === variant.id ? { ...v, sku: e.target.value } : v
                                       ));
                                     }}
-                                    placeholder="Auto-generated"
+                                    placeholder={t('admin.products.add.autoGenerated')}
                                     className="w-24 text-xs"
                                   />
                                 </td>
@@ -4888,7 +4429,6 @@ function AddProductPageContent() {
                             // Convert generated variants to formData.variants structure
                             // This will be handled in handleSubmit
                             console.log('✅ [VARIANT BUILDER] Variants ready for submission:', generatedVariants);
-                            alert(t('admin.products.add.variantsReady') || `Ready to submit ${generatedVariants.length.toString()} variants!`);
                           }}
                         >
                           {t('admin.products.add.variantsReady') || 'Variants Ready'}
