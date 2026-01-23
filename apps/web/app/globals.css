@@ -14,7 +14,7 @@
     margin: 0 !important;
     padding: 0 !important;
   }
-  
+
   /* Prevent text selection and caret on all text elements */
   p, span, div, h1, h2, h3, h4, h5, h6, 
   li, td, th, label, strong, em, b, i, 
@@ -26,7 +26,7 @@
     -ms-user-select: none !important;
     caret-color: transparent !important;
   }
-  
+
   /* Allow selection in input and textarea fields */
   input, textarea {
     user-select: text !important;
@@ -35,12 +35,12 @@
     -ms-user-select: text !important;
     caret-color: currentColor !important;
   }
-  
+
   /* Ensure caret is visible and blinking in focused inputs */
   input:focus, textarea:focus {
     caret-color: currentColor !important;
   }
-  
+
   /* Links should be selectable but no caret */
   a {
     user-select: none !important;
@@ -61,7 +61,7 @@
       transform: translateY(0);
     }
   }
-  
+
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
   }
@@ -70,14 +70,11 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
 
-  /* Figma Prototype Animations - Matching Play Mode */
-  
-  /* Floating animation for decorative bubbles - smooth continuous loop */
   @keyframes figma-float {
     0%, 100% {
       transform: translateY(0) translateX(0);
@@ -93,27 +90,16 @@
     }
   }
 
-  /* Rotation animation for shapes - smooth continuous loop */
   @keyframes figma-rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
-  /* Slow rotation for decorative elements */
   @keyframes figma-rotate-slow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
-  /* Pulse animation for logos and icons */
   @keyframes figma-pulse {
     0%, 100% {
       opacity: 1;
@@ -125,31 +111,16 @@
     }
   }
 
-  /* Fade in animation for images and logos on load */
   @keyframes figma-fade-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
 
-  /* Slide in from bottom for content */
   @keyframes figma-slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Apply animations - matching Figma Play mode timing */
   .figma-float {
     animation: figma-float 8s ease-in-out infinite;
   }
@@ -178,7 +149,6 @@
     animation: figma-slide-up 0.8s ease-out forwards;
   }
 
-  /* Product card hover animation - smooth lift effect */
   .product-card-hover {
     transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
   }
@@ -188,7 +158,6 @@
     box-shadow: 0 20px 40px rgba(0, 209, 255, 0.2);
   }
 
-  /* Product image hover animation - tilt, scale and lift (matching Figma) */
   .product-image-hover {
     transition: transform 0.4s ease-out;
     transform-origin: center bottom;
@@ -201,48 +170,47 @@
 
 /* Policy pages typography & spacing */
 .policy-page {
-  max-width: 56rem; /* ~max-w-4xl */
+  max-width: 56rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;  /* px-4 */
+  padding-left: 1rem;
   padding-right: 1rem;
 }
 
 @media (min-width: 640px) {
   .policy-page {
-    padding-left: 1.5rem; /* sm:px-6 */
+    padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .policy-page {
-    padding-left: 2rem; /* lg:px-8 */
+    padding-left: 2rem;
     padding-right: 2rem;
   }
 }
 
 .policy-page-inner {
-  padding-top: 3rem;   /* pt-12 */
-  padding-bottom: 4rem; /* pb-16 */
+  padding-top: 3rem;
+  padding-bottom: 4rem;
 }
 
 @media (min-width: 768px) {
   .policy-page-inner {
-    padding-top: 4rem; /* md:pt-16 */
+    padding-top: 4rem;
   }
 }
 
-/* Headings: more air above & below, not stuck to header */
 .policy-page-inner h1,
 .policy-page-inner h2,
 .policy-page-inner h3 {
-  margin-top: 2.5rem;   /* space from previous block */
-  margin-bottom: 1rem;  /* space before paragraph */
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .policy-page-inner h1:first-of-type {
-  margin-top: 0; /* already have top padding on container */
+  margin-top: 0;
 }
 
 .policy-page-inner h2:first-of-type,
@@ -250,14 +218,12 @@
   margin-top: 1.75rem;
 }
 
-/* Paragraphs: clear space from heading */
 .policy-page-inner p {
   margin-top: 0.75rem;
   margin-bottom: 0;
   line-height: 1.7;
 }
 
-/* Lists: align nicely under text, with comfortable spacing */
 .policy-page-inner ul,
 .policy-page-inner ol {
   margin-top: 0.75rem;
@@ -269,59 +235,18 @@
   margin-top: 0.25rem;
 }
 
-/* Home page - Pixel perfect Figma design with responsive scaling */
+/* Home page */
 .home-page-container {
-  width: 1920px !important;
-  height: 6637px !important;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
-  position: relative !important;
-  transform-origin: top center !important;
-  display: block !important;
-  /* JavaScript will handle transform and positioning */
+  @apply w-full max-w-[1920px] mx-auto relative overflow-hidden;
 }
 
-/* Ensure the main wrapper adjusts to scaled height for proper scrolling */
 .home-page-wrapper {
-  overflow: visible !important;
-  width: 100% !important;
-  max-width: 100vw !important;
-  margin: 0 auto !important;
-  position: relative !important;
-  display: block !important;
-  /* Center the container inside */
-  text-align: center !important;
+  @apply w-full relative overflow-hidden;
+  min-height: 6637px;
 }
 
-/* Calculate wrapper height based on scale */
 @media (max-width: 1919px) {
   .home-page-wrapper {
-    min-height: calc(6637px * calc(100vw / 1920)) !important;
-    height: calc(6637px * calc(100vw / 1920)) !important;
+    min-height: calc(6637px * (100vw / 1920));
   }
 }
-
-@media (min-width: 1920px) {
-  .home-page-wrapper {
-    min-height: 6637px !important;
-    height: auto !important;
-  }
-}
-
-/* Ensure body/html don't cause horizontal overflow */
-html {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  max-width: 100vw !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-

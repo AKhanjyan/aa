@@ -425,7 +425,7 @@ export default function HomePage() {
   return (
     <div
       ref={containerRef}
-      className="bg-white relative w-[1920px] h-[6637px] home-page-container"
+      className="bg-white relative w-full max-w-[1920px] h-[6637px] home-page-container"
       style={{
         display: 'block',
         transformOrigin: 'top center',
@@ -542,7 +542,7 @@ export default function HomePage() {
       </div>
 
       {/* Background Gradient */}
-      <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-[1920px]" />
+      <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-full max-w-[1920px]" />
 
       {/* Hero Section Decorative Group */}
       <div className="absolute inset-[3.74%_14.27%_90%_14.64%]">
@@ -618,16 +618,16 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[807px] left-0 top-[1158px] w-[1920px]">
+      <div className="absolute h-[807px] left-0 top-[1158px] w-full max-w-[1920px]">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
       </div>
 
       {/* Blurred Reflection */}
-      <div className="absolute flex h-[807px] items-center justify-center left-1/2 top-[1741px] translate-x-[-50%] w-[1920px]">
+      <div className="absolute flex h-[807px] items-center justify-center left-1/2 top-[1741px] translate-x-[-50%] w-full max-w-[1920px]">
         <div className="flex-none scale-y-[-100%]">
-          <div className="blur-[2px] h-[807px] relative w-[1920px]">
+          <div className="blur-[2px] h-[807px] relative w-full max-w-[1920px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <img alt="Water Wave Reflection" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
             </div>
@@ -636,26 +636,26 @@ export default function HomePage() {
       </div>
 
       {/* Decorative Elements - Ellipses */}
-      <div className="absolute h-[1124px] left-[calc(50%+953.5px)] top-[2396px] translate-x-[-50%] w-[1191px]">
-        <div className="absolute inset-[-41.37%_-39.04%] figma-float-slow">
+      <div className="absolute h-[1124px] left-[calc(50%+953.5px)] top-[2396px] translate-x-[-50%] w-[1191px] overflow-hidden">
+        <div className="absolute inset-0 figma-float-slow">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
         </div>
       </div>
 
-      <div className="absolute h-[1031px] left-1/2 top-[4834px] translate-x-[-50%] w-[1008px]">
-        <div className="absolute inset-[-45.1%_-46.13%] figma-float">
+      <div className="absolute h-[1031px] left-1/2 top-[4834px] translate-x-[-50%] w-[1008px] overflow-hidden">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse44} />
         </div>
       </div>
 
-      <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px]">
-        <div className="absolute inset-[-41.37%_-39.04%] figma-float-slow">
+      <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px] overflow-hidden">
+        <div className="absolute inset-0 figma-float-slow">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse42} />
         </div>
       </div>
 
-      <div className="absolute h-[1124px] left-[calc(50%+986px)] top-[3116px] translate-x-[-50%] w-[1422px]">
-        <div className="absolute inset-[-41.37%_-32.7%] figma-float">
+      <div className="absolute h-[1124px] left-[calc(50%+986px)] top-[3116px] translate-x-[-50%] w-[1422px] overflow-hidden">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse43} />
         </div>
       </div>
@@ -694,7 +694,7 @@ export default function HomePage() {
       </div>
 
       {/* Featured Products Section */}
-      <div className="absolute h-[1175px] left-1/2 top-[1278px] translate-x-[-50%] w-[1920px]">
+      <div className="absolute h-[1175px] left-1/2 top-[1278px] translate-x-[-50%] w-full max-w-[1920px]">
         <div className="absolute h-[976px] left-[192px] right-[192px] top-[139px]">
           {/* Section Header */}
           <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[24px] right-[24px] top-[-37px]">
@@ -711,21 +711,21 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <div className="absolute h-[736.83px] left-[24px] right-[24px] top-[166px] z-[1]">
+          <div className="absolute h-[736.83px] left-[24px] right-[24px] top-[166px] z-[1] overflow-hidden">
             {productsLoading ? (
               // Loading state - show placeholder
               <>
-                <div className="absolute bg-transparent inset-[-12px_-11.66px_12px_1025px]">
+                <div className="absolute bg-transparent left-0 top-[-12px] bottom-[12px] right-[11.66px]">
                   <div className="absolute h-[563px] left-[98.83px] top-[12.91px] w-[277px] bg-gray-300 animate-pulse rounded" />
                   <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]">
                     <div className="h-4 bg-gray-300 animate-pulse rounded w-3/4" />
                     <div className="h-6 bg-gray-300 animate-pulse rounded w-1/3" />
                   </div>
                 </div>
-                <div className="absolute bg-transparent content-stretch flex flex-col gap-[24px] inset-[-12px_500.33px_12px_513px] items-center justify-center p-[8px]">
+                <div className="absolute bg-transparent content-stretch flex flex-col gap-[24px] left-[513px] right-[500.33px] top-[-12px] bottom-[12px] items-center justify-center p-[8px]">
                   <div className="h-[564px] w-[205px] bg-gray-300 animate-pulse rounded" />
                 </div>
-                <div className="absolute bg-transparent inset-[-12px_1013.34px_12px_0]">
+                <div className="absolute bg-transparent left-[1013.34px] right-0 top-[-12px] bottom-[12px]">
                   <div className="absolute h-[508px] left-[137px] top-[53px] w-[182px] bg-gray-300 animate-pulse rounded" />
                 </div>
               </>
@@ -741,9 +741,9 @@ export default function HomePage() {
                   // Product positioning based on relativeIndex (matching original layout)
                   // Always use relativeIndex (0, 1, 2) for the 3 visible products
                   const positions = [
-                    { className: "inset-[-12px_-11.66px_12px_1025px]", imageClass: "h-[563px] left-[98.83px] top-[12.91px] w-[277px]", imageStyle: "h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]", contentClass: "left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]" },
-                    { className: "inset-[-12px_500.33px_12px_513px]", imageClass: "h-[564px] w-[205px]", imageStyle: "h-[100.18%] left-[-87.8%] max-w-none top-[-0.09%] w-[275.61%]", contentClass: "pb-[16px] px-[16px]" },
-                    { className: "inset-[-12px_1013.34px_12px_0]", imageClass: "h-[508px] left-[137px] top-[53px] w-[182px]", imageStyle: "h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%]", contentClass: "left-[16px] top-[600px] w-[424.66px]" }
+                    { className: "left-0 top-[-12px] bottom-[12px] right-[11.66px]", imageClass: "h-[563px] left-[98.83px] top-[12.91px] w-[277px]", imageStyle: "h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]", contentClass: "left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]" },
+                    { className: "left-[513px] right-[500.33px] top-[-12px] bottom-[12px]", imageClass: "h-[564px] w-[205px]", imageStyle: "h-[100.18%] left-[-87.8%] max-w-none top-[-0.09%] w-[275.61%]", contentClass: "pb-[16px] px-[16px]" },
+                    { className: "left-[1013.34px] right-0 top-[-12px] bottom-[12px]", imageClass: "h-[508px] left-[137px] top-[53px] w-[182px]", imageStyle: "h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%]", contentClass: "left-[16px] top-[600px] w-[424.66px]" }
                   ];
 
                   const pos = positions[relativeIndex] || positions[0];
@@ -902,7 +902,7 @@ export default function HomePage() {
             ) : (
               // Fallback to original hardcoded products if no products loaded
               <>
-                <div className="absolute bg-transparent inset-[-12px_-11.66px_12px_1025px]">
+                <div className="absolute bg-transparent left-0 top-[-12px] bottom-[12px] right-[11.66px]">
                   <div className="absolute h-[563px] left-[98.83px] top-[12.91px] w-[277px]">
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
                       <img alt="Product 19L" className="absolute h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]" src={img1} />
@@ -1151,13 +1151,13 @@ export default function HomePage() {
       <div className="absolute h-[286px] left-[730px] top-[4661px] w-[375px]">
         <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] top-0">
-          <div className="absolute inset-[9.48%_-14.22%_18.97%_34.91%]">
+          <div className="absolute inset-[9.48%_0_18.97%_34.91%] overflow-hidden">
             <div className="absolute inset-0">
               <img alt="PC Icon" className="block max-w-none size-full" src={img13} />
             </div>
           </div>
-          <div className="absolute inset-[29.31%_16.81%_0_9.91%]">
-            <div className="absolute inset-[-3.66%_-4.71%_-6.1%_-4.71%]">
+          <div className="absolute inset-[29.31%_16.81%_0_9.91%] overflow-hidden">
+            <div className="absolute inset-0">
               <img alt="Glass" className="block max-w-none size-full" src={img14} />
             </div>
           </div>
@@ -1180,8 +1180,8 @@ export default function HomePage() {
               <img alt="Leaf" className="block max-w-none size-full" src={img7} />
             </div>
           </div>
-          <div className="absolute inset-[16.22%_15.91%_6.5%_4.41%]">
-            <div className="absolute inset-[-3.35%_-4.33%_-5.58%_-4.33%]">
+          <div className="absolute inset-[16.22%_15.91%_6.5%_4.41%] overflow-hidden">
+            <div className="absolute inset-0">
               <img alt="Glass" className="block max-w-none size-full" src={img8} />
             </div>
           </div>
@@ -1202,11 +1202,11 @@ export default function HomePage() {
       <div className="absolute h-[278px] left-[1227px] top-[4932px] w-[375px]">
         <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.53%] right-[34.53%] top-0">
-          <div className="absolute inset-[5.88%_-4.86%_26.15%_50.33%]">
+          <div className="absolute inset-[5.88%_0_26.15%_50.33%] overflow-hidden">
             <img alt="Group" className="block max-w-none size-full" src={img10} />
           </div>
-          <div className="absolute inset-[13.93%_8.94%_9.09%_8.94%]">
-            <div className="absolute inset-[-3.36%_-4.2%_-5.6%_-4.2%]">
+          <div className="absolute inset-[13.93%_8.94%_9.09%_8.94%] overflow-hidden">
+            <div className="absolute inset-0">
               <img alt="Glass" className="block max-w-none size-full" src={img11} />
             </div>
           </div>
@@ -1224,7 +1224,7 @@ export default function HomePage() {
       </div>
 
       {/* Trusted By Section */}
-      <div className="absolute content-stretch flex flex-col h-[461px] items-start left-1/2 px-[192px] py-[80px] top-[5651px] translate-x-[-50%] w-[1920px]">
+      <div className="absolute content-stretch flex flex-col h-[461px] items-start left-1/2 px-[192px] py-[80px] top-[5651px] translate-x-[-50%] w-full max-w-[1920px]">
         <div className="h-[277px] max-w-[1536px] relative shrink-0 w-full">
           <div className="absolute content-stretch flex flex-col items-center left-[calc(50%+0.5px)] top-[-34px] translate-x-[-50%] w-[1441px]">
             <div className="flex flex-col font-['Montserrat',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[70px] text-center uppercase whitespace-nowrap">
@@ -1357,7 +1357,7 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute h-[700px] left-1/2 top-[6201px] translate-x-[-50%] w-[2220px] relative overflow-hidden">
+      <div className="absolute h-[700px] left-1/2 top-[6201px] translate-x-[-50%] w-full max-w-[1920px] relative overflow-hidden">
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Footer Background" className="absolute h-[144.5%] left-0 max-w-none top-[-44.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
@@ -1519,8 +1519,8 @@ export default function HomePage() {
             </div>
             <div className="border border-solid border-white content-stretch flex items-center justify-center p-px relative rounded-[9999px] shrink-0 size-[40px]">
               <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid items-[start] justify-items-[start] leading-[0] relative shrink-0">
-                <div className="col-1 ml-0 mt-0 relative row-1 size-[18px]">
-                  <div className="absolute inset-[-5.56%]">
+                <div className="col-1 ml-0 mt-0 relative row-1 size-[18px] overflow-hidden">
+                  <div className="absolute inset-0">
                     <img alt="Social" className="block max-w-none size-full" src={imgGroup} />
                   </div>
                 </div>
@@ -1561,7 +1561,7 @@ export default function HomePage() {
       </div>
 
       {/* Additional Decorative Elements - Hero Section Bubbles */}
-      <div className="absolute flex inset-[44.44%_66.93%_43.57%_-8.49%] items-center justify-center">
+      <div className="absolute flex top-[44.44%] right-[66.93%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[564.622px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1633,7 +1633,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[39.38%_-3.52%_50.88%_69.74%] items-center justify-center">
+      <div className="absolute flex top-[39.38%] right-[69.74%] bottom-[50.88%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[459px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1656,7 +1656,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[43.7%_-7.39%_49.82%_84.95%] items-center justify-center">
+      <div className="absolute flex top-[43.7%] right-[84.95%] bottom-[49.82%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[304.957px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1679,7 +1679,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[50.45%_-11.49%_39.8%_77.71%] items-center justify-center">
+      <div className="absolute flex top-[50.45%] right-[77.71%] bottom-[39.8%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[459px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1702,7 +1702,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[55.45%_-1.7%_38.23%_79.79%] items-center justify-center">
+      <div className="absolute flex top-[55.45%] right-[79.79%] bottom-[38.23%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[297.625px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1726,7 +1726,7 @@ export default function HomePage() {
       </div>
 
       {/* Featured Products Section Decorative Elements */}
-      <div className="absolute flex inset-[-1.19%_72.03%_66.22%_6.56%] items-center justify-center">
+      <div className="absolute flex top-0 right-[72.03%] bottom-[66.22%] left-[6.56%] items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[290.785px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1749,7 +1749,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[-10.09%_-8.49%_55.65%_75.18%] items-center justify-center">
+      <div className="absolute flex top-0 right-[75.18%] bottom-[55.65%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[456.082px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1796,13 +1796,13 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-[15.61%_32.71%_66.56%_53.61%]">
-                <div className="absolute inset-[-2.48%_-3.2%_-4.13%_-3.2%]">
+              <div className="absolute inset-[15.61%_32.71%_66.56%_53.61%] overflow-hidden">
+                <div className="absolute inset-0">
                   <img alt="Glass" className="block max-w-none size-full" src={img18} />
                 </div>
               </div>
-              <div className="absolute inset-[54.8%_59.41%_27.38%_26.91%]">
-                <div className="absolute inset-[-2.48%_-3.2%_-4.13%_-3.2%]">
+              <div className="absolute inset-[54.8%_59.41%_27.38%_26.91%] overflow-hidden">
+                <div className="absolute inset-0">
                   <img alt="Glass" className="block max-w-none size-full" src={img18} />
                 </div>
               </div>
