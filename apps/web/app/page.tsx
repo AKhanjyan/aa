@@ -636,7 +636,7 @@ export default function HomePage() {
                   <div 
                     key={product.id} 
                     onClick={() => router.push(`/products/${product.slug}`)}
-                    className={`absolute bg-[rgba(255,255,255,0)] ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} rounded-[24px] cursor-pointer`}
+                    className={`absolute bg-[rgba(255,255,255,0)] ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} rounded-[24px] cursor-pointer product-card-hover`}
                   >
                     {isThirdProduct ? (
                       <div className="absolute h-[714px] left-[9px] right-[9px] top-0">
@@ -645,7 +645,7 @@ export default function HomePage() {
                             {product.image ? (
                               <img 
                                 alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain`} 
+                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
                                 src={product.image} 
                               />
                             ) : (
@@ -689,7 +689,7 @@ export default function HomePage() {
                             {product.image ? (
                               <img 
                                 alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain`} 
+                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
                                 src={product.image} 
                               />
                             ) : (
@@ -737,7 +737,7 @@ export default function HomePage() {
                             {product.image ? (
                               <img 
                                 alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain`} 
+                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
                                 src={product.image} 
                               />
                             ) : (

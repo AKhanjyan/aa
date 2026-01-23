@@ -177,6 +177,26 @@
   .figma-slide-up {
     animation: figma-slide-up 0.8s ease-out forwards;
   }
+
+  /* Product card hover animation - smooth lift effect */
+  .product-card-hover {
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  }
+
+  .product-card-hover:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 209, 255, 0.2);
+  }
+
+  /* Product image hover animation - tilt, scale and lift (matching Figma) */
+  .product-image-hover {
+    transition: transform 0.4s ease-out;
+    transform-origin: center bottom;
+  }
+
+  .product-card-hover:hover .product-image-hover {
+    transform: rotate(-5deg) scale(1.08) translateY(-15px);
+  }
 }
 
 /* Policy pages typography & spacing */
