@@ -908,35 +908,7 @@ export default function HomePage() {
             {/* Navigation Arrows - Only show if we have more than 3 products */}
             {featuredProducts.length > 3 && (
               <div className="absolute content-stretch flex h-[41px] items-center justify-between left-[calc(50%-0.5px)] top-[295px] translate-x-[-50%] w-[1621px] z-20">
-                {/* Previous Button */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handlePreviousProducts(e);
-                  }}
-                  className="bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] cursor-pointer hover:bg-white/20 hover:border-white/80 active:bg-white/30 active:scale-95 transition-all duration-200 z-10 group"
-                  aria-label="Previous products"
-                >
-                  <svg
-                    preserveAspectRatio="none"
-                    width="24.02"
-                    height="28"
-                    viewBox="0 0 24.02 28"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-[28px] w-[24.02px] transform scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200"
-                  >
-                    <path
-                      d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                      fill="white"
-                      className="group-hover:fill-[#00d1ff] transition-colors duration-200"
-                    />
-                  </svg>
-                </button>
-
-                {/* Next Button */}
+                {/* Next Button - Moved to left side */}
                 <button
                   type="button"
                   onClick={(e) => {
@@ -944,7 +916,7 @@ export default function HomePage() {
                     e.stopPropagation();
                     handleNextProducts(e);
                   }}
-                  className="bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] cursor-pointer hover:bg-white/20 hover:border-white/80 active:bg-white/30 active:scale-95 transition-all duration-200 z-10 group"
+                  className="bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-10 group"
                   aria-label="Next products"
                 >
                   <svg
@@ -955,6 +927,34 @@ export default function HomePage() {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-[28px] w-[24.02px] transform rotate-180 scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200"
+                  >
+                    <path
+                      d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
+                      fill="white"
+                      className="group-hover:fill-[#00d1ff] transition-colors duration-200"
+                    />
+                  </svg>
+                </button>
+
+                {/* Previous Button - Moved to right side */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePreviousProducts(e);
+                  }}
+                  className="bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-10 group"
+                  aria-label="Previous products"
+                >
+                  <svg
+                    preserveAspectRatio="none"
+                    width="24.02"
+                    height="28"
+                    viewBox="0 0 24.02 28"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-[28px] w-[24.02px] transform scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200"
                   >
                     <path
                       d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
