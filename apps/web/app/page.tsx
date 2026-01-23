@@ -602,7 +602,7 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[807px] left-0 top-[978px] w-[1920px]">
+      <div className="absolute h-[807px] left-0 top-[1158px] w-[1920px]">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
@@ -1238,14 +1238,14 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute h-[576px] left-1/2 top-[6061px] translate-x-[-50%] w-[1920px] relative overflow-hidden">
+      <div className="absolute h-[576px] left-1/2 top-[6201px] translate-x-[-50%] w-[1920px] relative overflow-hidden">
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="Footer Background" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
+          <img alt="Footer Background" className="absolute h-[178.63%] left-0 max-w-none top-[-68.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
         {/* Dark overlay for better text readability */}
-        <div className="absolute bg-[#0f172a]/90 inset-0" />
-        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[81px] translate-x-[-50%] w-[1611px] relative z-10">
+        <div className="absolute  inset-0" />
+        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[91px] translate-x-[-50%] w-[1811px] relative z-15">
           <div className="absolute content-stretch flex gap-[298px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%]">
             {/* Column 1: Logo + Description */}
             <div className="h-[312px] relative shrink-0 w-[339px]">
