@@ -14,6 +14,7 @@ import { CartIcon } from '../components/icons/CartIcon';
 // Figma MCP Image URLs - Updated from latest Figma design (2025-01-16)
 const imgBorborAguaLogoColorB2024Colored1 = "https://www.figma.com/api/mcp/asset/b106fddf-ddb7-4708-ad7a-7cb2873cb7c9";
 const imgDanielSinocaAancLsb0SU0Unsplash1 = "https://www.figma.com/api/mcp/asset/4d0bd127-e4d8-45e9-9ace-16bff1810201";
+const imgDanielSinocaAancLsb0SU0Unsplash2 = "https://www.figma.com/api/mcp/asset/1167763f-c5b0-46ec-87f2-01b536b28b93";
 const img = "https://www.figma.com/api/mcp/asset/9bb170f3-78f7-41dc-a30d-f7aba37fbea1";
 const img1 = "https://www.figma.com/api/mcp/asset/3505a6b7-91e7-402f-a08d-2db92f4d6d86";
 const img2 = "https://www.figma.com/api/mcp/asset/d2d605c5-1270-4604-96ed-7891bee71207";
@@ -596,17 +597,17 @@ export default function HomePage() {
             {productsLoading ? (
               // Loading state - show placeholder
               <>
-                <div className="absolute bg-[rgba(255,255,255,0)] inset-[-12px_-11.66px_12px_1025px] rounded-[24px]">
+                <div className="absolute bg-transparent inset-[-12px_-11.66px_12px_1025px]">
                   <div className="absolute h-[563px] left-[98.83px] top-[12.91px] w-[277px] bg-gray-300 animate-pulse rounded" />
                   <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]">
                     <div className="h-4 bg-gray-300 animate-pulse rounded w-3/4" />
                     <div className="h-6 bg-gray-300 animate-pulse rounded w-1/3" />
                   </div>
                 </div>
-                <div className="absolute bg-[rgba(255,255,255,0)] content-stretch flex flex-col gap-[24px] inset-[-12px_500.33px_12px_513px] items-center justify-center p-[8px] rounded-[24px]">
+                <div className="absolute bg-transparent content-stretch flex flex-col gap-[24px] inset-[-12px_500.33px_12px_513px] items-center justify-center p-[8px]">
                   <div className="h-[564px] w-[205px] bg-gray-300 animate-pulse rounded" />
                 </div>
-                <div className="absolute bg-[rgba(255,255,255,0)] inset-[-12px_1013.34px_12px_0] rounded-[24px]">
+                <div className="absolute bg-transparent inset-[-12px_1013.34px_12px_0]">
                   <div className="absolute h-[508px] left-[137px] top-[53px] w-[182px] bg-gray-300 animate-pulse rounded" />
                 </div>
               </>
@@ -636,7 +637,7 @@ export default function HomePage() {
                   <div 
                     key={product.id} 
                     onClick={() => router.push(`/products/${product.slug}`)}
-                    className={`absolute bg-[rgba(255,255,255,0)] ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} rounded-[24px] cursor-pointer product-card-hover`}
+                    className={`absolute bg-transparent ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} cursor-pointer product-card-hover`}
                   >
                     {isThirdProduct ? (
                       <div className="absolute h-[714px] left-[9px] right-[9px] top-0">
@@ -685,7 +686,7 @@ export default function HomePage() {
                     ) : isSecondProduct ? (
                       <>
                         <div className={`h-[564px] relative shrink-0 w-[205px]`}>
-                          <div className="absolute bg-clip-padding border-0 border-[transparent] border-solid inset-0 overflow-hidden pointer-events-none">
+                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
                             {product.image ? (
                               <img 
                                 alt={product.title} 
@@ -698,7 +699,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         <div className="relative shrink-0 w-[456.67px]">
-                          <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col gap-[16px] items-start pb-[16px] px-[16px] relative w-full">
+                          <div className="content-stretch flex flex-col gap-[16px] items-start pb-[16px] px-[16px] relative w-full">
                             <div className="content-stretch flex items-end justify-between relative shrink-0 w-full">
                               <div className="content-stretch flex flex-col items-start relative shrink-0">
                                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
@@ -784,7 +785,7 @@ export default function HomePage() {
             ) : (
               // Fallback to original hardcoded products if no products loaded
               <>
-                <div className="absolute bg-[rgba(255,255,255,0)] inset-[-12px_-11.66px_12px_1025px] rounded-[24px]">
+                <div className="absolute bg-transparent inset-[-12px_-11.66px_12px_1025px]">
                   <div className="absolute h-[563px] left-[98.83px] top-[12.91px] w-[277px]">
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
                       <img alt="Product 19L" className="absolute h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]" src={img1} />
@@ -1135,177 +1136,176 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute bg-[#0f172a] h-[576px] left-1/2 top-[6061px] translate-x-[-50%] w-[1920px]">
-        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[81px] translate-x-[-50%] w-[1611px]">
-          <div className="absolute content-stretch flex gap-[298px] items-center justify-center left-[calc(50%-16px)] top-0 translate-x-[-50%]">
+      <div className="absolute h-[576px] left-1/2 top-[6061px] translate-x-[-50%] w-[1920px] relative overflow-hidden">
+        {/* Footer Background Image - daniel sinoca */}
+        <div className="absolute blur-[0px] h-[819px] left-[calc(50%-14px)] top-[-224px] translate-x-[-50%] w-[1949px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <img alt="Footer Background" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash2} />
+          </div>
+        </div>
+        {/* Dark overlay for better text readability */}
+        <div className="absolute bg-[#0f172a]/90 inset-0" />
+        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[81px] translate-x-[-50%] w-[1611px] relative z-10">
+          <div className="absolute content-stretch flex gap-[298px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%]">
             {/* Column 1: Logo + Description */}
             <div className="h-[312px] relative shrink-0 w-[339px]">
-              <div className="absolute content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
+              <div className="content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
                 <div className="h-[34px] relative shrink-0 w-[112px]">
                   <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgBorborAguaLogoColorB2024Colored1} />
                 </div>
               </div>
-              <div className="absolute content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
+              <div className="content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
                 <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full">
                   <p className="leading-[26px] whitespace-pre-wrap">{`New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is Rich in Natural Minerals that provides valuable health benefits to everyone.`}</p>
                 </div>
               </div>
-              <div className="absolute flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] left-[calc(50%-148.5px)] not-italic text-[#00d1ff] text-[16px] text-center top-[calc(50%+124px)] translate-x-[-50%] translate-y-[-50%] whitespace-nowrap">
-                <p className="leading-[24px]">More</p>
-              </div>
-              <div className="absolute content-stretch flex flex-col items-start left-[44px] top-[calc(50%+124px)] translate-y-[-50%]">
-                <div className="flex items-center justify-center relative shrink-0">
-                  <div className="flex-none scale-y-[-100%]">
-                    <div className="h-[28px] relative w-[24.02px]">
-                      <img alt="Icon" className="block max-w-none size-full" src={imgIcon2} />
+              <div className="flex items-center gap-[8px] left-0 top-[268px] relative">
+                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[16px] whitespace-nowrap">
+                  <p className="leading-[24px]">More</p>
+                </div>
+                <div className="content-stretch flex flex-col items-start relative shrink-0">
+                  <div className="flex items-center justify-center relative shrink-0">
+                    <div className="flex-none scale-y-[-100%]">
+                      <div className="h-[28px] relative w-[24.02px]">
+                        <img alt="Icon" className="block max-w-none size-full" src={imgIcon2} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* Column 2: Contact */}
-            <div className="flex flex-row items-center self-stretch">
-              <div className="content-stretch flex gap-[208px] h-full items-center relative shrink-0">
-                <div className="content-stretch flex flex-col gap-[24px] h-full items-start relative shrink-0 w-[241px]">
+            {/* Column 2-4: Contact, Policies, Site Map */}
+            <div className="content-stretch flex gap-[208px] items-start relative shrink-0">
+              {/* Column 2: Contact */}
+              <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[241px]">
+                <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                    <p className="leading-[20px] whitespace-pre-wrap">CONTACT</p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-[249px]">
                   <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
-                      <p className="leading-[20px] whitespace-pre-wrap">CONTACT</p>
+                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white whitespace-pre-wrap">
+                      <p className="font-['Inter',sans-serif] font-bold mb-0">
+                        <span className="leading-[24px]">{`Office: `}</span>
+                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037433000401">
+                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 33 000401</span>
+                        </a>
+                      </p>
                     </div>
                   </div>
-                  <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-[249px]">
-                    <div className="content-stretch flex flex-col h-[25px] items-start relative shrink-0 w-[181px]">
-                      <div className="content-stretch flex items-start relative shrink-0 w-[336px]">
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white whitespace-pre-wrap">
-                          <p className="font-['Inter',sans-serif] font-bold mb-0">
-                            <span className="leading-[24px]">{`Office: `}</span>
-                            <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037433000401">
-                              <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 33 000401</span>
-                            </a>
-                          </p>
-                          <p className="leading-[24px]">&nbsp;</p>
-                        </div>
-                      </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                      <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
+                        <span className="leading-[24px]">{`Delivery: `}</span>
+                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037441012004">
+                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 41 012004</span>
+                        </a>
+                      </p>
                     </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div className="content-stretch flex items-start relative shrink-0 w-full">
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
-                            <span className="leading-[24px]">{`Delivery: `}</span>
-                            <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037441012004">
-                              <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 41 012004</span>
-                            </a>
-                          </p>
-                        </div>
-                      </div>
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                      <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
+                        <span className="leading-[24px]">{`Email: `}</span>
+                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="mailto:borboraqua.am@gmail.com">
+                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">info@borboraqua.am</span>
+                        </a>
+                      </p>
                     </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div className="content-stretch flex items-start relative shrink-0 w-full">
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
-                            <span className="leading-[24px]">{`Email: `}</span>
-                            <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="mailto:borboraqua.am@gmail.com">
-                              <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">info@borboraqua.am</span>
-                            </a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div className="content-stretch flex items-start relative shrink-0 w-full">
-                        <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[24px] not-italic relative shrink-0 text-[16px] text-white w-[228px] whitespace-pre-wrap">
-                          <p className="mb-0">Location: 1412, Gegharkunik,</p>
-                          <p className="mb-0">v. Dzoragyugh, Armenia</p>
-                          <p>&nbsp;</p>
-                        </div>
-                      </div>
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[24px] not-italic relative shrink-0 text-[16px] text-white w-[228px] whitespace-pre-wrap">
+                      <p className="mb-0">Location: 1412, Gegharkunik,</p>
+                      <p className="mb-0">v. Dzoragyugh, Armenia</p>
                     </div>
                   </div>
                 </div>
-                
-                {/* Column 3: Policies */}
-                <div className="content-stretch flex flex-col gap-[24px] h-full items-start relative shrink-0 w-[154px]">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
-                      <p className="leading-[20px] whitespace-pre-wrap">POLICIES</p>
-                    </div>
+              </div>
+              
+              {/* Column 3: Policies */}
+              <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[154px]">
+                <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                    <p className="leading-[20px] whitespace-pre-wrap">POLICIES</p>
                   </div>
-                  <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/privacy')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">Privacy Policy</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/terms')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">Terms & Conditions</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/delivery-terms')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">Delivery Terms</p>
-                        </div>
-                      </div>
-                    </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                     <div 
-                      onClick={() => router.push('/refund-policy')}
-                      className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => router.push('/privacy')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
                     >
-                      <p className="leading-[24px] whitespace-pre-wrap">Refund Policy</p>
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">Privacy Policy</p>
+                      </div>
                     </div>
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div 
+                      onClick={() => router.push('/terms')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">Terms & Conditions</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div 
+                      onClick={() => router.push('/delivery-terms')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">Delivery Terms</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div 
+                    onClick={() => router.push('/refund-policy')}
+                    className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px] whitespace-pre-wrap">Refund Policy</p>
                   </div>
                 </div>
-                
-                {/* Column 4: Site Map */}
-                <div className="content-stretch flex flex-col gap-[24px] h-full items-start relative shrink-0 w-[94px]">
+              </div>
+              
+              {/* Column 4: Site Map */}
+              <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[94px]">
+                <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                    <p className="leading-[20px] whitespace-pre-wrap">SITE MAP</p>
+                  </div>
+                </div>
+                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
                   <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
-                      <p className="leading-[20px] whitespace-pre-wrap">SITE MAP</p>
+                    <div 
+                      onClick={() => router.push('/about')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">About Us</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/about')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">About Us</p>
-                        </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div 
+                      onClick={() => router.push('/contact')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">Contact</p>
                       </div>
                     </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/contact')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">Contact</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div 
-                        onClick={() => router.push('/products')}
-                        className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex flex-[1_0_0] flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[16px] text-white">
-                          <p className="leading-[24px] whitespace-pre-wrap">Shop</p>
-                        </div>
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                    <div 
+                      onClick={() => router.push('/products')}
+                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+                        <p className="leading-[24px] whitespace-pre-wrap">Shop</p>
                       </div>
                     </div>
                   </div>
