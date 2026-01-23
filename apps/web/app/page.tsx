@@ -100,7 +100,7 @@ export default function HomePage() {
   const router = useRouter();
   const { isLoggedIn, logout } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // State for featured products
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -138,7 +138,7 @@ export default function HomePage() {
     console.log('🔄 [CAROUSEL] Index changed to:', carouselIndex, 'Total products:', featuredProducts.length);
     console.log('🔄 [CAROUSEL] Showing products:', featuredProducts.slice(carouselIndex, carouselIndex + 3).map(p => p.title));
   }, [carouselIndex, featuredProducts]);
-  
+
   // State for header navigation
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -153,7 +153,7 @@ export default function HomePage() {
       try {
         setProductsLoading(true);
         console.log('📦 [HOMEPAGE] Fetching featured products...');
-        
+
         const language = getStoredLanguage();
         const params: Record<string, string> = {
           page: '1',
@@ -167,7 +167,7 @@ export default function HomePage() {
         });
 
         console.log(`✅ [HOMEPAGE] Loaded ${response.data.length} featured products`);
-        
+
         // If we got less than 9 products, try without filter to get any products
         if (response.data.length < 9) {
           console.log('⚠️ [HOMEPAGE] Less than 9 featured products, fetching any products...');
@@ -266,11 +266,11 @@ export default function HomePage() {
     e.preventDefault();
     const query = searchQuery.trim();
     const params = new URLSearchParams();
-    
+
     if (query) {
       params.set('search', query);
     }
-    
+
     setShowSearchModal(false);
     const queryString = params.toString();
     router.push(queryString ? `/products?${queryString}` : '/products');
@@ -358,7 +358,7 @@ export default function HomePage() {
       }
 
       const variantId = productDetails.variants[0].id;
-      
+
       await apiClient.post(
         '/api/v1/cart/items',
         {
@@ -373,21 +373,21 @@ export default function HomePage() {
       console.log('✅ [HOMEPAGE] Product added to cart:', product.title);
     } catch (error: any) {
       console.error('❌ [HOMEPAGE] Error adding to cart:', error);
-      
+
       // Check if error is about product not found
       if (error?.message?.includes('does not exist') || error?.message?.includes('404') || error?.status === 404) {
         alert('Product not found');
         return;
       }
-      
+
       // Check if error is about insufficient stock
-      if (error.response?.data?.detail?.includes('No more stock available') || 
-          error.response?.data?.detail?.includes('exceeds available stock') ||
-          error.response?.data?.title === 'Insufficient stock') {
+      if (error.response?.data?.detail?.includes('No more stock available') ||
+        error.response?.data?.detail?.includes('exceeds available stock') ||
+        error.response?.data?.title === 'Insufficient stock') {
         alert('No more stock available');
         return;
       }
-      
+
       // If error is about authorization, redirect to login
       if (error.message?.includes('401') || error.message?.includes('Unauthorized') || error?.status === 401) {
         router.push(`/login?redirect=/`);
@@ -406,7 +406,7 @@ export default function HomePage() {
   // Footer is at top-[6061px] with h-[576px], so total height = 6061 + 576 = 6637px
   // Using exact pixel height from Figma with responsive scaling
   return (
-    <div 
+    <div
       ref={containerRef}
       className="bg-white relative w-[1920px] h-[6637px] home-page-container"
       style={{
@@ -418,68 +418,68 @@ export default function HomePage() {
       <div className="fixed bg-[rgba(255,255,255,0.04)] backdrop-blur-[10px] content-stretch flex flex-col h-[73px] items-center justify-center left-1/2 px-[38px] py-[16px] rounded-[70px] top-[64px] translate-x-[-50%] w-[1668px] z-50">
         <div className="content-stretch flex gap-[320px] h-[56px] items-center justify-center relative shrink-0">
           {/* Logo */}
-          <div 
+          <div
             onClick={() => router.push('/')}
             className="h-[31px] relative shrink-0 w-[101px] cursor-pointer"
           >
             <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgBorborAguaLogoColorB2024Colored1} />
           </div>
-          
+
           {/* Navigation Menu */}
           <div className="content-stretch flex font-['Inter:Bold',sans-serif] font-bold gap-[74px] items-end justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white uppercase whitespace-nowrap">
-            <div 
+            <div
               onClick={() => router.push('/')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
               <p className="leading-[20px]">HOME</p>
             </div>
-            <div 
+            <div
               onClick={() => router.push('/products')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
               <p className="leading-[20px]">SHOP</p>
             </div>
-            <div 
+            <div
               onClick={() => router.push('/about')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
               <p className="leading-[20px]">ABOUT US</p>
             </div>
-            <div 
+            <div
               onClick={() => router.push('/contact')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
               <p className="leading-[20px]">CONTACT US</p>
             </div>
-            <div 
+            <div
               onClick={() => router.push('/blog')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
               <p className="leading-[20px]">BLOG</p>
             </div>
           </div>
-          
+
           {/* Header Icons - Separate Vector Groups */}
           <div className="content-stretch flex gap-[36px] items-center justify-center relative shrink-0">
             {/* Search Icon */}
-            <div 
+            <div
               onClick={() => setShowSearchModal(true)}
               className="h-[21px] w-[21px] relative shrink-0 cursor-pointer flex items-center justify-center"
             >
               <SearchIcon size={21} />
             </div>
-            
+
             {/* Cart Icon */}
-            <div 
+            <div
               onClick={() => router.push('/cart')}
               className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
             >
               <HeaderCartIcon size={20} />
             </div>
-            
+
             {/* Language Icon */}
             <div className="relative shrink-0" ref={languageMenuRef}>
-              <div 
+              <div
                 onClick={() => setShowLanguageMenu(!showLanguageMenu)}
                 className="h-[20px] w-[20px] relative cursor-pointer flex items-center justify-center"
               >
@@ -491,11 +491,10 @@ export default function HomePage() {
                     <button
                       key={code}
                       onClick={() => handleLanguageChange(code as LanguageCode)}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 ${
-                        getStoredLanguage() === code
+                      className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 ${getStoredLanguage() === code
                           ? 'bg-gray-100 text-gray-900 font-semibold'
                           : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                        }`}
                     >
                       {lang.name}
                     </button>
@@ -503,17 +502,17 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            
+
             {/* Exit/Logout Icon */}
             {isLoggedIn ? (
-              <div 
+              <div
                 onClick={handleLogout}
                 className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
               >
                 <ExitIcon size={20} />
               </div>
             ) : (
-              <div 
+              <div
                 onClick={() => router.push('/login')}
                 className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
               >
@@ -521,17 +520,17 @@ export default function HomePage() {
               </div>
             )}
           </div>
-      
+
         </div>
       </div>
 
       {/* Background Gradient */}
       <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-[1920px]" />
-      
+
       {/* Hero Section Decorative Group */}
       <div className="absolute inset-[3.74%_14.27%_90%_14.64%]">
         <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
-  
+
       </div>
 
       {/* Image 13 - Decorative Element */}
@@ -559,7 +558,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Main Heading */}
           <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[96px] text-center text-white w-full">
@@ -571,17 +570,17 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          
+
           {/* Subtitle */}
           <div className="content-stretch flex flex-col items-center justify-center max-w-[512px] relative shrink-0 w-[512px]">
             <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
               <p className="leading-[32.5px]">Natural spring water</p>
             </div>
           </div>
-          
+
           {/* Buttons */}
           <div className="content-center flex flex-wrap gap-[0px_16px] h-[76px] items-center justify-center pt-[16px] relative shrink-0 w-full">
-            <div 
+            <div
               onClick={() => router.push('/products')}
               className="bg-[#1ac0fd] content-stretch flex flex-col h-[60px] items-center justify-center pl-[63px] pr-[61px] py-[16px] relative rounded-[9999px] shrink-0 w-[185px] cursor-pointer hover:bg-[#00b8e6] transition-colors"
             >
@@ -589,7 +588,7 @@ export default function HomePage() {
                 <p className="leading-[24px]">Shop Now</p>
               </div>
             </div>
-            <div 
+            <div
               onClick={() => router.push('/about')}
               className="bg-[rgba(0,0,0,0)] content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 cursor-pointer hover:bg-white/10 transition-colors"
             >
@@ -607,7 +606,7 @@ export default function HomePage() {
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
       </div>
-      
+
       {/* Blurred Reflection */}
       <div className="absolute flex h-[807px] items-center justify-center left-1/2 top-[1741px] translate-x-[-50%] w-[1920px]">
         <div className="flex-none scale-y-[-100%]">
@@ -625,19 +624,19 @@ export default function HomePage() {
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
         </div>
       </div>
-      
+
       <div className="absolute h-[1031px] left-1/2 top-[4834px] translate-x-[-50%] w-[1008px]">
         <div className="absolute inset-[-45.1%_-46.13%] figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse44} />
         </div>
       </div>
-      
+
       <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px]">
         <div className="absolute inset-[-41.37%_-39.04%] figma-float-slow">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse42} />
         </div>
       </div>
-      
+
       <div className="absolute h-[1124px] left-[calc(50%+986px)] top-[3116px] translate-x-[-50%] w-[1422px]">
         <div className="absolute inset-[-41.37%_-32.7%] figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse43} />
@@ -652,7 +651,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] mix-blend-luminosity size-[956.401px] top-[5477px] translate-x-[-50%]">
         <div className="flex-none rotate-[-16.26deg] scale-y-[-100%] figma-rotate-slow">
           <div className="relative size-[771.293px]">
@@ -660,7 +659,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] mix-blend-luminosity size-[641.928px] top-[3208px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[524.132px]">
@@ -668,7 +667,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] mix-blend-luminosity size-[944.637px] top-[3493px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[771.293px]">
@@ -693,7 +692,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Products Grid */}
           <div className="absolute h-[736.83px] left-[24px] right-[24px] top-[166px]">
             {productsLoading ? (
@@ -720,89 +719,136 @@ export default function HomePage() {
                 console.log('🔄 [CAROUSEL] Rendering products - carouselIndex:', carouselIndex, 'visibleProducts:', visibleProducts.length, 'total:', featuredProducts.length);
                 return visibleProducts.map((product, relativeIndex) => {
                   const index = carouselIndex + relativeIndex;
-                const currency = getStoredCurrency();
-                const formattedPrice = formatPrice(product.price, currency);
-                
-                // Product positioning based on relativeIndex (matching original layout)
-                // Always use relativeIndex (0, 1, 2) for the 3 visible products
-                const positions = [
-                  { className: "inset-[-12px_-11.66px_12px_1025px]", imageClass: "h-[563px] left-[98.83px] top-[12.91px] w-[277px]", imageStyle: "h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]", contentClass: "left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]" },
-                  { className: "inset-[-12px_500.33px_12px_513px]", imageClass: "h-[564px] w-[205px]", imageStyle: "h-[100.18%] left-[-87.8%] max-w-none top-[-0.09%] w-[275.61%]", contentClass: "pb-[16px] px-[16px]" },
-                  { className: "inset-[-12px_1013.34px_12px_0]", imageClass: "h-[508px] left-[137px] top-[53px] w-[182px]", imageStyle: "h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%]", contentClass: "left-[16px] top-[600px] w-[424.66px]" }
-                ];
-                
-                const pos = positions[relativeIndex] || positions[0];
-                const isSecondProduct = relativeIndex === 1;
-                const isThirdProduct = relativeIndex === 2;
-                
-                return (
-                  <div 
-                    key={product.id} 
-                    onClick={() => router.push(`/products/${product.slug}`)}
-                    className={`absolute bg-transparent ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} cursor-pointer product-card-hover`}
-                  >
-                    {isThirdProduct ? (
-                      <div className="absolute h-[714px] left-[9px] right-[9px] top-0">
-                        <div className={`absolute ${pos.imageClass}`}>
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            {product.image ? (
-                              <img 
-                                alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
-                                src={product.image} 
-                              />
-                            ) : (
-                              <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
-                            )}
+                  const currency = getStoredCurrency();
+                  const formattedPrice = formatPrice(product.price, currency);
+
+                  // Product positioning based on relativeIndex (matching original layout)
+                  // Always use relativeIndex (0, 1, 2) for the 3 visible products
+                  const positions = [
+                    { className: "inset-[-12px_-11.66px_12px_1025px]", imageClass: "h-[563px] left-[98.83px] top-[12.91px] w-[277px]", imageStyle: "h-[111.44%] left-[-62.35%] max-w-none top-0 w-[226.62%]", contentClass: "left-[9px] pb-[16px] px-[16px] right-[9px] top-[599.91px]" },
+                    { className: "inset-[-12px_500.33px_12px_513px]", imageClass: "h-[564px] w-[205px]", imageStyle: "h-[100.18%] left-[-87.8%] max-w-none top-[-0.09%] w-[275.61%]", contentClass: "pb-[16px] px-[16px]" },
+                    { className: "inset-[-12px_1013.34px_12px_0]", imageClass: "h-[508px] left-[137px] top-[53px] w-[182px]", imageStyle: "h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%]", contentClass: "left-[16px] top-[600px] w-[424.66px]" }
+                  ];
+
+                  const pos = positions[relativeIndex] || positions[0];
+                  const isSecondProduct = relativeIndex === 1;
+                  const isThirdProduct = relativeIndex === 2;
+
+                  return (
+                    <div
+                      key={product.id}
+                      onClick={() => router.push(`/products/${product.slug}`)}
+                      className={`absolute bg-transparent ${pos.className} ${isSecondProduct ? 'content-stretch flex flex-col gap-[24px] items-center justify-center p-[8px]' : ''} cursor-pointer product-card-hover`}
+                    >
+                      {isThirdProduct ? (
+                        <div className="absolute h-[714px] left-[9px] right-[9px] top-0">
+                          <div className={`absolute ${pos.imageClass}`}>
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              {product.image ? (
+                                <img
+                                  alt={product.title}
+                                  className={`absolute ${pos.imageStyle} object-contain product-image-hover`}
+                                  src={product.image}
+                                />
+                              ) : (
+                                <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className={`absolute content-stretch flex h-[44px] items-end justify-between ${pos.contentClass}`}>
-                          <div className="content-stretch flex flex-col items-start relative shrink-0">
-                            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                              <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white">
-                                <p className="leading-[28px]">{product.title}</p>
+                          <div className={`absolute content-stretch flex h-[44px] items-end justify-between ${pos.contentClass}`}>
+                            <div className="content-stretch flex flex-col items-start relative shrink-0">
+                              <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                                <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white">
+                                  <p className="leading-[28px]">{product.title}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="content-stretch flex flex-col items-start relative shrink-0">
+                              <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
+                                <p className="leading-[28px]">{formattedPrice}</p>
                               </div>
                             </div>
                           </div>
-                          <div className="content-stretch flex flex-col items-start relative shrink-0">
-                            <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
-                              <p className="leading-[28px]">{formattedPrice}</p>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCart(product);
+                            }}
+                            disabled={!product.inStock || addingToCart.has(product.id)}
+                            className="absolute bg-[#00d1ff] content-stretch flex h-[48px] items-center justify-center left-[16px] py-[12px] rounded-[34px] top-[660px] w-[424.66px] hover:bg-[#00b8e6] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                          >
+                            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
+                              <p className="leading-[24px]">
+                                {addingToCart.has(product.id) ? 'Adding...' : 'Add to Cart'}
+                              </p>
+                            </div>
+                          </button>
+                        </div>
+                      ) : isSecondProduct ? (
+                        <>
+                          <div className={`h-[564px] relative shrink-0 w-[205px]`}>
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              {product.image ? (
+                                <img
+                                  alt={product.title}
+                                  className={`absolute ${pos.imageStyle} object-contain product-image-hover`}
+                                  src={product.image}
+                                />
+                              ) : (
+                                <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
+                              )}
                             </div>
                           </div>
-                        </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product);
-                          }}
-                          disabled={!product.inStock || addingToCart.has(product.id)}
-                          className="absolute bg-[#00d1ff] content-stretch flex h-[48px] items-center justify-center left-[16px] py-[12px] rounded-[34px] top-[660px] w-[424.66px] hover:bg-[#00b8e6] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                        >
-                          <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-                            <p className="leading-[24px]">
-                              {addingToCart.has(product.id) ? 'Adding...' : 'Add to Cart'}
-                            </p>
+                          <div className="relative shrink-0 w-[456.67px]">
+                            <div className="content-stretch flex flex-col gap-[16px] items-start pb-[16px] px-[16px] relative w-full">
+                              <div className="content-stretch flex items-end justify-between relative shrink-0 w-full">
+                                <div className="content-stretch flex flex-col items-start relative shrink-0">
+                                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                                    <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white">
+                                      <p className="leading-[28px]">{product.title}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="content-stretch flex flex-col items-start relative shrink-0">
+                                  <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
+                                    <p className="leading-[28px]">{formattedPrice}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddToCart(product);
+                                }}
+                                disabled={!product.inStock || addingToCart.has(product.id)}
+                                className="bg-[#00d1ff] content-stretch flex items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-full hover:bg-[#00b8e6] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                              >
+                                <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
+                                  <p className="leading-[24px]">
+                                    {addingToCart.has(product.id) ? 'Adding...' : 'Add to Cart'}
+                                  </p>
+                                </div>
+                              </button>
+                            </div>
                           </div>
-                        </button>
-                      </div>
-                    ) : isSecondProduct ? (
-                      <>
-                        <div className={`h-[564px] relative shrink-0 w-[205px]`}>
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            {product.image ? (
-                              <img 
-                                alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
-                                src={product.image} 
-                              />
-                            ) : (
-                              <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
-                            )}
+                        </>
+                      ) : (
+                        <>
+                          <div className={`absolute ${pos.imageClass}`}>
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                              {product.image ? (
+                                <img
+                                  alt={product.title}
+                                  className={`absolute ${pos.imageStyle} object-contain product-image-hover`}
+                                  src={product.image}
+                                />
+                              ) : (
+                                <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="relative shrink-0 w-[456.67px]">
-                          <div className="content-stretch flex flex-col gap-[16px] items-start pb-[16px] px-[16px] relative w-full">
-                            <div className="content-stretch flex items-end justify-between relative shrink-0 w-full">
+                          <div className={`absolute content-stretch flex flex-col gap-[16px] items-start ${pos.contentClass}`}>
+                            <div className="content-stretch flex items-end justify-between pr-[0.01px] relative shrink-0 w-full">
                               <div className="content-stretch flex flex-col items-start relative shrink-0">
                                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                                   <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white">
@@ -831,58 +877,11 @@ export default function HomePage() {
                               </div>
                             </button>
                           </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className={`absolute ${pos.imageClass}`}>
-                          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            {product.image ? (
-                              <img 
-                                alt={product.title} 
-                                className={`absolute ${pos.imageStyle} object-contain product-image-hover`} 
-                                src={product.image} 
-                              />
-                            ) : (
-                              <div className={`absolute ${pos.imageStyle} bg-gray-300`} />
-                            )}
-                          </div>
-                        </div>
-                        <div className={`absolute content-stretch flex flex-col gap-[16px] items-start ${pos.contentClass}`}>
-                          <div className="content-stretch flex items-end justify-between pr-[0.01px] relative shrink-0 w-full">
-                            <div className="content-stretch flex flex-col items-start relative shrink-0">
-                              <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                                <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white">
-                                  <p className="leading-[28px]">{product.title}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="content-stretch flex flex-col items-start relative shrink-0">
-                              <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
-                                <p className="leading-[28px]">{formattedPrice}</p>
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(product);
-                            }}
-                            disabled={!product.inStock || addingToCart.has(product.id)}
-                            className="bg-[#00d1ff] content-stretch flex items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-full hover:bg-[#00b8e6] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                          >
-                            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-                              <p className="leading-[24px]">
-                                {addingToCart.has(product.id) ? 'Adding...' : 'Add to Cart'}
-                              </p>
-                            </div>
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                );
-              });
+                        </>
+                      )}
+                    </div>
+                  );
+                });
               })()
             ) : (
               // Fallback to original hardcoded products if no products loaded
@@ -917,7 +916,7 @@ export default function HomePage() {
                 </div>
               </>
             )}
-            
+
             {/* Navigation Arrows - Only show if we have more than 3 products */}
             {featuredProducts.length > 3 && (
               <div className="absolute content-stretch flex h-[41px] items-center justify-between left-[calc(50%-0.5px)] top-[295px] translate-x-[-50%] w-[1621px]">
@@ -926,7 +925,7 @@ export default function HomePage() {
                   Index: {carouselIndex} / Total: {featuredProducts.length}
                 </div>
                 <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid items-[start] justify-items-[start] leading-[0] relative shrink-0">
-                  <div 
+                  <div
                     onClick={(e) => {
                       console.log('🔄 [CAROUSEL] Previous button clicked!');
                       handlePreviousProducts(e);
@@ -948,7 +947,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center justify-center relative shrink-0">
                   <div className="flex-none rotate-[180deg] scale-y-[-100%]">
-                    <div 
+                    <div
                       onClick={(e) => {
                         console.log('🔄 [CAROUSEL] Next button clicked!');
                         handleNextProducts(e);
@@ -972,17 +971,17 @@ export default function HomePage() {
               </div>
             )}
           </div>
-          
+
           {/* Pagination Dots */}
           <div className="absolute contents left-1/2 top-[920px] translate-x-[-50%]">
             <div className="absolute bg-[#e2e8f0] left-[calc(50%-17px)] rounded-[9999px] size-[6px] top-[920px] translate-x-[-50%]" />
             <div className="absolute bg-[#00d1ff] h-[6px] left-1/2 rounded-[9999px] top-[920px] translate-x-[-50%] w-[16px]" />
             <div className="absolute bg-[#e2e8f0] left-[calc(50%+17px)] rounded-[9999px] size-[6px] top-[920px] translate-x-[-50%]" />
           </div>
-          
+
           {/* View All Products Button */}
           <div className="absolute content-stretch flex flex-col items-center left-[24px] right-[24px] top-[976px]">
-            <div 
+            <div
               onClick={() => router.push('/products')}
               className="border-2 border-[#e2e8f0] border-solid content-stretch flex gap-[8px] items-center px-[34px] py-[12px] relative rounded-[9999px] shrink-0 cursor-pointer hover:border-[#00d1ff] hover:bg-[#00d1ff]/5 transition-all"
             >
@@ -1002,7 +1001,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Blue Underline */}
           <div className="absolute content-stretch flex items-start justify-center left-1/2 top-[59px] translate-x-[-50%] w-[1488px]">
             <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
@@ -1043,7 +1042,7 @@ export default function HomePage() {
           <p className="leading-[24px]">Natura Source</p>
         </div>
       </div>
-      
+
       {/* White Card (100%) */}
       <div className="absolute h-[343px] left-[393px] top-[3931px] w-[795px]">
         <div className="absolute bg-white inset-0 rounded-[37px]" />
@@ -1058,7 +1057,7 @@ export default function HomePage() {
           <p className="leading-[24px]">Clean Minerals</p>
         </div>
       </div>
-      
+
       {/* Side Images */}
       <div className="absolute h-[343px] left-[393px] top-[3570px] w-[306px]">
         <div className="absolute inset-0 rounded-[37px]">
@@ -1067,7 +1066,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <div className="absolute h-[350px] left-[1215px] top-[3924px] w-[308px]">
         <div className="absolute inset-0 rounded-[37px]">
           <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[37px]">
@@ -1114,7 +1113,7 @@ export default function HomePage() {
           <p className="leading-[28px]">RICH IN MINERALS</p>
         </div>
       </div>
-      
+
       {/* Card 2: Non-Carbonated */}
       <div className="absolute h-[272px] left-[217px] top-[5086px] w-[375px]">
         <div className="absolute bg-white inset-[13.97%_0_0_0] rounded-[37px]" />
@@ -1141,7 +1140,7 @@ export default function HomePage() {
           <p className="leading-[28px]">NON-CARBONATED</p>
         </div>
       </div>
-      
+
       {/* Card 3: No Artificial Ingredients */}
       <div className="absolute h-[278px] left-[1227px] top-[4932px] w-[375px]">
         <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[37px]" />
@@ -1198,7 +1197,7 @@ export default function HomePage() {
               <div className="bg-white col-1 ml-[34px] mt-0 rounded-[9999px] row-1 size-[6px]" />
             </div>
           </div>
-          
+
           {/* Navigation Arrows */}
           <div className="absolute contents left-[134px] top-[calc(50%+50.25px)] translate-y-[-50%]">
             <div className="absolute contents left-[134px] top-[calc(50%+50.5px)] translate-y-[-50%]">
@@ -1238,28 +1237,30 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute h-[576px] left-1/2 top-[6201px] translate-x-[-50%] w-[1920px] relative overflow-hidden">
+      <div className="absolute h-[700px] left-1/2 top-[6201px] translate-x-[-50%] w-[2220px] relative overflow-hidden">
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="Footer Background" className="absolute h-[178.63%] left-0 max-w-none top-[-68.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
+          <img alt="Footer Background" className="absolute h-[144.5%] left-0 max-w-none top-[-44.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
         {/* Dark overlay for better text readability */}
         <div className="absolute  inset-0" />
-        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[91px] translate-x-[-50%] w-[1811px] relative z-15">
-          <div className="absolute content-stretch flex gap-[298px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%]">
+        <div className="absolute h-[449px] left-[calc(50%+0.5px)] top-[231px] translate-x-[-50%] w-[1811px] relative z-10">
+          <div className="absolute content-stretch flex gap-[258px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%]">
             {/* Column 1: Logo + Description */}
-            <div className="h-[312px] relative shrink-0 w-[339px]">
-              <div className="content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
+            <div className="flex flex-col h-[312px] relative shrink-0 w-[339px] gap-[34px]">
+              <div className="content-stretch flex h-[14px] items-center left-0 top-0 w-[336px]">
                 <div className="h-[34px] relative shrink-0 w-[112px]">
                   <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgBorborAguaLogoColorB2024Colored1} />
                 </div>
               </div>
-              <div className="content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
-                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full">
-                  <p className="leading-[26px] whitespace-pre-wrap">{`New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is Rich in Natural Minerals that provides valuable health benefits to everyone.`}</p>
+              <div className="content-stretch flex flex-row flex-wrap items-start left-0 w-[336px]">
+                <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[26px] not-italic relative shrink-0 text-[18px] text-white w-full">
+                  <p className="leading-[26px]">
+                    New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is rich in natural minerals that provide valuable health benefits to everyone.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-[8px] left-0 top-[268px] relative">
+              <div className="flex items-center gap-[10px] left-0 relative">
                 <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[16px] whitespace-nowrap">
                   <p className="leading-[24px]">More</p>
                 </div>
@@ -1274,146 +1275,116 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Column 2-4: Contact, Policies, Site Map */}
             <div className="content-stretch flex gap-[208px] items-start relative shrink-0">
               {/* Column 2: Contact */}
               <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[241px]">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[24px] text-white tracking-[1.8px] uppercase w-full">
                     <p className="leading-[20px] whitespace-pre-wrap">CONTACT</p>
                   </div>
                 </div>
-                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-[249px]">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white whitespace-pre-wrap">
-                      <p className="font-['Inter',sans-serif] font-bold mb-0">
-                        <span className="leading-[24px]">{`Office: `}</span>
-                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037433000401">
-                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 33 000401</span>
-                        </a>
-                      </p>
-                    </div>
+                <div className="content-stretch flex flex-row flex-wrap gap-[16px] items-start relative shrink-0 w-[249px]">
+                  <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                    <p className="font-['Inter',sans-serif] font-bold mb-0">
+                      <span className="leading-[24px]">{`Office: `}</span>
+                      <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037433000401">
+                        <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 33 000401</span>
+                      </a>
+                    </p>
                   </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                      <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
-                        <span className="leading-[24px]">{`Delivery: `}</span>
-                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037441012004">
-                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 41 012004</span>
-                        </a>
-                      </p>
-                    </div>
+                  <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                    <p className="font-['Inter',sans-serif] font-bold">
+                      <span className="leading-[24px]">{`Delivery: `}</span>
+                      <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037441012004">
+                        <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 41 012004</span>
+                      </a>
+                    </p>
                   </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                      <p className="font-['Inter',sans-serif] font-bold whitespace-pre-wrap">
-                        <span className="leading-[24px]">{`Email: `}</span>
-                        <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="mailto:borboraqua.am@gmail.com">
-                          <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">info@borboraqua.am</span>
-                        </a>
-                      </p>
-                    </div>
+                  <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                    <p className="font-['Inter',sans-serif] font-bold">
+                      <span className="leading-[24px]">{`Email: `}</span>
+                      <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="mailto:borboraqua.am@gmail.com">
+                        <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">info@borboraqua.am</span>
+                      </a>
+                    </p>
                   </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[24px] not-italic relative shrink-0 text-[16px] text-white w-[228px] whitespace-pre-wrap">
-                      <p className="mb-0">Location: 1412, Gegharkunik,</p>
-                      <p className="mb-0">v. Dzoragyugh, Armenia</p>
-                    </div>
+                  <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[24px] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                    <p className="mb-0">Location: 1412, Gegharkunik,</p>
+                  </div>
+                  <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[24px] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                    <p className="mb-0">v. Dzoragyugh, Armenia</p>
                   </div>
                 </div>
               </div>
-              
+
               {/* Column 3: Policies */}
               <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[154px]">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white tracking-[1.6px] uppercase w-full">
                     <p className="leading-[20px] whitespace-pre-wrap">POLICIES</p>
                   </div>
                 </div>
-                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/privacy')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">Privacy Policy</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/terms')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">Terms & Conditions</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/delivery-terms')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">Delivery Terms</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div 
-                    onClick={() => router.push('/refund-policy')}
-                    className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full cursor-pointer hover:opacity-80 transition-opacity"
+                <div className="content-stretch flex flex-row flex-wrap gap-[18px] items-start relative shrink-0 w-full">
+                  <div
+                    onClick={() => router.push('/privacy')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px] whitespace-pre-wrap">Refund Policy</p>
+                    <p className="leading-[24px]">Privacy Policy</p>
+                  </div>
+                  <div
+                    onClick={() => router.push('/terms')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">Terms & Conditions</p>
+                  </div>
+                  <div
+                    onClick={() => router.push('/delivery-terms')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">Delivery Terms</p>
+                  </div>
+                  <div
+                    onClick={() => router.push('/refund-policy')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">Refund Policy</p>
                   </div>
                 </div>
               </div>
-              
+
               {/* Column 4: Site Map */}
               <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[94px]">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase w-full">
+                  <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[16.5px] text-white tracking-[1.4px] uppercase w-full">
                     <p className="leading-[20px] whitespace-pre-wrap">SITE MAP</p>
                   </div>
                 </div>
-                <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/about')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">About Us</p>
-                      </div>
-                    </div>
+                <div className="content-stretch flex flex-row flex-wrap gap-[18px] items-start relative shrink-0 w-full">
+                  <div
+                    onClick={() => router.push('/about')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">About Us</p>
                   </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/contact')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">Contact</p>
-                      </div>
-                    </div>
+                  <div
+                    onClick={() => router.push('/contact')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">Contact</p>
                   </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div 
-                      onClick={() => router.push('/products')}
-                      className="content-stretch flex items-start relative shrink-0 w-full cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                        <p className="leading-[24px] whitespace-pre-wrap">Shop</p>
-                      </div>
-                    </div>
+                  <div
+                    onClick={() => router.push('/products')}
+                    className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    <p className="leading-[24px]">Shop</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           {/* Social Media Icons */}
           <div className="absolute content-stretch flex gap-[16px] h-[48px] items-center left-[19px] pt-[8px] top-[312px] w-[336px]">
             <div className="border border-solid border-white content-stretch flex items-center justify-center p-px relative rounded-[9999px] shrink-0 size-[40px]">
@@ -1439,12 +1410,12 @@ export default function HomePage() {
               <img alt="Social" className="block max-w-none size-full" src={imgLink} />
             </div>
           </div>
-          
+
           {/* Copyright & Payment Icons */}
           <div className="absolute border-[#e2e8f0] border-solid border-t content-stretch flex items-center justify-between left-[24px] pt-[41px] top-[392px] w-[1488px]">
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center relative">
-                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-white whitespace-nowrap">
+                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-black whitespace-nowrap">
                   <p className="leading-[16px]">Copyright © 2024 | New Aqua LLC | All Rights Reserved</p>
                 </div>
               </div>
@@ -1475,9 +1446,9 @@ export default function HomePage() {
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1492,7 +1463,7 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       {/* Image 5 - Decorative Element */}
       <div className="absolute flex items-center justify-center left-[534px] top-[1374px] size-[163px]">
         <div className="relative rounded-[320px] size-full">
@@ -1505,7 +1476,7 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       {/* Image 11 - Decorative Element */}
       <div className="absolute flex items-center justify-center left-[1603px] top-[1233px] size-[244px]">
         <div className="relative rounded-[320px] size-full">
@@ -1518,15 +1489,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[20.54%_16.59%_77.5%_76.61%] items-center justify-center">
         <div className="relative rounded-[320px] size-[92.381px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1541,15 +1512,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[39.38%_-3.52%_50.88%_69.74%] items-center justify-center">
         <div className="relative rounded-[320px] size-[459px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1564,15 +1535,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[43.7%_-7.39%_49.82%_84.95%] items-center justify-center">
         <div className="relative rounded-[320px] size-[304.957px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1587,15 +1558,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[50.45%_-11.49%_39.8%_77.71%] items-center justify-center">
         <div className="relative rounded-[320px] size-[459px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1610,15 +1581,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[55.45%_-1.7%_38.23%_79.79%] items-center justify-center">
         <div className="relative rounded-[320px] size-[297.625px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1640,9 +1611,9 @@ export default function HomePage() {
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1657,15 +1628,15 @@ export default function HomePage() {
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[900px]" />
         </div>
       </div>
-      
+
       <div className="absolute flex inset-[-10.09%_-8.49%_55.65%_75.18%] items-center justify-center">
         <div className="relative rounded-[320px] size-[456.082px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img 
-                alt="Decorative" 
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" 
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
                 src={img}
                 onError={(e) => {
                   console.error('❌ [IMAGE] Failed to load decorative image:', img);
@@ -1763,7 +1734,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       <div className="absolute bottom-[17.71%] left-1/2 top-[80.63%] translate-x-[-50%] w-[78px]">
         <img alt="Vector" className="block max-w-none size-full" src={imgVector} />
       </div>
@@ -1771,7 +1742,7 @@ export default function HomePage() {
       {/* Search Modal */}
       {showSearchModal && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100] flex items-start justify-center pt-20 px-4">
-          <div 
+          <div
             ref={searchModalRef}
             className="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200/80 p-4 animate-in fade-in slide-in-from-top-2 duration-200"
           >
@@ -1785,7 +1756,7 @@ export default function HomePage() {
                 placeholder="Search products..."
                 className="flex-1 h-11 px-4 border-2 border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm placeholder:text-gray-400"
               />
-              
+
               {/* Search Button */}
               <button
                 type="submit"
@@ -1799,7 +1770,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 }
