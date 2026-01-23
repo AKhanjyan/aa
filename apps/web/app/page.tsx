@@ -384,7 +384,7 @@ export default function HomePage() {
             onClick={() => router.push('/')}
             className="h-[31px] relative shrink-0 w-[101px] cursor-pointer"
           >
-            <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBorborAguaLogoColorB2024Colored1} />
+            <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgBorborAguaLogoColorB2024Colored1} />
           </div>
           
           {/* Navigation Menu */}
@@ -440,7 +440,7 @@ export default function HomePage() {
       
       {/* Hero Section Decorative Group */}
       <div className="absolute inset-[3.74%_14.27%_90%_14.64%]">
-        <img alt="Decorative Group" className="block max-w-none size-full" src={imgGroup2105} />
+        <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
   
       </div>
 
@@ -518,32 +518,32 @@ export default function HomePage() {
 
       {/* Decorative Elements - Ellipses */}
       <div className="absolute h-[1124px] left-[calc(50%+953.5px)] top-[2396px] translate-x-[-50%] w-[1191px]">
-        <div className="absolute inset-[-41.37%_-39.04%]">
+        <div className="absolute inset-[-41.37%_-39.04%] figma-float-slow">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
         </div>
       </div>
       
       <div className="absolute h-[1031px] left-1/2 top-[4834px] translate-x-[-50%] w-[1008px]">
-        <div className="absolute inset-[-45.1%_-46.13%]">
+        <div className="absolute inset-[-45.1%_-46.13%] figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse44} />
         </div>
       </div>
       
       <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px]">
-        <div className="absolute inset-[-41.37%_-39.04%]">
+        <div className="absolute inset-[-41.37%_-39.04%] figma-float-slow">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse42} />
         </div>
       </div>
       
       <div className="absolute h-[1124px] left-[calc(50%+986px)] top-[3116px] translate-x-[-50%] w-[1422px]">
-        <div className="absolute inset-[-41.37%_-32.7%]">
+        <div className="absolute inset-[-41.37%_-32.7%] figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse43} />
         </div>
       </div>
 
       {/* Decorative Shapes */}
       <div className="absolute flex items-center justify-center left-[calc(50%+846.59px)] mix-blend-luminosity size-[1045.176px] top-[2628px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-56.31deg]">
+        <div className="flex-none rotate-[-56.31deg] figma-rotate-slow">
           <div className="relative size-[753.698px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape} />
           </div>
@@ -551,7 +551,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] mix-blend-luminosity size-[956.401px] top-[5477px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-16.26deg] scale-y-[-100%]">
+        <div className="flex-none rotate-[-16.26deg] scale-y-[-100%] figma-rotate-slow">
           <div className="relative size-[771.293px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape1} />
           </div>
@@ -559,7 +559,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] mix-blend-luminosity size-[641.928px] top-[3208px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-165deg]">
+        <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[524.132px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape2} />
           </div>
@@ -567,7 +567,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] mix-blend-luminosity size-[944.637px] top-[3493px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-165deg]">
+        <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[771.293px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape3} />
           </div>
@@ -1079,13 +1079,13 @@ export default function HomePage() {
           </div>
           <div className="absolute content-stretch flex gap-[184px] items-center left-[calc(50%+0.5px)] top-[96px] translate-x-[-50%]">
             <div className="h-[144px] relative shrink-0 w-[221px]">
-              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={img6Eb12990A37F43358E368Af827A9C8A5Png1} />
+              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={img6Eb12990A37F43358E368Af827A9C8A5Png1} />
             </div>
             <div className="h-[68.253px] relative shrink-0 w-[246px]">
-              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgLogo1} />
+              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgLogo1} />
             </div>
             <div className="h-[85px] relative shrink-0 w-[178px]">
-              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgSas20Logo1} />
+              <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgSas20Logo1} />
             </div>
           </div>
           <div className="absolute content-stretch flex h-[49px] items-end justify-center left-[24px] pt-[32px] right-[24px] top-[202px]">
@@ -1142,7 +1142,7 @@ export default function HomePage() {
             <div className="h-[312px] relative shrink-0 w-[339px]">
               <div className="absolute content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
                 <div className="h-[34px] relative shrink-0 w-[112px]">
-                  <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBorborAguaLogoColorB2024Colored1} />
+                  <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgBorborAguaLogoColorB2024Colored1} />
                 </div>
               </div>
               <div className="absolute content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
@@ -1371,7 +1371,7 @@ export default function HomePage() {
 
       {/* Additional Decorative Elements - Hero Section Bubbles */}
       <div className="absolute flex inset-[44.44%_66.93%_43.57%_-8.49%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[564.622px]">
+        <div className="flex-none rotate-[47.15deg] size-[564.622px] figma-float">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1387,7 +1387,7 @@ export default function HomePage() {
       <div className="absolute flex inset-[19.53%_72.19%_78.02%_19.32%] items-center justify-center">
         {/* Black Diamond Frame - rotated 45 degrees with transparency to show background */}
         <div className="absolute bg-black rotate-45 size-[163.015px] z-0 mix-blend-darken" />
-        <div className="flex-none rotate-[129.49deg] size-[115.804px] relative z-10">
+        <div className="flex-none rotate-[129.49deg] size-[115.804px] relative z-10 figma-float-slow">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1403,7 +1403,7 @@ export default function HomePage() {
       <div className="absolute flex inset-[17.94%_16.51%_78.39%_70.78%] items-center justify-center">
         {/* Black Diamond Frame - rotated 45 degrees with transparency to show background */}
         <div className="absolute bg-black rotate-45 size-[294.675px] z-0 mix-blend-darken" />
-        <div className="flex-none rotate-[100.79deg] size-[208.675px] relative z-10">
+        <div className="flex-none rotate-[100.79deg] size-[208.675px] relative z-10 figma-float">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1417,7 +1417,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[20.54%_16.59%_77.5%_76.61%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[92.381px]">
+        <div className="flex-none rotate-[47.15deg] size-[92.381px] figma-float-slow">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1431,7 +1431,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[39.38%_-3.52%_50.88%_69.74%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[459px]">
+        <div className="flex-none rotate-[47.15deg] size-[459px] figma-float">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(255,255,255,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1445,7 +1445,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[43.7%_-7.39%_49.82%_84.95%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[304.957px]">
+        <div className="flex-none rotate-[47.15deg] size-[304.957px] figma-float-slow">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(255,255,255,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1459,7 +1459,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[50.45%_-11.49%_39.8%_77.71%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[459px]">
+        <div className="flex-none rotate-[47.15deg] size-[459px] figma-float">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(255,255,255,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1473,7 +1473,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[55.45%_-1.7%_38.23%_79.79%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[297.625px]">
+        <div className="flex-none rotate-[47.15deg] size-[297.625px] figma-float-slow">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(255,255,255,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1488,7 +1488,7 @@ export default function HomePage() {
 
       {/* Featured Products Section Decorative Elements */}
       <div className="absolute flex inset-[-1.19%_72.03%_66.22%_6.56%] items-center justify-center">
-        <div className="flex-none rotate-[47.15deg] size-[290.785px]">
+        <div className="flex-none rotate-[47.15deg] size-[290.785px] figma-float">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">
@@ -1502,7 +1502,7 @@ export default function HomePage() {
       </div>
       
       <div className="absolute flex inset-[-10.09%_-8.49%_55.65%_75.18%] items-center justify-center">
-        <div className="flex-none rotate-[142.39deg] size-[456.082px]">
+        <div className="flex-none rotate-[142.39deg] size-[456.082px] figma-float-slow">
           <div className="relative size-full">
             <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[270px]" />
             <div className="absolute inset-0 mix-blend-lighten">

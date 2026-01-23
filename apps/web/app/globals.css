@@ -74,6 +74,109 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Figma Prototype Animations - Matching Play Mode */
+  
+  /* Floating animation for decorative bubbles - smooth continuous loop */
+  @keyframes figma-float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-20px) translateX(10px);
+    }
+    50% {
+      transform: translateY(-10px) translateX(-5px);
+    }
+    75% {
+      transform: translateY(-25px) translateX(5px);
+    }
+  }
+
+  /* Rotation animation for shapes - smooth continuous loop */
+  @keyframes figma-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Slow rotation for decorative elements */
+  @keyframes figma-rotate-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Pulse animation for logos and icons */
+  @keyframes figma-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+  }
+
+  /* Fade in animation for images and logos on load */
+  @keyframes figma-fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Slide in from bottom for content */
+  @keyframes figma-slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Apply animations - matching Figma Play mode timing */
+  .figma-float {
+    animation: figma-float 8s ease-in-out infinite;
+  }
+
+  .figma-float-slow {
+    animation: figma-float 12s ease-in-out infinite;
+  }
+
+  .figma-rotate {
+    animation: figma-rotate 20s linear infinite;
+  }
+
+  .figma-rotate-slow {
+    animation: figma-rotate-slow 30s linear infinite;
+  }
+
+  .figma-pulse {
+    animation: figma-pulse 3s ease-in-out infinite;
+  }
+
+  .figma-fade-in {
+    animation: figma-fade-in 1s ease-out forwards;
+  }
+
+  .figma-slide-up {
+    animation: figma-slide-up 0.8s ease-out forwards;
+  }
 }
 
 /* Policy pages typography & spacing */
