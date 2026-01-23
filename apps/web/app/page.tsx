@@ -7,9 +7,13 @@ import { figmaImages } from '../config/figma-images';
 import { getImageOverlayStyles, getOverlayDivStyles } from '../config/figma-image-overlays';
 import { apiClient } from '../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../lib/currency';
-import { getStoredLanguage } from '../lib/language';
+import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../lib/language';
 import { useAuth } from '../lib/auth/AuthContext';
 import { CartIcon } from '../components/icons/CartIcon';
+import { SearchIcon } from '../components/icons/SearchIcon';
+import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
+import { LanguageIcon } from '../components/icons/LanguageIcon';
+import { ExitIcon } from '../components/icons/ExitIcon';
 
 // Figma MCP Image URLs - Updated from latest Figma design (2025-01-16)
 const imgBorborAguaLogoColorB2024Colored1 = "https://www.figma.com/api/mcp/asset/b106fddf-ddb7-4708-ad7a-7cb2873cb7c9";
@@ -94,7 +98,7 @@ interface ProductsResponse {
 
 export default function HomePage() {
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   
   // State for featured products
@@ -138,8 +142,10 @@ export default function HomePage() {
   // State for header navigation
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const searchModalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
 
   // Fetch featured products from backend
   useEffect(() => {
@@ -222,6 +228,36 @@ export default function HomePage() {
       document.removeEventListener('keydown', handleEscape);
     };
   }, [showSearchModal]);
+
+  // Close language menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
+        setShowLanguageMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  /**
+   * Handle language change
+   */
+  const handleLanguageChange = (langCode: LanguageCode) => {
+    setStoredLanguage(langCode);
+    setShowLanguageMenu(false);
+  };
+
+  /**
+   * Handle logout
+   */
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   /**
    * Handle search
@@ -423,16 +459,68 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Search Icon */}
-          <div 
-            onClick={() => setShowSearchModal(true)}
-            className="h-[21px] relative shrink-0 w-[151.051px] cursor-pointer"
-          >
-            <div className="absolute inset-[-2.38%_0]">
-              <img alt="Search" className="block max-w-none size-full" src={imgFrame3292} />
+          {/* Header Icons - Separate Vector Groups */}
+          <div className="content-stretch flex gap-[36px] items-center justify-center relative shrink-0">
+            {/* Search Icon */}
+            <div 
+              onClick={() => setShowSearchModal(true)}
+              className="h-[21px] w-[21px] relative shrink-0 cursor-pointer flex items-center justify-center"
+            >
+              <SearchIcon size={21} />
             </div>
+            
+            {/* Cart Icon */}
+            <div 
+              onClick={() => router.push('/cart')}
+              className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
+            >
+              <HeaderCartIcon size={20} />
+            </div>
+            
+            {/* Language Icon */}
+            <div className="relative shrink-0" ref={languageMenuRef}>
+              <div 
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="h-[20px] w-[20px] relative cursor-pointer flex items-center justify-center"
+              >
+                <LanguageIcon size={20} />
+              </div>
+              {showLanguageMenu && (
+                <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  {Object.entries(LANGUAGES).map(([code, lang]) => (
+                    <button
+                      key={code}
+                      onClick={() => handleLanguageChange(code as LanguageCode)}
+                      className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 ${
+                        getStoredLanguage() === code
+                          ? 'bg-gray-100 text-gray-900 font-semibold'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {lang.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Exit/Logout Icon */}
+            {isLoggedIn ? (
+              <div 
+                onClick={handleLogout}
+                className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
+              >
+                <ExitIcon size={20} />
+              </div>
+            ) : (
+              <div 
+                onClick={() => router.push('/login')}
+                className="h-[20px] w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
+              >
+                <ExitIcon size={20} />
+              </div>
+            )}
           </div>
-          
       
         </div>
       </div>
