@@ -627,7 +627,7 @@ export default function HomePage() {
       </div>
 
       {/* Decorative Shapes */}
-      <div className="absolute flex items-center justify-center left-[calc(50%+846.59px)] mix-blend-luminosity size-[1045.176px] top-[2628px] translate-x-[-50%]">
+      <div className="absolute flex items-center justify-center left-[calc(50%+846.59px)] size-[1045.176px] top-[2628px] translate-x-[-50%]">
         <div className="flex-none rotate-[-56.31deg] figma-rotate-slow">
           <div className="relative size-[753.698px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape} />
@@ -640,12 +640,13 @@ export default function HomePage() {
           <div className="relative size-[524.132px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape2} />
             {/* White background overlay with gradient for bottom section */}
-            <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-white to-transparent pointer-events-none rounded-[40px] overflow-hidden"></div>
+
           </div>
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] mix-blend-luminosity size-[641.928px] top-[3208px] translate-x-[-50%]">
+      <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] size-[641.928px] top-[3208px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[524.132px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape2} />
@@ -653,7 +654,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] mix-blend-luminosity size-[944.637px] top-[3493px] translate-x-[-50%]">
+      <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] size-[944.637px] top-[3493px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg] figma-rotate-slow">
           <div className="relative size-[771.293px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape3} />
