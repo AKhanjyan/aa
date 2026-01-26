@@ -782,70 +782,8 @@ export default function HomePage() {
                 })()}
               </div>
             ) : null}
-
-            {/* Navigation Arrows - Only show if we have more than 3 products */}
-            {featuredProducts.length > 3 && (
-              <>
-                {/* Next Button - Left side, outside container */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🖱️ [CAROUSEL] Next button clicked');
-                    handleNextProducts(e);
-                  }}
-                  className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-650px)] lg:left-[calc(50%-650px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[295px] lg:top-[295px] md:top-[220px] sm:top-[180px]"
-                  aria-label="Next products"
-                >
-                  <svg
-                    preserveAspectRatio="none"
-                    width="24.02"
-                    height="28"
-                    viewBox="0 0 24.02 28"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-[28px] lg:h-[28px] md:h-[24px] sm:h-[20px] w-[24.02px] lg:w-[24.02px] md:w-[20px] sm:w-[18px] transform rotate-180 scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
-                  >
-                    <path
-                      d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                      fill="white"
-                      className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-                    />
-                  </svg>
-                </button>
-
-                {/* Previous Button - Right side, outside container */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🖱️ [CAROUSEL] Previous button clicked');
-                    handlePreviousProducts(e);
-                  }}
-                  className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-650px)] lg:right-[calc(50%-650px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[295px] lg:top-[295px] md:top-[220px] sm:top-[180px]"
-                  aria-label="Previous products"
-                >
-                  <svg
-                    preserveAspectRatio="none"
-                    width="24.02"
-                    height="28"
-                    viewBox="0 0 24.02 28"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-[28px] lg:h-[28px] md:h-[24px] sm:h-[20px] w-[24.02px] lg:w-[24.02px] md:w-[20px] sm:w-[18px] transform scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
-                  >
-                    <path
-                      d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                      fill="white"
-                      className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-                    />
-                  </svg>
-                </button>
-              </>
-            )}
           </div>
+
 
           {/* Pagination Dots - Show 3 dots for 3 carousel modes */}
           {featuredProducts.length > 3 && (
@@ -916,7 +854,68 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Navigation Arrows - Only show if we have more than 3 products - Outside overflow-hidden container */}
+      {featuredProducts.length > 3 && (
+        <>
+          {/* Next Button - Left side */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('🖱️ [CAROUSEL] Next button clicked');
+              handleNextProducts(e);
+            }}
+            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-650px)] lg:left-[calc(50%-650px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1712px] lg:top-[1712px] md:top-[1320px] sm:top-[1060px]"
+            aria-label="Next products"
+          >
+            <svg
+              preserveAspectRatio="none"
+              width="24.02"
+              height="28"
+              viewBox="0 0 24.02 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-[28px] lg:h-[28px] md:h-[24px] sm:h-[20px] w-[24.02px] lg:w-[24.02px] md:w-[20px] sm:w-[18px] transform rotate-180 scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
+            >
+              <path
+                d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
+                fill="white"
+                className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
+              />
+            </svg>
+          </button>
 
+          {/* Previous Button - Right side */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('🖱️ [CAROUSEL] Previous button clicked');
+              handlePreviousProducts(e);
+            }}
+            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-650px)] lg:right-[calc(50%-650px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1712px] lg:top-[1712px] md:top-[1320px] sm:top-[1080px]"
+            aria-label="Previous products"
+          >
+            <svg
+              preserveAspectRatio="none"
+              width="24.02"
+              height="28"
+              viewBox="0 0 24.02 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-[28px] lg:h-[28px] md:h-[24px] sm:h-[20px] w-[24.02px] lg:w-[24.02px] md:w-[20px] sm:w-[18px] transform scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
+            >
+              <path
+                d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
+                fill="white"
+                className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
+              />
+            </svg>
+          </button>
+        </>
+      )}
 
       {/* Water Energy Section */}
       <div className="absolute content-stretch flex flex-col gap-[35px] lg:gap-[35px] md:gap-[28px] sm:gap-[20px] items-start left-1/2 top-[2606px] lg:top-[2606px] md:top-[2000px] sm:top-[1600px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
