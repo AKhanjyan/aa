@@ -635,10 +635,12 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] mix-blend-luminosity size-[956.401px] top-[5477px] translate-x-[-50%]">
+      <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] size-[956.401px] top-[5477px] translate-x-[-50%]">
         <div className="flex-none rotate-[-16.26deg] scale-y-[-100%] figma-rotate-slow">
-          <div className="relative size-[771.293px]">
-            <img alt="Shape" className="block max-w-none size-full" src={imgShape1} />
+          <div className="relative size-[524.132px]">
+            <img alt="Shape" className="block max-w-none size-full" src={imgShape2} />
+            {/* White background overlay with gradient for bottom section */}
+            <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
           </div>
         </div>
       </div>
