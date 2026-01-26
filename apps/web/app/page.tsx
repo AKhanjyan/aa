@@ -1039,7 +1039,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[61.19%_13.33%_22.03%_13.6%] lg:inset-[61.19%_13.33%_22.03%_13.6%] md:inset-[61.19%_13.33%_22.03%_13.6%] sm:inset-[61.19%_13.33%_22.03%_13.6%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
+        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[61.19%_13.33%_22.03%_13.6%] lg:inset-[61.19%_13.33%_22.03%_13.6%] md:inset-[61.19%_13.33%_22.03%_13.6%] sm:inset-[61.19%_13.33%_22.03%_13.6%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.richInMinerals.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[49.3%_24%_40.91%_23.73%] lg:inset-[49.3%_24%_40.91%_23.73%] md:inset-[49.3%_24%_40.91%_23.73%] sm:inset-[49.3%_24%_40.91%_23.73%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
@@ -1065,7 +1065,7 @@ export default function HomePage() {
             <img alt="Top" className="block max-w-none size-full" src={img9} />
           </div>
         </div>
-        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.66%_13.33%_24.63%_13.6%] lg:inset-[60.66%_13.33%_24.63%_13.6%] md:inset-[60.66%_13.33%_24.63%_13.6%] sm:inset-[60.66%_13.33%_24.63%_13.6%] justify-center leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
+        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.66%_13.33%_24.63%_13.6%] lg:inset-[60.66%_13.33%_24.63%_13.6%] md:inset-[60.66%_13.33%_24.63%_13.6%] sm:inset-[60.66%_13.33%_24.63%_13.6%] justify-center leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46.69%_22.4%_43.01%_22.4%] lg:inset-[46.69%_22.4%_43.01%_22.4%] md:inset-[46.69%_22.4%_43.01%_22.4%] sm:inset-[46.69%_22.4%_43.01%_22.4%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
@@ -1089,7 +1089,7 @@ export default function HomePage() {
             <img alt="Top" className="block max-w-none size-full" src={img12} />
           </div>
         </div>
-        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.07%_10.4%_22.66%_10.67%] lg:inset-[60.07%_10.4%_22.66%_10.67%] md:inset-[60.07%_10.4%_22.66%_10.67%] sm:inset-[60.07%_10.4%_22.66%_10.67%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
+        <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.07%_10.4%_22.66%_10.67%] lg:inset-[60.07%_10.4%_22.66%_10.67%] md:inset-[60.07%_10.4%_22.66%_10.67%] sm:inset-[60.07%_10.4%_22.66%_10.67%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[47.84%_11.2%_42.09%_10.93%] lg:inset-[47.84%_11.2%_42.09%_10.93%] md:inset-[47.84%_11.2%_42.09%_10.93%] sm:inset-[47.84%_11.2%_42.09%_10.93%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
