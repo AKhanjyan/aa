@@ -90,7 +90,7 @@ interface ProductsResponse {
 
 export default function HomePage() {
   const router = useRouter();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, isAdmin } = useAuth();
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -112,9 +112,11 @@ export default function HomePage() {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const searchModalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const languageMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Fetch featured products from backend
   useEffect(() => {
@@ -203,6 +205,9 @@ export default function HomePage() {
     const handleClickOutside = (event: MouseEvent) => {
       if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
         setShowLanguageMenu(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
       }
     };
 
@@ -486,13 +491,48 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Exit/Logout Icon */}
+            {/* Exit/Logout Icon with User Menu */}
             {isLoggedIn ? (
-              <div
-                onClick={handleLogout}
-                className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
-              >
-                <ExitIcon size={20} />
+              <div className="relative shrink-0" ref={userMenuRef}>
+                <div
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center"
+                >
+                  <ExitIcon size={20} />
+                </div>
+                {showUserMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                    <button
+                      onClick={() => {
+                        router.push('/profile');
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150"
+                    >
+                      Profile
+                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => {
+                          router.push('/admin');
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150"
+                      >
+                        Admin Panel
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-all duration-150"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div
