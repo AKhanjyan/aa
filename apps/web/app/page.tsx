@@ -1048,7 +1048,7 @@ export default function HomePage() {
       </div>
 
       {/* Card 2: Non-Carbonated */}
-      <div className="absolute h-[272px] lg:h-[272px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[-362.5px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[5086px] lg:top-[5086px] md:top-[4000px] sm:top-[3280px] w-[375px] lg:w-[375px] md:w-[45%] sm:w-[90%]">
+      <div className="absolute h-[272px] lg:h-[272px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[-774px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[5086px] lg:top-[5086px] md:top-[4000px] sm:top-[3280px] w-[375px] lg:w-[375px] md:w-[45%] sm:w-[90%]">
         <div className="absolute bg-white inset-[13.97%_0_0_0] rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[37.07%] overflow-clip right-[32%] top-0">
           <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]">
@@ -1728,7 +1728,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute bottom-[17.71%] left-1/2 top-[80.63%] translate-x-[-50%] w-[78px]">
+      <div className="absolute left-1/2 top-[5352px] translate-x-[-50%] w-[78px]">
         <img alt="Vector" className="block max-w-none size-full" src={imgVector} />
       </div>
 
