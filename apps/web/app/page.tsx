@@ -1084,26 +1084,53 @@ export default function HomePage() {
               <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">{t('home.trustedBy.subtitle')}</p>
             </div>
           </div>
-          {/* Partner Logos - Show one at a time based on trustedByIndex */}
-          <div className="absolute content-stretch flex items-center justify-center left-[calc(50%+0.5px)] top-[96px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%] h-[144px]">
-            {/* Logo 0 */}
-            {trustedByIndex === 0 && (
-              <div className="h-[144px] relative shrink-0 w-[221px] transition-opacity duration-300">
-                <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={img6Eb12990A37F43358E368Af827A9C8A5Png1} />
-              </div>
-            )}
-            {/* Logo 1 */}
-            {trustedByIndex === 1 && (
-              <div className="h-[68.253px] relative shrink-0 w-[246px] transition-opacity duration-300">
-                <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgLogo1} />
-              </div>
-            )}
-            {/* Logo 2 */}
-            {trustedByIndex === 2 && (
-              <div className="h-[85px] relative shrink-0 w-[178px] transition-opacity duration-300">
-                <img alt="Partner Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full figma-fade-in" src={imgSas20Logo1} />
-              </div>
-            )}
+          {/* Partner Logos - Show all 3 at once, active one is larger */}
+          <div className="absolute content-stretch flex items-center justify-center gap-[60px] lg:gap-[60px] md:gap-[40px] sm:gap-[30px] left-[calc(50%+0.5px)] top-[96px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%] h-[144px]">
+            {/* Logo 0 - sas20 logo */}
+            <div 
+              className={`relative shrink-0 transition-all duration-300 cursor-pointer ${
+                trustedByIndex === 0 
+                  ? 'h-[144px] w-[178px] scale-110' 
+                  : 'h-[100px] w-[124px] opacity-70 hover:opacity-90'
+              }`}
+              onClick={() => setTrustedByIndex(0)}
+            >
+              <img 
+                alt="Partner Logo" 
+                className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" 
+                src={imgSas20Logo1} 
+              />
+            </div>
+            {/* Logo 1 - image6e */}
+            <div 
+              className={`relative shrink-0 transition-all duration-300 cursor-pointer ${
+                trustedByIndex === 1 
+                  ? 'h-[144px] w-[221px] scale-110' 
+                  : 'h-[100px] w-[154px] opacity-70 hover:opacity-90'
+              }`}
+              onClick={() => setTrustedByIndex(1)}
+            >
+              <img 
+                alt="Partner Logo" 
+                className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" 
+                src={img6Eb12990A37F43358E368Af827A9C8A5Png1} 
+              />
+            </div>
+            {/* Logo 2 - logo 1 */}
+            <div 
+              className={`relative shrink-0 transition-all duration-300 cursor-pointer ${
+                trustedByIndex === 2 
+                  ? 'h-[144px] w-[246px] scale-110' 
+                  : 'h-[100px] w-[171px] opacity-70 hover:opacity-90'
+              }`}
+              onClick={() => setTrustedByIndex(2)}
+            >
+              <img 
+                alt="Partner Logo" 
+                className="absolute inset-0 max-w-none object-contain pointer-events-none size-full" 
+                src={imgLogo1} 
+              />
+            </div>
           </div>
           {/* Pagination Dots */}
           <div className="absolute content-stretch flex h-[49px] items-center justify-center left-[24px] pt-[32px] right-[24px] top-[202px] z-[100]">
