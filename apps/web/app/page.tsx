@@ -683,8 +683,13 @@ export default function HomePage() {
             transform: "scaleY(-1)", // նույն flip-ը
           }}
         />
-        {/* Gradient fade overlay for smooth transition */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent pointer-events-none" />
+        {/* Gradient fade overlay - վերևում իրական գույն, կամաց-կամաց սպիտակի */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.3) 85%, white 100%)"
+          }}
+        />
         <div className="absolute h-[976px] lg:h-[976px] md:h-[750px] sm:h-[600px] left-[192px] lg:left-[192px] md:left-[5%] sm:left-[2.5%] right-[192px] lg:right-[192px] md:right-[5%] sm:right-[2.5%] top-[139px] lg:top-[139px] md:top-[100px] sm:top-[80px] relative z-10">
           {/* Section Header */}
           <div className="absolute content-stretch flex flex-col gap-[16px] lg:gap-[16px] md:gap-[12px] sm:gap-[10px] items-start left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] right-[24px] lg:right-[24px] md:right-[16px] sm:right-[12px] top-[-37px] lg:top-[-37px] md:top-[-30px] sm:top-[-24px]">
