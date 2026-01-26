@@ -568,11 +568,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Mobile Additional Decorative Images */}
-        <div className="absolute flex inset-[49.83%_-22.33%_44.36%_44.88%] items-center justify-center">
-          <div className="flex-none rotate-[47.15deg] size-[240px]">
+
+        {/* Mobile Featured Products Section Decorative Bubbles */}
+        <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(13.09%+958px)] bottom-[calc(100%-82.65%)]">
+          <div className="flex-none rotate-[100.79deg] size-[240px]">
             <div className="relative size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[զrgba(141, 44, 221, 0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
               <div className="absolute inset-0 mix-blend-lighten">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
@@ -582,7 +583,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex inset-[13.09%_-23.97%_82.65%_67.21%] items-center justify-center">
+        <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
           <div className="flex-none rotate-[100.79deg] size-[240px]">
             <div className="relative size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
@@ -595,7 +596,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex inset-[16.72%_4.12%_81.17%_67.67%] items-center justify-center">
+        <div className="absolute flex items-center justify-center left-[-15.81%] right-[67.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
           <div className="flex-none rotate-[100.79deg] size-[240px]">
             <div className="relative size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
@@ -608,47 +609,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex inset-[17.4%_67.75%_79%_-15.81%] items-center justify-center">
+        <div className="absolute flex items-center justify-center left-[-34.65%] right-[84.42%] top-[calc(15.76%+958px)] bottom-[calc(100%-80.47%)]">
           <div className="flex-none rotate-[100.79deg] size-[240px]">
-            <div className="relative size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
-              <div className="absolute inset-0 mix-blend-lighten">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-              <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" />
-            </div>
-          </div>
-        </div>
-        <div className="absolute flex inset-[15.76%_84.42%_80.47%_-34.65%] items-center justify-center">
-          <div className="flex-none rotate-[100.79deg] size-[240px]">
-            <div className="relative size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
-              <div className="absolute inset-0 mix-blend-lighten">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-              <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" />
-            </div>
-          </div>
-        </div>
-        <div className="absolute flex inset-[40.45%_75.71%_55.94%_-23.95%] items-center justify-center">
-          <div className="flex-none rotate-[47.15deg] size-[240px]">
-            <div className="relative size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
-              <div className="absolute inset-0 mix-blend-lighten">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-              <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" />
-            </div>
-          </div>
-        </div>
-        <div className="absolute flex inset-[38.34%_-20.93%_55.86%_43.49%] items-center justify-center">
-          <div className="flex-none rotate-[47.15deg] size-[240px]">
             <div className="relative size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
               <div className="absolute inset-0 mix-blend-lighten">
@@ -667,8 +629,8 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Image */}
-        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-[calc(50%-3.88px)] top-[3.55%] w-[286.773px]">
-          <div className="flex-none rotate-[102.66deg] size-[240px]">
+        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-[calc(50%-3.88px)] top-[45%] w-[440px]">
+          <div className="flex-none rotate-[102.66deg] size-[360px]">
             <div className="relative size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
               <div className="absolute inset-0 mix-blend-lighten">
@@ -682,7 +644,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Text */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[340px] w-[361px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[340px] w-[361px] z-10">
           <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[56px] relative shrink-0 text-[56px] text-white w-full whitespace-pre-wrap">
             <p className="mb-0">YOUR</p>
             <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">DAILY DOSE</p>
@@ -690,6 +652,9 @@ export default function HomePage() {
             <p>FRESHNESS</p>
           </div>
         </div>
+
+        {/* Mobile Hero Text Bottom Gradient Overlay */}
+        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.85)] h-[150px] left-0 opacity-75 to-[rgba(221,216,216,0.6)] top-[520px] w-[430px] z-0" />
 
         {/* Mobile Experience Purity Label */}
         <div className="absolute content-stretch flex gap-[12px] items-center left-[32px] right-[-32px] top-[311px]">
@@ -708,8 +673,11 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Mobile Hero Section Bottom Gradient Overlay */}
+        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.8)] h-[150px] left-0 opacity-70 to-[rgba(221,216,216,0.6)] top-[700px] w-[430px] z-0" />
+
         {/* Mobile CTA Buttons */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[8px] h-[136px] items-center justify-end left-1/2 pt-[16px] top-[675px] w-[430px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[8px] h-[136px] items-center justify-end left-1/2 pt-[16px] top-[675px] w-[430px] z-10">
           <button
             onClick={() => router.push('/products')}
             className="bg-[#31daff] content-stretch flex flex-col h-[60px] items-center justify-center pl-[63px] pr-[61px] py-[16px] relative rounded-[9999px] shrink-0 w-[185px] cursor-pointer"
@@ -751,8 +719,11 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Mobile Featured Products Gradient Overlay */}
+        <div className="absolute bg-gradient-to-b blur-[30px] from-[#62b3e8] h-[200px] left-0 opacity-60 to-[rgba(221,216,216,0.4)] top-[850px] w-[430px] z-0" />
+
         {/* Mobile Featured Products Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-[calc(50%+0.5px)] top-[958px] w-full max-w-[429px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-[calc(50%+0.5px)] top-[958px] w-full max-w-[429px] z-10">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
               <p className="mb-0">FEATURED</p>
