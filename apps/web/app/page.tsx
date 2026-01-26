@@ -714,7 +714,7 @@ export default function HomePage() {
               // Loading state - show placeholder with uniform grid
               <div className="flex gap-[40px] lg:gap-[40px] md:gap-[30px] sm:gap-[20px] justify-center items-start h-full">
                 {[0, 1, 2].map((i) => (
-                  <div key={i} className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px]">
+                  <div key={i} className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px] bg-transparent">
                     <div className="h-[320px] lg:h-[320px] md:h-[280px] sm:h-[240px] w-full bg-gray-300 animate-pulse rounded-lg overflow-hidden" />
                     <div className="w-full flex flex-col gap-[16px] px-[16px]">
                       <div className="h-4 bg-gray-300 animate-pulse rounded w-3/4" />
@@ -736,7 +736,7 @@ export default function HomePage() {
                       <div
                         key={product.id}
                         onClick={() => router.push(`/products/${product.slug}`)}
-                        className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px] cursor-pointer product-card-hover z-[11] isolate"
+                        className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px] cursor-pointer product-card-hover z-[11] isolate bg-transparent"
                       >
                         {/* Image Container - Uniform size with overflow hidden */}
                         <div className="h-[320px] lg:h-[320px] md:h-[280px] sm:h-[240px] w-full relative overflow-hidden flex items-center justify-center bg-transparent">
@@ -745,6 +745,7 @@ export default function HomePage() {
                               alt={product.title}
                               className="h-full w-full object-contain product-image-hover"
                               src={product.image}
+                              style={{ backgroundColor: 'transparent' }}
                             />
                           ) : (
                             <div className="w-full h-full bg-gray-300 rounded-lg" />
@@ -787,9 +788,9 @@ export default function HomePage() {
             ) : (
               // Fallback to original hardcoded products if no products loaded - uniform layout
               <div className="flex gap-[40px] lg:gap-[40px] md:gap-[30px] sm:gap-[20px] justify-center items-start h-full">
-                <div className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px]">
+                <div className="flex flex-col items-center gap-[24px] w-[320px] lg:w-[320px] md:w-[280px] sm:w-[240px] bg-transparent">
                   <div className="h-[320px] lg:h-[320px] md:h-[280px] sm:h-[240px] w-full relative overflow-hidden flex items-center justify-center bg-transparent">
-                    <img alt="Product 19L" className="h-full w-full object-contain" src={img1} />
+                    <img alt="Product 19L" className="h-full w-full object-contain" src={img1} style={{ backgroundColor: 'transparent' }} />
                   </div>
                   <div className="w-full flex flex-col gap-[16px] px-[16px] pb-[16px]">
                     <div className="flex items-end justify-between w-full">
