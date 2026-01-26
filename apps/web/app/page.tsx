@@ -919,7 +919,7 @@ export default function HomePage() {
           )}
 
           {/* View All Products Button */}
-          <div className="absolute content-stretch flex flex-col items-center left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] right-[24px] lg:right-[24px] md:right-[16px] sm:right-[12px] top-[976px] lg:top-[976px] md:top-[750px] sm:top-[600px]">
+          <div className="absolute content-stretch flex flex-col items-center left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] right-[24px] lg:right-[24px] md:right-[16px] sm:right-[12px] top-[776px] lg:top-[776px] md:top-[550px] sm:top-[400px]">
             <div
               onClick={() => router.push('/products')}
               className="border-2 border-[#e2e8f0] border-solid content-stretch flex gap-[8px] lg:gap-[8px] md:gap-[6px] sm:gap-[4px] items-center px-[34px] lg:px-[34px] md:px-[28px] sm:px-[20px] py-[12px] lg:py-[12px] md:py-[10px] sm:py-[8px] relative rounded-[9999px] shrink-0 cursor-pointer hover:border-[#00d1ff] hover:bg-[#00d1ff]/5 transition-all"
