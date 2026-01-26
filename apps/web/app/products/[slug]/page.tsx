@@ -1247,8 +1247,13 @@ export default function ProductPage({ params }: ProductPageProps) {
   const isOutOfStock = !currentVariant || currentVariant.stock <= 0;
   
   // Check which attributes are available and required
-  const hasColorAttribute = colorGroups.length > 0 && colorGroups.some(g => g.stock > 0);
-  const hasSizeAttribute = sizeGroups.length > 0 && sizeGroups.some(g => g.stock > 0);
+  // Use attributeGroups for new format, colorGroups/sizeGroups for old format
+  const hasColorAttribute = attributeGroups.has('color') 
+    ? (attributeGroups.get('color')?.some(g => g.stock > 0) || false)
+    : (colorGroups.length > 0 && colorGroups.some(g => g.stock > 0));
+  const hasSizeAttribute = attributeGroups.has('size')
+    ? (attributeGroups.get('size')?.some(g => g.stock > 0) || false)
+    : (sizeGroups.length > 0 && sizeGroups.some(g => g.stock > 0));
   const needsColor = hasColorAttribute && !selectedColor;
   const needsSize = hasSizeAttribute && !selectedSize;
   const isVariationRequired = needsColor || needsSize;
@@ -1267,12 +1272,21 @@ export default function ProductPage({ params }: ProductPageProps) {
   
   // Check if selected variant's attribute values have stock
   // Returns a map of attribute keys to whether they're unavailable (stock = 0)
+  // IMPORTANT: Only mark as unavailable if the variant itself has no stock
+  // Don't check attribute value stock, as it may be 0 due to other selections,
+  // but the variant itself might still have stock
   const unavailableAttributes = useMemo(() => {
     const unavailable = new Map<string, boolean>();
     
     if (!currentVariant || !product) return unavailable;
     
-    // Check each attribute in the selected variant
+    // If the variant itself has stock, all its attributes are available
+    if (currentVariant.stock > 0) {
+      return unavailable; // No unavailable attributes
+    }
+    
+    // Only if variant has no stock, check which attributes are unavailable
+    // This helps identify which attribute combination caused the out-of-stock
     currentVariant.options?.forEach((option) => {
       const attrKey = option.key || option.attribute;
       if (!attrKey) return;
@@ -1289,8 +1303,9 @@ export default function ProductPage({ params }: ProductPageProps) {
         return g.value?.toLowerCase().trim() === option.value?.toLowerCase().trim();
       });
       
-      // If attribute value found and has no stock, mark as unavailable
-      if (attrValue && attrValue.stock <= 0) {
+      // Only mark as unavailable if attribute value has no stock AND variant has no stock
+      // This helps identify which attribute combination is out of stock
+      if (attrValue && attrValue.stock <= 0 && currentVariant.stock <= 0) {
         unavailable.set(attrKey, true);
       }
     });
@@ -1643,7 +1658,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                           const isSelected = selectedColor === g.value?.toLowerCase().trim();
                           // IMPORTANT: Don't disable based on stock - show all colors, even if stock is 0
                           // Stock is just informational, not a reason to hide the option
-                          const isDisabled = false; // Always show all colors
                           // Process imageUrl to ensure it's in the correct format
                           const processedImageUrl = g.imageUrl ? processImageUrl(g.imageUrl) : null;
                           const hasImage = processedImageUrl && processedImageUrl.trim() !== '';
@@ -1707,7 +1721,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                           const isSelected = selectedSize === g.value.toLowerCase().trim();
                           // IMPORTANT: Don't disable based on stock - show all sizes, even if stock is 0
                           // Stock is just informational, not a reason to hide the option
-                          const isDisabled = false; // Always show all sizes
                           
                           // Process imageUrl to ensure it's in the correct format
                           const processedImageUrl = g.imageUrl ? processImageUrl(g.imageUrl) : null;
@@ -1773,7 +1786,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                           const isSelected = selectedValueId === g.valueId || (!g.valueId && selectedColor === g.value);
                           // IMPORTANT: Don't disable based on stock - show all attribute values, even if stock is 0
                           // Stock is just informational, not a reason to hide the option
-                          const isDisabled = false; // Always show all attribute values
                           
                           // Process imageUrl to ensure it's in the correct format
                           const processedImageUrl = g.imageUrl ? processImageUrl(g.imageUrl) : null;
@@ -1812,15 +1824,13 @@ export default function ProductPage({ params }: ProductPageProps) {
                             <button
                               key={g.valueId || g.value}
                               onClick={() => {
-                                if (!isDisabled) {
-                                  const newMap = new Map(selectedAttributeValues);
-                                  if (isSelected) {
-                                    newMap.delete(attrKey);
-                                  } else {
-                                    newMap.set(attrKey, g.valueId || g.value);
-                                  }
-                                  setSelectedAttributeValues(newMap);
+                                const newMap = new Map(selectedAttributeValues);
+                                if (isSelected) {
+                                  newMap.delete(attrKey);
+                                } else {
+                                  newMap.set(attrKey, g.valueId || g.value);
                                 }
+                                setSelectedAttributeValues(newMap);
                               }}
                               className={`${paddingClass} rounded-lg border-2 transition-all flex items-center ${gapClass} ${
                                 isSelected
