@@ -398,7 +398,7 @@ export default function HomePage() {
       className="bg-white relative w-full max-w-[1440px] mx-auto h-[6901px] lg:h-[6901px] md:h-[5600px] sm:h-[4700px] home-page-container"
     >
       {/* Header Section - Navigation Bar */}
-      <div className="fixed bg-[rgba(255,255,255,0.04)] backdrop-blur-[10px] content-stretch flex flex-col h-[73px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[38px] md:px-[24px] sm:px-[16px] py-[16px] md:py-[12px] sm:py-[8px] rounded-[70px] md:rounded-[50px] sm:rounded-[40px] top-[64px] md:top-[32px] sm:top-[16px] translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50">
+      <div className="fixed bg-[rgba(255,255,255,0.08)] backdrop-blur-[15px] content-stretch flex flex-col h-[73px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[38px] md:px-[24px] sm:px-[16px] py-[16px] md:py-[12px] sm:py-[8px] rounded-[70px] md:rounded-[50px] sm:rounded-[40px] top-[64px] md:top-[32px] sm:top-[16px] translate-x-[-50%] w-[1400px] lg:w-[1400px] md:w-[90%] sm:w-[95%] z-50 border border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]">
         <div className="content-stretch flex gap-[200px] lg:gap-[200px] md:gap-[120px] sm:gap-[16px] h-[56px] md:h-[44px] sm:h-[36px] items-center justify-center relative shrink-0">
           {/* Logo */}
           <div
