@@ -1,29 +1,107 @@
 {
-  "hero_title": "Welcome to Shop",
-  "hero_subtitle": "Discover amazing products and exclusive deals. Shop the latest trends and find everything you need in one place.",
-  "hero_button_products": "PRODUCTS",
-  "hero_button_view_more": "VIEW MORE",
-  "features_title": "We Provide High Quality Goods",
-  "features_subtitle": "A client that's unhappy for a reason is a problem, a client that's unhappy though he or her can't",
-  "feature_fast_delivery_title": "Fast Delivery",
-  "feature_fast_delivery_description": "Chances are there wasn't collaboration and checkpoints, there wasn't a process.",
-  "feature_best_quality_title": "Best Quality",
-  "feature_best_quality_description": "It's content strategy gone awry right from the start. Forswearing the use of Lorem Ipsum.",
-  "feature_free_return_title": "Free Return",
-  "feature_free_return_description": "True enough, but that's not all that it takes to get things back on track out there for a text.",
-  "featured_products": {
-    "title": "Featured Products",
-    "subtitle": "Three quick picks: New arrivals, Bestsellers, and Featured picks",
-    "tab_new": "NEW",
-    "tab_bestseller": "BESTSELLER",
-    "tab_featured": "FEATURED",
-    "ariaShowProducts": "Show {label} products",
-    "errorLoading": "Failed to load products",
-    "tryAgain": "Try Again",
-    "noProducts": "No products available in this category."
+  "navigation": {
+    "home": "HOME",
+    "shop": "SHOP",
+    "aboutUs": "ABOUT US",
+    "contactUs": "CONTACT US",
+    "blog": "BLOG"
+  },
+  "hero": {
+    "experiencePurity": "Experience Purity",
+    "yourDailyDoseOf": "YOUR DAILY DOSE OF",
+    "freshness": "FRESHNESS",
+    "subtitle": "Natural spring water",
+    "shopNow": "Shop Now",
+    "learnMore": "Learn More"
+  },
+  "featuredProducts": {
+    "title": "FEATURED PRODUCTS",
+    "subtitle": "Premium water designed for modern living",
+    "viewAllProducts": "View All Products",
+    "adding": "Adding...",
+    "addToCart": "Add to Cart"
+  },
+  "waterEnergy": {
+    "title": "WATER ENERGY"
+  },
+  "cards": {
+    "pureSpringWater": {
+      "percentage": "98%",
+      "title": "Pure spring water",
+      "subtitle": "from Armenia",
+      "source": "Natura Source"
+    },
+    "balancedHydration": {
+      "percentage": "100%",
+      "title": "Balanced hydration",
+      "subtitle": "every day",
+      "source": "Clean Minerals"
+    }
+  },
+  "whyChooseUs": {
+    "title": "Why Choose Us",
+    "richInMinerals": {
+      "title": "RICH IN MINERALS",
+      "description": "Rich in Natural Minerals that provide valuable health benefits."
+    },
+    "nonCarbonated": {
+      "title": "NON-CARBONATED",
+      "description": "Borbor Aqua does not infuse carbon dioxide in any of its bottled water."
+    },
+    "noArtificialIngredients": {
+      "title": "no artifical ingridients",
+      "description": "Borbor Aqua does not include any artificial ingredients in its bottled water"
+    }
+  },
+  "trustedBy": {
+    "title": "Trusted By",
+    "subtitle": "Industry leading partners"
+  },
+  "footer": {
+    "description": "New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is rich in natural minerals that provide valuable health benefits to everyone.",
+    "more": "More",
+    "contact": {
+      "title": "CONTACT",
+      "office": "Office:",
+      "delivery": "Delivery:",
+      "email": "Email:",
+      "location": "Location:",
+      "locationLine1": "1412, Gegharkunik,",
+      "locationLine2": "v. Dzoragyugh, Armenia"
+    },
+    "policies": {
+      "title": "POLICIES",
+      "privacyPolicy": "Privacy Policy",
+      "termsConditions": "Terms & Conditions",
+      "deliveryTerms": "Delivery Terms",
+      "refundPolicy": "Refund Policy"
+    },
+    "siteMap": {
+      "title": "SITE MAP",
+      "aboutUs": "About Us",
+      "contact": "Contact",
+      "shop": "Shop"
+    },
+    "copyright": "Copyright © 2024 | New Aqua LLC | All Rights Reserved"
+  },
+  "waterEnergySection": {
+    "pure": "Pure",
+    "energy": "energy",
+    "subtitle": "drawn from nature, captured in every drop.",
+    "balance": "balance",
+    "description": "Crystal clarity that refreshes the body and restores"
+  },
+  "search": {
+    "placeholder": "Search products..."
+  },
+  "errors": {
+    "noVariantsAvailable": "No variants available",
+    "productNotFound": "Product not found",
+    "noMoreStockAvailable": "No more stock available",
+    "failedToAddToCart": "Failed to add product to cart. Please try again."
+  },
+  "fallback": {
+    "productTitle": "Natural spring water",
+    "productPrice": "1800 AMD"
   }
 }
-
-
-
-

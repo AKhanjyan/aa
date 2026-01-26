@@ -2,13 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { figmaImages } from '../config/figma-images';
-import { getImageOverlayStyles, getOverlayDivStyles } from '../config/figma-image-overlays';
 import { apiClient } from '../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../lib/currency';
 import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../lib/language';
 import { useAuth } from '../lib/auth/AuthContext';
+import { useTranslation } from '../lib/i18n-client';
 import { CartIcon } from '../components/icons/CartIcon';
 import { SearchIcon } from '../components/icons/SearchIcon';
 import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
@@ -18,18 +16,14 @@ import { ExitIcon } from '../components/icons/ExitIcon';
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
 const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash1.jpg";
-const imgDanielSinocaAancLsb0SU0Unsplash2 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash2.jpg";
 const img = "/assets/home/img.png";
 const img1 = "/assets/home/img1.png";
-const img2 = "/assets/home/img2.png";
-const img3 = "/assets/home/img3.png";
 const img6Eb12990A37F43358E368Af827A9C8A5Png1 = "/assets/home/img6Eb12990A37F43358E368Af827A9C8A5Png1.png";
 const imgLogo1 = "/assets/home/imgLogo1.png";
 const imgSas20Logo1 = "/assets/home/imgSas20Logo1.png";
 const img5 = "/assets/home/img5.png";
 const img6 = "/assets/home/img6.png";
 const img17 = "/assets/home/img17.png";
-const imgFrame3292 = "/assets/home/imgFrame3292.svg";
 const imgEllipse41 = "/assets/home/imgEllipse41.svg";
 const imgShape = "/assets/home/imgShape.svg";
 const imgEllipse44 = "/assets/home/imgEllipse44.svg";
@@ -39,9 +33,7 @@ const imgEllipse42 = "/assets/home/imgEllipse42.svg";
 const imgShape3 = "/assets/home/imgShape3.svg";
 const imgEllipse43 = "/assets/home/imgEllipse43.svg";
 const imgGroup2105 = "/assets/home/imgGroup2105.svg";
-const imgIcon = "/assets/home/imgIcon.svg";
 const img4 = "/assets/home/img4.svg";
-const imgIcon1 = "/assets/home/imgIcon1.svg";
 const imgVector4 = "/assets/home/imgVector4.svg";
 const imgVector5 = "/assets/home/imgVector5.svg";
 const imgVector6 = "/assets/home/imgVector6.svg";
@@ -99,6 +91,7 @@ interface ProductsResponse {
 export default function HomePage() {
   const router = useRouter();
   const { isLoggedIn, logout } = useAuth();
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // State for featured products
@@ -347,7 +340,7 @@ export default function HomePage() {
       const productDetails = await apiClient.get<ProductDetails>(`/api/v1/products/${encodedSlug}`);
 
       if (!productDetails.variants || productDetails.variants.length === 0) {
-        alert('No variants available');
+        alert(t('home.errors.noVariantsAvailable'));
         return;
       }
 
@@ -370,7 +363,7 @@ export default function HomePage() {
 
       // Check if error is about product not found
       if (error?.message?.includes('does not exist') || error?.message?.includes('404') || error?.status === 404) {
-        alert('Product not found');
+        alert(t('home.errors.productNotFound'));
         return;
       }
 
@@ -378,7 +371,7 @@ export default function HomePage() {
       if (error.response?.data?.detail?.includes('No more stock available') ||
         error.response?.data?.detail?.includes('exceeds available stock') ||
         error.response?.data?.title === 'Insufficient stock') {
-        alert('No more stock available');
+        alert(t('home.errors.noMoreStockAvailable'));
         return;
       }
 
@@ -386,7 +379,7 @@ export default function HomePage() {
       if (error.message?.includes('401') || error.message?.includes('Unauthorized') || error?.status === 401) {
         router.push(`/login?redirect=/`);
       } else {
-        alert('Failed to add product to cart. Please try again.');
+        alert(t('home.errors.failedToAddToCart'));
       }
     } finally {
       setAddingToCart(prev => {
@@ -421,31 +414,31 @@ export default function HomePage() {
               onClick={() => router.push('/')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
-              <p className="leading-[20px]">HOME</p>
+              <p className="leading-[20px]">{t('home.navigation.home')}</p>
             </div>
             <div
               onClick={() => router.push('/products')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
-              <p className="leading-[20px]">SHOP</p>
+              <p className="leading-[20px]">{t('home.navigation.shop')}</p>
             </div>
             <div
               onClick={() => router.push('/about')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
-              <p className="leading-[20px]">ABOUT US</p>
+              <p className="leading-[20px]">{t('home.navigation.aboutUs')}</p>
             </div>
             <div
               onClick={() => router.push('/contact')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
-              <p className="leading-[20px]">CONTACT US</p>
+              <p className="leading-[20px]">{t('home.navigation.contactUs')}</p>
             </div>
             <div
               onClick={() => router.push('/blog')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
             >
-              <p className="leading-[20px]">BLOG</p>
+              <p className="leading-[20px]">{t('home.navigation.blog')}</p>
             </div>
           </div>
 
@@ -544,7 +537,7 @@ export default function HomePage() {
             <div className="bg-white h-[2px] lg:h-[2px] md:h-[1.5px] sm:h-[1.5px] shrink-0 w-[48px] lg:w-[48px] md:w-[40px] sm:w-[32px]" />
             <div className="content-stretch flex flex-col items-start relative shrink-0">
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[12px] sm:text-[11px] text-white tracking-[1.4px] lg:tracking-[1.4px] md:tracking-[1.2px] sm:tracking-[1px] uppercase whitespace-nowrap">
-                <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px]">Experience Purity</p>
+                <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px]">{t('home.hero.experiencePurity')}</p>
               </div>
             </div>
           </div>
@@ -553,10 +546,10 @@ export default function HomePage() {
           <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[96px] lg:text-[96px] md:text-[64px] sm:text-[36px] text-center text-white w-full">
               <p className="whitespace-pre-wrap">
-                <span className="leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white font-black">YOUR </span>
-                <span className="font-['Montserrat',sans-serif] font-light leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white">DAILY DOSE OF</span>
+                <span className="leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white font-black">{t('home.hero.yourDailyDoseOf')} </span>
+                <span className="font-['Montserrat',sans-serif] font-light leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white"> </span>
                 <span className="leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px]"> </span>
-                <span className="leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white font-black">FRESHNESS</span>
+                <span className="leading-[96px] lg:leading-[96px] md:leading-[64px] sm:leading-[40px] text-white font-black">{t('home.hero.freshness')}</span>
               </p>
             </div>
           </div>
@@ -564,7 +557,7 @@ export default function HomePage() {
           {/* Subtitle */}
           <div className="content-stretch flex flex-col items-center justify-center max-w-[512px] lg:max-w-[512px] md:max-w-[400px] sm:max-w-[280px] relative shrink-0 w-[512px] lg:w-[512px] md:w-full sm:w-full">
             <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[20px] lg:text-[20px] md:text-[18px] sm:text-[14px] text-white whitespace-nowrap">
-              <p className="leading-[32.5px] lg:leading-[32.5px] md:leading-[28px] sm:leading-[22px]">Natural spring water</p>
+              <p className="leading-[32.5px] lg:leading-[32.5px] md:leading-[28px] sm:leading-[22px]">{t('home.hero.subtitle')}</p>
             </div>
           </div>
 
@@ -575,7 +568,7 @@ export default function HomePage() {
               className="bg-[#1ac0fd] content-stretch flex flex-col h-[60px] lg:h-[60px] md:h-[52px] sm:h-[44px] items-center justify-center pl-[63px] pr-[61px] lg:pl-[63px] lg:pr-[61px] md:pl-[48px] md:pr-[46px] sm:pl-[32px] sm:pr-[30px] py-[16px] lg:py-[16px] md:py-[12px] sm:py-[10px] relative rounded-[9999px] shrink-0 w-[185px] lg:w-[185px] md:w-[160px] sm:w-[140px] cursor-pointer hover:bg-[#00b8e6] transition-colors"
             >
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-white whitespace-nowrap">
-                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">Shop Now</p>
+                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.hero.shopNow')}</p>
               </div>
             </div>
             <div
@@ -583,7 +576,7 @@ export default function HomePage() {
               className="bg-[rgba(0,0,0,0)] content-stretch flex flex-col h-[60px] lg:h-[60px] md:h-[52px] sm:h-[44px] items-center justify-center px-[40px] lg:px-[40px] md:px-[32px] sm:px-[24px] py-[16px] lg:py-[16px] md:py-[12px] sm:py-[10px] relative rounded-[9999px] shrink-0 cursor-pointer hover:bg-white/10 transition-colors"
             >
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[19px] lg:h-[19px] md:h-[17px] sm:h-[15px] justify-center leading-[0] not-italic relative shrink-0 text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-white w-[89px] lg:w-[89px] md:w-[75px] sm:w-[65px]">
-                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] whitespace-pre-wrap">Learn More</p>
+                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] whitespace-pre-wrap">{t('home.hero.learnMore')}</p>
               </div>
             </div>
           </div>
@@ -695,12 +688,12 @@ export default function HomePage() {
           <div className="absolute content-stretch flex flex-col gap-[16px] lg:gap-[16px] md:gap-[12px] sm:gap-[10px] items-start left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[-37px] lg:top-[-37px] md:top-[-30px] sm:top-[-24px]">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[70px] lg:text-[70px] md:text-[48px] sm:text-[32px] text-center text-white tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-                <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">FEATURED PRODUCTS</p>
+                <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">{t('home.featuredProducts.title')}</p>
               </div>
             </div>
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
-                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">Premium water designed for modern living</p>
+                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.featuredProducts.subtitle')}</p>
               </div>
             </div>
           </div>
@@ -775,7 +768,7 @@ export default function HomePage() {
                           >
                             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
                               <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">
-                                {addingToCart.has(product.id) ? 'Adding...' : 'Add to Cart'}
+                                {addingToCart.has(product.id) ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
                               </p>
                             </div>
                           </button>
@@ -796,18 +789,18 @@ export default function HomePage() {
                     <div className="flex items-end justify-between w-full">
                       <div className="flex flex-col items-start">
                         <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] text-white whitespace-nowrap">
-                          <p className="leading-[28px]">Natural spring water</p>
+                          <p className="leading-[28px]">{t('home.fallback.productTitle')}</p>
                         </div>
                       </div>
                       <div className="flex flex-col items-start">
                         <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
-                          <p className="leading-[28px]">1800 AMD</p>
+                          <p className="leading-[28px]">{t('home.fallback.productPrice')}</p>
                         </div>
                       </div>
                     </div>
                     <div className="bg-[#00d1ff] content-stretch flex items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-full">
                       <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-                        <p className="leading-[24px]">Add to Cart</p>
+                        <p className="leading-[24px]">{t('home.featuredProducts.addToCart')}</p>
                       </div>
                     </div>
                   </div>
@@ -925,7 +918,7 @@ export default function HomePage() {
               className="border-2 border-[#e2e8f0] border-solid content-stretch flex gap-[8px] lg:gap-[8px] md:gap-[6px] sm:gap-[4px] items-center px-[34px] lg:px-[34px] md:px-[28px] sm:px-[20px] py-[12px] lg:py-[12px] md:py-[10px] sm:py-[8px] relative rounded-[9999px] shrink-0 cursor-pointer hover:border-[#00d1ff] hover:bg-[#00d1ff]/5 transition-all"
             >
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
-                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">View All Products</p>
+                <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.featuredProducts.viewAllProducts')}</p>
               </div>
               <div className="relative shrink-0">
                 <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
@@ -955,7 +948,7 @@ export default function HomePage() {
         <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[70px] lg:text-[70px] md:text-[48px] sm:text-[32px] text-center tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase w-[641px] lg:w-[641px] md:w-[500px] sm:w-full">
-              <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px] whitespace-pre-wrap">WATER ENERGY</p>
+              <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px] whitespace-pre-wrap">{t('home.waterEnergy.title')}</p>
             </div>
           </div>
         </div>
@@ -973,14 +966,14 @@ export default function HomePage() {
       <div className="absolute h-[343px] lg:h-[343px] md:h-[280px] sm:h-[240px] left-[729px] lg:left-[729px] md:left-[38%] sm:left-[5%] top-[3570px] lg:top-[3570px] md:top-[2800px] sm:top-[2200px] w-[794px] lg:w-[794px] md:w-[60%] sm:w-[90%]">
         <div className="absolute bg-[#1ac0fd] inset-0 rounded-[37px] lg:rounded-[37px] md:rounded-[30px] sm:rounded-[24px]" />
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[65.89%_3.9%_22.45%_69.14%] lg:inset-[65.89%_3.9%_22.45%_69.14%] md:inset-[65.89%_3.9%_22.45%_69.14%] sm:inset-[65.89%_3.9%_22.45%_69.14%] justify-center leading-[0] text-[96px] lg:text-[96px] md:text-[72px] sm:text-[56px] text-center text-white tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-          <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">98%</p>
+          <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">{t('home.cards.pureSpringWater.percentage')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[12.83%_29.35%_58.02%_5.29%] lg:inset-[12.83%_29.35%_58.02%_5.29%] md:inset-[12.83%_29.35%_58.02%_5.29%] sm:inset-[12.83%_29.35%_58.02%_5.29%] justify-center leading-[50px] lg:leading-[50px] md:leading-[40px] sm:leading-[32px] text-[46px] lg:text-[46px] md:text-[36px] sm:text-[28px] text-white tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-          <p className="mb-0">Pure spring water</p>
-          <p className="font-['Montserrat',sans-serif] font-light">from Armenia</p>
+          <p className="mb-0">{t('home.cards.pureSpringWater.title')}</p>
+          <p className="font-['Montserrat',sans-serif] font-light">{t('home.cards.pureSpringWater.subtitle')}</p>
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-medium inset-[83.67%_3.9%_9.33%_82.24%] lg:inset-[83.67%_3.9%_9.33%_82.24%] md:inset-[83.67%_3.9%_9.33%_82.24%] sm:inset-[83.67%_3.9%_9.33%_82.24%] italic justify-center leading-[0] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
-          <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">Natura Source</p>
+          <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.cards.pureSpringWater.source')}</p>
         </div>
       </div>
 
@@ -988,14 +981,14 @@ export default function HomePage() {
       <div className="absolute h-[343px] lg:h-[343px] md:h-[280px] sm:h-[240px] left-[393px] lg:left-[393px] md:left-[20.5%] sm:left-[5%] top-[3931px] lg:top-[3931px] md:top-[3100px] sm:top-[2500px] w-[795px] lg:w-[795px] md:w-[60%] sm:w-[90%]">
         <div className="absolute bg-white inset-0 rounded-[37px] lg:rounded-[37px] md:rounded-[30px] sm:rounded-[24px]" />
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[69.68%_60%_18.66%_7.42%] lg:inset-[69.68%_60%_18.66%_7.42%] md:inset-[69.68%_60%_18.66%_7.42%] sm:inset-[69.68%_60%_18.66%_7.42%] justify-center leading-[0] text-[#0f172a] text-[96px] lg:text-[96px] md:text-[72px] sm:text-[56px] text-center tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-          <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">100%</p>
+          <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">{t('home.cards.balancedHydration.percentage')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[12.83%_5.28%_58.02%_22.26%] lg:inset-[12.83%_5.28%_58.02%_22.26%] md:inset-[12.83%_5.28%_58.02%_22.26%] sm:inset-[12.83%_5.28%_58.02%_22.26%] justify-center leading-[50px] lg:leading-[50px] md:leading-[40px] sm:leading-[32px] text-[#00d1ff] text-[46px] lg:text-[46px] md:text-[36px] sm:text-[28px] text-right tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-          <p className="mb-0">Balanced hydration</p>
-          <p className="font-['Montserrat',sans-serif] font-light">every day</p>
+          <p className="mb-0">{t('home.cards.balancedHydration.title')}</p>
+          <p className="font-['Montserrat',sans-serif] font-light">{t('home.cards.balancedHydration.subtitle')}</p>
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-medium inset-[53.94%_78.24%_39.07%_7.42%] lg:inset-[53.94%_78.24%_39.07%_7.42%] md:inset-[53.94%_78.24%_39.07%_7.42%] sm:inset-[53.94%_78.24%_39.07%_7.42%] italic justify-center leading-[0] text-[#00d1ff] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
-          <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">Clean Minerals</p>
+          <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.cards.balancedHydration.source')}</p>
         </div>
       </div>
 
@@ -1021,7 +1014,7 @@ export default function HomePage() {
         <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[70px] lg:text-[70px] md:text-[48px] sm:text-[32px] text-center tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
-              <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">Why Choose Us</p>
+              <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">{t('home.whyChooseUs.title')}</p>
             </div>
           </div>
         </div>
@@ -1047,11 +1040,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[61.19%_13.33%_22.03%_13.6%] lg:inset-[61.19%_13.33%_22.03%_13.6%] md:inset-[61.19%_13.33%_22.03%_13.6%] sm:inset-[61.19%_13.33%_22.03%_13.6%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
-          <p className="mb-0">Rich in Natural Minerals that provide</p>
-          <p>valuable health benefits.</p>
+          <p className="mb-0">{t('home.whyChooseUs.richInMinerals.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[49.3%_24%_40.91%_23.73%] lg:inset-[49.3%_24%_40.91%_23.73%] md:inset-[49.3%_24%_40.91%_23.73%] sm:inset-[49.3%_24%_40.91%_23.73%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
-          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">RICH IN MINERALS</p>
+          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">{t('home.whyChooseUs.richInMinerals.title')}</p>
         </div>
       </div>
 
@@ -1074,11 +1066,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.66%_13.33%_24.63%_13.6%] lg:inset-[60.66%_13.33%_24.63%_13.6%] md:inset-[60.66%_13.33%_24.63%_13.6%] sm:inset-[60.66%_13.33%_24.63%_13.6%] justify-center leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
-          <p className="mb-0">Borbor Aqua does not infuse carbon</p>
-          <p>dioxide in any of its bottled water.</p>
+          <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46.69%_22.4%_43.01%_22.4%] lg:inset-[46.69%_22.4%_43.01%_22.4%] md:inset-[46.69%_22.4%_43.01%_22.4%] sm:inset-[46.69%_22.4%_43.01%_22.4%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
-          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">NON-CARBONATED</p>
+          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">{t('home.whyChooseUs.nonCarbonated.title')}</p>
         </div>
       </div>
 
@@ -1099,11 +1090,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.07%_10.4%_22.66%_10.67%] lg:inset-[60.07%_10.4%_22.66%_10.67%] md:inset-[60.07%_10.4%_22.66%_10.67%] sm:inset-[60.07%_10.4%_22.66%_10.67%] justify-center leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center whitespace-nowrap">
-          <p className="mb-0">Borbor Aqua does not include any</p>
-          <p>artificial ingredients in its bottled water</p>
+          <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.description')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[47.84%_11.2%_42.09%_10.93%] lg:inset-[47.84%_11.2%_42.09%_10.93%] md:inset-[47.84%_11.2%_42.09%_10.93%] sm:inset-[47.84%_11.2%_42.09%_10.93%] justify-center leading-[0] text-[#0f172a] text-[20px] lg:text-[20px] md:text-[18px] sm:text-[16px] text-center uppercase whitespace-nowrap">
-          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">no artifical ingridients</p>
+          <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[20px]">{t('home.whyChooseUs.noArtificialIngredients.title')}</p>
         </div>
       </div>
 
@@ -1112,12 +1102,12 @@ export default function HomePage() {
         <div className="h-[277px] lg:h-[277px] md:h-[240px] sm:h-[200px] max-w-[1536px] relative shrink-0 w-full">
           <div className="absolute content-stretch flex flex-col items-center left-[calc(50%+0.5px)] top-[-34px] lg:top-[-34px] md:top-[-28px] sm:top-[-24px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
             <div className="flex flex-col font-['Montserrat',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[70px] lg:text-[70px] md:text-[48px] sm:text-[32px] text-center uppercase whitespace-nowrap">
-              <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[22px]">Trusted By</p>
+              <p className="leading-[28px] lg:leading-[28px] md:leading-[24px] sm:leading-[22px]">{t('home.trustedBy.title')}</p>
             </div>
           </div>
           <div className="absolute content-stretch flex flex-col items-center left-[calc(50%+1px)] top-[37px] lg:top-[37px] md:top-[30px] sm:top-[24px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
             <div className="flex flex-col font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center uppercase whitespace-nowrap">
-              <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">Industry leading partners</p>
+              <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">{t('home.trustedBy.subtitle')}</p>
             </div>
           </div>
           {/* Partner Logos - Show one at a time based on trustedByIndex */}
@@ -1260,13 +1250,13 @@ export default function HomePage() {
               <div className="content-stretch flex flex-row flex-wrap items-start left-0 w-[336px] lg:w-[336px] md:w-full sm:w-full">
                 <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[26px] lg:leading-[26px] md:leading-[24px] sm:leading-[22px] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white w-full">
                   <p className="leading-[26px] lg:leading-[26px] md:leading-[24px] sm:leading-[22px]">
-                    New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is rich in natural minerals that provide valuable health benefits to everyone.
+                    {t('home.footer.description')}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-[10px] lg:gap-[10px] md:gap-[8px] sm:gap-[6px] left-0 relative">
                 <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] whitespace-nowrap">
-                  <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">More</p>
+                  <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.footer.more')}</p>
                 </div>
                 <div className="content-stretch flex flex-col items-start relative shrink-0">
                   <div className="flex items-center justify-center relative shrink-0">
@@ -1286,13 +1276,13 @@ export default function HomePage() {
               <div className="content-stretch flex flex-col gap-[24px] lg:gap-[24px] md:gap-[20px] sm:gap-[16px] items-start relative shrink-0 w-[241px] lg:w-[241px] md:w-[45%] sm:w-full">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                   <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[24px] lg:text-[24px] md:text-[20px] sm:text-[18px] text-white tracking-[1.8px] lg:tracking-[1.8px] md:tracking-[1.5px] sm:tracking-[1.2px] uppercase w-full">
-                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">CONTACT</p>
+                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">{t('home.footer.contact.title')}</p>
                   </div>
                 </div>
                 <div className="content-stretch flex flex-row flex-wrap gap-[16px] lg:gap-[16px] md:gap-[12px] sm:gap-[10px] items-start relative shrink-0 w-[249px] lg:w-[249px] md:w-full sm:w-full">
                   <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white whitespace-nowrap">
                     <p className="font-['Inter',sans-serif] font-bold mb-0">
-                      <span className="leading-[24px]">{`Office: `}</span>
+                      <span className="leading-[24px]">{t('home.footer.contact.office')} </span>
                       <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037433000401">
                         <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 33 000401</span>
                       </a>
@@ -1300,7 +1290,7 @@ export default function HomePage() {
                   </div>
                   <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
                     <p className="font-['Inter',sans-serif] font-bold">
-                      <span className="leading-[24px]">{`Delivery: `}</span>
+                      <span className="leading-[24px]">{t('home.footer.contact.delivery')} </span>
                       <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="tel:0037441012004">
                         <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">+374 41 012004</span>
                       </a>
@@ -1308,17 +1298,17 @@ export default function HomePage() {
                   </div>
                   <div className="flex font-['Inter',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap">
                     <p className="font-['Inter',sans-serif] font-bold">
-                      <span className="leading-[24px]">{`Email: `}</span>
+                      <span className="leading-[24px]">{t('home.footer.contact.email')} </span>
                       <a className="[text-decoration-skip-ink:none] cursor-pointer decoration-solid leading-[24px] underline" href="mailto:borboraqua.am@gmail.com">
                         <span className="[text-decoration-skip-ink:none] decoration-solid leading-[24px]">info@borboraqua.am</span>
                       </a>
                     </p>
                   </div>
                   <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white whitespace-nowrap">
-                    <p className="mb-0">Location: 1412, Gegharkunik,</p>
+                    <p className="mb-0">{t('home.footer.contact.location')} {t('home.footer.contact.locationLine1')}</p>
                   </div>
                   <div className="flex font-['Inter',sans-serif] font-bold justify-center leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white whitespace-nowrap">
-                    <p className="mb-0">v. Dzoragyugh, Armenia</p>
+                    <p className="mb-0">{t('home.footer.contact.locationLine2')}</p>
                   </div>
                 </div>
               </div>
@@ -1327,7 +1317,7 @@ export default function HomePage() {
               <div className="content-stretch flex flex-col gap-[24px] lg:gap-[24px] md:gap-[20px] sm:gap-[16px] items-start relative shrink-0 w-[154px] lg:w-[154px] md:w-[45%] sm:w-full">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                   <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white tracking-[1.6px] lg:tracking-[1.6px] md:tracking-[1.4px] sm:tracking-[1.2px] uppercase w-full">
-                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">POLICIES</p>
+                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">{t('home.footer.policies.title')}</p>
                   </div>
                 </div>
                 <div className="content-stretch flex flex-row flex-wrap gap-[18px] lg:gap-[18px] md:gap-[14px] sm:gap-[12px] items-start relative shrink-0 w-full">
@@ -1335,25 +1325,25 @@ export default function HomePage() {
                     onClick={() => router.push('/privacy')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px]">Privacy Policy</p>
+                    <p className="leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px]">{t('home.footer.policies.privacyPolicy')}</p>
                   </div>
                   <div
                     onClick={() => router.push('/terms')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px]">Terms & Conditions</p>
+                    <p className="leading-[24px]">{t('home.footer.policies.termsConditions')}</p>
                   </div>
                   <div
                     onClick={() => router.push('/delivery-terms')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px]">Delivery Terms</p>
+                    <p className="leading-[24px]">{t('home.footer.policies.deliveryTerms')}</p>
                   </div>
                   <div
                     onClick={() => router.push('/refund-policy')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px]">Refund Policy</p>
+                    <p className="leading-[24px]">{t('home.footer.policies.refundPolicy')}</p>
                   </div>
                 </div>
               </div>
@@ -1362,7 +1352,7 @@ export default function HomePage() {
               <div className="content-stretch flex flex-col gap-[24px] lg:gap-[24px] md:gap-[20px] sm:gap-[16px] items-start relative shrink-0 w-[94px] lg:w-[94px] md:w-[45%] sm:w-full">
                 <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
                   <div className="flex flex-col font-['Montserrat',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[16.5px] lg:text-[16.5px] md:text-[15px] sm:text-[13px] text-white tracking-[1.4px] lg:tracking-[1.4px] md:tracking-[1.2px] sm:tracking-[1px] uppercase w-full">
-                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">SITE MAP</p>
+                    <p className="leading-[20px] lg:leading-[20px] md:leading-[18px] sm:leading-[16px] whitespace-pre-wrap">{t('home.footer.siteMap.title')}</p>
                   </div>
                 </div>
                 <div className="content-stretch flex flex-row flex-wrap gap-[18px] lg:gap-[18px] md:gap-[14px] sm:gap-[12px] items-start relative shrink-0 w-full">
@@ -1370,19 +1360,19 @@ export default function HomePage() {
                     onClick={() => router.push('/about')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] lg:text-[18px] md:text-[16px] sm:text-[14px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px]">About Us</p>
+                    <p className="leading-[24px] lg:leading-[24px] md:leading-[22px] sm:leading-[20px]">{t('home.footer.siteMap.aboutUs')}</p>
                   </div>
                   <div
                     onClick={() => router.push('/contact')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px]">Contact</p>
+                    <p className="leading-[24px]">{t('home.footer.siteMap.contact')}</p>
                   </div>
                   <div
                     onClick={() => router.push('/products')}
                     className="flex font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <p className="leading-[24px]">Shop</p>
+                    <p className="leading-[24px]">{t('home.footer.siteMap.shop')}</p>
                   </div>
                 </div>
               </div>
@@ -1420,7 +1410,7 @@ export default function HomePage() {
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center relative">
                 <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] lg:text-[12px] md:text-[11px] sm:text-[10px] text-black whitespace-nowrap">
-                  <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">Copyright © 2024 | New Aqua LLC | All Rights Reserved</p>
+                  <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">{t('home.footer.copyright')}</p>
                 </div>
               </div>
             </div>
@@ -1693,17 +1683,16 @@ export default function HomePage() {
             </div>
           </div>
           <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[65.4%_0_16.48%_57.22%] justify-center leading-[0] text-[#0f172a] text-[0px] tracking-[-0.9px] uppercase whitespace-nowrap">
-            <p className="leading-[50px] mb-0 text-[66px]">Pure</p>
-            <p className="leading-[50px] mb-0 text-[66px]">energy</p>
-            <p className="font-['Montserrat',sans-serif] font-normal leading-[20px] text-[16px]">drawn from nature, captured in every drop.</p>
+            <p className="leading-[50px] mb-0 text-[66px]">{t('home.waterEnergySection.pure')}</p>
+            <p className="leading-[50px] mb-0 text-[66px]">{t('home.waterEnergySection.energy')}</p>
+            <p className="font-['Montserrat',sans-serif] font-normal leading-[20px] text-[16px]">{t('home.waterEnergySection.subtitle')}</p>
           </div>
           <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[29.76%_62.8%_62.88%_0] justify-center leading-[0] text-[#09c1ff] text-[66px] tracking-[-0.9px] uppercase whitespace-nowrap">
-            <p className="leading-[50px]">balance</p>
+            <p className="leading-[50px]">{t('home.waterEnergySection.balance')}</p>
           </div>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-normal inset-[22.39%_62.8%_72.01%_7.99%] justify-center leading-[19px] text-[#0f172a] text-[16px] text-right tracking-[-0.9px] uppercase whitespace-nowrap">
-          <p className="mb-0">Crystal clarity that refreshes</p>
-          <p>the body and restores</p>
+          <p className="mb-0">{t('home.waterEnergySection.description')}</p>
         </div>
       </div>
 
@@ -1757,7 +1746,7 @@ export default function HomePage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
+                placeholder={t('home.search.placeholder')}
                 className="flex-1 h-11 px-4 border-2 border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm placeholder:text-gray-400"
               />
 
