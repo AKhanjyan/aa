@@ -1018,7 +1018,7 @@ export function Header() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 flex md:hidden bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex md:hidden bg-[#62b3e8]/30 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           onClick={() => setMobileMenuOpen(false)}
@@ -1151,29 +1151,38 @@ export function Header() {
 
       {/* Search Modal */}
       {showSearchModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-start justify-center pt-20 px-4">
+        <div 
+          className="fixed inset-0 bg-[#62b3e8]/30 backdrop-blur-sm z-50 flex items-start justify-center pt-16 md:pt-20 px-4"
+          onClick={() => setShowSearchModal(false)}
+          style={{ touchAction: 'none' }}
+        >
           <div 
             ref={searchModalRef}
-            className="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200/80 p-4 animate-in fade-in slide-in-from-top-2 duration-200"
+            className="w-full max-w-2xl animate-in fade-in slide-in-from-top-2 duration-200 relative z-[51]"
+            onClick={(e) => e.stopPropagation()}
+            style={{ touchAction: 'auto' }}
           >
-            <form onSubmit={handleSearch} className="flex items-center gap-2">
-              {/* Search Input */}
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('common.placeholders.search')}
-                className="flex-1 h-11 px-4 border-2 border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm placeholder:text-gray-400"
-              />
-              
-              {/* Search Button */}
-              <button
-                type="submit"
-                className="h-11 px-6 bg-gray-900 text-white rounded-r-lg hover:bg-gray-800 transition-colors flex items-center justify-center"
-              >
-                <SearchIcon />
-              </button>
+            <form onSubmit={handleSearch} className="relative z-[52]">
+              {/* Search Input with glassy effect */}
+              <div className="relative z-[53]">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('common.placeholders.search')}
+                  className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-4 bg-[#62b3e8]/80 backdrop-blur-md border-2 border-white/90 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white text-base md:text-lg placeholder:text-white/70 text-white shadow-lg pointer-events-auto relative z-[54] touch-manipulation"
+                  autoFocus
+                  autoComplete="off"
+                  style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
+                />
+                {/* Search Icon inside input */}
+                <div className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 pointer-events-none z-[55]">
+                  <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
             </form>
           </div>
         </div>

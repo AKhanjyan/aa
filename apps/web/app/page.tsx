@@ -143,6 +143,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const searchModalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const languageMenuRef = useRef<HTMLDivElement>(null);
@@ -230,7 +231,7 @@ export default function HomePage() {
     };
   }, [showSearchModal]);
 
-  // Close language menu when clicking outside
+  // Close language menu and mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
@@ -239,6 +240,7 @@ export default function HomePage() {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
       }
+      // Mobile menu closes when clicking on overlay (handled in JSX)
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -432,8 +434,9 @@ export default function HomePage() {
         {/* Mobile Header */}
         <div className="absolute content-stretch flex items-center justify-between left-[17px] top-[35px] w-[398px] z-50">
           <div className="content-stretch flex gap-[6px] items-center relative shrink-0">
+            {/* Mobile Menu Button (Hamburger) */}
             <button
-              onClick={() => setShowSearchModal(true)}
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="bg-[rgba(0,0,0,0)] border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid content-stretch cursor-pointer flex flex-col items-start px-[15.5px] py-[18.5px] relative rounded-[9999px] w-[49px]"
             >
               <div className="flex items-center justify-center relative shrink-0">
@@ -444,6 +447,7 @@ export default function HomePage() {
                 </div>
               </div>
             </button>
+            {/* Mobile Search Button */}
             <button
               onClick={() => setShowSearchModal(true)}
               className="bg-[rgba(0,0,0,0)] border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid content-stretch cursor-pointer flex items-center p-[14.5px] relative rounded-[9999px]"
@@ -460,7 +464,155 @@ export default function HomePage() {
           <div className="h-[31px] relative shrink-0 w-[101px] cursor-pointer" onClick={() => router.push('/')}>
             <img alt="Borbor Aqua Logo" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBorborAguaLogoColorB2024Colored1} />
           </div>
+          {/* Mobile Language Menu */}
+          <div className="relative shrink-0" ref={languageMenuRef}>
+            <button
+              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+              className="bg-[rgba(0,0,0,0)] border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid content-stretch cursor-pointer flex items-center p-[14.5px] relative rounded-[9999px]"
+            >
+              <div className="flex items-center justify-center relative shrink-0">
+                <LanguageIcon size={20} />
+              </div>
+            </button>
+            {showLanguageMenu && (
+              <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                {Object.entries(LANGUAGES).map(([code, lang]) => (
+                  <button
+                    key={code}
+                    onClick={() => handleLanguageChange(code as LanguageCode)}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 ${getStoredLanguage() === code
+                        ? 'bg-gray-100 text-gray-900 font-semibold'
+                        : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                  >
+                    {lang.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {showMobileMenu && (
+          <div className="fixed inset-0 bg-gradient-to-b from-[#62b3e8] to-[rgba(11, 55, 168, 0.75)] backdrop-blur-sm z-[100] lg:hidden flex items-center justify-center" onClick={() => setShowMobileMenu(false)}>
+            <div 
+              className="relative bg-white rounded-2xl border border-gray-200/50 shadow-2xl w-[280px] max-w-[90%] p-8 animate-in fade-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowMobileMenu(false)}
+                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Menu Items */}
+              <nav className="flex flex-col gap-6">
+                <button
+                  onClick={() => {
+                    router.push('/profile');
+                    setShowMobileMenu(false);
+                  }}
+                  className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                >
+                  MY ACCOUNT
+                </button>
+                <button
+                  onClick={() => {
+                    router.push('/products');
+                    setShowMobileMenu(false);
+                  }}
+                  className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                >
+                  CATALOG
+                </button>
+                <button
+                  onClick={() => {
+                    router.push('/delivery-terms');
+                    setShowMobileMenu(false);
+                  }}
+                  className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                >
+                  DELIVERY
+                </button>
+                <button
+                  onClick={() => {
+                    router.push('/cart');
+                    setShowMobileMenu(false);
+                  }}
+                  className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                >
+                  CART
+                </button>
+                
+                <div className="h-px bg-gray-200 my-2" />
+                
+                <button
+                  onClick={() => {
+                    setShowLanguageMenu(!showLanguageMenu);
+                  }}
+                  className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                >
+                  LANGUAGE
+                </button>
+                {isLoggedIn && (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setShowMobileMenu(false);
+                    }}
+                    className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
+                  >
+                    LOG OUT
+                  </button>
+                )}
+              </nav>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Search Modal */}
+        {showSearchModal && (
+          <div 
+            className="fixed inset-0 bg-[#62b3e8]/30 backdrop-blur-sm z-[100] flex items-start justify-center pt-16 px-4"
+            onClick={() => setShowSearchModal(false)}
+            style={{ touchAction: 'none' }}
+          >
+            <div
+              ref={searchModalRef}
+              className="w-full max-w-md animate-in fade-in slide-in-from-top-2 duration-200 relative z-[101]"
+              onClick={(e) => e.stopPropagation()}
+              style={{ touchAction: 'auto' }}
+            >
+              <form onSubmit={handleSearch} className="relative z-[102]">
+                {/* Search Input with glassy effect */}
+                <div className="relative z-[103]">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t('home.search.placeholder')}
+                    className="w-full h-12 pl-12 pr-4 bg-[#62b3e8]/80 backdrop-blur-md border-2 border-white/90 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white text-base placeholder:text-white/70 text-white shadow-lg pointer-events-auto relative z-[104] touch-manipulation"
+                    autoFocus
+                    autoComplete="off"
+                    style={{ WebkitAppearance: 'none', WebkitTapHighlightColor: 'transparent' }}
+                  />
+                  {/* Search Icon inside input */}
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-[105]">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Background Gradient */}
         <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 to-[rgba(221,216,216,0.75)] top-0 w-[430px]" />
@@ -926,10 +1078,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex items-center justify-center relative shrink-0 w-full">
-            <div className="-scale-y-100 flex-none w-full">
-              <div className="content-stretch flex h-[9px] items-start justify-center relative w-full">
-                <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
-              </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="bg-[#00d1ff] h-[6px] w-[6px] rounded-full transition-all duration-300" />
             </div>
           </div>
         </div>
@@ -982,16 +1132,6 @@ export default function HomePage() {
                         <img alt="" className="absolute h-full left-[-91.91%] max-w-none top-0 w-[283.83%]" src="https://www.figma.com/api/mcp/asset/655c1036-cbe5-4609-b621-924834d6314f" />
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="absolute inset-[15.61%_15.04%_66.56%_63.72%]" data-name="glass">
-                  <div className="absolute inset-[-3.62%_-4.67%_-6.03%_-4.67%]">
-                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/aadbc746-1d0b-416c-8ec8-f41cc8e9d911" />
-                  </div>
-                </div>
-                <div className="absolute inset-[54.8%_56.51%_27.38%_22.25%]" data-name="glass">
-                  <div className="absolute inset-[-3.62%_-4.67%_-6.03%_-4.67%]">
-                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/cd530067-d699-40ac-bdbd-e431ca8dce60" />
                   </div>
                 </div>
               </div>
@@ -2659,16 +2799,6 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-[15.61%_32.71%_66.56%_53.61%] overflow-hidden">
-                <div className="absolute inset-0">
-                  <img alt="Glass" className="block max-w-none size-full" src={img18} />
-                </div>
-              </div>
-              <div className="absolute inset-[54.8%_59.41%_27.38%_26.91%] overflow-hidden">
-                <div className="absolute inset-0">
-                  <img alt="Glass" className="block max-w-none size-full" src={img18} />
-                </div>
-              </div>
             </div>
           </div>
           <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-black inset-[65.4%_0_16.48%_57.22%] justify-center leading-[0] text-[#0f172a] text-[0px] tracking-[-0.9px] uppercase whitespace-nowrap">
@@ -2726,35 +2856,37 @@ export default function HomePage() {
 
       {/* Search Modal */}
       {showSearchModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[100] flex items-start justify-center pt-20 px-4">
+        <div 
+          className="fixed inset-0 bg-[#62b3e8]/30 backdrop-blur-sm z-[100] flex items-start justify-center pt-16 md:pt-20 px-4"
+          onClick={() => setShowSearchModal(false)}
+        >
           <div
             ref={searchModalRef}
-            className="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200/80 p-4 animate-in fade-in slide-in-from-top-2 duration-200"
+            className="w-full max-w-2xl animate-in fade-in slide-in-from-top-2 duration-200"
+            onClick={(e) => e.stopPropagation()}
           >
-            <form onSubmit={handleSearch} className="flex items-center gap-2">
-              {/* Search Input */}
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('home.search.placeholder')}
-                className="flex-1 h-11 px-4 border-2 border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent text-sm placeholder:text-gray-400"
-              />
-
-              {/* Search Button */}
-              <button
-                type="submit"
-                className="h-11 px-6 bg-gray-900 text-white rounded-r-lg hover:bg-gray-800 transition-colors flex items-center justify-center"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
+            <form onSubmit={handleSearch} className="relative">
+              {/* Search Input with glassy effect */}
+              <div className="relative">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('home.search.placeholder')}
+                  className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-4 bg-[#62b3e8]/80 backdrop-blur-md border-2 border-white/90 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white text-base md:text-lg placeholder:text-white/70 text-white shadow-lg"
+                />
+                {/* Search Icon inside input */}
+                <div className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
             </form>
           </div>
         </div>
-         )}
+      )}
 
       </div>
     </div>
