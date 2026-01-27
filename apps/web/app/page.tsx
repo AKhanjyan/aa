@@ -95,6 +95,8 @@ interface Product {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
+  description?: string;
   price: number;
   image: string | null;
   inStock: boolean;
@@ -571,8 +573,8 @@ export default function HomePage() {
 
 
         {/* Mobile Featured Products Section Decorative Bubbles */}
-        <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(13.09%+958px)] bottom-[calc(100%-82.65%)]">
-          <div className="flex-none rotate-[100.79deg] size-[240px]">
+        <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(2.09%+958px)] bottom-[calc(100%-82.65%)]">
+          <div className="flex-none rotate-[100.79deg] size-[210px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -585,7 +587,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
-          <div className="flex-none rotate-[100.79deg] size-[240px]">
+          <div className="flex-none rotate-[100.79deg] size-[100px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -598,7 +600,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[-15.81%] right-[67.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
-          <div className="flex-none rotate-[100.79deg] size-[240px]">
+          <div className="flex-none rotate-[100.79deg] size-[160px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -610,8 +612,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex items-center justify-center left-[-34.65%] right-[84.42%] top-[calc(15.76%+958px)] bottom-[calc(100%-80.47%)]">
-          <div className="flex-none rotate-[100.79deg] size-[240px]">
+        <div className="absolute flex items-center justify-center left-[-34.65%] right-[84.42%] top-[calc(6.76%+958px)] bottom-[calc(100%-80.47%)]">
+          <div className="flex-none rotate-[100.79deg] size-[160px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -777,7 +779,7 @@ export default function HomePage() {
         {/* Mobile Featured Products Section */}
         <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-[calc(50%+0.5px)] top-[958px] w-full max-w-[429px] z-10">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
-            <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
+            <div className="flex flex-col font-['Montserrat:Black',sans-  serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
               <p className="mb-0">FEATURED</p>
               <p>PRODUCTS</p>
             </div>
@@ -791,49 +793,56 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Featured Product Card */}
-        {featuredProducts.length > 0 && (
-          <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-[calc(50%+0.5px)] px-[16px] top-[1088px] w-[371px]">
-            <div className="h-[435px] relative shrink-0 w-[155px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img
-                  alt={featuredProducts[0].title}
-                  className="absolute h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%]"
-                  src={featuredProducts[0].image || imgBorborAquaProductKids033L2}
-                />
-              </div>
-            </div>
-            <div className="content-stretch flex flex-col gap-[6px] items-start py-px relative shrink-0 w-full">
-              <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full">
-                <div className="content-stretch flex flex-col items-start relative shrink-0">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white whitespace-nowrap">
-                      <p className="mb-0">{featuredProducts[0].title}</p>
-                    </div>
-                  </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
-                      <p className="leading-[16px]">0.5L</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="content-stretch flex flex-col items-start relative shrink-0">
-                  <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
-                    <p className="leading-[28px]">{formatPrice(featuredProducts[0].price)}</p>
-                  </div>
+        {featuredProducts.length > 0 && (() => {
+          const currentProduct = featuredProducts[carouselIndex] || featuredProducts[0];
+          return (
+            <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-[calc(50%+0.5px)] px-[16px] top-[1088px] w-[371px]">
+              <div className="h-[435px] relative shrink-0 w-[155px]">
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <img
+                    alt={currentProduct.title}
+                    className="absolute h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%] object-contain"
+                    src={currentProduct.image || imgBorborAquaProductKids033L2}
+                  />
                 </div>
               </div>
-              <button
-                onClick={() => handleAddToCart(featuredProducts[0])}
-                disabled={addingToCart.has(featuredProducts[0].id) || !featuredProducts[0].inStock}
-                className="bg-[#00d1ff] content-stretch cursor-pointer flex h-[48px] items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-[339px] disabled:opacity-50"
-              >
-                <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-                  <p className="leading-[24px]">Add to Cart</p>
+              <div className="content-stretch flex flex-col gap-[6px] items-start py-px relative shrink-0 w-full">
+                <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full">
+                  <div className="content-stretch flex flex-col items-start relative shrink-0">
+                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                      <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                        <p className="mb-0">{currentProduct.title}</p>
+                      </div>
+                    </div>
+                    {(currentProduct.subtitle || currentProduct.description) && (
+                      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full mt-1">
+                        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
+                          <p className="leading-[16px]">{currentProduct.subtitle || currentProduct.description}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="content-stretch flex flex-col items-start relative shrink-0">
+                    <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
+                      <p className="leading-[28px]">{formatPrice(currentProduct.price)}</p>
+                    </div>
+                  </div>
                 </div>
-              </button>
+                <button
+                  onClick={() => handleAddToCart(currentProduct)}
+                  disabled={addingToCart.has(currentProduct.id) || !currentProduct.inStock}
+                  className="bg-[#00d1ff] content-stretch cursor-pointer flex h-[48px] items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-[339px] disabled:opacity-50"
+                >
+                  <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
+                    <p className="leading-[24px]">
+                      {addingToCart.has(currentProduct.id) ? 'Adding...' : 'Add to Cart'}
+                    </p>
+                  </div>
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Mobile Carousel Navigation */}
         <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-[calc(50%+0.5px)] top-[1285px] w-[339px]">
