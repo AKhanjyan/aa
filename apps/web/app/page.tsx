@@ -926,7 +926,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Water Energy Content */}
-        <div className="-translate-x-1/2 absolute h-[465px] left-[calc(50%-10.5px)] top-[1900px] lg:top-[1895px] w-[403px]">
+        <div className="-translate-x-1/2 absolute left-[calc(50%-10.5px)] top-[1900px] lg:top-[1895px] w-[403px] h-[465px]">
           <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[54.84%_0.99%_16.56%_68.49%] justify-center leading-[0] text-[#0f172a] text-[0px] tracking-[-0.9px] uppercase whitespace-nowrap">
             <p className="leading-[25px] mb-0 text-[29px]">Pure</p>
             <p className="leading-[25px] mb-0 text-[29px]">energy</p>
@@ -944,45 +944,45 @@ export default function HomePage() {
           </div>
           <div className="absolute flex inset-[43.01%_56.32%_-14.63%_-38.96%] items-center justify-center">
             <div className="flex-none rotate-[47.15deg] size-[240px]">
-              <div className="relative size-full">
-                <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" />
-                <div className="absolute inset-0 mix-blend-lighten">
+              <div className="relative size-full" data-name="image 1">
+                <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" data-name="glow" />
+                <div className="absolute inset-0 mix-blend-lighten" data-name="image 1">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
+                    <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src="https://www.figma.com/api/mcp/asset/6dea7752-4b00-4715-99bc-a552c52b65e1" />
                   </div>
                 </div>
-                <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" />
+                <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" data-name="image 2" />
               </div>
             </div>
           </div>
           <div className="absolute contents inset-[5.91%_9.77%_0.02%_3.97%]">
             <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
               <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
-                <div className="absolute inset-[9.43%_9.77%_67.89%_72.21%]">
+                <div className="absolute inset-[9.43%_9.77%_67.89%_72.21%]" data-name="Vector">
                   <div className="absolute inset-[0_3.7%_4.59%_0.78%]">
-                    <img alt="" className="block max-w-none size-full" src={imgVector7} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/75823744-b48b-4797-9b35-a31de4fa0271" />
                   </div>
                 </div>
-                <div className="absolute inset-[48.32%_67.73%_31.94%_16.13%]">
-                  <img alt="" className="block max-w-none size-full" src={imgVector8} />
+                <div className="absolute inset-[48.32%_67.73%_31.94%_16.13%]" data-name="Vector">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/c4ce32de-82f7-4155-8c7a-39f15a551c4c" />
                 </div>
                 <div className="absolute aspect-[157.45058065837884/437.4313836472372] flex items-center justify-center left-[34.21%] right-[26.72%] top-[27.48px]">
                   <div className="flex-none h-[436.107px] rotate-[-0.5deg] w-[153.651px]">
-                    <div className="relative size-full">
+                    <div className="relative size-full" data-name="\sqawdef 1">
                       <div className="absolute inset-0 opacity-88 overflow-hidden pointer-events-none">
-                        <img alt="" className="absolute h-full left-[-91.91%] max-w-none top-0 w-[283.83%]" src={imgSqawdef1} />
+                        <img alt="" className="absolute h-full left-[-91.91%] max-w-none top-0 w-[283.83%]" src="https://www.figma.com/api/mcp/asset/655c1036-cbe5-4609-b621-924834d6314f" />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="absolute inset-[15.61%_15.04%_66.56%_63.72%]">
+                <div className="absolute inset-[15.61%_15.04%_66.56%_63.72%]" data-name="glass">
                   <div className="absolute inset-[-3.62%_-4.67%_-6.03%_-4.67%]">
-                    <img alt="" className="block max-w-none size-full" src={imgGlass3} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/aadbc746-1d0b-416c-8ec8-f41cc8e9d911" />
                   </div>
                 </div>
-                <div className="absolute inset-[54.8%_56.51%_27.38%_22.25%]">
+                <div className="absolute inset-[54.8%_56.51%_27.38%_22.25%]" data-name="glass">
                   <div className="absolute inset-[-3.62%_-4.67%_-6.03%_-4.67%]">
-                    <img alt="" className="block max-w-none size-full" src={imgGlass4} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/cd530067-d699-40ac-bdbd-e431ca8dce60" />
                   </div>
                 </div>
               </div>
@@ -2730,7 +2730,7 @@ export default function HomePage() {
             </form>
           </div>
         </div>
-      )}
+         )}
 
       </div>
     </div>
