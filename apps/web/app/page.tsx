@@ -629,7 +629,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Image */}
-        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-[calc(50%-3.88px)] top-[45%] w-[440px]">
+        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-[calc(50%-3.88px)] top-[48%] w-[440px]">
           <div className="flex-none rotate-[102.66deg] size-[360px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
@@ -1440,7 +1440,7 @@ export default function HomePage() {
       </div>
 
       {/* Image 13 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[600px] top-[300px] size-[806px]">
+      <div className="absolute flex items-center justify-center left-[600px] top-[410px] size-[806px]  pointer-events-non">
         <div className="relative rounded-[320px] size-full">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -1507,7 +1507,7 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[807px] left-0 top-[1158px] w-full max-w-[1920px]">
+      <div className="absolute h-[807px] left-0 top-[1158px] w-full max-w-[1920px] z-[-1]">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
@@ -1531,7 +1531,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute h-[1031px] left-1/2 top-[4834px] translate-x-[-50%] w-[1008px] overflow-hidden">
+      <div className="absolute h-[1051px] left-1/2 top-[4650px] translate-x-[-50%] w-[2808px] overflow-hidden "  >
         <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse44} />
         </div>
