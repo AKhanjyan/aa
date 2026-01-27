@@ -958,13 +958,13 @@ export default function HomePage() {
           <div className="absolute contents inset-[5.91%_9.77%_0.02%_3.97%]">
             <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
               <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
-                <div className="absolute inset-[9.43%_9.77%_67.89%_72.21%]" data-name="Vector">
+                <div className="absolute inset-[9.43%_9.77%_67.89%_74%]" data-name="Vector" data-node-id="3:2109">
                   <div className="absolute inset-[0_3.7%_4.59%_0.78%]">
-                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/75823744-b48b-4797-9b35-a31de4fa0271" />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/08813665-fb7d-46ff-a20b-bd1f72beebdf" />
                   </div>
                 </div>
-                <div className="absolute inset-[48.32%_67.73%_31.94%_16.13%]" data-name="Vector">
-                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/c4ce32de-82f7-4155-8c7a-39f15a551c4c" />
+                <div className="absolute inset-[48.32%_67.73%_31.94%_18%]" data-name="Vector" data-node-id="3:2110">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/4621d6c7-4dbd-4afd-9ec4-29430094f5e3" />
                 </div>
                 <div className="absolute aspect-[157.45058065837884/437.4313836472372] flex items-center justify-center left-[34.21%] right-[26.72%] top-[27.48px]">
                   <div className="flex-none h-[436.107px] rotate-[-0.5deg] w-[153.651px]">
@@ -1064,78 +1064,93 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Why Choose Us Cards */}
-        <div className="absolute content-stretch flex flex-col gap-[50px] items-end left-[35px] top-[3210px] w-[361px]">
-          <div className="h-[286px] relative shrink-0 w-full">
-            <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[37px]" />
-            <div className="absolute aspect-[100/100] left-[33.98%] right-[33.7%] top-0">
-              <div className="relative size-full">
-                <div className="absolute inset-[9.48%_-14.22%_18.97%_34.91%]">
-                  <img alt="" className="block max-w-none size-full" src={imgVector4} />
+        <div className="-translate-x-1/2 absolute left-[calc(50%+0.5px)] top-[3210px] w-[361px]">
+          <div className="relative content-stretch flex flex-col gap-[50px] items-end w-full">
+          {/* Decorative Vectors - Same as Water Energy */}
+          <div className="absolute contents inset-[5.91%_9.77%_0.02%_3.97%]">
+            <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
+              <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
+                <div className="absolute inset-[9.43%_9.77%_67.89%_74%]" data-name="Vector">
+                  <div className="absolute inset-[0_3.7%_4.59%_0.78%]">
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/08813665-fb7d-46ff-a20b-bd1f72beebdf" />
+                  </div>
                 </div>
-                <div className="absolute inset-[29.31%_16.81%_0_9.91%]">
+          
+              </div>
+            </div>
+          </div>
+          <div className="h-[286px] relative shrink-0 w-full" data-node-id="3:2132">
+            <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[37px]" data-node-id="3:2133" />
+            <div className="absolute aspect-[100/100] left-[33.98%] right-[33.7%] top-0" data-name="pc" data-node-id="0:182">
+              <div className="relative size-full">
+                <div className="absolute inset-[9.48%_-14.22%_18.97%_34.91%]" data-name="Vector" data-node-id="0:183">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/f252f37e-868c-46c2-be96-f822d3aab537" />
+                </div>
+                <div className="absolute inset-[29.31%_16.81%_0_9.91%]" data-name="glass" data-node-id="0:184">
                   <div className="absolute inset-[-3.66%_-4.71%_-6.1%_-4.71%]">
-                    <img alt="" className="block max-w-none size-full" src={imgGlass2} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/e777528f-0907-4aa7-a28e-871308fd4e93" />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[61.19%_11.7%_22.03%_11.98%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap">
+            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[61.19%_11.7%_22.03%_11.98%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap" data-node-id="3:2135">
               <p className="mb-0">Rich in Natural Minerals that provide</p>
               <p>valuable health benefits.</p>
             </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[49.3%_22.56%_40.91%_22.84%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase">
+            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[49.3%_22.56%_40.91%_22.84%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase" data-node-id="3:2136">
               <p className="leading-[28px] whitespace-pre-wrap">RICH IN MINERALS</p>
             </div>
           </div>
-          <div className="h-[278px] relative shrink-0 w-full">
-            <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[37px]" />
-            <div className="absolute aspect-[100/100] left-[33.52%] right-[34.08%] top-0">
+          <div className="h-[278px] relative shrink-0 w-full" data-node-id="3:2137">
+            <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[37px]" data-node-id="3:2138" />
+            <div className="absolute aspect-[100/100] left-[33.52%] right-[34.08%] top-0" data-name="warning" data-node-id="0:165">
               <div className="relative size-full">
-                <div className="absolute inset-[5.88%_-4.86%_26.15%_50.33%]">
-                  <img alt="" className="block max-w-none size-full" src={imgGroup} />
+                <div className="absolute inset-[5.88%_-4.86%_26.15%_50.33%]" data-name="Group" data-node-id="0:166">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/fbb7061c-d20f-4cdf-b279-e5796eec7550" />
                 </div>
-                <div className="absolute inset-[13.93%_8.94%_9.09%_8.94%]">
+                <div className="absolute inset-[13.93%_8.94%_9.09%_8.94%]" data-name="glass" data-node-id="0:169">
                   <div className="absolute inset-[-3.36%_-4.2%_-5.6%_-4.2%]">
-                    <img alt="" className="block max-w-none size-full" src={imgGlass1} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/be7ad9f7-327f-4e89-9ba1-222f20a54476" />
                   </div>
                 </div>
-                <div className="absolute inset-[39.77%_45.45%_20.45%_45.45%]">
-                  <img alt="" className="block max-w-none size-full" src={imgTop1} />
+                <div className="absolute inset-[39.77%_45.45%_20.45%_45.45%]" data-name="top" data-node-id="0:170">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/15315365-c5b2-42c7-9756-074acb2eb650" />
                 </div>
               </div>
             </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.07%_8.94%_22.66%_8.38%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap">
+            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.07%_8.94%_22.66%_8.38%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap" data-node-id="3:2140">
               <p className="mb-0">Borbor Aqua does not include any</p>
               <p>artificial ingredients in its bottled water</p>
             </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[47.84%_9.5%_42.09%_8.94%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase">
+            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[47.84%_9.5%_42.09%_8.94%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase" data-node-id="3:2141">
               <p className="leading-[28px] whitespace-pre-wrap">no artifical ingridients</p>
             </div>
           </div>
-          <div className="h-[272px] relative shrink-0 w-full">
-            <div className="absolute bg-white inset-[13.97%_-0.55%_0_0] rounded-[37px]" />
-            <div className="absolute aspect-[100/100] left-[34.07%] overflow-clip right-[33.8%] top-0">
+          <div className="h-[272px] relative shrink-0 w-full" data-node-id="3:2142">
+            <div className="absolute bg-white inset-[13.97%_-0.55%_0_0] rounded-[37px]" data-node-id="3:2143" />
+            <div className="absolute aspect-[100/100] left-[34.07%] overflow-clip right-[33.8%] top-0" data-name="leaf" data-node-id="0:150">
               <div className="relative size-full">
-                <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]">
-                  <img alt="" className="block max-w-none size-full" src={imgBg} />
+                <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]" data-name="bg" data-node-id="0:151">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/5fd94071-5e89-4d8b-9dc1-0186aee60a37" />
                 </div>
-                <div className="absolute inset-[16.22%_15.91%_6.5%_4.41%]">
+                <div className="absolute inset-[16.22%_15.91%_6.5%_4.41%]" data-name="glass" data-node-id="0:152">
                   <div className="absolute inset-[-3.35%_-4.33%_-5.58%_-4.33%]">
-                    <img alt="" className="block max-w-none size-full" src={imgGlass} />
+                    <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/7dbb068b-eecb-4cb8-8b19-c14124babcea" />
                   </div>
                 </div>
-                <div className="absolute inset-[32.96%_31.82%_25.5%_35.23%]">
-                  <img alt="" className="block max-w-none size-full" src={imgTop} />
+                <div className="absolute inset-[32.96%_31.82%_25.5%_35.23%]" data-name="top" data-node-id="0:153">
+                  <img alt="" className="block max-w-none size-full" src="https://www.figma.com/api/mcp/asset/0ffabdd4-6cad-4a82-85b4-c6701ed0bb8f" />
                 </div>
               </div>
             </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.66%_11.91%_24.63%_12.19%] justify-center leading-[20px] not-italic text-[#64748b] text-[16px] text-center whitespace-nowrap">
+            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.66%_11.91%_24.63%_12.19%] justify-center leading-[20px] not-italic text-[#64748b] text-[16px] text-center whitespace-nowrap" data-node-id="3:2145">
               <p className="mb-0">Borbor Aqua does not infuse carbon</p>
               <p>dioxide in any of its bottled water.</p>
             </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[46.69%_21.05%_43.01%_21.61%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase whitespace-nowrap">
+            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[46.69%_21.05%_43.01%_21.61%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase whitespace-nowrap" data-node-id="3:2146">
               <p className="leading-[28px]">NON-CARBONATED</p>
             </div>
+          </div>
           </div>
         </div>
 
