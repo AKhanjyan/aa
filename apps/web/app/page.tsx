@@ -826,10 +826,10 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Pagination Dots */}
-        <div className="-translate-x-1/2 absolute contents left-1/2 top-[1666px]">
-          <div className="-translate-x-1/2 absolute bg-white left-[calc(50%-17px)] rounded-[9999px] size-[6px] top-[1666px]" />
-          <div className="-translate-x-1/2 absolute bg-[#00d1ff] h-[6px] left-1/2 rounded-[9999px] top-[1666px] w-[16px]" />
-          <div className="-translate-x-1/2 absolute bg-white left-[calc(50%+17px)] rounded-[9999px] size-[6px] top-[1666px]" />
+        <div className="absolute contents left-1/2 top-[1666px]">
+          <div className="absolute bg-white left-[calc(50%-17px)] rounded-[9999px] size-[6px] top-[1666px]" />
+          <div className="absolute bg-[#00d1ff] h-[6px] left-1/2 rounded-[9999px] top-[1666px] w-[16px]" />
+          <div className="absolute bg-white left-[calc(50%+17px)] rounded-[9999px] size-[6px] top-[1666px]" />
         </div>
 
         {/* Mobile View All Products Button */}
