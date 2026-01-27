@@ -856,7 +856,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Water Energy Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-start left-[calc(50%+1.5px)] top-[1843px] w-full max-w-[429px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-start left-[calc(50%+1.5px)] top-[1840px] lg:top-[1835px] w-full max-w-[429px]">
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-[641px]">
@@ -874,7 +874,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Water Energy Content */}
-        <div className="-translate-x-1/2 absolute h-[465px] left-[calc(50%-10.5px)] top-[1903px] w-[403px]">
+        <div className="-translate-x-1/2 absolute h-[465px] left-[calc(50%-10.5px)] top-[1900px] lg:top-[1895px] w-[403px]">
           <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[54.84%_0.99%_16.56%_68.49%] justify-center leading-[0] text-[#0f172a] text-[0px] tracking-[-0.9px] uppercase whitespace-nowrap">
             <p className="leading-[25px] mb-0 text-[29px]">Pure</p>
             <p className="leading-[25px] mb-0 text-[29px]">energy</p>
@@ -1708,14 +1708,14 @@ export default function HomePage() {
           </div>
 
 
-          {/* Pagination Dots - Show 3 dots for 3 carousel modes */}
+          {/* Pagination Dots - Show 3 dots for 3 carousel modes (positioned above "View All Products" on non-mobile) */}
           {featuredProducts.length > 3 && (
-            <div className="absolute contents left-1/2 top-[950px] translate-x-[-50%]">
+            <div className="absolute contents left-1/2 top-[760px] translate-x-[-50%]">
               {/* Dot 1 - First mode (products 0-2) */}
               <button
                 type="button"
                 onClick={() => setCarouselIndex(0)}
-                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[760px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 0
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%-17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%-17px)] hover:bg-[#00d1ff]/50'
@@ -1726,7 +1726,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setCarouselIndex(3)}
-                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[760px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 3
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-1/2'
                     : 'bg-[#e2e8f0] size-[6px] left-1/2 hover:bg-[#00d1ff]/50'
@@ -1737,7 +1737,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setCarouselIndex(6)}
-                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[760px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 6
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%+17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%+17px)] hover:bg-[#00d1ff]/50'
