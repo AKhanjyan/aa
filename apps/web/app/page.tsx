@@ -573,55 +573,55 @@ export default function HomePage() {
 
 
         {/* Mobile Featured Products Section Decorative Bubbles */}
-        <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(2.09%+958px)] bottom-[calc(100%-82.65%)]">
+        <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
           <div className="flex-none rotate-[100.79deg] size-[210px]">
             <div className="relative rounded-[320px] size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
                 </div>
               </div>
-              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[900px]" />
             </div>
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
           <div className="flex-none rotate-[100.79deg] size-[100px]">
             <div className="relative rounded-[320px] size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
                 </div>
               </div>
-              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[900px]" />
             </div>
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[-15.81%] right-[67.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
           <div className="flex-none rotate-[100.79deg] size-[160px]">
             <div className="relative rounded-[320px] size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
                 </div>
               </div>
-              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[900px]" />
             </div>
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[-34.65%] right-[84.42%] top-[calc(6.76%+958px)] bottom-[calc(100%-80.47%)]">
           <div className="flex-none rotate-[100.79deg] size-[160px]">
             <div className="relative rounded-[320px] size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
                 </div>
               </div>
-              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+              <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[900px]" />
             </div>
           </div>
         </div>
@@ -954,13 +954,13 @@ export default function HomePage() {
           <div className="absolute flex inset-[43.01%_56.32%_-14.63%_-38.96%] items-center justify-center">
             <div className="flex-none rotate-[47.15deg] size-[240px]">
               <div className="relative size-full" data-name="image 1">
-                <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[120px]" data-name="glow" />
+                <div className="absolute backdrop-blur-[4px] bg-[rgba(141,44,221,0.3)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[120px]" data-name="glow" />
                 <div className="absolute inset-0 mix-blend-lighten" data-name="image 1">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src="https://www.figma.com/api/mcp/asset/6dea7752-4b00-4715-99bc-a552c52b65e1" />
                   </div>
                 </div>
-                <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-overlay rounded-[120px]" data-name="image 2" />
+                <div className="absolute bg-[rgba(141,44,221,0.6)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-overlay rounded-[120px]" data-name="image 2" />
               </div>
             </div>
           </div>
