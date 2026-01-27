@@ -2533,28 +2533,6 @@ export default function HomePage() {
       </div>
 
       {/* Featured Products Section Decorative Elements */}
-      <div className="absolute flex top-0 right-[72.03%] bottom-[66.22%] left-[6.56%] items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[290.785px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
-      </div>
 
       <div className="absolute flex top-0 right-[75.18%] bottom-[55.65%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[456.082px]">
