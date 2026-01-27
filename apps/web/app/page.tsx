@@ -1440,12 +1440,12 @@ export default function HomePage() {
       </div>
 
       {/* Image 13 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[600px] top-[410px] size-[806px]  pointer-events-non">
+      <div className="absolute flex items-center justify-center left-[600px] top-[410px] size-[806px] pointer-events-none">
         <div className="relative rounded-[320px] size-full">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img alt="Image 13" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img13Decorative} />
+              <img alt="Image 13" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"  />
             </div>
           </div>
           <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
@@ -1609,15 +1609,15 @@ export default function HomePage() {
             background: "linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.3) 85%, white 100%)"
           }}
         />
-        <div className="absolute h-[976px] lg:h-[976px] md:h-[750px] sm:h-[600px] left-1/2 translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%] top-[139px] lg:top-[139px] md:top-[100px] sm:top-[80px] relative z-10">
+        <div className="absolute h-[976px] lg:h-[976px] md:h-[750px] sm:h-[600px] left-1/2 translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%] top-[179px] lg:top-[179px] md:top-[130px] sm:top-[100px] relative z-10">
           {/* Section Header */}
-          <div className="absolute content-stretch flex flex-col gap-[16px] lg:gap-[16px] md:gap-[12px] sm:gap-[10px] items-start left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[-37px] lg:top-[-37px] md:top-[-30px] sm:top-[-24px]">
+          <div className="absolute content-stretch flex flex-col gap-[16px] lg:gap-[16px] md:gap-[12px] sm:gap-[10px] items-start left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[10px] lg:top-[10px] md:top-[0px] sm:top-[0px]">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[70px] lg:text-[70px] md:text-[48px] sm:text-[32px] text-center text-white tracking-[-0.9px] lg:tracking-[-0.9px] md:tracking-[-0.7px] sm:tracking-[-0.5px] uppercase whitespace-nowrap">
                 <p className="leading-[40px] lg:leading-[40px] md:leading-[32px] sm:leading-[28px]">{t('home.featuredProducts.title')}</p>
               </div>
             </div>
-            <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
+            <div className="content-stretch flex flex-col items-center relative shrink-0 w-full mt-[18px] lg:mt-[18px]">
               <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] lg:text-[16px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
                 <p className="leading-[24px] lg:leading-[24px] md:leading-[20px] sm:leading-[18px]">{t('home.featuredProducts.subtitle')}</p>
               </div>
@@ -1628,7 +1628,7 @@ export default function HomePage() {
           
 
           {/* Products Grid - Uniform Layout */}
-          <div className="absolute h-[442px] lg:h-[442px] md:h-[330px] sm:h-[270px] left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[166px] lg:top-[166px] md:top-[120px] sm:top-[100px] z-[10]">
+          <div className="absolute h-[442px] lg:h-[442px] md:h-[330px] sm:h-[270px] left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[206px] lg:top-[206px] md:top-[150px] sm:top-[120px] z-[10]">
             {productsLoading ? (
               // Loading state - show placeholder with uniform grid
               <div className="flex gap-[40px] lg:gap-[40px] md:gap-[30px] sm:gap-[20px] justify-center items-start h-full">
@@ -1710,12 +1710,12 @@ export default function HomePage() {
 
           {/* Pagination Dots - Show 3 dots for 3 carousel modes */}
           {featuredProducts.length > 3 && (
-            <div className="absolute contents left-1/2 top-[920px] translate-x-[-50%]">
+            <div className="absolute contents left-1/2 top-[950px] translate-x-[-50%]">
               {/* Dot 1 - First mode (products 0-2) */}
               <button
                 type="button"
                 onClick={() => setCarouselIndex(0)}
-                className={`absolute rounded-full top-[920px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 0
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%-17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%-17px)] hover:bg-[#00d1ff]/50'
@@ -1726,7 +1726,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setCarouselIndex(3)}
-                className={`absolute rounded-full top-[920px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 3
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-1/2'
                     : 'bg-[#e2e8f0] size-[6px] left-1/2 hover:bg-[#00d1ff]/50'
@@ -1737,7 +1737,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setCarouselIndex(6)}
-                className={`absolute rounded-full top-[920px] translate-x-[-50%] transition-all duration-300 ${
+                className={`absolute rounded-full top-[950px] translate-x-[-50%] transition-all duration-300 ${
                   carouselIndex === 6
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%+17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%+17px)] hover:bg-[#00d1ff]/50'
@@ -1748,7 +1748,7 @@ export default function HomePage() {
           )}
 
           {/* View All Products Button */}
-          <div className="absolute content-stretch flex flex-col items-center left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] right-[24px] lg:right-[24px] md:right-[16px] sm:right-[12px] top-[776px] lg:top-[776px] md:top-[550px] sm:top-[400px]">
+          <div className="absolute content-stretch flex flex-col items-center left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] right-[24px] lg:right-[24px] md:right-[16px] sm:right-[12px] top-[806px] lg:top-[806px] md:top-[580px] sm:top-[430px]">
             <div
               onClick={() => router.push('/products')}
               className="border-2 border-[#e2e8f0] border-solid content-stretch flex gap-[8px] lg:gap-[8px] md:gap-[6px] sm:gap-[4px] items-center px-[34px] lg:px-[34px] md:px-[28px] sm:px-[20px] py-[12px] lg:py-[12px] md:py-[10px] sm:py-[8px] relative rounded-[9999px] shrink-0 cursor-pointer hover:border-[#00d1ff] hover:bg-[#00d1ff]/5 transition-all"
@@ -1771,7 +1771,7 @@ export default function HomePage() {
           </div>
 
           {/* Blue Underline */}
-          <div className="absolute content-stretch flex items-start justify-center left-1/2 top-[59px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
+          <div className="absolute content-stretch flex items-start justify-center left-1/2 top-[110px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
             <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
           </div>
         </div>
@@ -1789,7 +1789,7 @@ export default function HomePage() {
               console.log('🖱️ [CAROUSEL] Next button clicked');
               handleNextProducts(e);
             }}
-            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-650px)] lg:left-[calc(50%-650px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1712px] lg:top-[1712px] md:top-[1320px] sm:top-[1060px]"
+            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-650px)] lg:left-[calc(50%-650px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1740px] lg:top-[1740px] md:top-[1350px] sm:top-[1090px]"
             aria-label="Next products"
           >
             <svg
@@ -1818,7 +1818,7 @@ export default function HomePage() {
               console.log('🖱️ [CAROUSEL] Previous button clicked');
               handlePreviousProducts(e);
             }}
-            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-650px)] lg:right-[calc(50%-650px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1712px] lg:top-[1712px] md:top-[1320px] sm:top-[1080px]"
+            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[56px] lg:size-[56px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-650px)] lg:right-[calc(50%-650px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1740px] lg:top-[1740px] md:top-[1350px] sm:top-[1110px]"
             aria-label="Previous products"
           >
             <svg
@@ -2383,7 +2383,7 @@ export default function HomePage() {
       </div>
 
       {/* Image 5 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[534px] top-[1374px] size-[163px]">
+      <div className="absolute flex items-center justify-center left-[534px] top-[1574px] size-[110px]">
         <div className="relative rounded-[320px] size-full">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -2396,7 +2396,7 @@ export default function HomePage() {
       </div>
 
       {/* Image 11 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[1603px] top-[1233px] size-[244px]">
+      <div className="absolute flex items-center justify-center left-[1603px] top-[1233px] size-[210px]">
         <div className="relative rounded-[320px] size-full">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
