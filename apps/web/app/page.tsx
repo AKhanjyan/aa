@@ -1057,9 +1057,9 @@ export default function HomePage() {
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
                 <div className="flex items-center justify-center relative shrink-0">
-                  <div className="-scale-y-100 flex-none">
+                  <div className="flex-none scale-y-[-100%]">
                     <div className="h-[28px] relative w-[24.02px]">
-                      <img alt="" className="block max-w-none size-full" src={img1} />
+                      <img alt="Arrow" className="block max-w-none size-full" src={img4} />
                     </div>
                   </div>
                 </div>
