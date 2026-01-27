@@ -1839,6 +1839,10 @@ export default function HomePage() {
           </button>
         </>
       )}
+ {/* <div className="absolute left-0 right-0 top-[2388px] lg:top-[2590px] md:top-[1986px] sm:top-[1586px] h-[6px] bg-white z-[5]" /> */}
+
+      {/* Seam fix above Water Energy (covers tiny line between sections) */}
+      <div className="absolute left-0 right-0 top-[2108px] lg:top-[2450px] md:top-[1806px] sm:top-[1396px] h-[6px] bg-white z-[10]" />
 
       {/* Water Energy Section */}
       <div className="absolute content-stretch flex flex-col gap-[35px] lg:gap-[35px] md:gap-[28px] sm:gap-[20px] items-start left-1/2 top-[2606px] lg:top-[2606px] md:top-[2000px] sm:top-[1600px] translate-x-[-50%] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%]">
@@ -1849,12 +1853,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center relative shrink-0 w-full">
-          <div className="flex-none scale-y-[-100%] w-full">
-            <div className="content-stretch flex h-[9px] items-start justify-center relative w-full">
-              <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
-            </div>
-          </div>
+        <div className="content-stretch flex items-start justify-center relative shrink-0 w-full">
+          <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
         </div>
       </div>
 
@@ -2155,7 +2155,7 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute h-[700px] lg:h-[700px] md:h-[600px] sm:h-[500px] left-1/2 top-[6201px] lg:top-[6201px] md:top-[5000px] sm:top-[4200px] translate-x-[-50%] w-full max-w-[1920px] relative overflow-hidden">
+      <div className="absolute h-[700px] lg:h-[700px] md:h-[600px] sm:h-[500px] left-0 top-[6201px] lg:top-[6201px] md:top-[5000px] sm:top-[4200px] w-full relative overflow-hidden">
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Footer Background" className="absolute h-[144.5%] left-0 max-w-none top-[-44.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
@@ -2330,10 +2330,10 @@ export default function HomePage() {
           </div>
 
           {/* Copyright & Payment Icons */}
-          <div className="absolute border-[#e2e8f0] border-solid border-t content-stretch flex items-center justify-between left-[24px] lg:left-[24px] md:left-[16px] sm:left-[12px] pt-[41px] lg:pt-[41px] md:pt-[32px] sm:pt-[24px] top-[392px] lg:top-[392px] md:top-[320px] sm:top-[280px] w-[1100px] lg:w-[1100px] md:w-[90%] sm:w-[95%] flex-col sm:flex-col md:flex-row">
+          <div className="absolute border-[#e2e8f0] border-solid border-t content-stretch flex items-center justify-between left-0 right-0 px-[24px] lg:px-[24px] md:px-[16px] sm:px-[12px] pt-[41px] lg:pt-[41px] md:pt-[32px] sm:pt-[24px] top-[392px] lg:top-[392px] md:top-[320px] sm:top-[280px] w-full flex-col sm:flex-col md:flex-row">
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center relative">
-                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] lg:text-[12px] md:text-[11px] sm:text-[10px] text-black whitespace-nowrap">
+                <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] lg:text-[12px] md:text-[11px] sm:text-[10px] text-white whitespace-nowrap">
                   <p className="leading-[16px] lg:leading-[16px] md:leading-[14px] sm:leading-[12px]">{t('home.footer.copyright')}</p>
                 </div>
               </div>

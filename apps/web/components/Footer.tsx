@@ -205,7 +205,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-8 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-white">
               {t('common.footer.copyright').replace('{year}', new Date().getFullYear().toString())}
             </p>
             
