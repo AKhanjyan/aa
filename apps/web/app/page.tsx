@@ -718,13 +718,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="-translate-x-1/2 absolute flex items-center justify-center left-[calc(50%+28.66px)] mix-blend-luminosity size-[597.326px] top-[4287px]">
-          <div className="-scale-y-100 flex-none rotate-[-17.72deg]">
-            <div className="relative size-[475.23px]">
-              <img alt="" className="block max-w-none size-full" src={imgShape1} />
-            </div>
-          </div>
-        </div>
+        
         <div className="-translate-x-1/2 absolute h-[438px] left-[calc(50%-302px)] top-[1251px] w-[464px]">
           <div className="absolute inset-[-83.33%_-78.66%]">
             <img alt="" className="block max-w-none size-full" src={imgEllipse41} />
