@@ -2619,7 +2619,7 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+          <div  />
         </div>
       </div>
 
@@ -2632,7 +2632,7 @@ export default function HomePage() {
               <img alt="Image 5" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage5} />
             </div>
           </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+          <div  />
         </div>
       </div>
 
@@ -2645,7 +2645,7 @@ export default function HomePage() {
               <img alt="Image 11" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage11} />
             </div>
           </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+          <div />
         </div>
       </div>
 
@@ -2668,7 +2668,7 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+          <div />
         </div>
       </div>
 
@@ -2692,7 +2692,7 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
+          <div  />
         </div>
       </div>
 
