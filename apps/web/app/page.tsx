@@ -772,7 +772,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex items-center justify-center left-[-34.65%] right-[84.42%] top-[calc(6.76%+958px)] bottom-[calc(100%-80.47%)]">
+        {/* Left decorative bubble near Featured Products - fixed 200px from left on all mobile widths */}
+        <div className="absolute flex items-center justify-center left-[-70px] top-[calc(-2%+958px)]">
           <div className="flex-none rotate-[100.79deg] size-[160px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] mix-blend-darken rounded-[770px]" />
