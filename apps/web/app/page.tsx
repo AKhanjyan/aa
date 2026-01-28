@@ -628,7 +628,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute blur-[2px] h-[480px] left-0 right-0 top-[4350px] w-full overflow-hidden pointer-events-none">
+        <div className="absolute flex h-[480px]   items-center justify-center left-[-0.6] right-0 top-[4350px] w-full ">
           <div className="relative w-full h-full">
             <img
               alt=""
