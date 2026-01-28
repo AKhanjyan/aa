@@ -448,8 +448,8 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-white overflow-x-hidden">
-      {/* Mobile / Tablet Version - Visible up to lg */}
-      <div className="lg:hidden bg-white relative w-full max-w-[430px] sm:max-w-none mx-auto min-h-screen overflow-x-hidden">
+      {/* Mobile / Tablet Version - Visible up to xl */}
+      <div className="xl:hidden bg-white relative w-full max-w-[430px] sm:max-w-none mx-auto min-h-screen overflow-x-hidden">
         {/* Mobile Header */}
         <div className="absolute content-stretch flex items-center justify-between left-[17px] right-[17px] top-[35px] z-50">
           <div className="content-stretch flex gap-[6px] items-center relative shrink-0">
@@ -487,7 +487,7 @@ export default function HomePage() {
 
         {/* Mobile Menu Overlay */}
         {showMobileMenu && (
-          <div className="fixed inset-0 bg-gradient-to-b from-[#62b3e8] to-[rgba(11, 55, 168, 0.75)] backdrop-blur-sm z-[100] lg:hidden flex items-center justify-center" onClick={() => setShowMobileMenu(false)}>
+          <div className="fixed inset-0 bg-gradient-to-b from-[#62b3e8] to-[rgba(11, 55, 168, 0.75)] backdrop-blur-sm z-[100] xl:hidden flex items-center justify-center" onClick={() => setShowMobileMenu(false)}>
             <div 
               className="relative bg-white rounded-2xl border border-gray-200/50 shadow-2xl w-[280px] max-w-[90%] p-8 animate-in fade-in zoom-in-95 duration-300"
               onClick={(e) => e.stopPropagation()}
@@ -845,7 +845,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Bottom Navigation Frame - sticky expressive glassmorphism bar */}
-        <div className="-translate-x-1/2 fixed lg:hidden left-1/2 bottom-0 w-full max-w-[430px] px-4 pb-5 z-50">
+        <div className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[430px] px-4 pb-5 z-50">
           <div className="relative bg-white/5 backdrop-blur-3xl h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden">
             <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[348px]">
               <div className="content-stretch flex items-center justify-between relative shrink-0 w-[252px]">
@@ -1582,10 +1582,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Desktop Version - Only for large screens */}
+      {/* Desktop Version - Only for extra large screens */}
       <div
         ref={containerRef}
-        className="hidden lg:block bg-white relative w-full mx-auto h-[6170px] home-page-container overflow-x-hidden overflow-y-hidden"
+        className="hidden xl:block bg-white relative w-full mx-auto h-[6170px] home-page-container overflow-x-hidden overflow-y-hidden"
       >
       {/* Header Section - Navigation Bar */}
       <div className="fixed bg-[rgba(255,255,255,0.08)] backdrop-blur-[15px] content-stretch flex flex-col h-[65px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[32px] md:px-[24px] sm:px-[16px] py-[14px] md:py-[12px] sm:py-[8px] rounded-[60px] md:rounded-[50px] sm:rounded-[40px] top-[56px] md:top-[32px] sm:top-[16px] translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50 border border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]">
