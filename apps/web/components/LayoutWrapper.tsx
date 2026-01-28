@@ -16,6 +16,14 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     if (isHomePage && wrapperRef.current) {
       const updateHeight = () => {
         const viewportWidth = window.innerWidth;
+
+        // On mobile, let content control the height (no forced 6901px scaling)
+        if (viewportWidth <= 767) {
+          wrapperRef.current!.style.minHeight = '';
+          wrapperRef.current!.style.height = '';
+          return;
+        }
+
         const scale = Math.min(viewportWidth / 1920, 1);
         const scaledHeight = 6901 * scale;
         wrapperRef.current!.style.minHeight = `${scaledHeight}px`;

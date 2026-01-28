@@ -254,6 +254,14 @@
   min-height: 6901px;
 }
 
+/* Mobile-specific layout (independent from desktop 6901px height) */
+@media (max-width: 767px) {
+  .home-page-wrapper {
+    @apply w-full relative overflow-x-hidden;
+    min-height: auto;
+  }
+}
+
 /* Shape images color change to #75D2EC */
 
 img[src*="imgShape"] {
