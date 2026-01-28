@@ -429,8 +429,8 @@ export default function HomePage() {
 
   return (
     <div className="w-full bg-white overflow-x-hidden">
-      {/* Mobile / Tablet Version - Visible up to lg, matches Figma mobile design */}
-      <div className="lg:hidden bg-white relative w-full max-w-[430px] mx-auto min-h-screen overflow-x-hidden">
+      {/* Mobile / Tablet Version - Visible up to lg */}
+      <div className="lg:hidden bg-white relative w-full max-w-[430px] md:max-w-none mx-auto min-h-screen overflow-x-hidden">
         {/* Mobile Header */}
         <div className="absolute content-stretch flex items-center justify-between left-[17px] top-[35px] w-[398px] z-50">
           <div className="content-stretch flex gap-[6px] items-center relative shrink-0">
@@ -615,29 +615,37 @@ export default function HomePage() {
         )}
 
         {/* Mobile Background Gradient */}
-        <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 to-[rgba(221,216,216,0.75)] top-0 w-[430px]" />
+        <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 right-0 to-[rgba(221,216,216,0.75)] top-0 w-full" />
 
         {/* Mobile Decorative Background Images */}
-        <div className="absolute h-[312px] left-[-204px] top-[789px] w-[741px]">
+        <div className="absolute h-[312px] left-0 right-0 top-[789px] w-full">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <img alt="" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash3} />
           </div>
         </div>
-        <div className="absolute flex h-[312px] items-center justify-center left-[-203px] top-[1098px] w-[741px]">
-          <div className="-scale-y-100 flex-none">
-            <div className="h-[312px] relative w-[741px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <img alt="" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash3} />
+        <div className="absolute flex h-[312px] items-center justify-center left-0 right-0 top-[1098px] w-full overflow-hidden pointer-events-none">
+          <div className="-scale-y-100 flex-none w-full h-full">
+            <div className="h-full relative w-full">
+              <div className="absolute inset-0 overflow-hidden">
+                <img
+                  alt=""
+                  className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full"
+                  src={imgDanielSinocaAancLsb0SU0Unsplash3}
+                />
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute blur-[2px] h-[480px] left-[-355px] top-[4600px] w-[1143px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <img alt="" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash3} />
+        <div className="absolute blur-[2px] h-[480px] left-0 right-0 top-[4600px] w-full overflow-hidden pointer-events-none">
+          <div className="relative w-full h-full">
+            <img
+              alt=""
+              className="absolute left-1/2 -translate-x-1/2 w-[120%] h-full object-cover"
+              src={imgDanielSinocaAancLsb0SU0Unsplash3}
+            />
           </div>
         </div>
-        <div className="absolute flex h-[873px] items-center justify-center left-[-783px] top-[5075px] w-[2078px]">
+        <div className="absolute flex h-[873px] items-center justify-center left-0 right-0 top-[5075px] w-full">
           <div className="-scale-y-100 flex-none">
             <div className="blur-[2px] h-[873px] relative w-[2078px]">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -784,7 +792,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Image */}
-        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-[calc(50%-3.88px)] top-[48%] w-[440px]">
+        <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-1/2 top-[48%] w-full max-w-[440px]">
           <div className="flex-none rotate-[102.66deg] size-[360px]">
             <div className="relative rounded-[320px] size-full">
               <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
@@ -809,7 +817,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Text Bottom Gradient Overlay */}
-        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.85)] h-[150px] left-0 opacity-75 to-[rgba(221,216,216,0.6)] top-[520px] w-[430px] z-0" />
+        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.85)] h-[150px] left-0 right-0 opacity-75 to-[rgba(221,216,216,0.6)] top-[520px] z-0" />
 
         {/* Mobile Experience Purity Label */}
         <div className="absolute content-stretch flex gap-[12px] items-center left-[32px] right-[-32px] top-[311px]">
@@ -829,10 +837,10 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Hero Section Bottom Gradient Overlay */}
-        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.8)] h-[150px] left-0 opacity-70 to-[rgba(221,216,216,0.6)] top-[700px] w-[430px] z-0" />
+        <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.8)] h-[150px] left-0 right-0 opacity-70 to-[rgba(221,216,216,0.6)] top-[700px] z-0" />
 
         {/* Mobile CTA Buttons */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[8px] h-[136px] items-center justify-end left-1/2 pt-[16px] top-[675px] w-[430px] z-10">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[8px] h-[136px] items-center justify-end left-1/2 pt-[16px] top-[675px] w-full max-w-[430px] px-4 z-10">
           <button
             onClick={() => router.push('/products')}
             className="bg-[#31daff] content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#31daff]/50 hover:scale-105 active:scale-95"
@@ -926,10 +934,10 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Featured Products Gradient Overlay */}
-        <div className="absolute bg-gradient-to-b blur-[30px] from-[#62b3e8] h-[300px] left-0 pointer-events-none to-[rgba(255, 255, 255, 0.07)] top-[738px] w-[430px] z-[1]" data-node-id="3:2019" />
+        <div className="absolute bg-gradient-to-b blur-[30px] from-[#62b3e8] h-[300px] left-0 right-0 pointer-events-none to-[rgba(255, 255, 255, 0.07)] top-[738px] w-full z-[1]" data-node-id="3:2019" />
 
         {/* Mobile Featured Products Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-[calc(50%+0.5px)] top-[958px] w-full max-w-[429px] z-10">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-1/2 top-[958px] w-full max-w-[429px] px-4 z-10">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-  serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
               <p className="mb-0">FEATURED</p>
@@ -948,7 +956,7 @@ export default function HomePage() {
         {featuredProducts.length > 0 && (() => {
           const currentProduct = featuredProducts[carouselIndex] || featuredProducts[0];
           return (
-            <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-[calc(50%+0.5px)] px-[16px] top-[1088px] w-[371px]">
+            <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-1/2 px-[16px] top-[1088px] w-full max-w-[371px]">
               <div className="h-[435px] relative shrink-0 w-[155px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   <img
