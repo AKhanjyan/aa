@@ -2230,7 +2230,7 @@ export default function HomePage() {
 
       {/* Why Choose Us Cards */}
       {/* Card 1: Rich in Minerals */}
-      <div className="absolute h-[208px] lg:h-[260px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] top-[4200px] lg:top-[4200px] md:top-[3700px] sm:top-[3000px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%]">
+      <div className="absolute h-[208px] lg:h-[260px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] top-[4200px] lg:top-[4200px] md:top-[3700px] sm:top-[3000px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] top-0">
           <div className="absolute inset-[9.48%_0_18.97%_34.91%] overflow-hidden">
@@ -2253,7 +2253,7 @@ export default function HomePage() {
       </div>
 
       {/* Card 2: Non-Carbonated */}
-      <div className="absolute h-[200px] lg:h-[250px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[-700px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4580px] lg:top-[4580px] md:top-[4000px] sm:top-[3280px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%]">
+      <div className="absolute h-[200px] lg:h-[250px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[-700px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4580px] lg:top-[4580px] md:top-[4000px] sm:top-[3280px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[13.97%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[37.07%] overflow-clip right-[32%] top-0">
           <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]">
@@ -2279,7 +2279,7 @@ export default function HomePage() {
       </div>
 
       {/* Card 3: No Artificial Ingredients */}
-      <div className="absolute h-[204px] lg:h-[255px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[330px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4430px] lg:top-[4430px] md:top-[4300px] sm:top-[3560px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%]">
+      <div className="absolute h-[204px] lg:h-[255px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[330px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4430px] lg:top-[4430px] md:top-[4300px] sm:top-[3560px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.53%] right-[34.53%] top-0">
           <div className="absolute inset-[5.88%_0_26.15%_50.33%] overflow-hidden">
@@ -2668,12 +2668,12 @@ export default function HomePage() {
 
       {/* Additional Decorative Elements - Hero Section Bubbles */}
       {/* Background ellipse at original left position */}
-      <div className="absolute top-[33.44%] left-[-10%] h-[800px] w-[600px]  overflow-hidden pointer-events-none">
+      <div className="absolute top-[38.44%] left-[-10%] h-[800px] w-[600px]  overflow-hidden pointer-events-none">
         <img alt="Background Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
       </div>
 
       {/* Main large bubble */}
-      <div className="absolute flex top-[29.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden">
+      <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[384.622px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -2697,7 +2697,7 @@ export default function HomePage() {
       </div>
 
       {/* Image 5 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[1224px] top-[1450px] size-[200px]">
+      <div className="absolute flex items-center justify-center left-[1124px] top-[1350px] size-[200px]">
         <div className="relative rounded-[320px] size-full">
           {/* Soft blue glow bubble without dark blend artifacts */}
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
@@ -2714,7 +2714,7 @@ export default function HomePage() {
       
 
       {/* Image 11 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[1603px] top-[1233px] size-[150px]">
+      <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[150px]">
         <div className="relative rounded-[320px] size-full">
           {/* Soft blue glow bubble without dark blend artifacts */}
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
@@ -2727,7 +2727,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex inset-[19%_16.59%_77.5%_76.61%] items-center justify-center">
+      <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center">
         <div className="relative rounded-[320px] size-[102.381px]">
           {/* Soft blue glow bubble without dark blend artifacts */}
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
@@ -2752,7 +2752,7 @@ export default function HomePage() {
       </div>
 
       {/* Upper bubble - move to the right side a bit higher */}
-      <div className="absolute flex top-[38%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-hidden">
+      <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[339px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -2800,7 +2800,7 @@ export default function HomePage() {
       
       {/* // Lower bubble 2 - move a bit further down */}
       
-      <div className="absolute flex top-[52%] right-[-10%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden">
+      <div className="absolute flex top-[52%] right-[-6%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[329px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -2850,7 +2850,7 @@ export default function HomePage() {
 
       {/* Featured Products Section Decorative Elements */}
 
-      <div className="absolute flex top-[-5%] right-[75.18%] bottom-[55.65%] left-0 items-center justify-center overflow-hidden">
+      <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden">
         <div className="relative rounded-[320px] size-[256.082px]">
           <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
           <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
@@ -2925,38 +2925,38 @@ export default function HomePage() {
       </div>
 
       {/* Vector Graphics for Why Choose Us */}
-      <div className="absolute left-1/2 top-[4150px] lg:top-[4250px] md:top-[3850px] sm:top-[3150px] -translate-x-1/2 w-[980px] lg:w-[980px] md:w-[90%] sm:w-[95%]">
-        <div className="absolute flex h-[325px] items-center justify-center right-0 mix-blend-lighten top-[80px] w-[521.999px]">
+      <div className="absolute left-1/2 top-[4150px] lg:top-[4215px] md:top-[3850px] sm:top-[3150px] -translate-x-1/2 w-[980px] lg:w-[980px] md:w-[90%] sm:w-[95%]">
+        <div className="absolute flex h-[325px] items-center justify-center right-[40px] mix-blend-lighten top-[120px] w-[521.999px]">
           <div className="flex-none rotate-[180deg]">
             <div className="h-[285px] relative w-[521.999px]">
               <img alt="Vector" className="block max-w-none size-full" src={imgVector4} />
             </div>
           </div>
         </div>
-        <div className="absolute flex h-[551.999px] items-center justify-center left-0 top-0 w-[325px]">
+        <div className="absolute flex h-[551.999px] items-center justify-center left-[20px] top-[80px] w-[325px]">
           <div className="flex-none rotate-[-90deg]">
             <div className="h-[285px] relative w-[521.999px]">
               <img alt="Vector" className="block max-w-none size-full" src={imgVector5} />
             </div>
           </div>
         </div>
-        <div className="absolute flex h-[325px] items-center justify-center right-[40px] mix-blend-lighten top-[380px] w-[461px]">
+        <div className="absolute flex h-[325px] items-center justify-center right-[35px] mix-blend-lighten top-[380px] w-[461px]">
           <div className="flex-none scale-y-[-100%]">
-            <div className="h-[325px] relative w-[461px]">
+            <div className="h-[285px] relative w-[461px]">
               <img alt="Vector" className="block max-w-none size-full" src={imgVector6} />
             </div>
           </div>
         </div>
-        <div className="absolute flex h-[325px] items-center justify-center left-0 mix-blend-lighten top-[380px] w-[526px]">
+        <div className="absolute flex h-[325px] items-center justify-center left-[0px] mix-blend-lighten top-[380px] w-[526px]">
           <div className="flex-none rotate-[180deg]">
-            <div className="h-[325px] relative w-[526px]">
+            <div className="h-[285px] relative w-[526px]">
               <img alt="Vector" className="block max-w-none size-full" src={imgVector7} />
             </div>
           </div>
         </div>
       </div>
       <div className="relative">
-        <div className="absolute left-1/2 top-[4200px] translate-x-[-50%] w-[78px]">
+        <div className="absolute left-1/2 top-[416gi0px] translate-x-[-50%]  w-[78px]">
           <img alt="Vector" className="block max-w-none size-full" src={imgVector} />
         </div>
       </div>
