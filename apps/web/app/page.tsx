@@ -1810,7 +1810,7 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[527px] left-0 top-[1158px] w-full max-w-[1920px] z-[-0]">
+      <div className="absolute h-[527px] left-1/2 top-[1158px] translate-x-[-50%] w-full max-w-[1920px] z-0">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
@@ -1834,7 +1834,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute h-[1051px] left-1/2 top-[4650px] translate-x-[-50%] w-[2808px] overflow-hidden "  >
+      <div className="absolute h-[1051px] left-1/2 top-[4100px] translate-x-[-50%] w-[2808px] overflow-hidden "  >
         <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse44} />
         </div>
@@ -2670,7 +2670,7 @@ export default function HomePage() {
 
       {/* Additional Decorative Elements - Hero Section Bubbles */}
       {/* Background ellipse at original left position */}
-      <div className="absolute top-[38.44%] right-[66.93%] bottom-[43.57%] left-[-35] overflow-hidden pointer-events-none">
+      <div className="absolute top-[33.44%] left-[-10%] h-[800px] w-[600px]  overflow-hidden pointer-events-none">
         <img alt="Background Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
       </div>
 
