@@ -672,10 +672,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex h-[325px] items-center justify-center left-[102px] mix-blend-lighten top-[3684px] w-[178.352px]">
+        <div className="absolute flex h-[325px] items-center justify-center left-[154px] mix-blend-lighten top-[3694px] w-[211.999px]">
           <div className="-scale-y-100 flex-none rotate-180">
-            <div className="h-[325px] relative w-[178.352px]">
-              <img alt="" className="block max-w-none size-full" src={imgVector6} />
+            <div className="h-[365px] relative w-[178.352px]">
+              <img alt="" className="block max-w-none size-full" src={imgVector5} />
             </div>
           </div>
         </div>
