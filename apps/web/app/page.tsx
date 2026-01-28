@@ -2956,7 +2956,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className="relative">
-        <div className="absolute left-1/2 top-[416gi0px] translate-x-[-50%]  w-[78px]">
+        <div className="absolute left-1/2 top-[4160px] translate-x-[-50%]  w-[78px]">
           <img alt="Vector" className="block max-w-none size-full" src={imgVector} />
         </div>
       </div>
