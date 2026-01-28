@@ -796,7 +796,7 @@ export default function HomePage() {
         <div className="-translate-x-1/2 absolute bottom-[88.94%] flex items-center justify-center left-1/2 top-[48%] w-full max-w-[440px]">
           <div className="flex-none rotate-[100.79deg] size-[360px]">
             <div className="relative rounded-[320px] size-full">
-              <div className="absolute backdrop-blur-[4px] bg-[rgba(118, 179, 233, 0.1)]  inset-[0.2%_0.3%_0.3%_0.3%]  mix-blend-darken rounded-[770px]" />
+              <div className="absolute backdrop-blur-[4px] bg-[rgba(118, 179, 233, 0.42)]  inset-[0.2%_0.3%_0.3%_0.3%]  mix-blend-darken rounded-[770px]" />
               <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                   <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
