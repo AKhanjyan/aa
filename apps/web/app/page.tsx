@@ -12,7 +12,7 @@ import { SearchIcon } from '../components/icons/SearchIcon';
 import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
 import { LanguageIcon } from '../components/icons/LanguageIcon';
 import { ExitIcon } from '../components/icons/ExitIcon';
-import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedProduct } from '../components/icons/global/global';
+import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedProduct, FeaturedProductsNavigationArrow } from '../components/icons/global/global';
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
@@ -93,7 +93,6 @@ const imgTop1 = "/assets/home/imgTop1.svg";
 const imgGlass1 = "/assets/home/imgGlass1.svg";
 const imgGlass2 = "/assets/home/imgGlass2.svg";
 const imgIcon = "/assets/home/imgIcon.svg";
-const imgIcon1 = "/assets/home/imgIcon1.svg";
 const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash3.jpg";
 const imgEllipse45 = "/assets/home/imgEllipse45.svg";
 const imgHomeVector = "/assets/home/Vector.svg";
@@ -911,44 +910,20 @@ export default function HomePage() {
 
         {/* Mobile Carousel Navigation */}
         <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-1/2 top-[1285px] w-full max-w-[500px] px-4">
-          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid items-[start] justify-items-[start] leading-[0] relative shrink-0">
-            <button
-              onClick={handlePreviousProducts}
-              className="bg-[rgba(0,0,0,0)] border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid col-1 content-stretch flex flex-col items-center justify-center ml-0 mt-0 px-[8.5px] py-[6.5px] relative rounded-[9999px] row-1 transition-colors duration-200 hover:bg-[#00d1ff] hover:border-[#00d1ff]"
-            >
-              <div className="relative shrink-0">
-                <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start relative">
-                  <div className="flex items-center justify-center relative shrink-0">
-                    <div className="-scale-y-100 flex-none">
-                      <div className="h-[28px] relative w-[24.02px]">
-                        <img alt="" className="block max-w-none size-full" src={imgIcon} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </button>
-          </div>
-          <div className="flex items-center justify-center relative shrink-0">
-            <div className="-scale-y-100 flex-none rotate-180">
-              <button
-                onClick={handleNextProducts}
-                className="bg-[rgba(0,0,0,0)] border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid content-stretch flex flex-col items-center justify-center px-[8.5px] py-[6.5px] relative rounded-[9999px] transition-colors duration-200 hover:bg-[#00d1ff] hover:border-[#00d1ff]"
-              >
-                <div className="relative shrink-0">
-                  <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start relative">
-                    <div className="flex items-center justify-center relative shrink-0">
-                      <div className="-scale-y-100 flex-none">
-                        <div className="h-[28px] relative w-[24.02px]">
-                          <img alt="" className="block max-w-none size-full" src={imgIcon} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
+          <FeaturedProductsNavigationArrow
+            direction="next"
+            onClick={handleNextProducts}
+            isMobile={true}
+            className="bg-[#00d1ff]/90"
+            ariaLabel={t('home.trustedBy.nextProducts')}
+          />
+          <FeaturedProductsNavigationArrow
+            direction="prev"
+            onClick={handlePreviousProducts}
+            isMobile={true}
+            className="bg-[#00d1ff]/90"
+            ariaLabel={t('home.trustedBy.previousProducts')}
+          />
         </div>
 
         {/* Mobile Pagination Dots (interactive, synced with featured products carousel) */}
@@ -1300,44 +1275,20 @@ export default function HomePage() {
 
         {/* Mobile Trusted By Navigation - same handlers as desktop */}
         <div className="-translate-x-1/2 absolute content-stretch flex h-[41px] items-center justify-between left-1/2 top-[4374px] w-full max-w-[470px] px-4">
-          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid items-[start] justify-items-[start] leading-[0] relative shrink-0">
-            <button
-              onClick={handlePreviousTrustedBy}
-              className="bg-[rgba(0,0,0,0)] border-[#eee] border-[0.5px] border-solid col-1 content-stretch flex flex-col items-center justify-center ml-0 mt-0 px-[8.5px] py-[6.5px] relative rounded-[9999px] row-1 transition-colors duration-200 hover:bg-[#00d1ff] hover:border-[#00d1ff]"
-            >
-              <div className="relative shrink-0">
-                <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start relative">
-                  <div className="flex items-center justify-center relative shrink-0">
-                    <div className="-scale-y-100 flex-none">
-                      <div className="h-[28px] relative w-[24.02px]">
-                        <img alt="" className="block max-w-none size-full" src={imgIcon1} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </button>
-          </div>
-          <div className="flex items-center justify-center relative shrink-0">
-            <div className="-scale-y-100 flex-none rotate-180">
-              <button
-                onClick={handleNextTrustedBy}
-                className="bg-[rgba(0,0,0,0)] border-[#eee] border-[0.5px] border-solid content-stretch flex flex-col items-center justify-center px-[8.5px] py-[6.5px] relative rounded-[9999px] transition-colors duration-200 hover:bg-[#00d1ff] hover:border-[#00d1ff]"
-              >
-                <div className="relative shrink-0">
-                  <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start relative">
-                    <div className="flex items-center justify-center relative shrink-0">
-                      <div className="-scale-y-100 flex-none">
-                        <div className="h-[28px] relative w-[24.02px]">
-                          <img alt="" className="block max-w-none size-full" src={imgIcon1} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
+          <FeaturedProductsNavigationArrow
+            direction="prev"
+            onClick={handlePreviousTrustedBy}
+            isMobile={true}
+            className="border-[#eee]"
+            ariaLabel="Previous partner"
+          />
+          <FeaturedProductsNavigationArrow
+            direction="next"
+            onClick={handleNextTrustedBy}
+            isMobile={true}
+            className="border-[#eee]"
+            ariaLabel="Next partner"
+          />
         </div>
 
         {/* Mobile Trusted By Pagination Dots */}
@@ -1824,63 +1775,35 @@ export default function HomePage() {
       {/* Navigation Arrows - Only show if we have more than 3 products - Outside overflow-hidden container */}
       {featuredProducts.length > 3 && (
         <>
-          {/* Next Button - Left side */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+          {/* Next Button - Left side (աջ տանի) */}
+          <FeaturedProductsNavigationArrow
+            direction="next"
+            onClick={(e?: React.MouseEvent) => {
+              if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
               console.log('🖱️ [CAROUSEL] Next button clicked');
               handleNextProducts(e);
             }}
-            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-580px)] lg:left-[calc(50%-580px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1090px]"
-            aria-label={t('home.trustedBy.nextProducts')}
-          >
-            <svg
-              preserveAspectRatio="none"
-              width="24.02"
-              height="28"
-              viewBox="0 0 24.02 28"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-[25px] lg:h-[25px] md:h-[24px] sm:h-[20px] w-[21px] lg:w-[21px] md:w-[20px] sm:w-[18px] transform rotate-180 scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
-            >
-              <path
-                d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                fill="white"
-                className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-              />
-            </svg>
-          </button>
+            className="left-[calc(50%-580px)] lg:left-[calc(50%-580px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1090px]"
+            ariaLabel={t('home.trustedBy.nextProducts')}
+          />
 
-          {/* Previous Button - Right side */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+          {/* Previous Button - Right side (ձախ տանի) */}
+          <FeaturedProductsNavigationArrow
+            direction="prev"
+            onClick={(e?: React.MouseEvent) => {
+              if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
               console.log('🖱️ [CAROUSEL] Previous button clicked');
               handlePreviousProducts(e);
             }}
-            className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-580px)] lg:right-[calc(50%-580px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1110px]"
-            aria-label={t('home.trustedBy.previousProducts')}
-          >
-            <svg
-              preserveAspectRatio="none"
-              width="24.02"
-              height="28"
-              viewBox="0 0 24.02 28"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-[25px] lg:h-[25px] md:h-[24px] sm:h-[20px] w-[21px] lg:w-[21px] md:w-[20px] sm:w-[18px] transform scale-y-[-1] group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none"
-            >
-              <path
-                d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                fill="white"
-                className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-              />
-            </svg>
-          </button>
+            className="right-[calc(50%-580px)] lg:right-[calc(50%-580px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1110px]"
+            ariaLabel={t('home.trustedBy.previousProducts')}
+          />
         </>
       )}
  {/* <div className="absolute left-0 right-0 top-[2388px] lg:top-[2590px] md:top-[1986px] sm:top-[1586px] h-[6px] bg-white z-[5]" /> */}
@@ -2144,63 +2067,35 @@ export default function HomePage() {
 
           {/* Navigation Arrows */}
           <div className="absolute content-stretch flex items-center justify-between left-[107px] right-[107px] lg:left-[134px] lg:right-[134px] top-[calc(50%+40px)] lg:top-[calc(50%+50.25px)] translate-y-[-50%] z-[100]">
-            {/* Previous Button - Left side */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🖱️ [TRUSTED BY] Previous button clicked');
-                handlePreviousTrustedBy(e);
-              }}
-              className="bg-gray-300 border-[#eee] border-[0.5px] border-solid flex items-center justify-center px-[6.8px] py-[5.2px] lg:px-[8.5px] lg:py-[6.5px] rounded-full size-[45px] lg:size-[56px] cursor-pointer hover:bg-black/80 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-black/70 active:scale-95 transition-all duration-200 relative z-[101] group"
-              aria-label="Previous partner"
-            >
-              <svg
-                preserveAspectRatio="none"
-                width="24.02"
-                height="28"
-                viewBox="0 0 24.02 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-[29px] w-[24px] lg:h-[36px] lg:w-[30px] transform rotate-180 group-hover:scale-110 transition-transform duration-200 pointer-events-none"
-              >
-                <path
-                  d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                  fill="white"
-                  className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-                />
-              </svg>
-            </button>
-
-            {/* Next Button - Right side */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            {/* Next Button - Left side (աջ տանի) */}
+            <FeaturedProductsNavigationArrow
+              direction="next"
+              onClick={(e?: React.MouseEvent) => {
+                if (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
                 console.log('🖱️ [TRUSTED BY] Next button clicked');
                 handleNextTrustedBy(e);
               }}
-              className="bg-gray-300 border-[#eee] border-[0.5px] border-solid flex items-center justify-center px-[6.8px] py-[5.2px] lg:px-[8.5px] lg:py-[6.5px] rounded-full size-[45px] lg:size-[56px] cursor-pointer hover:bg-black/80 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-black/70 active:scale-95 transition-all duration-200 relative z-[101] group"
-              aria-label="Next partner"
-            >
-              <svg
-                preserveAspectRatio="none"
-                width="24.02"
-                height="28"
-                viewBox="0 0 24.02 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-[29px] w-[24px] lg:h-[36px] lg:w-[30px] transform group-hover:scale-110 transition-transform duration-200 pointer-events-none"
-              >
-                <path
-                  d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
-                  fill="white"
-                  className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
-                />
-              </svg>
-            </button>
+              className="bg-[#00d1ff]/90 backdrop-blur-sm border-[#eee] border-[0.5px] border-solid size-[45px] lg:size-[56px] hover:bg-[#00d1ff] hover:border-white hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-[#00d1ff]/80 relative z-[101] left-0 right-auto"
+              ariaLabel="Next partner"
+            />
+
+            {/* Previous Button - Right side (ձախ տանի) */}
+            <FeaturedProductsNavigationArrow
+              direction="prev"
+              onClick={(e?: React.MouseEvent) => {
+                if (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+                console.log('🖱️ [TRUSTED BY] Previous button clicked');
+                handlePreviousTrustedBy(e);
+              }}
+              className="bg-[#00d1ff]/90 backdrop-blur-sm border-[#eee] border-[0.5px] border-solid size-[45px] lg:size-[56px] hover:bg-[#00d1ff] hover:border-white active:bg-[#00d1ff]/80 relative z-[101] right-0 left-auto shadow-md"
+              ariaLabel="Previous partner"
+            />
           </div>
         </div>
       </div>

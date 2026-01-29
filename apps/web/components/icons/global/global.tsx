@@ -924,3 +924,99 @@ export function FeaturedProductCard({
   );
 }
 
+// Navigation Arrow Icon Component for Featured Products Carousel
+interface NavigationArrowProps {
+  direction: 'prev' | 'next';
+  onClick: (e?: React.MouseEvent) => void;
+  className?: string;
+  isMobile?: boolean;
+  ariaLabel?: string;
+}
+
+/**
+ * Reusable Navigation Arrow Component for Featured Products
+ * Can be used on home page and other pages with carousels
+ */
+export function FeaturedProductsNavigationArrow({
+  direction,
+  onClick,
+  className = '',
+  isMobile = false,
+  ariaLabel,
+}: NavigationArrowProps) {
+  const imgIcon = "/assets/home/imgIcon.svg";
+  
+  if (isMobile) {
+    // Mobile version with image icon
+    // prev should point left (<-), next should point right (->)
+    // Image icon points right by default, so:
+    // - prev: -scale-y-100 (flip vertically, points left)
+    // - next: -scale-y-100 rotate-180 (flip and rotate, points right)
+    const iconTransform = direction === 'prev' 
+      ? '-scale-y-100' 
+      : '-scale-y-100 rotate-180';
+    
+    return (
+      <button
+        onClick={onClick}
+        className={`bg-transparent border-[0.5px] border-[rgba(255,255,255,0.49)] border-solid content-stretch flex flex-col items-center justify-center px-[8.5px] py-[6.5px] relative rounded-[9999px] transition-colors duration-200 hover:border-[#00d1ff] hover:shadow-lg hover:shadow-[#00d1ff]/50 ${className}`}
+        aria-label={ariaLabel}
+      >
+        <div className="relative shrink-0">
+          <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start relative">
+            <div className="flex items-center justify-center relative shrink-0">
+              <div className={`${iconTransform} flex-none`}>
+                <div className="h-[28px] relative w-[24.02px]">
+                  <img alt="" className="block max-w-none size-full" src={imgIcon} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  // Desktop version with SVG
+  // Check if className contains positioning classes (relative, absolute, etc.) to avoid overriding
+  const hasPositioning = className.includes('relative') || className.includes('absolute') || className.includes('fixed') || className.includes('sticky');
+  // Check if className contains background classes to avoid overriding
+  const hasBackground = className.includes('bg-');
+  const baseClasses = hasPositioning 
+    ? `${hasBackground ? '' : 'bg-transparent'} border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:scale-95 transition-all duration-200 z-[10001] group`
+    : `absolute ${hasBackground ? '' : 'bg-transparent'} border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:scale-95 transition-all duration-200 z-[10001] group`;
+  
+  // Determine arrow direction - prev should point left (<-), next should point right (->)
+  // SVG path points right by default, so:
+  // - prev: no rotation (points left after scale-y-[-1])
+  // - next: rotate 180 (points right after scale-y-[-1])
+  const arrowTransform = direction === 'prev' 
+    ? 'scale-y-[-1]' 
+    : 'rotate-180 scale-y-[-1]';
+  
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${baseClasses} ${className}`}
+      aria-label={ariaLabel}
+    >
+      <svg
+        preserveAspectRatio="none"
+        width="24.02"
+        height="28"
+        viewBox="0 0 24.02 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={`h-[25px] lg:h-[25px] md:h-[24px] sm:h-[20px] w-[21px] lg:w-[21px] md:w-[20px] sm:w-[18px] transform ${arrowTransform} group-hover:scale-y-[-1.1] transition-transform duration-200 pointer-events-none`}
+      >
+        <path
+          d="M16.0692 13.0282H4.23242V14.9727H16.0692L10.6248 20.4171L12.0102 21.7782L19.788 14.0004L12.0102 6.22266L10.6248 7.58377L16.0692 13.0282Z"
+          fill="white"
+          className="group-hover:fill-[#00d1ff] transition-colors duration-200 pointer-events-none"
+        />
+      </svg>
+    </button>
+  );
+}
+

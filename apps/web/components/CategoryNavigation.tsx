@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { apiClient } from '../lib/api-client';
 import { getStoredLanguage } from '../lib/language';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslation } from '../lib/i18n-client';
+import { FeaturedProductsNavigationArrow } from './icons/global/global';
 
 interface Category {
   id: string;
@@ -347,26 +347,25 @@ function CategoryNavigationContent() {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
         <div className="relative">
           {/* Левая стрелка - всегда видна, но неактивна когда нельзя прокрутить */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+          <FeaturedProductsNavigationArrow
+            direction="next"
+            onClick={(e?: React.MouseEvent) => {
+              if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
               console.info('[CategoryNavigation] Left arrow clicked, canScrollLeft:', canScrollLeft);
               if (canScrollLeft) {
                 scrollByAmount(-220);
               }
             }}
-            disabled={!canScrollLeft}
-            className={`flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 z-10 w-12 h-12 items-center justify-center bg-transparent hover:bg-transparent transition-all ${
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 md:-translate-x-16 z-10 hover:shadow-lg hover:shadow-white/50 ${
               canScrollLeft 
-                ? 'text-gray-900 hover:scale-110 cursor-pointer' 
-                : 'text-gray-300 cursor-not-allowed opacity-50'
+                ? 'cursor-pointer opacity-100' 
+                : 'cursor-not-allowed opacity-50 pointer-events-none'
             }`}
-            aria-label={t('products.categoryNavigation.scrollLeft')}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
+            ariaLabel={t('products.categoryNavigation.scrollLeft')}
+          />
           <div
             ref={scrollContainerRef}
             className="flex items-center gap-4 sm:gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-1 sm:pb-2 pl-2 sm:pl-4 md:pl-6"
@@ -441,26 +440,25 @@ function CategoryNavigationContent() {
           })}
           </div>
           {/* Правая стрелка - всегда видна, но неактивна когда нельзя прокрутить */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+          <FeaturedProductsNavigationArrow
+            direction="prev"
+            onClick={(e?: React.MouseEvent) => {
+              if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
               console.info('[CategoryNavigation] Right arrow clicked, canScrollRight:', canScrollRight);
               if (canScrollRight) {
                 scrollByAmount(220);
               }
             }}
-            disabled={!canScrollRight}
-            className={`flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 z-10 w-12 h-12 items-center justify-center bg-transparent hover:bg-transparent transition-all ${
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 md:translate-x-16 z-10 hover:shadow-lg hover:shadow-white/50 ${
               canScrollRight 
-                ? 'text-gray-900 hover:scale-110 cursor-pointer' 
-                : 'text-gray-300 cursor-not-allowed opacity-50'
+                ? 'cursor-pointer opacity-100' 
+                : 'cursor-not-allowed opacity-50 pointer-events-none'
             }`}
-            aria-label={t('products.categoryNavigation.scrollRight')}
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
+            ariaLabel={t('products.categoryNavigation.scrollRight')}
+          />
         </div>
       </div>
     </div>

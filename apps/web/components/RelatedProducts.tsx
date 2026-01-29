@@ -7,7 +7,7 @@ import { formatPrice, getStoredCurrency } from '../lib/currency';
 import { getStoredLanguage, type LanguageCode } from '../lib/language';
 import { t } from '../lib/i18n';
 import { useAuth } from '../lib/auth/AuthContext';
-import { FeaturedProductCard, type FeaturedProduct, addToCart } from './icons/global/global';
+import { FeaturedProductCard, type FeaturedProduct, addToCart, FeaturedProductsNavigationArrow } from './icons/global/global';
 import { useTranslation } from '../lib/i18n-client';
 
 interface RelatedProduct {
@@ -442,45 +442,31 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
             {/* Navigation Arrows - Only show if there are more products than visible */}
             {products.length > visibleCards && (
               <>
-                <button
-                  onClick={goToPrevious}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-full shadow-lg transition-all z-20 cursor-pointer hover:scale-110"
-                  aria-label="Previous products"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
+                <FeaturedProductsNavigationArrow
+                  direction="next"
+                  onClick={(e?: React.MouseEvent) => {
+                    if (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                    goToNext();
+                  }}
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-16 z-20 bg-[#00d1ff]/90 backdrop-blur-sm"
+                  ariaLabel="Next products"
+                />
 
-                <button
-                  onClick={goToNext}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 bg-white/90 hover:bg-white text-gray-900 p-2 rounded-full shadow-lg transition-all z-20 cursor-pointer hover:scale-110"
-                  aria-label="Next products"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
+                <FeaturedProductsNavigationArrow
+                  direction="prev"
+                  onClick={(e?: React.MouseEvent) => {
+                    if (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                    goToPrevious();
+                  }}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-16 z-20 bg-[#00d1ff]/90 backdrop-blur-sm"
+                  ariaLabel="Previous products"
+                />
               </>
             )}
 
