@@ -775,11 +775,11 @@ export function FeaturedProductCard({
           </div>
         </div>
         <div className="content-stretch flex flex-col gap-[6px] items-start py-px relative shrink-0 w-full">
-          <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full">
-            <div className="content-stretch flex flex-col items-start relative shrink-0">
+          <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full gap-2">
+            <div className="content-stretch flex flex-col items-start relative shrink-0 flex-1 min-w-0 max-w-[calc(100%-100px)]">
               <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white whitespace-nowrap">
-                  <p className="mb-0">{product.title}</p>
+                <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white">
+                  <p className="mb-0 truncate w-full">{product.title}</p>
                 </div>
               </div>
               {(product.subtitle || product.description) && (
@@ -790,7 +790,7 @@ export function FeaturedProductCard({
                 </div>
               )}
             </div>
-            <div className="content-stretch flex flex-col items-start relative shrink-0">
+            <div className="content-stretch flex flex-col items-start relative shrink-0 flex-shrink-0">
               <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
                 <p className="leading-[28px]">
                   {formatPrice(product.price, currency)}
@@ -841,13 +841,13 @@ export function FeaturedProductCard({
         </div>
         {/* Content Section - Compact layout */}
         <div className="w-full flex flex-col gap-[10px] px-[8px] pb-[8px]">
-          <div className="flex items-end justify-between w-full">
-            <div className="flex flex-col items-start flex-1 min-w-0">
+          <div className="flex items-end justify-between w-full gap-2">
+            <div className="flex flex-col items-start flex-1 min-w-0 max-w-[calc(100%-90px)]">
               <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white">
                 <p className="leading-[20px] truncate w-full">{product.title}</p>
               </div>
             </div>
-            <div className="flex flex-col items-start ml-2 flex-shrink-0">
+            <div className="flex flex-col items-start flex-shrink-0">
               <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[16px] whitespace-nowrap">
                 <p className="leading-[22px]">{formatPrice(product.price, currency)}</p>
               </div>
@@ -894,13 +894,13 @@ export function FeaturedProductCard({
       </div>
       {/* Content Section - Uniform layout */}
       <div className="w-full flex flex-col gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] px-[14px] lg:px-[14px] md:px-[16px] sm:px-[16px] pb-[14px] lg:pb-[14px] md:pb-[16px] sm:pb-[16px]">
-        <div className="flex items-end justify-between w-full">
-          <div className="flex flex-col items-start">
+        <div className="flex items-end justify-between w-full gap-2">
+          <div className="flex flex-col items-start flex-1 min-w-0 max-w-[calc(100%-100px)]">
             <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[16px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-white">
-              <p className="leading-[24px] lg:leading-[24px] md:leading-[24px] sm:leading-[20px]">{product.title}</p>
+              <p className="leading-[24px] lg:leading-[24px] md:leading-[24px] sm:leading-[20px] truncate w-full">{product.title}</p>
             </div>
           </div>
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start flex-shrink-0">
             <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[18px] lg:text-[18px] md:text-[18px] sm:text-[16px] whitespace-nowrap">
               <p className="leading-[26px] lg:leading-[26px] md:leading-[24px] sm:leading-[20px]">{formatPrice(product.price, currency)}</p>
             </div>
