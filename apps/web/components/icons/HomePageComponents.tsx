@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getStoredLanguage, LANGUAGES, type LanguageCode } from '../../lib/language';
+import { apiClient } from '../../lib/api-client';
 import { SearchIcon } from './SearchIcon';
 import { HeaderCartIcon } from './HeaderCartIcon';
 import { LanguageIcon } from './LanguageIcon';
@@ -10,6 +11,167 @@ import { ExitIcon } from './ExitIcon';
 
 // Export HeaderCartIcon for use in other components
 export { HeaderCartIcon };
+
+/**
+ * Reusable Add to Cart utility function
+ * Can be used in home page and single product page
+ */
+export interface AddToCartProduct {
+  id: string;
+  slug: string;
+  inStock?: boolean;
+}
+
+export interface AddToCartOptions {
+  product: AddToCartProduct;
+  variantId?: string;
+  quantity?: number;
+  isLoggedIn: boolean;
+  router: ReturnType<typeof useRouter>;
+  t?: (key: string) => string;
+  onSuccess?: () => void;
+  onError?: (error: any) => void;
+}
+
+export async function addToCart({
+  product,
+  variantId,
+  quantity = 1,
+  isLoggedIn,
+  router,
+  t = (key: string) => key,
+  onSuccess,
+  onError,
+}: AddToCartOptions): Promise<boolean> {
+  if (!product.inStock) {
+    return false;
+  }
+
+  // If user is not logged in, handle guest cart or redirect to login
+  if (!isLoggedIn) {
+    try {
+      // Try guest cart first
+      const stored = localStorage.getItem('shop_cart_guest');
+      const cart = stored ? JSON.parse(stored) : [];
+      
+      // If we have variantId, use it, otherwise get from product details
+      let finalVariantId = variantId;
+      
+      if (!finalVariantId) {
+        // Get product details to get variant ID
+        interface ProductDetails {
+          id: string;
+          slug: string;
+          variants?: Array<{
+            id: string;
+            sku: string;
+            price: number;
+            stock: number;
+            available: boolean;
+          }>;
+        }
+
+        const encodedSlug = encodeURIComponent(product.slug.trim());
+        const productDetails = await apiClient.get<ProductDetails>(`/api/v1/products/${encodedSlug}`);
+
+        if (!productDetails.variants || productDetails.variants.length === 0) {
+          if (onError) onError(new Error('No variants available'));
+          return false;
+        }
+
+        finalVariantId = productDetails.variants[0].id;
+      }
+
+      const existing = cart.find((i: any) => i.variantId === finalVariantId);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({
+          productId: product.id,
+          productSlug: product.slug,
+          variantId: finalVariantId,
+          quantity,
+        });
+      }
+      localStorage.setItem('shop_cart_guest', JSON.stringify(cart));
+      window.dispatchEvent(new Event('cart-updated'));
+      if (onSuccess) onSuccess();
+      return true;
+    } catch (error) {
+      // If guest cart fails, redirect to login
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return false;
+    }
+  }
+
+  // Logged in user - use API
+  try {
+    let finalVariantId = variantId;
+
+    // If no variantId provided, get from product details
+    if (!finalVariantId) {
+      interface ProductDetails {
+        id: string;
+        slug: string;
+        variants?: Array<{
+          id: string;
+          sku: string;
+          price: number;
+          stock: number;
+          available: boolean;
+        }>;
+      }
+
+      const encodedSlug = encodeURIComponent(product.slug.trim());
+      const productDetails = await apiClient.get<ProductDetails>(`/api/v1/products/${encodedSlug}`);
+
+      if (!productDetails.variants || productDetails.variants.length === 0) {
+        if (onError) onError(new Error(t('home.errors.noVariantsAvailable')));
+        return false;
+      }
+
+      finalVariantId = productDetails.variants[0].id;
+    }
+
+    await apiClient.post('/api/v1/cart/items', {
+      productId: product.id,
+      variantId: finalVariantId,
+      quantity,
+    });
+
+    // Trigger cart update event
+    window.dispatchEvent(new Event('cart-updated'));
+    if (onSuccess) onSuccess();
+    return true;
+  } catch (error: any) {
+    console.error('❌ [ADD TO CART] Error:', error);
+
+    // Check if error is about product not found
+    if (error?.message?.includes('does not exist') || error?.message?.includes('404') || error?.status === 404) {
+      if (onError) onError(new Error(t('home.errors.productNotFound')));
+      return false;
+    }
+
+    // Check if error is about insufficient stock
+    if (
+      error.response?.data?.detail?.includes('No more stock available') ||
+      error.response?.data?.detail?.includes('exceeds available stock') ||
+      error.response?.data?.title === 'Insufficient stock'
+    ) {
+      if (onError) onError(new Error(t('home.errors.noMoreStockAvailable')));
+      return false;
+    }
+
+    // If error is about authorization, redirect to login
+    if (error.message?.includes('401') || error.message?.includes('Unauthorized') || error?.status === 401) {
+      router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return false;
+    }
+
+    if (onError) onError(error);
+    return false;
+  }
+}
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
@@ -226,7 +388,7 @@ export function Footer({ router, t, isHomePage = false }: FooterProps) {
       <div className={`relative h-[620px] lg:h-[620px] md:h-[600px] sm:h-[500px] left-0 w-full overflow-hidden ${isHomePage ? 'mt-[5550px] lg:mt-[5550px] md:mt-[5000px] sm:mt-[4000px]' : ''}`}>
         {/* Footer transition gradient - seamless blend with page background (only for non-home pages) */}
         {!isHomePage && (
-          <div className="absolute top-0 left-0 right-0 h-[150px] bg-gradient-to-b from-[#8fd4ff] to-transparent z-[1]" />
+          <div className="absolute top-0 left-0 right-0 h-[250px] z-[1]" style={{ background: 'linear-gradient(to bottom, white 0%, white 1%, rgba(255,255,255,0.8) 65%, transparent 100%)' }} />
         )}
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

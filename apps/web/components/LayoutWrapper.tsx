@@ -69,9 +69,12 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col pb-16 lg:pb-0 bg-[#8fd4ff]">
+    <div className="relative flex min-h-screen flex-col pb-16 lg:pb-0 bg-white">
+      {/* Blue gradient section - 800px from top with smooth transition */}
+      <div className="absolute top-0 left-0 right-0 h-[1100px] bg-[#8fd4ff] z-0" style={{ background: 'linear-gradient(to bottom, #8fd4ff 0%, #8fd4ff 50%, #9dd0ff 60%, #acd4ff 68%, #bbd8ff 75%, #cadeff 80%, #d9e6ff 83%, #e8eeff 86%, #f0f4ff 88%, #ffffff 96%)' }} />
+      
       {/* Spacer section at the top - increases page height */}
-      <div className="w-full bg-[#8fd4ff] h-[80px] md:h-[70px] sm:h-[60px] flex-shrink-0 relative z-0" />
+      <div className="w-full bg-transparent h-[80px] md:h-[70px] sm:h-[60px] flex-shrink-0 relative z-10" />
       <Header
         router={router}
         t={t}
@@ -89,7 +92,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         isHomePage={false}
       />
       <Breadcrumb />
-      <main className={`flex-1 w-full bg-[#8fd4ff] ${isProductsPage || isAdminPage || isProfilePage ? 'pt-4' : 'pt-[80px] md:pt-[70px] sm:pt-[60px]'}`}>
+      <main className={`flex-1 w-full relative z-10 ${isProductsPage || isAdminPage || isProfilePage ? 'pt-4' : 'pt-[80px] md:pt-[70px] sm:pt-[60px]'}`}>
         {children}
       </main>
       <Footer router={router} t={t} isHomePage={false} />

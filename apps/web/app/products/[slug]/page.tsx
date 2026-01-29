@@ -13,6 +13,7 @@ import { RelatedProducts } from '../../../components/RelatedProducts';
 import { ProductReviews } from '../../../components/ProductReviews';
 import { Minus, Plus, Maximize2 } from 'lucide-react';
 import { ProductLabels } from '../../../components/ProductLabels';
+import { addToCart } from '../../../components/icons/HomePageComponents';
 import {
   processImageUrl,
   smartSplitUrls,
@@ -1597,7 +1598,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
             <div className="text-gray-600 mb-8 prose prose-sm" dangerouslySetInnerHTML={{ __html: getProductText(language, product.id, 'longDescription') || product.description || '' }} />
 
-            <div className="mt-8 p-4 bg-white border border-gray-200 rounded-2xl space-y-4">
+            <div className="mt-8 p-4 bg-gradient-to-b from-[#8fd4ff] to-[#b8e5ff] border border-gray-200 rounded-2xl space-y-4">
             {/* Rating Section */}
             <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
               <div className="flex items-center gap-2">
@@ -1978,30 +1979,39 @@ export default function ProductPage({ params }: ProductPageProps) {
               </div>
             )}
             <div className="flex items-center gap-3 pt-4 border-t">
-              <div className="flex items-center border rounded-xl overflow-hidden bg-gray-50">
+              <div className="flex items-center border rounded-xl overflow-hidden bg-gradient-to-r from-[#8fd4ff] to-[#b8e5ff]">
                 <button onClick={() => adjustQuantity(-1)} className="w-12 h-12 flex items-center justify-center">-</button>
                 <div className="w-12 text-center font-bold">{quantity}</div>
                 <button onClick={() => adjustQuantity(1)} className="w-12 h-12 flex items-center justify-center">+</button>
               </div>
-              <button disabled={!canAddToCart || isAddingToCart} className="flex-1 h-12 bg-gray-900 text-white rounded-xl uppercase font-bold disabled:bg-gray-300 disabled:cursor-not-allowed"
+              <button disabled={!canAddToCart || isAddingToCart} className="flex-1 h-[48px] bg-[#00d1ff] text-white rounded-[34px] uppercase font-bold disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#00b8e6] transition-colors"
                 onClick={async () => {
                   if (!canAddToCart || !product || !currentVariant) return;
                   setIsAddingToCart(true);
-                  try {
-                    if (!isLoggedIn) {
-                      const stored = localStorage.getItem('shop_cart_guest');
-                      const cart = stored ? JSON.parse(stored) : [];
-                      const existing = cart.find((i: any) => i.variantId === currentVariant.id);
-                      if (existing) existing.quantity += quantity;
-                      else cart.push({ productId: product.id, productSlug: product.slug, variantId: currentVariant.id, quantity });
-                      localStorage.setItem('shop_cart_guest', JSON.stringify(cart));
-                    } else {
-                      await apiClient.post('/api/v1/cart/items', { productId: product.id, variantId: currentVariant.id, quantity });
-                    }
-                    setShowMessage(`${t(language, 'product.addedToCart')} ${quantity} ${t(language, 'product.pcs')}`);
-                    window.dispatchEvent(new Event('cart-updated'));
-                  } catch (err) { setShowMessage(t(language, 'product.errorAddingToCart')); }
-                  finally { setIsAddingToCart(false); setTimeout(() => setShowMessage(null), 2000); }
+                  
+                  const success = await addToCart({
+                    product: {
+                      id: product.id,
+                      slug: product.slug,
+                      inStock: currentVariant?.available ?? true,
+                    },
+                    variantId: currentVariant.id,
+                    quantity,
+                    isLoggedIn,
+                    router,
+                    t: (key: string) => t(language, key),
+                    onSuccess: () => {
+                      setShowMessage(`${t(language, 'product.addedToCart')} ${quantity} ${t(language, 'product.pcs')}`);
+                    },
+                    onError: (error: any) => {
+                      setShowMessage(t(language, 'product.errorAddingToCart'));
+                    },
+                  });
+
+                  setIsAddingToCart(false);
+                  if (success) {
+                    setTimeout(() => setShowMessage(null), 2000);
+                  }
                 }}>
                 {isAddingToCart ? t(language, 'product.adding') : (isOutOfStock ? t(language, 'product.outOfStock') : (isVariationRequired ? getRequiredAttributesMessage() : (hasUnavailableAttributes ? t(language, 'product.outOfStock') : t(language, 'product.addToCart'))))}
               </button>

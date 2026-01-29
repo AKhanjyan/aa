@@ -12,7 +12,7 @@ import { SearchIcon } from '../components/icons/SearchIcon';
 import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
 import { LanguageIcon } from '../components/icons/LanguageIcon';
 import { ExitIcon } from '../components/icons/ExitIcon';
-import { Header, Footer, Button } from '../components/icons/HomePageComponents';
+import { Header, Footer, Button, addToCart } from '../components/icons/HomePageComponents';
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
@@ -366,85 +366,32 @@ export default function HomePage() {
    * Handle adding product to cart
    */
   const handleAddToCart = async (product: Product) => {
-    if (!product.inStock) {
-      return;
-    }
-
-    // If user is not logged in, redirect to login
-    if (!isLoggedIn) {
-      router.push(`/login?redirect=/`);
-      return;
-    }
-
     setAddingToCart(prev => new Set(prev).add(product.id));
 
-    try {
-      // Get product details to get variant ID
-      interface ProductDetails {
-        id: string;
-        slug: string;
-        variants?: Array<{
-          id: string;
-          sku: string;
-          price: number;
-          stock: number;
-          available: boolean;
-        }>;
-      }
-
-      // Encode slug to handle special characters
-      const encodedSlug = encodeURIComponent(product.slug.trim());
-      const productDetails = await apiClient.get<ProductDetails>(`/api/v1/products/${encodedSlug}`);
-
-      if (!productDetails.variants || productDetails.variants.length === 0) {
-        alert(t('home.errors.noVariantsAvailable'));
-        return;
-      }
-
-      const variantId = productDetails.variants[0].id;
-
-      await apiClient.post(
-        '/api/v1/cart/items',
-        {
-          productId: product.id,
-          variantId: variantId,
-          quantity: 1,
+    const success = await addToCart({
+      product,
+      quantity: 1,
+      isLoggedIn,
+      router,
+      t,
+      onSuccess: () => {
+        console.log('✅ [HOMEPAGE] Product added to cart:', product.title);
+      },
+      onError: (error: any) => {
+        console.error('❌ [HOMEPAGE] Error adding to cart:', error);
+        if (error?.message) {
+          alert(error.message);
+        } else {
+          alert(t('home.errors.failedToAddToCart'));
         }
-      );
+      },
+    });
 
-      // Trigger cart update event
-      window.dispatchEvent(new Event('cart-updated'));
-      console.log('✅ [HOMEPAGE] Product added to cart:', product.title);
-    } catch (error: any) {
-      console.error('❌ [HOMEPAGE] Error adding to cart:', error);
-
-      // Check if error is about product not found
-      if (error?.message?.includes('does not exist') || error?.message?.includes('404') || error?.status === 404) {
-        alert(t('home.errors.productNotFound'));
-        return;
-      }
-
-      // Check if error is about insufficient stock
-      if (error.response?.data?.detail?.includes('No more stock available') ||
-        error.response?.data?.detail?.includes('exceeds available stock') ||
-        error.response?.data?.title === 'Insufficient stock') {
-        alert(t('home.errors.noMoreStockAvailable'));
-        return;
-      }
-
-      // If error is about authorization, redirect to login
-      if (error.message?.includes('401') || error.message?.includes('Unauthorized') || error?.status === 401) {
-        router.push(`/login?redirect=/`);
-      } else {
-        alert(t('home.errors.failedToAddToCart'));
-      }
-    } finally {
-      setAddingToCart(prev => {
-        const next = new Set(prev);
-        next.delete(product.id);
-        return next;
-      });
-    }
+    setAddingToCart(prev => {
+      const next = new Set(prev);
+      next.delete(product.id);
+      return next;
+    });
   };
 
   return (

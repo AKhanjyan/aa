@@ -92,7 +92,7 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
 
   if (loading) {
     return (
-      <Card className="p-4 mb-6 bg-[#8fd4ff] border-gray-200">
+      <Card className="p-4 mb-6 bg-transparent border-transparent shadow-none">
         <h3 className="text-base font-bold text-gray-800 mb-4 uppercase tracking-wide">{t('products.filters.color.title')}</h3>
         <div className="text-sm text-gray-500">{t('products.filters.color.loading')}</div>
       </Card>
@@ -100,7 +100,7 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
   }
 
   return (
-    <Card className="p-4 mb-6 bg-[#8fd4ff] border-gray-200">
+    <Card className="p-4 mb-6 bg-transparent border-transparent shadow-none">
       <h3 className="text-base font-bold text-gray-800 mb-4 uppercase tracking-wide">{t('products.filters.color.title')}</h3>
       {colors.length === 0 ? (
         <div className="text-sm text-gray-500 py-4 text-center">
@@ -124,8 +124,8 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
                 aria-pressed={isSelected}
                 className={`w-full flex items-center justify-between py-2 px-1 rounded transition-colors group ${
                   isSelected
-                    ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200'
-                    : 'hover:bg-gray-50'
+                    ? 'bg-blue-50/30 hover:bg-blue-100/30 border border-blue-200/50'
+                    : 'hover:bg-white/20'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -160,8 +160,8 @@ export function ColorFilter({ category, search, minPrice, maxPrice, selectedColo
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full ${
                     isSelected
-                      ? 'text-blue-700 bg-blue-100'
-                      : 'text-gray-500 bg-gray-100'
+                      ? 'text-blue-700 bg-blue-100/50'
+                      : 'text-gray-500 bg-gray-100/50'
                   }`}
                 >
                   {color.count}
