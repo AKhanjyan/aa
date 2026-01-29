@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Header, Footer } from './icons/global/global';
+import { MobileHeader, MobileMenu, MobileSearch, MobileFooter } from './icons/global/globalMobile';
 import { Breadcrumb } from './Breadcrumb';
 import { MobileBottomNav } from './MobileBottomNav';
 import { useAuth } from '../lib/auth/AuthContext';
@@ -21,8 +22,10 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   // State for header navigation
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const languageMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +62,23 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     router.push('/');
   };
 
+  /**
+   * Handle search
+   */
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = searchQuery.trim();
+    const params = new URLSearchParams();
+
+    if (query) {
+      params.set('search', query);
+    }
+
+    setShowSearchModal(false);
+    const queryString = params.toString();
+    router.push(queryString ? `/products?${queryString}` : '/products');
+  };
+
   if (isHomePage) {
     // Home page – թույլ ենք տալիս բնական scroll, որ footer-ը չկտրվի
     return (
@@ -73,29 +93,77 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
       {/* Blue gradient section - 800px from top with smooth transition */}
       <div className="absolute top-0 left-0 right-0 h-[1100px] bg-[#8fd4ff] z-0" style={{ background: 'linear-gradient(to bottom, #8fd4ff 0%, #8fd4ff 50%, #9dd0ff 60%, #acd4ff 68%, #bbd8ff 75%, #cadeff 80%, #d9e6ff 83%, #e8eeff 86%, #f0f4ff 88%, #ffffff 96%)' }} />
       
-      {/* Spacer section at the top - increases page height */}
-      <div className="w-full bg-transparent h-[80px] md:h-[70px] sm:h-[60px] flex-shrink-0 relative z-10" />
-      <Header
+      {/* Mobile Header - Only visible on mobile */}
+      <MobileHeader
         router={router}
         t={t}
         setShowSearchModal={setShowSearchModal}
-        setShowLanguageMenu={setShowLanguageMenu}
-        showLanguageMenu={showLanguageMenu}
-        handleLanguageChange={handleLanguageChange}
+        setShowMobileMenu={setShowMobileMenu}
         isLoggedIn={isLoggedIn}
         isAdmin={isAdmin}
-        setShowUserMenu={setShowUserMenu}
-        showUserMenu={showUserMenu}
-        handleLogout={handleLogout}
-        languageMenuRef={languageMenuRef}
-        userMenuRef={userMenuRef}
-        isHomePage={false}
       />
-      <Breadcrumb />
-      <main className={`flex-1 w-full relative z-10 ${isProductsPage || isAdminPage || isProfilePage ? 'pt-4' : 'pt-[80px] md:pt-[70px] sm:pt-[60px]'}`}>
+
+      {/* Mobile Menu - Only visible on mobile */}
+      <MobileMenu
+        router={router}
+        t={t}
+        showMobileMenu={showMobileMenu}
+        setShowMobileMenu={setShowMobileMenu}
+        isLoggedIn={isLoggedIn}
+        isAdmin={isAdmin}
+        handleLogout={handleLogout}
+        showLanguageMenu={showLanguageMenu}
+        setShowLanguageMenu={setShowLanguageMenu}
+      />
+
+      {/* Mobile Search - Only visible on mobile */}
+      <MobileSearch
+        t={t}
+        showSearchModal={showSearchModal}
+        setShowSearchModal={setShowSearchModal}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleSearch={handleSearch}
+      />
+      
+      {/* Spacer section at the top - increases page height */}
+      <div className="hidden xl:block w-full bg-transparent h-[80px] md:h-[70px] sm:h-[60px] flex-shrink-0 relative z-10" />
+      {/* Desktop Header - Only visible on desktop */}
+      <div className="hidden xl:block">
+        <Header
+          router={router}
+          t={t}
+          setShowSearchModal={setShowSearchModal}
+          setShowLanguageMenu={setShowLanguageMenu}
+          showLanguageMenu={showLanguageMenu}
+          handleLanguageChange={handleLanguageChange}
+          isLoggedIn={isLoggedIn}
+          isAdmin={isAdmin}
+          setShowUserMenu={setShowUserMenu}
+          showUserMenu={showUserMenu}
+          handleLogout={handleLogout}
+          languageMenuRef={languageMenuRef}
+          userMenuRef={userMenuRef}
+          isHomePage={false}
+        />
+      </div>
+      {/* Breadcrumb - Only visible on desktop */}
+      <div className="hidden xl:block">
+        <Breadcrumb />
+      </div>
+      <main className={`flex-1 w-full relative z-10 ${isProductsPage || isAdminPage || isProfilePage ? 'pt-4 xl:pt-4' : 'xl:pt-[80px]'}`}>
         {children}
       </main>
-      <Footer router={router} t={t} isHomePage={false} />
+      {/* Desktop Footer - Only visible on desktop */}
+      <div className="hidden xl:block">
+        <Footer router={router} t={t} isHomePage={false} />
+      </div>
+      
+      {/* Mobile Footer - Only visible on mobile */}
+      <div className="xl:hidden relative w-full">
+        <MobileFooter router={router} t={t} />
+      </div>
+      
       <MobileBottomNav />
     </div>
   );

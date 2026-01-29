@@ -8,7 +8,7 @@ import { Button, Input, Card } from '@shop/ui';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { apiClient } from '../../lib/api-client';
 import { formatPrice, type CurrencyCode } from '../../lib/currency';
-import { ProfileMenuDrawer } from '../../components/ProfileMenuDrawer';
+import { ProfileMenuDrawer } from '../../components/icons/global/globalMobile';
 import { UserAvatar } from '../../components/UserAvatar';
 import { useTranslation } from '../../lib/i18n-client';
 import { getProfileMenuTABS } from '../../components/icons/global/global';
