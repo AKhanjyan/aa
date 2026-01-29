@@ -610,7 +610,7 @@ export default function HomePage() {
         <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 right-0 to-[rgba(221,216,216,0.75)] top-0 w-full" />
 
         {/* Mobile Hero Section Decorative Group */}
-        <div className="absolute inset-[10%_8%_75%_8%]">
+        <div className="absolute inset-[12%_8%_76%_8%]">
           <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
         </div>
 
@@ -797,7 +797,7 @@ export default function HomePage() {
 
 
         {/* Mobile Hero Text */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[340px] w-[361px] z-10">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[330px] w-[361px] z-10">
           <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[56px] relative shrink-0 text-[56px] text-white w-full whitespace-pre-wrap">
             <p className="mb-0">YOUR</p>
             <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">DAILY DOSE</p>
