@@ -13,6 +13,7 @@ import { ProductsGrid } from '../../components/ProductsGrid';
 import { CategoryNavigation } from '../../components/CategoryNavigation';
 import { MobileFiltersDrawer } from '../../components/MobileFiltersDrawer';
 import { MOBILE_FILTERS_EVENT } from '../../lib/events';
+import { productsService } from '../../lib/services/products.service';
 
 const PAGE_CONTAINER = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8';
 // Container for filters section to align with Header logo (same Y-axis)
@@ -51,6 +52,7 @@ interface ProductsResponse {
 
 /**
  * Fetch products (PRODUCTION SAFE)
+ * Directly calls the service instead of HTTP fetch for better reliability on Vercel
  */
 async function getProducts(
   page: number = 1,
@@ -65,45 +67,35 @@ async function getProducts(
 ): Promise<ProductsResponse> {
   try {
     const language = getStoredLanguage();
-    const params: Record<string, string> = {
-      page: page.toString(),
-      limit: limit.toString(),
+    
+    // Build filters object for productsService
+    const filters = {
+      page,
+      limit,
       lang: language,
+      search: search?.trim() || undefined,
+      category: category?.trim() || undefined,
+      minPrice: minPrice ? parseFloat(minPrice) : undefined,
+      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+      colors: colors?.trim() || undefined,
+      sizes: sizes?.trim() || undefined,
+      brand: brand?.trim() || undefined,
     };
 
-    if (search?.trim()) params.search = search.trim();
-    if (category?.trim()) params.category = category.trim();
-    if (minPrice?.trim()) params.minPrice = minPrice.trim();
-    if (maxPrice?.trim()) params.maxPrice = maxPrice.trim();
-    if (colors?.trim()) params.colors = colors.trim();
-    if (sizes?.trim()) params.sizes = sizes.trim();
-    if (brand?.trim()) params.brand = brand.trim();
+    console.log("🌐 [PRODUCTS] Fetch products directly from service", { filters });
 
-    const queryString = new URLSearchParams(params).toString();
+    // Directly call the service instead of HTTP fetch
+    // This works better on Vercel since we're already on the server side
+    const result = await productsService.findAll(filters);
 
-    // Fallback chain: NEXT_PUBLIC_APP_URL -> VERCEL_URL -> localhost (for local dev)
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-    const targetUrl = `${baseUrl}/api/v1/products?${queryString}`;
-    console.log("🌐 [PRODUCTS] Fetch products", { targetUrl, baseUrl });
-
-    const res = await fetch(targetUrl, {
-      cache: "no-store"
-    });
-
-    if (!res.ok) throw new Error(`API failed: ${res.status}`);
-
-    const response = await res.json();
-    if (!response.data || !Array.isArray(response.data)) {
+    if (!result.data || !Array.isArray(result.data)) {
       return {
         data: [],
         meta: { total: 0, page: 1, limit: 24, totalPages: 0 }
       };
     }
 
-    return response;
+    return result;
 
   } catch (e) {
     console.error("❌ PRODUCT ERROR", e);
