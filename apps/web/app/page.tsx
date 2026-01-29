@@ -797,7 +797,7 @@ export default function HomePage() {
 
 
         {/* Mobile Hero Text */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[330px] w-[361px] z-10">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[331px] w-[361px] z-10">
           <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[56px] relative shrink-0 text-[56px] text-white w-full whitespace-pre-wrap">
             <p className="mb-0">YOUR</p>
             <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">DAILY DOSE</p>
