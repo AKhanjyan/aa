@@ -12,7 +12,7 @@ import { SearchIcon } from '../components/icons/SearchIcon';
 import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
 import { LanguageIcon } from '../components/icons/LanguageIcon';
 import { ExitIcon } from '../components/icons/ExitIcon';
-import { Header, Footer, Button, addToCart } from '../components/icons/global/global';
+import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedProduct } from '../components/icons/global/global';
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
@@ -893,59 +893,19 @@ export default function HomePage() {
         {featuredProducts.length > 0 && (() => {
           const currentProduct = featuredProducts[carouselIndex] || featuredProducts[0];
           return (
-            <div
-              className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-1/2 px-[16px] top-[1088px] w-full max-w-[371px] cursor-pointer"
-              onClick={() => handleOpenProduct(currentProduct)}
-            >
-              <div className="h-[435px] relative shrink-0 w-[155px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <img
-                    alt={currentProduct.title}
-                    className="absolute h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%] object-contain"
-                    src={currentProduct.image || imgBorborAquaProductKids033L2}
-                  />
-                </div>
-              </div>
-              <div className="content-stretch flex flex-col gap-[6px] items-start py-px relative shrink-0 w-full">
-                <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full">
-                  <div className="content-stretch flex flex-col items-start relative shrink-0">
-                    <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-                      <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white whitespace-nowrap">
-                        <p className="mb-0">{currentProduct.title}</p>
-                      </div>
-                    </div>
-                    {(currentProduct.subtitle || currentProduct.description) && (
-                      <div className="content-stretch flex flex-col items-start relative shrink-0 w-full mt-1">
-                        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
-                          <p className="leading-[16px]">{currentProduct.subtitle || currentProduct.description}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="content-stretch flex flex-col items-start relative shrink-0">
-                    <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
-                      <p className="leading-[28px]">
-                        {formatPrice(currentProduct.price, getStoredCurrency())}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(currentProduct);
-                  }}
-                  disabled={addingToCart.has(currentProduct.id) || !currentProduct.inStock}
-                  className="bg-[#00d1ff] content-stretch cursor-pointer flex h-[48px] items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-[339px] disabled:opacity-50"
-                >
-                  <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-                    <p className="leading-[24px]">
-                      {addingToCart.has(currentProduct.id) ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
-                    </p>
-                  </div>
-                </button>
-              </div>
-            </div>
+            <FeaturedProductCard
+              key={currentProduct.id}
+              product={currentProduct}
+              router={router}
+              t={t}
+              isLoggedIn={isLoggedIn}
+              isAddingToCart={addingToCart.has(currentProduct.id)}
+              onAddToCart={handleAddToCart}
+              onProductClick={handleOpenProduct}
+              formatPrice={formatPrice}
+              currency={getStoredCurrency()}
+              isMobile={true}
+            />
           );
         })()}
 
@@ -1771,61 +1731,21 @@ export default function HomePage() {
               <div className="flex gap-[32px] lg:gap-[32px] md:gap-[30px] sm:gap-[20px] justify-center items-start h-full">
                 {(() => {
                   const visibleProducts = featuredProducts.slice(carouselIndex, carouselIndex + 3);
-                  return visibleProducts.map((product) => {
-                    const currency = getStoredCurrency();
-                    const formattedPrice = formatPrice(product.price, currency);
-
-                    return (
-                      <div
-                        key={product.id}
-                        onClick={() => handleOpenProduct(product)}
-                        className="flex flex-col items-center gap-[20px] lg:gap-[20px] md:gap-[24px] sm:gap-[24px] w-[280px] lg:w-[280px] md:w-[280px] sm:w-[240px] cursor-pointer product-card-hover z-[11] isolate bg-transparent"
-                      >
-                        {/* Image Container - Uniform size with overflow hidden */}
-                        <div className="h-[280px] lg:h-[280px] md:h-[280px] sm:h-[240px] w-full relative overflow-hidden flex items-center justify-center bg-transparent">
-                          {product.image ? (
-                            <img
-                              alt={product.title}
-                              className="h-full w-full object-contain product-image-hover"
-                              src={product.image}
-                              style={{ backgroundColor: 'transparent' }}
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-300 rounded-lg" />
-                          )}
-                        </div>
-                        {/* Content Section - Uniform layout */}
-                        <div className="w-full flex flex-col gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] px-[14px] lg:px-[14px] md:px-[16px] sm:px-[16px] pb-[14px] lg:pb-[14px] md:pb-[16px] sm:pb-[16px]">
-                          <div className="flex items-end justify-between w-full">
-                            <div className="flex flex-col items-start">
-                              <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[16px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-white">
-                                <p className="leading-[24px] lg:leading-[24px] md:leading-[24px] sm:leading-[20px]">{product.title}</p>
-                              </div>
-                            </div>
-                            <div className="flex flex-col items-start">
-                              <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[18px] lg:text-[18px] md:text-[18px] sm:text-[16px] whitespace-nowrap">
-                                <p className="leading-[26px] lg:leading-[26px] md:leading-[24px] sm:leading-[20px]">{formattedPrice}</p>
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddToCart(product);
-                            }}
-                            disabled={!product.inStock || addingToCart.has(product.id)}
-                            className="bg-[#00d1ff] content-stretch flex h-[44px] lg:h-[44px] md:h-[48px] sm:h-[48px] items-center justify-center py-[10px] lg:py-[10px] md:py-[12px] sm:py-[12px] relative rounded-[30px] lg:rounded-[30px] md:rounded-[34px] sm:rounded-[34px] shrink-0 w-full hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#00d1ff]/50 hover:scale-105 active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-300 cursor-pointer"
-                          >
-                            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
-                              <p className="leading-[22px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px]">
-                                {addingToCart.has(product.id) ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
-                              </p>
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  });
+                  const currency = getStoredCurrency();
+                  return visibleProducts.map((product) => (
+                    <FeaturedProductCard
+                      key={product.id}
+                      product={product}
+                      router={router}
+                      t={t}
+                      isLoggedIn={isLoggedIn}
+                      isAddingToCart={addingToCart.has(product.id)}
+                      onAddToCart={handleAddToCart}
+                      onProductClick={handleOpenProduct}
+                      formatPrice={formatPrice}
+                      currency={currency}
+                    />
+                  ));
                 })()}
               </div>
             ) : null}

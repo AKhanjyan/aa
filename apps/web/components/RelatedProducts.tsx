@@ -1,15 +1,14 @@
 'use client';
 
 import { useState, useEffect, useRef, type MouseEvent, type TouchEvent } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../lib/currency';
 import { getStoredLanguage, type LanguageCode } from '../lib/language';
 import { t } from '../lib/i18n';
 import { useAuth } from '../lib/auth/AuthContext';
-import { CartIcon as CartPngIcon } from './icons/CartIcon';
+import { FeaturedProductCard, type FeaturedProduct, addToCart } from './icons/global/global';
+import { useTranslation } from '../lib/i18n-client';
 
 interface RelatedProduct {
   id: string;
@@ -50,6 +49,7 @@ interface RelatedProductsProps {
 export function RelatedProducts({ categorySlug, currentProductId }: RelatedProductsProps) {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
+  const { t: tClient } = useTranslation();
   const [products, setProducts] = useState<RelatedProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -62,7 +62,7 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
   const carouselRef = useRef<HTMLDivElement>(null);
   // Initialize language with 'en' to match server-side default and prevent hydration mismatch
   const [language, setLanguage] = useState<LanguageCode>('en');
-  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [currency, setCurrency] = useState(getStoredCurrency());
 
   // Initialize language from localStorage after mount to prevent hydration mismatch
   useEffect(() => {
@@ -75,6 +75,23 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
     window.addEventListener('language-updated', handleLanguageUpdate);
     return () => {
       window.removeEventListener('language-updated', handleLanguageUpdate);
+    };
+  }, []);
+
+  // Listen for currency updates
+  useEffect(() => {
+    const handleCurrencyUpdate = () => {
+      setCurrency(getStoredCurrency());
+    };
+    const handleCurrencyRatesUpdate = () => {
+      setCurrency(getStoredCurrency());
+    };
+
+    window.addEventListener('currency-updated', handleCurrencyUpdate);
+    window.addEventListener('currency-rates-updated', handleCurrencyRatesUpdate);
+    return () => {
+      window.removeEventListener('currency-updated', handleCurrencyUpdate);
+      window.removeEventListener('currency-rates-updated', handleCurrencyRatesUpdate);
     };
   }, []);
 
@@ -289,75 +306,59 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
   };
 
   /**
-   * Handle adding product to cart
+   * Handle opening product page
    */
-  const handleAddToCart = async (e: MouseEvent, product: RelatedProduct) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!product.inStock) {
-      return;
-    }
-
-    if (!isLoggedIn) {
-      router.push(`/login?redirect=/products/${product.slug}`);
-      return;
-    }
-
-    setAddingToCart(prev => new Set(prev).add(product.id));
-
-    try {
-      // Get product details to get variant ID
-      interface ProductDetails {
-        id: string;
-        slug: string;
-        variants?: Array<{
-          id: string;
-          sku: string;
-          price: number;
-          stock: number;
-          available: boolean;
-        }>;
-      }
-
+  const handleOpenProduct = (product: FeaturedProduct) => {
+    if (product.slug) {
       const encodedSlug = encodeURIComponent(product.slug.trim());
-      const productDetails = await apiClient.get<ProductDetails>(`/api/v1/products/${encodedSlug}`);
-
-      if (!productDetails.variants || productDetails.variants.length === 0) {
-        alert('No variants available');
-        return;
-      }
-
-      const variantId = productDetails.variants[0].id;
-      
-      await apiClient.post(
-        '/api/v1/cart/items',
-        {
-          productId: product.id,
-          variantId: variantId,
-          quantity: 1,
-        }
-      );
-
-      // Trigger cart update event
-      window.dispatchEvent(new Event('cart-updated'));
-    } catch (error: any) {
-      console.error('[RelatedProducts] Error adding to cart:', error);
-      if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
-        router.push(`/login?redirect=/products/${product.slug}`);
-      } else {
-        alert('Failed to add product to cart. Please try again.');
-      }
-    } finally {
-      setAddingToCart(prev => {
-        const next = new Set(prev);
-        next.delete(product.id);
-        return next;
-      });
+      router.push(`/products/${encodedSlug}`);
+    } else {
+      router.push(`/products/${product.id}`);
     }
   };
 
-  const currency = getStoredCurrency();
+  /**
+   * Handle adding product to cart
+   */
+  const handleAddToCart = async (product: FeaturedProduct) => {
+    setAddingToCart(prev => new Set(prev).add(product.id));
+
+    const success = await addToCart({
+      product,
+      quantity: 1,
+      isLoggedIn,
+      router,
+      t: tClient,
+      onSuccess: () => {
+        console.log('✅ [RELATED PRODUCTS] Product added to cart:', product.title);
+      },
+      onError: (error: any) => {
+        console.error('❌ [RELATED PRODUCTS] Error adding to cart:', error);
+        if (error?.message) {
+          alert(error.message);
+        } else {
+          alert(tClient('home.errors.failedToAddToCart'));
+        }
+      },
+    });
+
+    setAddingToCart(prev => {
+      const next = new Set(prev);
+      next.delete(product.id);
+      return next;
+    });
+  };
+
+  // Convert RelatedProduct to FeaturedProduct format
+  const convertToFeaturedProduct = (product: RelatedProduct): FeaturedProduct => ({
+    id: product.id,
+    slug: product.slug,
+    title: product.title,
+    price: product.price,
+    image: product.image,
+    inStock: product.inStock,
+    brand: product.brand || null,
+  });
 
   // Always show the section, even if no products (will show loading or empty state)
   return (
@@ -405,115 +406,33 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
                 }}
               >
                 {products.map((product) => {
-                  const hasImage = product.image && !imageErrors.has(product.id);
-                  // Get category name from product categories
-                  const categoryName = product.categories && product.categories.length > 0 
-                    ? product.categories.map(c => c.title).join(', ')
-                    : product.brand?.name || 'Product';
-                  
+                  const featuredProduct = convertToFeaturedProduct(product);
                   return (
                     <div
                       key={product.id}
                       className="flex-shrink-0 px-3 h-full"
                       style={{ width: `${100 / visibleCards}%` }}
+                      onClick={(e) => {
+                        // Prevent navigation if we actually dragged
+                        if (hasMoved) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          return;
+                        }
+                      }}
                     >
-                      <div className="group relative h-full flex flex-col">
-                        <Link
-                          href={`/products/${product.slug}`}
-                          className="block cursor-pointer flex-1 flex flex-col"
-                          onClick={(e) => {
-                            // Prevent navigation only if we actually dragged (moved more than threshold)
-                            if (hasMoved) {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              return;
-                            }
-                            // Allow navigation - Link will handle it
-                            console.log('[RelatedProducts] Navigating to product:', product.slug);
-                          }}
-                        >
-                          <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
-                            {/* Product Image */}
-                            <div className="relative aspect-square bg-gray-100 overflow-hidden flex-shrink-0">
-                              {hasImage ? (
-                                <Image
-                                  src={product.image!}
-                                  alt={product.title}
-                                  fill
-                                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                  unoptimized
-                                  onError={() => {
-                                    setImageErrors(prev => new Set(prev).add(product.id));
-                                  }}
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                  <span className="text-gray-400 text-sm">{t(language, 'common.messages.noImage')}</span>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Product Info */}
-                            <div className="p-4 flex flex-col flex-1">
-                              {/* Title */}
-                              <h3 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                                {product.title}
-                              </h3>
-
-                              {/* Category */}
-                              <p className="text-xs text-gray-500 mb-3">
-                                {categoryName}
-                              </p>
-
-                              {/* Price */}
-                              <div className="flex flex-col gap-1 mt-auto">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-lg font-bold text-gray-900">
-                                    {formatPrice(product.price, currency)}
-                                  </span>
-                                  {product.discountPercent && product.discountPercent > 0 && (
-                                    <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                                      -{product.discountPercent}%
-                                    </span>
-                                  )}
-                                </div>
-                                {(product.originalPrice && product.originalPrice > product.price) || 
-                                 (product.compareAtPrice && product.compareAtPrice > product.price) ? (
-                                  <span className="text-sm text-gray-500 line-through decoration-gray-400">
-                                    {formatPrice(
-                                      (product.originalPrice && product.originalPrice > product.price) 
-                                        ? product.originalPrice 
-                                        : (product.compareAtPrice || 0),
-                                      currency
-                                    )}
-                                  </span>
-                                ) : null}
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-
-                        {/* Cart Icon Button */}
-                        <button
-                          onClick={(e) => handleAddToCart(e, product)}
-                          disabled={!product.inStock || addingToCart.has(product.id)}
-                          className="absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed z-20 group/cart"
-                          title={product.inStock ? 'Add to cart' : 'Out of stock'}
-                          aria-label={product.inStock ? 'Add to cart' : 'Out of stock'}
-                        >
-                          {addingToCart.has(product.id) ? (
-                            <svg className="animate-spin h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                          ) : (
-                            <div className={`transition-colors duration-200 ${product.inStock ? 'text-gray-600 group-hover/cart:text-green-600' : 'text-gray-400'}`}>
-                              <CartPngIcon size={24} />
-                            </div>
-                          )}
-                        </button>
-                      </div>
+                      <FeaturedProductCard
+                        product={featuredProduct}
+                        router={router}
+                        t={tClient}
+                        isLoggedIn={isLoggedIn}
+                        isAddingToCart={addingToCart.has(product.id)}
+                        onAddToCart={handleAddToCart}
+                        onProductClick={handleOpenProduct}
+                        formatPrice={(price: number, curr?: any) => formatPrice(price, curr || currency)}
+                        currency={currency}
+                        compact={true}
+                      />
                     </div>
                   );
                 })}

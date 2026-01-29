@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ProductCard } from './ProductCard';
+import { useRouter } from 'next/navigation';
+import { FeaturedProductCard, type FeaturedProduct, addToCart } from './icons/global/global';
 import { useTranslation } from '../lib/i18n-client';
+import { useAuth } from '../lib/auth/AuthContext';
+import { formatPrice, getStoredCurrency } from '../lib/currency';
 
 interface Product {
   id: string;
@@ -27,8 +30,12 @@ interface ProductsGridProps {
 
 export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps) {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>('grid-2');
   const [sortedProducts, setSortedProducts] = useState<Product[]>(products);
+  const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
+  const [currency, setCurrency] = useState(getStoredCurrency());
 
   // Load view mode from localStorage
   useEffect(() => {
@@ -53,6 +60,63 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
       window.removeEventListener('view-mode-changed', handleViewModeChange as (_event: Event) => void);
     };
   }, []);
+
+  // Listen for currency updates
+  useEffect(() => {
+    const handleCurrencyUpdate = () => {
+      setCurrency(getStoredCurrency());
+    };
+    const handleCurrencyRatesUpdate = () => {
+      setCurrency(getStoredCurrency());
+    };
+
+    window.addEventListener('currency-updated', handleCurrencyUpdate);
+    window.addEventListener('currency-rates-updated', handleCurrencyRatesUpdate);
+    return () => {
+      window.removeEventListener('currency-updated', handleCurrencyUpdate);
+      window.removeEventListener('currency-rates-updated', handleCurrencyRatesUpdate);
+    };
+  }, []);
+
+  // Handle opening product page
+  const handleOpenProduct = (product: FeaturedProduct) => {
+    if (product.slug) {
+      const encodedSlug = encodeURIComponent(product.slug.trim());
+      router.push(`/products/${encodedSlug}`);
+    } else {
+      router.push(`/products/${product.id}`);
+    }
+  };
+
+  // Handle adding product to cart
+  const handleAddToCart = async (product: FeaturedProduct) => {
+    setAddingToCart(prev => new Set(prev).add(product.id));
+
+    const success = await addToCart({
+      product,
+      quantity: 1,
+      isLoggedIn,
+      router,
+      t,
+      onSuccess: () => {
+        console.log('✅ [PRODUCTS GRID] Product added to cart:', product.title);
+      },
+      onError: (error: any) => {
+        console.error('❌ [PRODUCTS GRID] Error adding to cart:', error);
+        if (error?.message) {
+          alert(error.message);
+        } else {
+          alert(t('home.errors.failedToAddToCart'));
+        }
+      },
+    });
+
+    setAddingToCart(prev => {
+      const next = new Set(prev);
+      next.delete(product.id);
+      return next;
+    });
+  };
 
   // Sort products
   useEffect(() => {
@@ -83,13 +147,13 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   const getGridClasses = () => {
     switch (viewMode) {
       case 'list':
-        return 'grid grid-cols-1 gap-4';
+        return 'grid grid-cols-1 gap-6';
       case 'grid-2':
-        return 'grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
       case 'grid-3':
-        return 'grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
       default:
-        return 'grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
     }
   };
 
@@ -101,18 +165,37 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
     );
   }
 
+  // Convert Product to FeaturedProduct format
+  const convertToFeaturedProduct = (product: Product): FeaturedProduct => ({
+    id: product.id,
+    slug: product.slug,
+    title: product.title,
+    price: product.price,
+    image: product.image,
+    inStock: product.inStock,
+    brand: product.brand,
+  });
+
   return (
     <div className={getGridClasses()}>
-      {sortedProducts.map((product) => (
-        <ProductCard 
-          key={product.id} 
-          product={{
-            ...product,
-            compareAtPrice: product.compareAtPrice ?? undefined
-          }} 
-          viewMode={viewMode} 
-        />
-      ))}
+      {sortedProducts.map((product) => {
+        const featuredProduct = convertToFeaturedProduct(product);
+        return (
+          <FeaturedProductCard
+            key={product.id}
+            product={featuredProduct}
+            router={router}
+            t={t}
+            isLoggedIn={isLoggedIn}
+            isAddingToCart={addingToCart.has(product.id)}
+            onAddToCart={handleAddToCart}
+            onProductClick={handleOpenProduct}
+            formatPrice={(price: number, curr?: any) => formatPrice(price, curr || currency)}
+            currency={currency}
+            compact={true}
+          />
+        );
+      })}
     </div>
   );
 }

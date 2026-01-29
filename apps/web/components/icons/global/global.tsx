@@ -710,3 +710,217 @@ export function ViewAllProductsButton({ router, t, isMobile = false }: ViewAllPr
   );
 }
 
+// Featured Product Card Interface
+export interface FeaturedProduct {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  price: number;
+  image: string | null;
+  inStock: boolean;
+  brand: {
+    id: string;
+    name: string;
+  } | null;
+}
+
+interface FeaturedProductCardProps {
+  product: FeaturedProduct;
+  router: ReturnType<typeof useRouter>;
+  t: (key: string) => string;
+  isLoggedIn: boolean;
+  isAddingToCart: boolean;
+  onAddToCart: (product: FeaturedProduct) => void | Promise<void>;
+  onProductClick: (product: FeaturedProduct) => void;
+  formatPrice: <T = string>(price: number, currency?: T) => string;
+  currency?: string;
+  isMobile?: boolean;
+  compact?: boolean; // For shop page - smaller cards
+}
+
+/**
+ * Reusable Featured Product Card Component
+ * Used on home page and can be used on any other page
+ * Maintains the same UI and functionality as home page product cards
+ */
+export function FeaturedProductCard({
+  product,
+  router,
+  t,
+  isLoggedIn,
+  isAddingToCart,
+  onAddToCart,
+  onProductClick,
+  formatPrice,
+  currency,
+  isMobile = false,
+  compact = false,
+}: FeaturedProductCardProps) {
+  if (isMobile) {
+    return (
+      <div
+        className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[40px] items-center left-1/2 px-[16px] top-[1088px] w-full max-w-[371px] cursor-pointer"
+        onClick={() => onProductClick(product)}
+      >
+        <div className="h-[435px] relative shrink-0 w-[155px]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <img
+              alt={product.title}
+              className="absolute h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%] object-contain"
+              src={product.image || ''}
+            />
+          </div>
+        </div>
+        <div className="content-stretch flex flex-col gap-[6px] items-start py-px relative shrink-0 w-full">
+          <div className="content-stretch flex h-[24px] items-end justify-between relative shrink-0 w-full">
+            <div className="content-stretch flex flex-col items-start relative shrink-0">
+              <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
+                <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[28px] relative shrink-0 text-[18px] text-white whitespace-nowrap">
+                  <p className="mb-0">{product.title}</p>
+                </div>
+              </div>
+              {(product.subtitle || product.description) && (
+                <div className="content-stretch flex flex-col items-start relative shrink-0 w-full mt-1">
+                  <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
+                    <p className="leading-[16px]">{product.subtitle || product.description}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="content-stretch flex flex-col items-start relative shrink-0">
+              <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[20px] whitespace-nowrap">
+                <p className="leading-[28px]">
+                  {formatPrice(product.price, currency)}
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+            disabled={isAddingToCart || !product.inStock}
+            className="bg-[#00d1ff] content-stretch cursor-pointer flex h-[48px] items-center justify-center py-[12px] relative rounded-[34px] shrink-0 w-[339px] disabled:opacity-50"
+          >
+            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
+              <p className="leading-[24px]">
+                {isAddingToCart ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
+              </p>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop version
+  if (compact) {
+    // Compact version for shop page - smaller cards
+    return (
+      <div
+        key={product.id}
+        onClick={() => onProductClick(product)}
+        className="flex flex-col items-center gap-[12px] w-full cursor-pointer product-card-hover z-[11] isolate bg-transparent"
+      >
+        {/* Image Container - Smaller for shop */}
+        <div className="h-[200px] w-full relative overflow-hidden flex items-center justify-center bg-transparent rounded-lg">
+          {product.image ? (
+            <img
+              alt={product.title}
+              className="h-full w-full object-contain product-image-hover"
+              src={product.image}
+              style={{ backgroundColor: 'transparent' }}
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-300 rounded-lg" />
+          )}
+        </div>
+        {/* Content Section - Compact layout */}
+        <div className="w-full flex flex-col gap-[10px] px-[8px] pb-[8px]">
+          <div className="flex items-end justify-between w-full">
+            <div className="flex flex-col items-start flex-1 min-w-0">
+              <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[14px] text-white">
+                <p className="leading-[20px] truncate w-full">{product.title}</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-start ml-2 flex-shrink-0">
+              <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[16px] whitespace-nowrap">
+                <p className="leading-[22px]">{formatPrice(product.price, currency)}</p>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+            disabled={!product.inStock || isAddingToCart}
+            className="bg-[#00d1ff] content-stretch flex h-[36px] items-center justify-center py-[8px] relative rounded-[20px] shrink-0 w-full hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#00d1ff]/50 hover:scale-105 active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-300 cursor-pointer"
+          >
+            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-white whitespace-nowrap">
+              <p className="leading-[18px]">
+                {isAddingToCart ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
+              </p>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Full size version for home page
+  return (
+    <div
+      key={product.id}
+      onClick={() => onProductClick(product)}
+      className="flex flex-col items-center gap-[20px] lg:gap-[20px] md:gap-[24px] sm:gap-[24px] w-[280px] lg:w-[280px] md:w-[280px] sm:w-[240px] cursor-pointer product-card-hover z-[11] isolate bg-transparent"
+    >
+      {/* Image Container - Uniform size with overflow hidden */}
+      <div className="h-[280px] lg:h-[280px] md:h-[280px] sm:h-[240px] w-full relative overflow-hidden flex items-center justify-center bg-transparent">
+        {product.image ? (
+          <img
+            alt={product.title}
+            className="h-full w-full object-contain product-image-hover"
+            src={product.image}
+            style={{ backgroundColor: 'transparent' }}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-300 rounded-lg" />
+        )}
+      </div>
+      {/* Content Section - Uniform layout */}
+      <div className="w-full flex flex-col gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] px-[14px] lg:px-[14px] md:px-[16px] sm:px-[16px] pb-[14px] lg:pb-[14px] md:pb-[16px] sm:pb-[16px]">
+        <div className="flex items-end justify-between w-full">
+          <div className="flex flex-col items-start">
+            <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[16px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-white">
+              <p className="leading-[24px] lg:leading-[24px] md:leading-[24px] sm:leading-[20px]">{product.title}</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-start">
+            <div className="flex flex-col font-['Inter:Black',sans-serif] font-black justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[18px] lg:text-[18px] md:text-[18px] sm:text-[16px] whitespace-nowrap">
+              <p className="leading-[26px] lg:leading-[26px] md:leading-[24px] sm:leading-[20px]">{formatPrice(product.price, currency)}</p>
+            </div>
+          </div>
+        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart(product);
+          }}
+          disabled={!product.inStock || isAddingToCart}
+          className="bg-[#00d1ff] content-stretch flex h-[44px] lg:h-[44px] md:h-[48px] sm:h-[48px] items-center justify-center py-[10px] lg:py-[10px] md:py-[12px] sm:py-[12px] relative rounded-[30px] lg:rounded-[30px] md:rounded-[34px] sm:rounded-[34px] shrink-0 w-full hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#00d1ff]/50 hover:scale-105 active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-300 cursor-pointer"
+        >
+          <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-center text-white whitespace-nowrap">
+            <p className="leading-[22px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px]">
+              {isAddingToCart ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
+            </p>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
