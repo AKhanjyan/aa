@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { useTranslation } from '../../../lib/i18n-client';
@@ -553,6 +553,97 @@ export function MobileFooter({ router, t }: MobileFooterProps) {
             <div className="h-[25px] relative shrink-0 w-[87.735px]">
               <img alt="" className="block max-w-none size-full" src={imgGroup2123} />
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Mobile Bottom Navigation Images
+const imgEllipse2 = "/assets/home/imgEllipse2.svg";
+const imgHomeVector = "/assets/home/Vector.svg";
+const imgVector1 = "/assets/home/imgVector1.svg";
+const imgGroup2148 = "/assets/home/imgGroup2148.svg";
+const imgGroup2149 = "/assets/home/imgGroup2149.svg";
+
+/**
+ * Mobile Bottom Navigation Component
+ * Glassmorphism navigation bar with Home, Shop, Cart, Profile icons
+ * Moved from home page to be used across all pages
+ */
+export function MobileBottomNavigation() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Determine active navigation index based on current pathname
+  const getActiveIndex = () => {
+    if (pathname === '/') return 0;
+    if (pathname.startsWith('/products')) return 1;
+    if (pathname.startsWith('/cart')) return 2;
+    if (pathname.startsWith('/profile')) return 3;
+    return null;
+  };
+
+  const activeIndex = getActiveIndex();
+
+  return (
+    <div className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[430px] px-4 pb-5 z-50">
+      <div className="relative bg-white/5 backdrop-blur-3xl h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden">
+        <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[348px]">
+          <div className="content-stretch flex items-center justify-between relative shrink-0 w-[252px]">
+            {/* Home */}
+            <button
+              onClick={() => router.push('/')}
+              className="group h-[56px] w-[56px] relative flex items-center justify-center transition-transform duration-200 hover:-translate-y-1 active:scale-95"
+            >
+              {activeIndex === 0 && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                </div>
+              )}
+              <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
+              <img className="relative block max-w-none size-[19px]" alt="" src={imgHomeVector} />
+            </button>
+            {/* Shop */}
+            <button
+              onClick={() => router.push('/products')}
+              className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
+            >
+              {activeIndex === 1 && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                </div>
+              )}
+              <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
+              <img className="relative block max-w-none size-[20px]" alt="" src={imgVector1} />
+            </button>
+            {/* Cart */}
+            <button
+              onClick={() => router.push('/cart')}
+              className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
+            >
+              {activeIndex === 2 && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                </div>
+              )}
+              <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
+              <img className="relative block max-w-none h-[22.312px] w-[25px]" alt="" src={imgGroup2148} />
+            </button>
+            {/* Profile */}
+            <button
+              onClick={() => router.push('/profile')}
+              className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
+            >
+              {activeIndex === 3 && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                </div>
+              )}
+              <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
+              <img className="relative block max-w-none h-[22px] w-[18.526px]" alt="" src={imgGroup2149} />
+            </button>
           </div>
         </div>
       </div>

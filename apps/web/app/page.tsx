@@ -137,8 +137,6 @@ export default function HomePage() {
   
   // State for Trusted By section pagination
   const [trustedByIndex, setTrustedByIndex] = useState(0);
-  // State for mobile bottom navigation active icon (null = none selected)
-  const [activeMobileNavIndex, setActiveMobileNavIndex] = useState<number | null>(null);
 
   // Removed scaling logic - using Tailwind responsive classes instead
   // This prevents zoom issues and conflicts with responsive design
@@ -796,79 +794,6 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Mobile Bottom Navigation Frame - sticky expressive glassmorphism bar */}
-        <div className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[430px] px-4 pb-5 z-50">
-          <div className="relative bg-white/5 backdrop-blur-3xl h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden">
-            <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[348px]">
-              <div className="content-stretch flex items-center justify-between relative shrink-0 w-[252px]">
-                {/* Home */}
-                <button
-                  onClick={() => {
-                    setActiveMobileNavIndex(0);
-                    router.push('/');
-                  }}
-                  className="group h-[56px] w-[56px] relative flex items-center justify-center transition-transform duration-200 hover:-translate-y-1 active:scale-95"
-                >
-                  {activeMobileNavIndex === 0 && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
-                    </div>
-                  )}
-                  <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
-                  <img className="relative block max-w-none size-[19px]" alt="" src={imgHomeVector} />
-                </button>
-                {/* Cart */}
-                <button
-                  onClick={() => {
-                    setActiveMobileNavIndex(1);
-                    router.push('/products');
-                  }}
-                  className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
-                >
-                  {activeMobileNavIndex === 1 && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
-                    </div>
-                  )}
-                  <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
-                  <img className="relative block max-w-none size-[20px]" alt="" src={imgVector1} />
-                </button>
-                {/* Profile */}
-                <button
-                  onClick={() => {
-                    setActiveMobileNavIndex(2);
-                    router.push('/cart');
-                  }}
-                  className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
-                >
-                  {activeMobileNavIndex === 2 && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
-                    </div>
-                  )}
-                  <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
-                  <img className="relative block max-w-none h-[22.312px] w-[25px]" alt="" src={imgGroup2148} />
-                </button>
-                {/* Contact */}
-                <button
-                  onClick={() => {
-                    setActiveMobileNavIndex(3);
-                    router.push('/profile');
-                  }}
-                  className="group block cursor-pointer h-[56px] w-[56px] relative flex items-center justify-center opacity-90 hover:opacity-100 transition-transform duration-200 hover:scale-110 hover:-translate-y-1 active:scale-95"
-                >
-                  {activeMobileNavIndex === 3 && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
-                    </div>
-                  )}
-                  <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
-                  <img className="relative block max-w-none h-[22px] w-[18.526px]" alt="" src={imgGroup2149} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Mobile Featured Products Gradient Overlay */}
         <div className="absolute bg-gradient-to-b blur-[30px] from-[#62b3e8] h-[300px] left-0 right-0 pointer-events-none to-[rgba(255, 255, 255, 0.07)] top-[738px] w-full z-[1]" data-node-id="3:2019" />

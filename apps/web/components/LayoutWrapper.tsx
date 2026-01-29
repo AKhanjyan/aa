@@ -3,9 +3,8 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Header, Footer } from './icons/global/global';
-import { MobileHeader, MobileMenu, MobileSearch, MobileFooter } from './icons/global/globalMobile';
+import { MobileHeader, MobileMenu, MobileSearch, MobileFooter, MobileBottomNavigation } from './icons/global/globalMobile';
 import { Breadcrumb } from './Breadcrumb';
-import { MobileBottomNav } from './MobileBottomNav';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useTranslation } from '../lib/i18n-client';
 import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../lib/language';
@@ -82,9 +81,13 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   if (isHomePage) {
     // Home page – թույլ ենք տալիս բնական scroll, որ footer-ը չկտրվի
     return (
-      <main className="w-full home-page-wrapper">
-        {children}
-      </main>
+      <>
+        <main className="w-full home-page-wrapper">
+          {children}
+        </main>
+        {/* Mobile Bottom Navigation - Only visible on mobile */}
+        <MobileBottomNavigation />
+      </>
     );
   }
 
@@ -164,7 +167,8 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         <MobileFooter router={router} t={t} />
       </div>
       
-      <MobileBottomNav />
+      {/* Mobile Bottom Navigation - Only visible on mobile */}
+      <MobileBottomNavigation />
     </div>
   );
 }
