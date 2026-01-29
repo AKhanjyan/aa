@@ -737,18 +737,18 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
-          <div className="flex-none rotate-[100.79deg] size-[100px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
+          <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
+            <div className="flex-none rotate-[100.79deg] size-[100px]">
+              <div className="relative rounded-[320px] size-full">
+                {/* Soft blue glow bubble without dark blend artifacts */}
+                <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
+                <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
+                    <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
         <div className="absolute flex items-center justify-center left-[-15.81%] right-[67.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
           <div className="flex-none rotate-[100.79deg] size-[160px]">
@@ -1143,7 +1143,7 @@ export default function HomePage() {
             <div className="flex-none rotate-[100.79deg] size-[210px]">
               <div className="relative rounded-[320px] size-full">
                 {/* Soft blue glow bubble without dark blend artifacts */}
-                <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.2%_0.3%_0.3%_0.3%] rounded-[770px]" />
+                <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)]  rounded-full" />
                 <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
                     <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
@@ -1152,6 +1152,9 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+
+        
 
 
     
