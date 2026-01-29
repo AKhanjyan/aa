@@ -98,11 +98,11 @@ export function Breadcrumb() {
   const isProfilePage = pathname.startsWith('/profile');
 
   return (
-    <nav className={`bg-[#8fd4ff] border-b border-gray-200 ${isProductsPage || isAdminPage || isProfilePage ? 'mt-12' : ''}`}>
+    <nav className={`bg-[#8fd4ff] border-b border-gray-200 shadow-sm relative z-20 ${isProductsPage || isAdminPage || isProfilePage ? 'mt-12' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div className="flex items-center text-sm">
+        <div className="flex items-center text-sm flex-wrap">
           {breadcrumbs.map((item, index) => (
-            <div key={item.href} className="flex items-center">
+            <div key={`${item.href}-${index}`} className="flex items-center">
               {index > 0 && (
                 <span className="mx-2 text-gray-400">/</span>
               )}
