@@ -35,7 +35,8 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   const [viewMode, setViewMode] = useState<ViewMode>('grid-2');
   const [sortedProducts, setSortedProducts] = useState<Product[]>(products);
   const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
-  const [currency, setCurrency] = useState(getStoredCurrency());
+  // Initialize with 'AMD' to match server-side default and prevent hydration mismatch
+  const [currency, setCurrency] = useState<'USD' | 'AMD' | 'EUR' | 'RUB' | 'GEL'>('AMD');
 
   // Load view mode from localStorage
   useEffect(() => {
@@ -47,6 +48,11 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
       setViewMode('grid-2');
       localStorage.setItem('products-view-mode', 'grid-2');
     }
+  }, []);
+
+  // Initialize currency from localStorage after mount to prevent hydration mismatch
+  useEffect(() => {
+    setCurrency(getStoredCurrency());
   }, []);
 
   // Listen for view mode changes
@@ -149,11 +155,11 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
       case 'list':
         return 'grid grid-cols-1 gap-6';
       case 'grid-2':
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
       case 'grid-3':
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
       default:
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
     }
   };
 

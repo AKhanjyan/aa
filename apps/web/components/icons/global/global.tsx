@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { apiClient } from '../../../lib/api-client';
+import { type CurrencyCode } from '../../../lib/currency';
 import { SearchIcon } from '../SearchIcon';
 import { HeaderCartIcon } from '../HeaderCartIcon';
 import { LanguageIcon } from '../LanguageIcon';
@@ -734,8 +735,8 @@ interface FeaturedProductCardProps {
   isAddingToCart: boolean;
   onAddToCart: (product: FeaturedProduct) => void | Promise<void>;
   onProductClick: (product: FeaturedProduct) => void;
-  formatPrice: <T = string>(price: number, currency?: T) => string;
-  currency?: string;
+  formatPrice: (price: number, currency?: CurrencyCode) => string;
+  currency?: CurrencyCode;
   isMobile?: boolean;
   compact?: boolean; // For shop page - smaller cards
 }

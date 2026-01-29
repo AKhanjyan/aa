@@ -62,7 +62,8 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
   const carouselRef = useRef<HTMLDivElement>(null);
   // Initialize language with 'en' to match server-side default and prevent hydration mismatch
   const [language, setLanguage] = useState<LanguageCode>('en');
-  const [currency, setCurrency] = useState(getStoredCurrency());
+  // Initialize currency with 'AMD' to match server-side default and prevent hydration mismatch
+  const [currency, setCurrency] = useState<'USD' | 'AMD' | 'EUR' | 'RUB' | 'GEL'>('AMD');
 
   // Initialize language from localStorage after mount to prevent hydration mismatch
   useEffect(() => {
@@ -76,6 +77,11 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
     return () => {
       window.removeEventListener('language-updated', handleLanguageUpdate);
     };
+  }, []);
+
+  // Initialize currency from localStorage after mount to prevent hydration mismatch
+  useEffect(() => {
+    setCurrency(getStoredCurrency());
   }, []);
 
   // Listen for currency updates
