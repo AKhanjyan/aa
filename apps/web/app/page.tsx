@@ -799,10 +799,10 @@ export default function HomePage() {
         {/* Mobile Hero Text */}
         <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[331px] w-[361px] z-10">
           <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[56px] relative shrink-0 text-[56px] text-white w-full whitespace-pre-wrap">
-            <p className="mb-0">YOUR</p>
-            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">DAILY DOSE</p>
-            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">OF</p>
-            <p>FRESHNESS</p>
+            <p className="mb-0">{t('home.hero.your')}</p>
+            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.dailyDose')}</p>
+            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.of')}</p>
+            <p>{t('home.hero.freshness')}</p>
           </div>
         </div>
 
@@ -814,7 +814,7 @@ export default function HomePage() {
           <div className="bg-white h-[2px] shrink-0 w-[48px]" />
           <div className="content-stretch flex flex-col items-start relative shrink-0">
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase whitespace-nowrap">
-              <p className="leading-[20px]">Experience Purity</p>
+              <p className="leading-[20px]">{t('home.hero.experiencePurity')}</p>
             </div>
           </div>
         </div>
@@ -822,7 +822,7 @@ export default function HomePage() {
         {/* Mobile Subtitle */}
         <div className="absolute content-stretch flex flex-col items-center justify-center left-[32px] max-w-[512px] right-[207px] top-[564px]">
           <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
-            <p className="leading-[32.5px]">Natural spring water</p>
+            <p className="leading-[32.5px]">{t('home.hero.subtitle')}</p>
           </div>
         </div>
 
@@ -836,7 +836,7 @@ export default function HomePage() {
             className="bg-[#31daff] content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#31daff]/50 hover:scale-105 active:scale-95"
           >
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white whitespace-nowrap">
-              <p className="leading-[24px]">Shop Now</p>
+              <p className="leading-[24px]">{t('home.hero.shopNow')}</p>
             </div>
           </button>
           <button
@@ -844,7 +844,7 @@ export default function HomePage() {
             className="bg-[rgba(0,0,0,0)] border-2 border-white/30 content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 hover:scale-105 active:scale-95"
           >
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[19px] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-[89px]">
-              <p className="leading-[24px] whitespace-pre-wrap">Learn More</p>
+              <p className="leading-[24px] whitespace-pre-wrap">{t('home.hero.learnMore')}</p>
             </div>
           </button>
         </div>
@@ -930,13 +930,12 @@ export default function HomePage() {
         <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-1/2 top-[958px] w-full max-w-[429px] px-4 z-10">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-  serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
-              <p className="mb-0">FEATURED</p>
-              <p>PRODUCTS</p>
+              <p className="mb-0">{t('home.featuredProducts.title')}</p>
             </div>
           </div>
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-              <p className="leading-[24px]">Premium water designed for modern living</p>
+              <p className="leading-[24px]">{t('home.featuredProducts.subtitle')}</p>
             </div>
           </div>
           <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
@@ -993,7 +992,7 @@ export default function HomePage() {
                 >
                   <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
                     <p className="leading-[24px]">
-                      {addingToCart.has(currentProduct.id) ? 'Adding...' : 'Add to Cart'}
+                      {addingToCart.has(currentProduct.id) ? t('home.featuredProducts.adding') : t('home.featuredProducts.addToCart')}
                     </p>
                   </div>
                 </button>
@@ -1056,7 +1055,7 @@ export default function HomePage() {
                   ? 'bg-[#00d1ff] h-[8px] w-[20px]'
                   : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
               }`}
-              aria-label="Show first featured products"
+              aria-label={t('home.trustedBy.showFirstFeaturedProducts')}
             />
             {/* Dot 2 - Second mode (products 3-5) */}
             <button
@@ -1067,7 +1066,7 @@ export default function HomePage() {
                   ? 'bg-[#00d1ff] h-[8px] w-[20px]'
                   : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
               }`}
-              aria-label="Show middle featured products"
+              aria-label={t('home.trustedBy.showMiddleFeaturedProducts')}
             />
             {/* Dot 3 - Third mode (products 6-8) */}
             <button
@@ -1078,7 +1077,7 @@ export default function HomePage() {
                   ? 'bg-[#00d1ff] h-[8px] w-[20px]'
                   : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
               }`}
-              aria-label="Show last featured products"
+              aria-label={t('home.trustedBy.showLastFeaturedProducts')}
             />
           </div>
         )}
@@ -1090,7 +1089,7 @@ export default function HomePage() {
             className="border-2 border-[#e2e8f0] border-solid content-stretch flex gap-[8px] items-center px-[34px] py-[12px] relative rounded-[9999px] shrink-0 transition-all duration-300 hover:border-[#1ac0fd] hover:bg-[#1ac0fd]/5 hover:shadow-md hover:shadow-[#1ac0fd]/20 hover:scale-105 active:scale-95"
           >
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#0f172a] text-[16px] text-center whitespace-nowrap">
-              <p className="leading-[24px]">View All Products</p>
+              <p className="leading-[24px]">{t('home.featuredProducts.viewAllProducts')}</p>
             </div>
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-start relative">
@@ -1111,7 +1110,7 @@ export default function HomePage() {
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-[641px]">
-                <p className="leading-[40px] whitespace-pre-wrap">WATER ENERGY</p>
+                <p className="leading-[40px] whitespace-pre-wrap">{t('home.waterEnergy.title')}</p>
               </div>
             </div>
           </div>
@@ -1125,19 +1124,19 @@ export default function HomePage() {
         {/* Mobile Water Energy Content */}
         <div className="-translate-x-1/2 absolute left-[calc(50%-10.5px)] top-[1900px] lg:top-[1895px] w-[322px] h-[372px]">
           <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[54.84%_0.99%_16.56%_68.49%] justify-center leading-[0] text-[#0f172a] text-[0px] tracking-[-0.9px] uppercase whitespace-nowrap">
-            <p className="leading-[20px] mb-0 text-[23px]">Pure</p>
-            <p className="leading-[20px] mb-0 text-[23px]">energy</p>
-            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">drawn from</p>
-            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">nature,</p>
-            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">captured in</p>
-            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] text-[11px]">every drop.</p>
+            <p className="leading-[20px] mb-0 text-[23px]">{t('home.waterEnergySection.pure')}</p>
+            <p className="leading-[20px] mb-0 text-[23px]">{t('home.waterEnergySection.energy')}</p>
+            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">{t('home.waterEnergySection.drawnFrom')}</p>
+            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">{t('home.waterEnergySection.nature')}</p>
+            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] mb-0 text-[11px]">{t('home.waterEnergySection.capturedIn')}</p>
+            <p className="font-['Montserrat:Regular',sans-serif] font-normal leading-[16px] text-[11px]">{t('home.waterEnergySection.everyDrop')}</p>
           </div>
           <div className="absolute flex flex-col font-['Montserrat:Regular',sans-serif] font-normal inset-[22.8%_59.55%_60%_13.65%] justify-center leading-[16px] text-[#0f172a] text-[14px] text-right tracking-[-0.9px] uppercase whitespace-nowrap">
-            <p className="mb-0">Crystal</p>
-            <p className="mb-0">clarity that</p>
-            <p className="mb-0">refreshes the</p>
-            <p className="mb-0">body and</p>
-            <p>restores</p>
+            <p className="mb-0">{t('home.waterEnergySection.crystal')}</p>
+            <p className="mb-0">{t('home.waterEnergySection.clarityThat')}</p>
+            <p className="mb-0">{t('home.waterEnergySection.refreshesThe')}</p>
+            <p className="mb-0">{t('home.waterEnergySection.bodyAnd')}</p>
+            <p>{t('home.waterEnergySection.restores')}</p>
           </div>
           <div className="absolute flex items-center justify-center inset-[43.01%_56.32%_-14.63%_-38.96%]">
             <div className="flex-none rotate-[100.79deg] size-[210px]">
@@ -1193,7 +1192,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[37.63%_59.55%_51.61%_3.97%] justify-center leading-[0] text-[#09c1ff] text-[29px] text-right tracking-[-0.9px] uppercase whitespace-nowrap">
-              <p className="leading-[50px]">balance</p>
+              <p className="leading-[50px]">{t('home.waterEnergySection.balance')}</p>
             </div>
           </div>
         </div>
@@ -1213,14 +1212,14 @@ export default function HomePage() {
               <p className="leading-[40px] whitespace-pre-wrap">98%</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[4.41%_28.61%_36.12%_7.93%] justify-center leading-[24px] text-[0px] text-[24px] text-white tracking-[-0.9px] uppercase whitespace-pre-wrap">
-              <p className="mb-0">Pure</p>
-              <p className="mb-0">spring</p>
-              <p className="mb-0">water</p>
-              <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">from</p>
-              <p className="font-['Montserrat:Light',sans-serif] font-light">Armenia</p>
+              <p className="mb-0">{t('home.cards.pureSpringWater.pure')}</p>
+              <p className="mb-0">{t('home.cards.pureSpringWater.spring')}</p>
+              <p className="mb-0">{t('home.cards.pureSpringWater.water')}</p>
+              <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.cards.pureSpringWater.from')}</p>
+              <p className="font-['Montserrat:Light',sans-serif] font-light">{t('home.cards.pureSpringWater.armenia')}</p>
             </div>
             <div className="absolute flex flex-col font-['Inter:Medium_Italic',sans-serif] font-medium inset-[84.65%_8.65%_6.46%_44.71%] italic justify-center leading-[0] text-[14px] text-right text-white">
-              <p className="leading-[24px] whitespace-pre-wrap">Natura Source</p>
+              <p className="leading-[24px] whitespace-pre-wrap">{t('home.cards.pureSpringWater.source')}</p>
             </div>
           </div>
         </div>
@@ -1232,13 +1231,13 @@ export default function HomePage() {
               <p className="leading-[40px] whitespace-pre-wrap">100%</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[4.41%_16.83%_36.12%_7.69%] justify-center leading-[24px] text-[#1ac0fd] text-[0px] text-[24px] tracking-[-0.9px] uppercase whitespace-pre-wrap">
-              <p className="mb-0">BALNCED</p>
-              <p className="mb-0">HYDRATION</p>
-              <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">EVERY</p>
-              <p className="font-['Montserrat:Light',sans-serif] font-light">DAY</p>
+              <p className="mb-0">{t('home.cards.balancedHydration.balanced')}</p>
+              <p className="mb-0">{t('home.cards.balancedHydration.hydration')}</p>
+              <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.cards.balancedHydration.every')}</p>
+              <p className="font-['Montserrat:Light',sans-serif] font-light">{t('home.cards.balancedHydration.day')}</p>
             </div>
             <div className="absolute flex flex-col font-['Inter:Medium_Italic',sans-serif] font-medium inset-[84.65%_8.65%_6.46%_44.71%] italic justify-center leading-[0] text-[#1ac0fd] text-[14px] text-right">
-              <p className="leading-[24px] whitespace-pre-wrap">Clean Minrals</p>
+              <p className="leading-[24px] whitespace-pre-wrap">{t('home.cards.balancedHydration.source')}</p>
             </div>
           </div>
           <div className="h-[227px] relative rounded-[30px] shrink-0 w-[180px] overflow-hidden">
@@ -1255,7 +1254,7 @@ export default function HomePage() {
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-full">
-                <p className="leading-[40px] whitespace-pre-wrap">WHY CHOOSE US</p>
+                <p className="leading-[40px] whitespace-pre-wrap">{t('home.whyChooseUs.title')}</p>
               </div>
             </div>
           </div>
@@ -1299,11 +1298,11 @@ export default function HomePage() {
               </div>
             </div>
             <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[61.19%_11.7%_22.03%_11.98%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap" data-node-id="3:2135">
-              <p className="mb-0">Rich in Natural Minerals that provide</p>
-              <p>valuable health benefits.</p>
+              <p className="mb-0">{t('home.whyChooseUs.richInMinerals.descriptionLine1')}</p>
+              <p>{t('home.whyChooseUs.richInMinerals.descriptionLine2')}</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[49.3%_22.56%_40.91%_22.84%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase" data-node-id="3:2136">
-              <p className="leading-[28px] whitespace-pre-wrap">RICH IN MINERALS</p>
+              <p className="leading-[28px] whitespace-pre-wrap">{t('home.whyChooseUs.richInMinerals.title')}</p>
             </div>
           </div>
           <div className="h-[278px] relative shrink-0 w-full" data-node-id="3:2137">
@@ -1324,11 +1323,11 @@ export default function HomePage() {
               </div>
             </div>
             <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.07%_8.94%_22.66%_8.38%] justify-center leading-[24px] not-italic text-[#64748b] text-[16px] text-center whitespace-pre-wrap" data-node-id="3:2140">
-              <p className="mb-0">Borbor Aqua does not include any</p>
-              <p>artificial ingredients in its bottled water</p>
+              <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.descriptionLine1')}</p>
+              <p>{t('home.whyChooseUs.noArtificialIngredients.descriptionLine2')}</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[47.84%_9.5%_42.09%_8.94%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase" data-node-id="3:2141">
-              <p className="leading-[28px] whitespace-pre-wrap">no artifical ingridients</p>
+              <p className="leading-[28px] whitespace-pre-wrap">{t('home.whyChooseUs.noArtificialIngredients.title')}</p>
             </div>
           </div>
           <div className="h-[272px] relative shrink-0 w-full" data-node-id="3:2142">
@@ -1349,11 +1348,11 @@ export default function HomePage() {
               </div>
             </div>
             <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[60.66%_11.91%_24.63%_12.19%] justify-center leading-[20px] not-italic text-[#64748b] text-[16px] text-center whitespace-nowrap" data-node-id="3:2145">
-              <p className="mb-0">Borbor Aqua does not infuse carbon</p>
-              <p>dioxide in any of its bottled water.</p>
+              <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.descriptionLine1')}</p>
+              <p>{t('home.whyChooseUs.nonCarbonated.descriptionLine2')}</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[46.69%_21.05%_43.01%_21.61%] justify-center leading-[0] text-[#0f172a] text-[20px] text-center uppercase whitespace-nowrap" data-node-id="3:2146">
-              <p className="leading-[28px]">NON-CARBONATED</p>
+              <p className="leading-[28px]">{t('home.whyChooseUs.nonCarbonated.title')}</p>
             </div>
           </div>
           </div>
@@ -1364,12 +1363,12 @@ export default function HomePage() {
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-full">
-                <p className="leading-[40px] whitespace-pre-wrap">TRUSTED BY</p>
+                <p className="leading-[40px] whitespace-pre-wrap">{t('home.trustedBy.title')}</p>
               </div>
             </div>
           </div>
           <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[14px] text-center uppercase whitespace-nowrap">
-            <p className="leading-[16px]">Industry leading partners</p>
+            <p className="leading-[16px]">{t('home.trustedBy.subtitle')}</p>
           </div>
           <div className="flex items-center justify-center relative shrink-0 w-full">
             <div className="-scale-y-100 flex-none w-full">
@@ -1463,7 +1462,7 @@ export default function HomePage() {
                 ? 'bg-[#00d1ff] h-[8px] w-[20px]'
                 : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
             }`}
-            aria-label="Show third partner"
+            aria-label={t('home.trustedBy.showThirdPartner')}
           />
         </div>
 
@@ -1477,7 +1476,7 @@ export default function HomePage() {
             </div>
             <div className="absolute content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
               <div className="flex flex-col font-['Inter:Medium',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full">
-                <p className="leading-[26px] whitespace-pre-wrap">New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is Rich in Natural Minerals that provides valuable health benefits to everyone.</p>
+                <p className="leading-[26px] whitespace-pre-wrap">{t('home.footer.description')}</p>
               </div>
             </div>
             <div className="absolute flex items-center gap-[9px] left-0 top-[280px] cursor-pointer" onClick={() => router.push('/about')}>
@@ -1794,9 +1793,9 @@ export default function HomePage() {
           <div className="content-stretch flex flex-col items-center justify-center relative shrink-0 w-full">
             <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[80px] lg:text-[80px] md:text-[64px] sm:text-[36px] text-center text-white w-full">
               <p className="whitespace-pre-wrap">
-                <span className="leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white font-black">{t('home.hero.yourDailyDoseOf')} </span>
-                <span className="font-['Montserrat',sans-serif] font-light leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white"> </span>
-                <span className="leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px]"> </span>
+                <span className="leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white font-black">{t('home.hero.your')} </span>
+                <span className="font-['Montserrat',sans-serif] font-light leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white">{t('home.hero.dailyDose')} </span>
+                <span className="font-['Montserrat',sans-serif] font-light leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white">{t('home.hero.of')} </span>
                 <span className="leading-[80px] lg:leading-[80px] md:leading-[64px] sm:leading-[40px] text-white font-black">{t('home.hero.freshness')}</span>
               </p>
             </div>
@@ -2043,7 +2042,7 @@ export default function HomePage() {
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%-17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%-17px)] hover:bg-[#00d1ff]/50'
                 }`}
-                aria-label="Show first 3 products"
+                aria-label={t('home.trustedBy.showFirst3Products')}
               />
               {/* Dot 2 - Second mode (products 3-5) */}
               <button
@@ -2054,7 +2053,7 @@ export default function HomePage() {
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-1/2'
                     : 'bg-[#e2e8f0] size-[6px] left-1/2 hover:bg-[#00d1ff]/50'
                 }`}
-                aria-label="Show second 3 products"
+                aria-label={t('home.trustedBy.showSecond3Products')}
               />
               {/* Dot 3 - Third mode (products 6-8) */}
               <button
@@ -2065,7 +2064,7 @@ export default function HomePage() {
                     ? 'bg-[#00d1ff] h-[6px] w-[16px] left-[calc(50%+17px)]'
                     : 'bg-[#e2e8f0] size-[6px] left-[calc(50%+17px)] hover:bg-[#00d1ff]/50'
                 }`}
-                aria-label="Show third 3 products"
+                aria-label={t('home.trustedBy.showThird3Products')}
               />
             </div>
           )}
@@ -2113,7 +2112,7 @@ export default function HomePage() {
               handleNextProducts(e);
             }}
             className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group left-[calc(50%-580px)] lg:left-[calc(50%-580px)] md:left-[calc(50%-500px)] sm:left-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1090px]"
-            aria-label="Next products"
+            aria-label={t('home.trustedBy.nextProducts')}
           >
             <svg
               preserveAspectRatio="none"
@@ -2142,7 +2141,7 @@ export default function HomePage() {
               handlePreviousProducts(e);
             }}
             className="absolute bg-transparent border-[0.5px] border-white/49 border-solid flex items-center justify-center px-[8.5px] py-[6.5px] rounded-full size-[50px] lg:size-[50px] md:size-[48px] sm:size-[40px] cursor-pointer hover:bg-white/20 hover:border-white/80 hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-white/30 active:scale-95 transition-all duration-200 z-[10001] group right-[calc(50%-580px)] lg:right-[calc(50%-580px)] md:right-[calc(50%-500px)] sm:right-[calc(50%-400px)] top-[1580px] lg:top-[1580px] md:top-[1350px] sm:top-[1110px]"
-            aria-label="Previous products"
+            aria-label={t('home.trustedBy.previousProducts')}
           >
             <svg
               preserveAspectRatio="none"
@@ -2416,7 +2415,7 @@ export default function HomePage() {
                     ? 'bg-[#00d1ff] h-[8px] w-[19px] lg:h-[10px] lg:w-[24px]'
                     : 'bg-white size-[8px] lg:size-[10px] hover:bg-[#00d1ff]/50 cursor-pointer'
                 }`}
-                aria-label="Show third partner"
+                aria-label={t('home.trustedBy.showThirdPartner')}
               />
             </div>
           </div>

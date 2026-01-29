@@ -8,7 +8,9 @@
   },
   "hero": {
     "experiencePurity": "Experience Purity",
-    "yourDailyDoseOf": "YOUR DAILY DOSE OF",
+    "your": "YOUR",
+    "dailyDose": "DAILY DOSE",
+    "of": "OF",
     "freshness": "FRESHNESS",
     "subtitle": "Natural spring water",
     "shopNow": "Shop Now",
@@ -29,33 +31,59 @@
       "percentage": "98%",
       "title": "Pure spring water",
       "subtitle": "from Armenia",
+      "pure": "Pure",
+      "spring": "spring",
+      "water": "water",
+      "from": "from",
+      "armenia": "Armenia",
       "source": "Natura Source"
     },
     "balancedHydration": {
       "percentage": "100%",
       "title": "Balanced hydration",
       "subtitle": "every day",
+      "balanced": "BALANCED",
+      "hydration": "HYDRATION",
+      "every": "EVERY",
+      "day": "DAY",
       "source": "Clean Minerals"
     }
   },
   "whyChooseUs": {
-    "title": "Why Choose Us",
+    "title": "WHY CHOOSE US",
     "richInMinerals": {
       "title": "RICH IN MINERALS",
-      "description": "Rich in Natural Minerals that provide valuable health benefits."
+      "description": "Rich in Natural Minerals that provide valuable health benefits.",
+      "descriptionLine1": "Rich in Natural Minerals that provide",
+      "descriptionLine2": "valuable health benefits."
     },
     "nonCarbonated": {
       "title": "NON-CARBONATED",
-      "description": "Borbor Aqua does not infuse carbon dioxide in any of its bottled water."
+      "description": "Borbor Aqua does not infuse carbon dioxide in any of its bottled water.",
+      "descriptionLine1": "Borbor Aqua does not infuse carbon",
+      "descriptionLine2": "dioxide in any of its bottled water."
     },
     "noArtificialIngredients": {
       "title": "no artifical ingridients",
-      "description": "Borbor Aqua does not include any artificial ingredients in its bottled water"
+      "description": "Borbor Aqua does not include any artificial ingredients in its bottled water",
+      "descriptionLine1": "Borbor Aqua does not include any",
+      "descriptionLine2": "artificial ingredients in its bottled water"
     }
   },
   "trustedBy": {
-    "title": "Trusted By",
-    "subtitle": "Industry leading partners"
+    "title": "TRUSTED BY",
+    "subtitle": "Industry leading partners",
+    "showFirstPartner": "Show first partner",
+    "showSecondPartner": "Show second partner",
+    "showThirdPartner": "Show third partner",
+    "showFirstFeaturedProducts": "Show first featured products",
+    "showMiddleFeaturedProducts": "Show middle featured products",
+    "showLastFeaturedProducts": "Show last featured products",
+    "showFirst3Products": "Show first 3 products",
+    "showSecond3Products": "Show second 3 products",
+    "showThird3Products": "Show third 3 products",
+    "nextProducts": "Next products",
+    "previousProducts": "Previous products"
   },
   "footer": {
     "description": "New Aqua LLC introduces its Natural Spring Bottled Water – Borbor Aqua. Our range of products consists of 0.25L, 0.33L, 0.5L, 1L, 5L & 19L water bottles. Our Natural spring bottled water is non-carbonated. It is rich in natural minerals that provide valuable health benefits to everyone.",
@@ -87,8 +115,16 @@
   "waterEnergySection": {
     "pure": "Pure",
     "energy": "energy",
-    "subtitle": "drawn from nature, captured in every drop.",
+    "drawnFrom": "drawn from",
+    "nature": "nature,",
+    "capturedIn": "captured in",
+    "everyDrop": "every drop.",
     "balance": "balance",
+    "crystal": "Crystal",
+    "clarityThat": "clarity that",
+    "refreshesThe": "refreshes the",
+    "bodyAnd": "body and",
+    "restores": "restores",
     "descriptionLine1": "Crystal clarity that refreshes",
     "descriptionLine2": "the body and restores"
   },
