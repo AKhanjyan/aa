@@ -94,6 +94,7 @@ class OrdersService {
         
         cartItems = await Promise.all(
           cart.items.map(async (item: {
+            id?: string;
             productId: string;
             variantId: string;
             quantity: number;
@@ -106,7 +107,7 @@ class OrdersService {
             
             if (!variant) {
               console.error('❌ [ORDERS SERVICE] Cart item missing variant:', {
-                itemId: item.id,
+                itemId: item.id || 'unknown',
                 variantId: item.variantId,
                 productId: item.productId,
               });
@@ -119,7 +120,7 @@ class OrdersService {
             }
             
             console.log('✅ [ORDERS SERVICE] Processing cart item:', {
-              itemId: item.id,
+              itemId: item.id || 'unknown',
               variantId: variant.id,
               productId: product.id,
               quantity: item.quantity,
@@ -621,11 +622,11 @@ class OrdersService {
           }>;
         } | null;
       }) => {
-        const variantOptions = item.variant?.options?.map((opt: {
+        const variantOptions = (item.variant?.options as any)?.map((opt: {
           attributeKey: string | null;
           value: string | null;
-          valueId: string | null;
-          attributeValue: {
+          valueId?: string | null;
+          attributeValue?: {
             value: string;
             imageUrl: string | null;
             colors: any;

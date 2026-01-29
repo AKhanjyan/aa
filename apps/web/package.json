@@ -7,7 +7,7 @@
     "dev:webpack": "next dev --no-turbo",
     "dev:clean": "node -e \"require('fs').rmSync('.next', {recursive: true, force: true})\" && next dev",
     "prebuild": "cd ../../packages/db && npm run db:generate",
-    "prebuild:migrate": "cd ../../packages/db && (npm run db:migrate:deploy || npm run db:push || true)",
+    "prebuild:migrate": "node scripts/check-db-and-migrate.js",
     "build": "npm run prebuild:migrate && next build",
     "start": "next start",
     "lint": "next lint",

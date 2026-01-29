@@ -294,7 +294,7 @@ function AttributesPageContent() {
         ...data,
         locale: 'en',
       });
-      console.log('✅ [ADMIN] Value updated successfully:', response.data);
+      console.log('✅ [ADMIN] Value updated successfully:', (response as any)?.data);
       fetchAttributes();
       showToast(t('admin.attributes.valueUpdatedSuccess'), 'success');
     } catch (err: any) {
