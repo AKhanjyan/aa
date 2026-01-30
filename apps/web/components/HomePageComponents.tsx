@@ -108,7 +108,7 @@ export function HomePageHeader() {
   return (
     <>
       {/* Header Section - Navigation Bar */}
-      <div className="fixed bg-[rgba(255,255,255,0.08)] backdrop-blur-[15px] content-stretch flex flex-col h-[65px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[32px] md:px-[24px] sm:px-[16px] py-[14px] md:py-[12px] sm:py-[8px] rounded-[60px] md:rounded-[50px] sm:rounded-[40px] top-[56px] md:top-[32px] sm:top-[16px] translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50 border border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]">
+      <div className="fixed bg-[rgba(255,255,255,0.32)] backdrop-blur-[15px] content-stretch flex flex-col h-[65px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[32px] md:px-[24px] sm:px-[16px] py-[14px] md:py-[12px] sm:py-[8px] rounded-[60px] md:rounded-[50px] sm:rounded-[40px] top-[56px] md:top-[32px] sm:top-[16px] translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50 border border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]">
         <div className="content-stretch flex gap-[160px] lg:gap-[160px] md:gap-[120px] sm:gap-[16px] h-[50px] md:h-[44px] sm:h-[36px] items-center justify-center relative shrink-0">
           {/* Logo */}
           <div
@@ -119,7 +119,7 @@ export function HomePageHeader() {
           </div>
 
           {/* Navigation Menu */}
-          <div className="content-stretch flex font-['Inter:Bold',sans-serif] font-bold gap-[60px] lg:gap-[60px] md:gap-[24px] sm:gap-[12px] items-end justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white uppercase whitespace-nowrap sm:hidden md:flex">
+          <div className="content-stretch flex font-['Inter:Bold',sans-serif] font-bold gap-[60px] lg:gap-[60px] md:gap-[24px] sm:gap-[12px] items-end justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-[#151e21] uppercase whitespace-nowrap sm:hidden md:flex">
             <div
               onClick={() => router.push('/')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
@@ -159,7 +159,7 @@ export function HomePageHeader() {
               onClick={() => setShowSearchModal(true)}
               className="h-[21px] md:h-[18px] sm:h-[16px] w-[21px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
             >
-              <SearchIcon size={21} />
+              <SearchIcon size={21} className="brightness-0" />
             </div>
 
             {/* Cart Icon */}
@@ -167,7 +167,7 @@ export function HomePageHeader() {
               onClick={() => router.push('/cart')}
               className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
             >
-              <HeaderCartIcon size={20} />
+              <HeaderCartIcon size={20} className="brightness-0" />
             </div>
 
             {/* Language Icon */}
@@ -176,7 +176,7 @@ export function HomePageHeader() {
                 onClick={() => setShowLanguageMenu(!showLanguageMenu)}
                 className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center"
               >
-                <LanguageIcon size={20} />
+                <LanguageIcon size={20} className="brightness-0" />
               </div>
               {showLanguageMenu && (
                 <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
@@ -203,7 +203,7 @@ export function HomePageHeader() {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center"
                 >
-                  <ExitIcon size={20} />
+                  <ExitIcon size={20} className="brightness-0" />
                 </div>
                 {showUserMenu && (
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
@@ -244,7 +244,7 @@ export function HomePageHeader() {
                 onClick={() => router.push('/login')}
                 className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
               >
-                <ExitIcon size={20} />
+                <ExitIcon size={20} className="brightness-0" />
               </div>
             )}
           </div>
