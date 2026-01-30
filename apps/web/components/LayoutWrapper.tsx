@@ -158,12 +158,9 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
       <div className="hidden xl:block">
         <Footer router={router} t={t} isHomePage={false} />
       </div>
-      
-      {/* Mobile Footer - Only visible on mobile */}
-      <div className="xl:hidden relative w-full">
+      <div className="xl:hidden relative w-full ">
         <MobileFooter router={router} t={t} />
-      </div>
-      
+      </div>           
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <MobileBottomNavigation />
     </div>
