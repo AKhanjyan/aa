@@ -271,8 +271,8 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200">
-      <div className="mb-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200 rounded-[44px] ">
+      <div className="mb-8 ">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           {t('common.reviews.title')}
         </h2>
@@ -339,7 +339,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
               }
               setShowForm(true);
             }}
-            className="mb-8"
+            className="mb-8 h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold hover:bg-[#00d1ff] transition-colors"
           >
             {t('common.reviews.writeReview')}
           </Button>
@@ -348,7 +348,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
         {/* Review Form */}
         {showForm && (
           <form onSubmit={editingReviewId ? handleUpdateReview : handleSubmit} className="mb-8 p-6 bg-gray-50 rounded-lg">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            <h3 className="text-xl font-semibold  text-gray-900 mb-4">
               {editingReviewId ? 'Update Your Review' : t('common.reviews.writeReview')}
             </h3>
 
@@ -357,7 +357,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('common.reviews.rating')} *
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
@@ -384,15 +384,15 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
             </div>
 
             {/* Comment Textarea */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="mb-4"> 
+              <label className="block text-sm font-medium text-gray-700 mb-2 ">
                 {t('common.reviews.comment')} *
               </label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className=" w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder={t('common.reviews.commentPlaceholder')}
                 required
               />
@@ -404,6 +404,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
                 type="submit"
                 variant="primary"
                 disabled={submitting}
+                className="h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold disabled:bg-gray-300 disabled: hover:bg-[#00d1ff] transition-colors"
               >
                 {submitting
                   ? t('common.reviews.submitting')
@@ -414,6 +415,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
               <Button
                 type="button"
                 variant="outline"
+                className="rounded-[44px] hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900 transition-colors"
                 onClick={editingReviewId ? handleCancelEdit : () => {
                   setShowForm(false);
                   setRating(0);
@@ -443,6 +445,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
                 }
                 setShowForm(true);
               }}
+              className="h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold hover:bg-[#00d1ff] transition-colors"
             >
               {t('common.reviews.writeReview')}
             </Button>
