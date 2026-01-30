@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${montserrat.variable} ${inter.className} bg-gray-50 text-gray-900 antialiased`}>
+      <body className={`${inter.variable} ${montserrat.variable} ${inter.className} bg-white text-gray-900 antialiased`}>
         <Suspense fallback={null}>
           <ClientProviders>
             <LayoutWrapper>

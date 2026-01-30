@@ -422,7 +422,7 @@ export function MobileFooter({ router, t }: MobileFooterProps) {
       </div>
 
       {/* Mobile Footer */}
-      <div className="relative z-10 content-stretch flex flex-col gap-[30px] items-start justify-center left-[35px] w-[339px] max-w-[calc(100%-70px)] mx-auto pb-[0px] pt-8">
+      <div className="relative z-10 content-stretch flex flex-col gap-[30px] items-start justify-center left-[35px] w-[339px] max-w-[calc(1200%-70px)] mx-auto pb-[0px] pt-4">
         <div className="h-[312px] relative shrink-0 w-full">
           <div className="absolute content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
             <div className="h-[34px] relative shrink-0 w-[112px]">

@@ -99,9 +99,6 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         setShowSearchModal={setShowSearchModal}
         setShowMobileMenu={setShowMobileMenu}
       />
-      
-      {/* Blue gradient section - 800px from top with smooth transition */}
-      <div className="absolute top-0 left-0 right-0 h-[1100px] bg-[#8fd4ff] z-0" style={{ background: 'linear-gradient(to bottom, #8fd4ff 0%, #8fd4ff 50%, #9dd0ff 60%, #acd4ff 68%, #bbd8ff 75%, #cadeff 80%, #d9e6ff 83%, #e8eeff 86%, #f0f4ff 88%, #ffffff 96%)' }} />
 
       {/* Mobile Menu - Only visible on mobile */}
       <MobileMenu
@@ -151,14 +148,14 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
       <div className="hidden xl:block">
         <Breadcrumb />
       </div>
-      <main className={`flex-1 w-full relative z-10 ${isProductsPage || isAdminPage || isProfilePage ? 'pt-20 xl:pt-4 pb-[1200px] xl:pb-0' : 'xl:pt-[80px] pt-20 pb-[1200px] xl:pb-0'}`}>
+      <main className={`flex-1 w-full relative z-10 ${isProductsPage || isAdminPage || isProfilePage ? 'pt-20 xl:pt-4 pb-0 xl:pb-0' : 'xl:pt-[80px] pt-20 pb-0 xl:pb-0'}`}>
         {children}
       </main>
       {/* Desktop Footer - Only visible on desktop */}
       <div className="hidden xl:block">
         <Footer router={router} t={t} isHomePage={false} />
       </div>
-      <div className="xl:hidden relative w-full ">
+      <div className="xl:hidden relative w-full -mt-8">
         <MobileFooter router={router} t={t} />
       </div>           
       {/* Mobile Bottom Navigation - Only visible on mobile */}

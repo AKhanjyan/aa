@@ -1598,7 +1598,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
             <div className="text-gray-600 mb-8 prose prose-sm" dangerouslySetInnerHTML={{ __html: getProductText(language, product.id, 'longDescription') || product.description || '' }} />
 
-            <div className="mt-8 p-4 bg-gradient-to-b from-[#8fd4ff] to-[#b8e5ff] border border-gray-200 rounded-2xl space-y-4">
+            <div className="mt-8 p-4 bg-white border border-gray-200 rounded-2xl space-y-4">
             {/* Rating Section */}
             <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
               <div className="flex items-center gap-2">
@@ -1979,7 +1979,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               </div>
             )}
             <div className="flex items-center gap-3 pt-4 border-t">
-              <div className="flex items-center border rounded-xl overflow-hidden bg-gradient-to-r from-[#8fd4ff] to-[#b8e5ff]">
+              <div className="flex items-center border rounded-xl overflow-hidden bg-white">
                 <button onClick={() => adjustQuantity(-1)} className="w-12 h-12 flex items-center justify-center">-</button>
                 <div className="w-12 text-center font-bold">{quantity}</div>
                 <button onClick={() => adjustQuantity(1)} className="w-12 h-12 flex items-center justify-center">+</button>
