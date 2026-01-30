@@ -193,6 +193,7 @@ interface HeaderProps {
   t: (key: string) => string;
   setShowSearchModal: (show: boolean) => void;
   setShowLanguageMenu: (show: boolean) => void;
+
   showLanguageMenu: boolean;
   handleLanguageChange: (langCode: LanguageCode) => void;
   isLoggedIn: boolean;
@@ -208,7 +209,6 @@ interface HeaderProps {
 export function Header({
   router,
   t,
-  setShowSearchModal,
   setShowLanguageMenu,
   showLanguageMenu,
   handleLanguageChange,
@@ -226,10 +226,25 @@ export function Header({
     ? 'top-[4px] md:top-[40px] sm:top-[4px]'
     : 'top-[80px] md:top-[40px] sm:top-[60px]';
   
+  // Add shadow when on white background (non-home pages), keep current shadow for home page
+  const shadowClass = isHomePage 
+    ? 'shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]'
+    : 'shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_8px_rgba(0,0,0,0.1)]';
+  
+  // Change background color when on white background to make it more visible but not too different
+  const bgClass = isHomePage 
+    ? 'bg-[rgba(255,255,255,0.08)]'
+    : 'bg-gray-50/95';
+  
+  // Change border color when on white background to make it more visible
+  const borderClass = isHomePage 
+    ? 'border-[rgba(255,255,255,0.15)]'
+    : 'border-gray-200/60';
+  
   return (
     <>
       {/* Header Section - Navigation Bar */}
-      <div className={`fixed bg-[rgba(255,255,255,0.08)] backdrop-blur-[15px] content-stretch flex flex-col h-[65px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[32px] md:px-[24px] sm:px-[16px] py-[14px] md:py-[12px] sm:py-[8px] rounded-[60px] md:rounded-[50px] sm:rounded-[40px] ${topPosition} translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50 border border-[rgba(255,255,255,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.12),0_0_60px_rgba(98,179,232,0.15)]`}>
+      <div className={`fixed ${bgClass} backdrop-blur-[15px] content-stretch flex flex-col h-[65px] md:h-[60px] sm:h-[50px] items-center justify-center left-1/2 px-[32px] md:px-[24px] sm:px-[16px] py-[14px] md:py-[12px] sm:py-[8px] rounded-[60px] md:rounded-[50px] sm:rounded-[40px] ${topPosition} translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-50 border ${borderClass} ${shadowClass}`}>
         <div className="content-stretch flex gap-[160px] lg:gap-[160px] md:gap-[120px] sm:gap-[16px] h-[50px] md:h-[44px] sm:h-[36px] items-center justify-center relative shrink-0">
           {/* Logo */}
           <div
@@ -240,7 +255,7 @@ export function Header({
           </div>
 
           {/* Navigation Menu */}
-          <div className="content-stretch flex font-['Inter:Bold',sans-serif] font-bold gap-[60px] lg:gap-[60px] md:gap-[24px] sm:gap-[12px] items-end justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white uppercase whitespace-nowrap sm:hidden md:flex">
+          <div className={`content-stretch flex font-['Inter:Bold',sans-serif] font-bold gap-[60px] lg:gap-[60px] md:gap-[24px] sm:gap-[12px] items-end justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white uppercase whitespace-nowrap sm:hidden md:flex ${!isHomePage ? '[&_p]:drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : ''}`}>
             <div
               onClick={() => router.push('/')}
               className="flex flex-col justify-center relative shrink-0 cursor-pointer"
@@ -277,8 +292,8 @@ export function Header({
           <div className="content-stretch flex gap-[28px] lg:gap-[28px] md:gap-[20px] sm:gap-[12px] items-center justify-center relative shrink-0">
             {/* Search Icon */}
             <div
-              onClick={() => setShowSearchModal(true)}
-              className="h-[21px] md:h-[18px] sm:h-[16px] w-[21px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
+              onClick={() => router.push('/products')}
+              className={`h-[21px] md:h-[18px] sm:h-[16px] w-[21px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center ${!isHomePage ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' : ''}`}
             >
               <SearchIcon size={21} />
             </div>
@@ -286,7 +301,7 @@ export function Header({
             {/* Cart Icon */}
             <div
               onClick={() => router.push('/cart')}
-              className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
+              className={`h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center ${!isHomePage ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' : ''}`}
             >
               <HeaderCartIcon size={20} />
             </div>
@@ -295,7 +310,7 @@ export function Header({
             <div className="relative shrink-0" ref={languageMenuRef}>
               <div
                 onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center"
+                className={`h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center ${!isHomePage ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' : ''}`}
               >
                 <LanguageIcon size={20} />
               </div>
@@ -322,7 +337,7 @@ export function Header({
               <div className="relative shrink-0" ref={userMenuRef}>
                 <div
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center"
+                  className={`h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative cursor-pointer flex items-center justify-center ${!isHomePage ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' : ''}`}
                 >
                   <ExitIcon size={20} />
                 </div>
@@ -363,7 +378,7 @@ export function Header({
             ) : (
               <div
                 onClick={() => router.push('/login')}
-                className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
+                className={`h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center ${!isHomePage ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' : ''}`}
               >
                 <ExitIcon size={20} />
               </div>

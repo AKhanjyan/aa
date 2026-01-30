@@ -130,7 +130,6 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         <Header
           router={router}
           t={t}
-          setShowSearchModal={setShowSearchModal}
           setShowLanguageMenu={setShowLanguageMenu}
           showLanguageMenu={showLanguageMenu}
           handleLanguageChange={handleLanguageChange}
