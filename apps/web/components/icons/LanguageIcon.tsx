@@ -9,7 +9,7 @@ interface LanguageIconProps {
  * Language icon from Figma vector group
  */
 export function LanguageIcon({ size = 20, className = '' }: LanguageIconProps) {
-  const imgLanguageIcon = "https://www.figma.com/api/mcp/asset/f043a5f6-c07b-40fc-bd7c-95ed387b0490";
+  const imgLanguageIcon = "/assets/home/imgHeaderLanguageIcon.svg";
   
   return (
     <img 

@@ -9,7 +9,7 @@ interface SearchIconProps {
  * Search icon from Figma vector group
  */
 export function SearchIcon({ size = 21, className = '' }: SearchIconProps) {
-  const imgSearchIcon = "https://www.figma.com/api/mcp/asset/e4a0ab91-ecc2-4970-9d02-54165dfb7e01";
+  const imgSearchIcon = "/assets/home/imgHeaderSearchIcon.svg";
   
   return (
     <img 

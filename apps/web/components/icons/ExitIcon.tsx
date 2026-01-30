@@ -9,7 +9,7 @@ interface ExitIconProps {
  * Exit/Logout icon from Figma vector group
  */
 export function ExitIcon({ size = 20, className = '' }: ExitIconProps) {
-  const imgExitIcon = "https://www.figma.com/api/mcp/asset/e7ddaef4-2914-4de9-8b97-16e46e60bdb5";
+  const imgExitIcon = "/assets/home/imgHeaderExitIcon.svg";
   
   return (
     <img 
