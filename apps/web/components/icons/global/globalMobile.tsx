@@ -430,7 +430,7 @@ export function MobileFooter({ router, t }: MobileFooterProps) {
               <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBorborAguaLogoColorB2024Colored1} />
             </div>
           </div>
-          <div className="absolute content-stretch flex flex-col items-start left-0 top-[58px] w-[336px]">
+          <div className="absolute content-stretch flex flex-col items-start left-0 top-[68px] w-[336px]">
             <div className="flex flex-col font-['Inter:Medium',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-full">
               <p className="leading-[26px] whitespace-pre-wrap">{t('home.footer.description')}</p>
             </div>
@@ -536,22 +536,22 @@ export function MobileFooter({ router, t }: MobileFooterProps) {
       </div>
 
       {/* Mobile Footer Copyright */}
-      <div className="relative z-10 border-[#e2e8f0] border-solid border-t content-stretch flex flex-col gap-[21px] items-center justify-center pt-[29px] w-full max-w-[386px] mx-auto mt-8">
-        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-white whitespace-nowrap">
+      <div className="relative z-10 border-[#e2e8f0] border-solid border-t content-stretch flex flex-col gap-[16px] items-center justify-center  w-full max-w-[386px] mx-auto top-[-160px]">
+        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-white whitespace-nowrap mt-[16px]">
           <p className="leading-[16px]">{t('home.footer.copyright')}</p>
         </div>
         <div className="relative shrink-0">
           <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[13px] items-center justify-end relative">
-            <div className="h-[24.998px] relative shrink-0 w-[77.198px]">
+            <div className="h-[25.998px] relative shrink-0 w-[35.198px] left-[-50px]">
               <img alt="" className="block max-w-none size-full" src={imgGroup2122} />
             </div>
-            <div className="h-[29.209px] relative shrink-0 w-[48.946px]">
+            <div className="h-[25.209px] relative shrink-0 w-[35.946px] left-[-30px]">
               <img alt="" className="block max-w-none size-full" src={imgGroup2121} />
             </div>
-            <div className="h-[25.209px] relative shrink-0 w-[98.706px]">
+            <div className="h-[25.209px] relative shrink-0 w-[35.706px] left-[-15px]">
               <img alt="" className="block max-w-none size-full" src={imgGroup2124} />
             </div>
-            <div className="h-[25px] relative shrink-0 w-[87.735px]">
+            <div className="h-[35px] relative shrink-0 w-[55.735px] left-[15px]">
               <img alt="" className="block max-w-none size-full" src={imgGroup2123} />
             </div>
           </div>
