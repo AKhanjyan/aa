@@ -89,8 +89,8 @@ async function getProducts(
 export default async function ProductsPage({ searchParams }: any) {
   const params = searchParams ? await searchParams : {};
   const page = parseInt(params?.page || "1", 10);
-  // Show 8 products per page on mobile (4 rows × 2 columns)
-  const perPage = 8;
+  // Show 9 products per page on desktop, 8 on mobile
+  const perPage = 9;
 
   const productsData = await getProducts(
     page,

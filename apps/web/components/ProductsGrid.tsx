@@ -38,6 +38,7 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
   // Initialize with 'AMD' to match server-side default and prevent hydration mismatch
   const [currency, setCurrency] = useState<'USD' | 'AMD' | 'EUR' | 'RUB' | 'GEL'>('AMD');
+  const [isMobile, setIsMobile] = useState(false);
 
   // Always use grid-3 view mode
   useEffect(() => {
@@ -48,6 +49,17 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   // Initialize currency from localStorage after mount to prevent hydration mismatch
   useEffect(() => {
     setCurrency(getStoredCurrency());
+  }, []);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
 
@@ -166,9 +178,12 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
     brand: product.brand,
   });
 
+  // Limit products: 9 on desktop, 8 on mobile
+  const displayProducts = isMobile ? sortedProducts.slice(0, 8) : sortedProducts.slice(0, 9);
+
   return (
     <div className={getGridClasses()}>
-      {sortedProducts.map((product) => {
+      {displayProducts.map((product) => {
         const featuredProduct = convertToFeaturedProduct(product);
         return (
           <FeaturedProductCard
