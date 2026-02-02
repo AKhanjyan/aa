@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { Button, Input, Card } from '@shop/ui';
+import { Input, Card } from '@shop/ui';
 import Link from 'next/link';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useTranslation } from '../../lib/i18n-client';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -249,14 +250,14 @@ export default function RegisterPage() {
           {!acceptTerms && error === t('register.errors.acceptTerms') && (
             <p className="text-xs text-red-600 -mt-2">{t('register.errors.mustAcceptTerms')}</p>
           )}
-          <Button 
+          <ProductPageButton 
             variant="primary" 
-            className="w-full"
+            className="w-full py-3"
             type="submit"
             disabled={isSubmitting || isLoading}
           >
             {isSubmitting || isLoading ? t('register.form.creatingAccount') : t('register.form.createAccount')}
-          </Button>
+          </ProductPageButton>
         </form>
 
         <div className="mt-6 text-center">

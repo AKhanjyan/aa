@@ -2,11 +2,12 @@
 
 import { useState, FormEvent, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button, Input, Card } from '@shop/ui';
+import { Input, Card } from '@shop/ui';
 import Link from 'next/link';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '../../lib/i18n-client';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 function LoginPageContent() {
   const { t } = useTranslation();
@@ -123,14 +124,14 @@ function LoginPageContent() {
               {t('login.form.forgotPassword')}
             </Link>
           </div>
-          <Button 
+          <ProductPageButton 
             variant="primary" 
-            className="w-full"
+            className="w-full py-3"
             type="submit"
             disabled={isSubmitting || isLoading}
           >
             {isSubmitting || isLoading ? t('login.form.submitting') : t('login.form.submit')}
-          </Button>
+          </ProductPageButton>
         </form>
 
         <div className="mt-6 text-center">

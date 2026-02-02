@@ -1,11 +1,12 @@
 'use client';
 
-import { Button, Input } from '@shop/ui';
+import { Input } from '@shop/ui';
 import { useState, useEffect } from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
 import { getStoredLanguage } from '@/lib/language';
 import { useTranslation } from '../../lib/i18n-client';
 import contactData from '../../../../config/contact.json';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 // Icons
 const PhoneIcon = () => (
@@ -178,13 +179,13 @@ export default function ContactPage() {
                   placeholder={t('contact.form.messagePlaceholder')}
                 />
               </div>
-              <Button
+              <ProductPageButton
                 type="submit"
                 variant="primary"
-                className="w-full bg-gray-900 text-white hover:bg-gray-800 rounded-md py-3 font-semibold uppercase tracking-wide"
+                className="w-full py-3"
               >
                 {t('contact.form.submit')}
-              </Button>
+              </ProductPageButton>
             </form>
           </div>
         </div>
