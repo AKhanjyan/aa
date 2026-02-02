@@ -6,6 +6,7 @@ import { Button } from '@shop/ui';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useTranslation } from '../lib/i18n-client';
 import { apiClient } from '../lib/api-client';
+import { ProductPageButton } from './ProductPageButton';
 
 interface Review {
   id: string;
@@ -330,8 +331,8 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
 
         {/* Write Review Button */}
         {!showForm && (
-          <Button
-            variant="primary"
+          <ProductPageButton
+            variant="cancel"
             onClick={() => {
               if (!isLoggedIn) {
                 alert(t('common.reviews.loginRequired'));
@@ -339,10 +340,10 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
               }
               setShowForm(true);
             }}
-            className="mb-8 h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold hover:bg-[#00d1ff] transition-colors"
+            className="mb-8"
           >
             {t('common.reviews.writeReview')}
-          </Button>
+          </ProductPageButton>
         )}
 
         {/* Review Form */}
@@ -400,22 +401,20 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
 
             {/* Form Actions */}
             <div className="flex gap-4">
-              <Button
+              <ProductPageButton
                 type="submit"
-                variant="primary"
+                variant="cancel"
                 disabled={submitting}
-                className="h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold disabled:bg-gray-300 disabled: hover:bg-[#00d1ff] transition-colors"
               >
                 {submitting
                   ? t('common.reviews.submitting')
                   : editingReviewId
                     ? 'Update Review'
                     : t('common.reviews.submitReview')}
-              </Button>
-              <Button
+              </ProductPageButton>
+              <ProductPageButton
                 type="button"
-                variant="outline"
-                className="rounded-[44px] hover:bg-gray-100 hover:border-gray-300 hover:text-gray-900 transition-colors"
+                variant="cancel"
                 onClick={editingReviewId ? handleCancelEdit : () => {
                   setShowForm(false);
                   setRating(0);
@@ -423,7 +422,7 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
                 }}
               >
                 {t('common.buttons.cancel')}
-              </Button>
+              </ProductPageButton>
             </div>
           </form>
         )}
@@ -436,8 +435,8 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
             {t('common.reviews.noReviews')}
           </p>
           {!showForm && (
-            <Button
-              variant="primary"
+            <ProductPageButton
+              variant="cancel"
               onClick={() => {
                 if (!isLoggedIn) {
                   alert(t('common.reviews.loginRequired'));
@@ -445,10 +444,9 @@ export function ProductReviews({ productId, productSlug }: ProductReviewsProps) 
                 }
                 setShowForm(true);
               }}
-              className="h-[48px] bg-[#00b8e6] text-white rounded-[44px]  font-bold hover:bg-[#00d1ff] transition-colors"
             >
               {t('common.reviews.writeReview')}
-            </Button>
+            </ProductPageButton>
           )}
         </div>
       ) : (
