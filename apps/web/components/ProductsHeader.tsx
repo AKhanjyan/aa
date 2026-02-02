@@ -176,67 +176,6 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
             </select>
           </div>
 
-          {/* View Mode Icons: List, Grid (2x2), and Grid (3x3) */}
-          <div className="flex items-center gap-1">
-            {/* List View */}
-            <button
-              onClick={() => handleViewModeChange('list')}
-              className={`rounded-lg p-2 transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-gray-100 text-gray-900'
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-              aria-label={t('products.header.viewModes.list')}
-            >
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="3" y1="5" x2="17" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <line x1="3" y1="15" x2="17" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </button>
-            
-            {/* Grid View (2x2) */}
-            <button
-              onClick={() => handleViewModeChange('grid-2')}
-              className={`rounded-lg p-2 transition-all ${
-                viewMode === 'grid-2'
-                  ? 'bg-gray-100 text-gray-900'
-                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-              }`}
-              aria-label={t('products.header.viewModes.grid2')}
-            >
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                <rect x="11" y="2" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                <rect x="2" y="11" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                <rect x="11" y="11" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-              </svg>
-            </button>
-
-            {/* Grid View (3x3) */}
-            <button
-              onClick={() => handleViewModeChange('grid-3')}
-              className={`rounded-lg p-2 transition-all ${
-                viewMode === 'grid-3'
-                  ? 'bg-gray-100 text-gray-900'
-                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-              }`}
-              aria-label={t('products.header.viewModes.grid3')}
-            >
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="4" cy="4" r="1.5" fill="currentColor" />
-                <circle cx="10" cy="4" r="1.5" fill="currentColor" />
-                <circle cx="16" cy="4" r="1.5" fill="currentColor" />
-                <circle cx="4" cy="10" r="1.5" fill="currentColor" />
-                <circle cx="10" cy="10" r="1.5" fill="currentColor" />
-                <circle cx="16" cy="10" r="1.5" fill="currentColor" />
-                <circle cx="4" cy="16" r="1.5" fill="currentColor" />
-                <circle cx="10" cy="16" r="1.5" fill="currentColor" />
-                <circle cx="16" cy="16" r="1.5" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-
           {/* Sort dropdown */}
           <div className="relative" ref={sortDropdownRef}>
             <button
@@ -324,43 +263,8 @@ function ProductsHeaderContent({ total, perPage }: ProductsHeaderProps) {
             <span>{t('products.header.filters')}</span>
           </button>
 
-          {/* Right: View Mode Icons + Sort */}
+          {/* Right: Sort */}
           <div className="flex items-center gap-2">
-            {/* View Mode Icons */}
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => handleViewModeChange('list')}
-                className={`rounded-lg p-2 transition-colors ${
-                  viewMode === 'list'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-400 hover:text-gray-600'
-                }`}
-                aria-label={t('products.header.viewModes.list')}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="3" y1="5" x2="17" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  <line x1="3" y1="15" x2="17" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </button>
-              <button
-                onClick={() => handleViewModeChange('grid-2')}
-                className={`rounded-lg p-2 transition-all ${
-                  viewMode === 'grid-2'
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-                }`}
-                aria-label={t('products.header.viewModes.grid2')}
-              >
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="2" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                  <rect x="11" y="2" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                  <rect x="2" y="11" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                  <rect x="11" y="11" width="7" height="7" stroke="currentColor" strokeWidth="1.5" fill={viewMode === 'grid-2' ? 'currentColor' : 'none'} />
-                </svg>
-              </button>
-            </div>
-
             {/* Sort icon */}
             <div className="relative" ref={mobileSortDropdownRef}>
               <button

@@ -33,48 +33,23 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoggedIn } = useAuth();
-  const [viewMode, setViewMode] = useState<ViewMode>('grid-2');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid-3');
   const [sortedProducts, setSortedProducts] = useState<Product[]>(products);
   const [addingToCart, setAddingToCart] = useState<Set<string>>(new Set());
   // Initialize with 'AMD' to match server-side default and prevent hydration mismatch
   const [currency, setCurrency] = useState<'USD' | 'AMD' | 'EUR' | 'RUB' | 'GEL'>('AMD');
 
-  // Load view mode from URL or localStorage
+  // Always use grid-3 view mode
   useEffect(() => {
-    const urlView = searchParams.get('view');
-    if (urlView && ['list', 'grid'].includes(urlView)) {
-      // Map 'grid' from URL to 'grid-2' for compatibility
-      const mappedView: ViewMode = urlView === 'grid' ? 'grid-2' : urlView as ViewMode;
-      setViewMode(mappedView);
-      localStorage.setItem('products-view-mode', mappedView);
-    } else {
-      const stored = localStorage.getItem('products-view-mode');
-      if (stored && ['list', 'grid-2', 'grid-3'].includes(stored)) {
-        setViewMode(stored as ViewMode);
-      } else {
-        // Default to grid-2 if nothing stored
-        setViewMode('grid-2');
-        localStorage.setItem('products-view-mode', 'grid-2');
-      }
-    }
-  }, [searchParams]);
+    setViewMode('grid-3');
+    localStorage.setItem('products-view-mode', 'grid-3');
+  }, []);
 
   // Initialize currency from localStorage after mount to prevent hydration mismatch
   useEffect(() => {
     setCurrency(getStoredCurrency());
   }, []);
 
-  // Listen for view mode changes
-  useEffect(() => {
-    const handleViewModeChange = (_event: CustomEvent) => {
-      setViewMode((_event as CustomEvent).detail);
-    };
-
-    window.addEventListener('view-mode-changed', handleViewModeChange as (_event: Event) => void);
-    return () => {
-      window.removeEventListener('view-mode-changed', handleViewModeChange as (_event: Event) => void);
-    };
-  }, []);
 
   // Listen for currency updates
   useEffect(() => {
@@ -166,9 +141,9 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
       case 'grid-2':
         return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
       case 'grid-3':
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
       default:
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
+        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
     }
   };
 

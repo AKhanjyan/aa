@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from 'react';
 
 type SortOption = 'default' | 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
 type PriceFilter = 'all' | 'low' | 'high';
-type ViewMode = 'grid-2' | 'list';
 
 interface ProductsHeroProps {
   total?: number;
@@ -16,7 +15,6 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
   const searchParams = useSearchParams();
   const [sortBy, setSortBy] = useState<SortOption>('default');
   const [priceFilter, setPriceFilter] = useState<PriceFilter>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid-2');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,18 +30,12 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
   useEffect(() => {
     const sortParam = searchParams.get('sort') as SortOption;
     const priceParam = searchParams.get('price') as PriceFilter;
-    const viewParam = searchParams.get('view');
 
     if (sortParam && sortOptions.some(opt => opt.value === sortParam)) {
       setSortBy(sortParam);
     }
     if (priceParam && ['all', 'low', 'high'].includes(priceParam)) {
       setPriceFilter(priceParam);
-    }
-    if (viewParam) {
-      // Map 'grid' from URL to 'grid-2' for internal state
-      const mappedView: ViewMode = viewParam === 'grid' ? 'grid-2' : (viewParam === 'list' ? 'list' : 'grid-2');
-      setViewMode(mappedView);
     }
   }, [searchParams]);
 
@@ -98,15 +90,6 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
     router.push(`/products?${params.toString()}`);
   };
 
-  const handleViewModeChange = (mode: ViewMode) => {
-    setViewMode(mode);
-    
-    const params = new URLSearchParams(searchParams.toString());
-    // Map 'grid-2' to 'grid' for URL compatibility
-    params.set('view', mode === 'grid-2' ? 'grid' : mode);
-    
-    router.replace(`/products?${params.toString()}`, { scroll: false });
-  };
 
   return (
     <div className="relative w-full" data-node-id="4:1680">
@@ -225,48 +208,6 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
           </div>
         </div>
 
-        {/* Right: View Mode Toggle */}
-        <div className="relative flex-shrink-0" data-name="View" data-node-id="4:1689">
-          <div className="bg-[rgba(255,255,255,0.33)] h-9 rounded-full w-24 relative overflow-hidden">
-            {/* Active view indicator */}
-            <div
-              className="absolute bg-[rgba(8,202,244,0.7)] h-9 rounded-bl-2xl rounded-tl-2xl transition-all duration-300"
-              style={{
-                left: 0,
-                width: viewMode === 'grid-2' ? '52%' : '48%',
-              }}
-              data-node-id="4:1693"
-            />
-            
-            {/* Grid View Button */}
-            <button
-              onClick={() => handleViewModeChange('grid-2')}
-              className="absolute left-1.5 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center z-10"
-              data-name="Grid"
-              data-node-id="4:1694"
-            >
-              <div className="grid grid-cols-2 gap-0.5">
-                <div className="bg-white h-1.5 rounded w-1.5" />
-                <div className="bg-white h-1.5 rounded w-1.5" />
-                <div className="bg-white h-1.5 rounded w-1.5" />
-                <div className="bg-white h-1.5 rounded w-1.5" />
-              </div>
-            </button>
-            
-            {/* List View Button */}
-            <button
-              onClick={() => handleViewModeChange('list')}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 flex flex-col gap-0.5 z-10"
-              data-name="List"
-              data-node-id="4:1699"
-            >
-              <div className="bg-[#1a1f21] h-0.5 rounded w-1" />
-              <div className="bg-[#1a1f21] h-0.5 rounded w-2.5" />
-              <div className="bg-[#1a1f21] h-0.5 rounded w-1" />
-              <div className="bg-[#1a1f21] h-0.5 rounded w-2.5" />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
