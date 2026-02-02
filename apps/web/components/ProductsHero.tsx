@@ -93,21 +93,8 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
 
   return (
     <div className="relative w-full" data-node-id="4:1680">
-      {/* Results Count Text */}
-      {total > 0 && (
-        <div className="flex items-center justify-between mb-3" data-name="Group 2143" data-node-id="4:1711">
-          <p className="font-['Montserrat',sans-serif] font-semibold text-sm text-[rgba(0,0,0,0.87)]">
-            <span className="font-['Montserrat',sans-serif] font-semibold text-[rgba(129,129,129,0.87)]">Home</span>
-            <span> / Products</span>
-          </p>
-          <p className="font-['Montserrat',sans-serif] font-bold text-sm text-[rgba(0,0,0,0.87)]" data-node-id="4:1712">
-            Show {total} Results
-          </p>
-        </div>
-      )}
-
       {/* Hero Section Container - Compact Layout */}
-      <div className="flex items-center gap-3 ml-auto mr-0 max-w-2xl py-3" data-name="Hero" data-node-id="4:1681">
+      <div className="flex items-center gap-3 ml-auto mr-0 py-3 mb-3" data-name="Hero" data-node-id="4:1681" style={{ width: 'fit-content' }}>
         {/* Left: Sort by dropdown */}
         <div className="flex items-center" data-name="Sort by" data-node-id="4:1682">
           <div className="relative" ref={sortDropdownRef}>
@@ -209,6 +196,15 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
         </div>
 
       </div>
+
+      {/* Results Count Text */}
+      {total > 0 && (
+        <div className="flex items-center justify-end" data-name="Group 2143" data-node-id="4:1711">
+          <p className="font-['Montserrat',sans-serif] font-bold text-sm text-[rgba(0,0,0,0.87)]" data-node-id="4:1712">
+            Show {total} Results
+          </p>
+        </div>
+      )}
     </div>
   );
 }
