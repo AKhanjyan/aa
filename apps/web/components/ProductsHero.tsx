@@ -197,7 +197,7 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
 
       {/* Results Count Text */}
       {total > 0 && (
-        <div className="flex items-center justify-end" data-name="Group 2143" data-node-id="4:1711">
+        <div className="flex items-center justify-end mb-12" data-name="Group 2143" data-node-id="4:1711">
           <p className="font-['Montserrat',sans-serif] font-bold text-sm text-[rgba(0,0,0,0.87)]" data-node-id="4:1712">
             Show {total} Results
           </p>
