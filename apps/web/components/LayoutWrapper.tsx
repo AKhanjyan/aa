@@ -118,7 +118,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col pb-16 lg:pb-0 bg-white">
+    <div className="relative flex min-h-screen flex-col pb-16 lg:pb-0 app-page-background">
       {/* Top Header Bar - Only visible on mobile, white background */}
       <TopHeaderBar
         router={router}

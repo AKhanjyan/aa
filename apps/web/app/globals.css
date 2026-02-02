@@ -143,6 +143,23 @@
     animation: figma-slide-up 0.8s ease-out forwards;
   }
 
+  /* Global app background for non-home pages (Figma products page style) */
+  .app-page-background {
+    /* Stronger, more visible blue gradient so it doesn't look plain white */
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 55%),
+      linear-gradient(
+        104.07deg,
+        #f8fcff 0%,
+        #d4ecff 35%,
+        #9ff4ff 60%,
+        #9fe7ff 80%
+      );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
   @keyframes rotate-360 {
     from {
       transform: rotate(0deg);
@@ -254,9 +271,19 @@
   }
 
 
-
   .home-page-wrapper {
     @apply w-full relative overflow-x-hidden;
+  }
+
+  /* Breadcrumb bar background – reuse same palette as app-page-background */
+  .breadcrumb-background {
+    background-image: linear-gradient(
+      104.07deg,
+      #f8fcff 0%,
+      #d4f3ff 35%,
+      #c4f8ff 60%,
+      #9fe7ff 80%
+    );
   }
 }
 
