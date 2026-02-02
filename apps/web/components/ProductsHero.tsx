@@ -20,8 +20,6 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'default', label: 'Default' },
-    { value: 'price-asc', label: 'Price: Low to High' },
-    { value: 'price-desc', label: 'Price: High to Low' },
     { value: 'name-asc', label: 'Name: A to Z' },
     { value: 'name-desc', label: 'Name: Z to A' },
   ];
@@ -156,7 +154,7 @@ export function ProductsHero({ total = 0 }: ProductsHeroProps) {
               data-node-id="4:1683"
             >
               <span className="font-['Montserrat',sans-serif] font-semibold text-xs text-[rgba(0,0,0,0.87)]">
-                Sort by
+                {sortOptions.find(opt => opt.value === sortBy)?.label || (sortBy === 'price-asc' || sortBy === 'price-desc' ? 'Default' : 'Sort by')}
               </span>
               <svg
                 width="14"
