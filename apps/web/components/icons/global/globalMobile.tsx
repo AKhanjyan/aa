@@ -584,18 +584,18 @@ export function TopHeaderBar({
   setShowMobileMenu,
 }: TopHeaderBarProps) {
   return (
-    <div className="xl:hidden fixed top-0 left-0 right-0 z-50 bg-[#8fd4ff] border-b border-white/20 shadow-sm">
+    <div className="xl:hidden fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.32)] backdrop-blur-[15px] border-b border-black shadow-sm">
       <div className="flex items-center justify-between pl-4 pr-0 py-3 h-[73px]">
         <div className="flex items-center gap-2">
           {/* Hamburger Menu Button */}
           <button
             onClick={() => setShowMobileMenu(true)}
-            className="bg-transparent border border-white/49 cursor-pointer flex items-center justify-center p-3 rounded-full w-[49px] h-[49px] transition-all duration-300 hover:bg-white/10 hover:border-white/80 hover:scale-110 active:scale-95"
+            className="bg-transparent border border-black cursor-pointer flex items-center justify-center p-3 rounded-full w-[49px] h-[49px] transition-all duration-300 hover:bg-black hover:border-black hover:scale-110 active:scale-95"
           >
             <div className="flex items-center justify-center">
               <div className="-scale-y-100 flex-none rotate-180">
                 <div className="h-[12px] relative w-[18px]">
-                  <img className="block max-w-none size-full" alt="" src={imgVector3} />
+                  <img className="block max-w-none size-full brightness-0" alt="" src={imgVector3} />
                 </div>
               </div>
             </div>
@@ -603,12 +603,12 @@ export function TopHeaderBar({
           {/* Search Button */}
           <button
             onClick={() => setShowSearchModal(true)}
-            className="bg-transparent border border-white/49 cursor-pointer flex items-center justify-center p-3 rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/80 hover:scale-110 active:scale-95"
+            className="bg-transparent border border-black cursor-pointer flex items-center justify-center p-3 rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/80 hover:scale-110 active:scale-95"
           >
             <div className="flex items-center justify-center">
               <div className="-scale-y-100 flex-none rotate-180">
                 <div className="relative size-[20px]">
-                  <img className="block max-w-none size-full" alt="" src={imgVector2} />
+                  <img className="block max-w-none size-full brightness-0" alt="" src={imgVector2} />
                 </div>
               </div>
             </div>
