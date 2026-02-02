@@ -494,7 +494,7 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
                     }
                     goToNext();
                   }}
-                  className="hidden sm:block absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-8 sm:translate-x-12 md:translate-x-16 lg:translate-x-20 rotate-180 z-20 bg-[#00d1ff]/90 backdrop-blur-sm size-[32px] sm:size-[36px] md:size-[42px] lg:size-[48px]"
+                  className="hidden sm:block absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-8 sm:translate-x-12 md:translate-x-16 lg:translate-x-20 rotate-180 z-20 size-[32px] sm:size-[36px] md:size-[42px] lg:size-[48px] !border-black hover:!border-black flex items-center justify-center [&_path]:fill-black [&_path]:hover:fill-black"
                   ariaLabel="Next products"
                 />
 
@@ -507,7 +507,7 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
                     }
                     goToPrevious();
                   }}
-                  className="hidden sm:block absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-8 sm:-translate-x-12 md:-translate-x-16 lg:-translate-x-20 rotate-180 z-20 bg-[#00d1ff]/90 backdrop-blur-sm size-[32px] sm:size-[36px] md:size-[42px] lg:size-[48px]"
+                  className="hidden sm:block absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-8 sm:-translate-x-12 md:-translate-x-16 lg:-translate-x-20 rotate-180 z-20 size-[32px] sm:size-[36px] md:size-[42px] lg:size-[48px] !border-black hover:!border-black flex items-center justify-center [&_path]:fill-black [&_path]:hover:fill-black"
                   ariaLabel="Previous products"
                 />
               </>
