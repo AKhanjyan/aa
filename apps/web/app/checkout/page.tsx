@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, Button, Input } from '@shop/ui';
+import { Card, Input } from '@shop/ui';
 import { apiClient } from '../../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../../lib/currency';
 import { getStoredLanguage } from '../../lib/language';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useTranslation } from '../../lib/i18n-client';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 interface CartItem {
   id: string;
@@ -760,9 +761,9 @@ export default function CheckoutPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('checkout.title')}</h1>
         <Card className="p-6 text-center">
           <p className="text-gray-600 mb-4">{t('checkout.errors.cartEmpty')}</p>
-          <Button variant="primary" onClick={() => router.push('/products')}>
+          <ProductPageButton variant="primary" onClick={() => router.push('/products')} className="py-3">
             {t('checkout.buttons.continueShopping')}
-          </Button>
+          </ProductPageButton>
         </Card>
       </div>
     );
@@ -1059,15 +1060,14 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <Button
+              <ProductPageButton
                 type="submit"
                 variant="primary"
-                className="w-full"
-                size="lg"
+                className="w-full py-3"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? t('checkout.buttons.processing') : t('checkout.buttons.placeOrder')}
-              </Button>
+              </ProductPageButton>
             </Card>
           </div>
         </div>
@@ -1427,19 +1427,19 @@ export default function CheckoutPage() {
             )}
 
             <div className="flex gap-3">
-              <Button
+              <ProductPageButton
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="flex-1 py-3"
                 onClick={() => setShowShippingModal(false)}
                 disabled={isSubmitting}
               >
                 {t('checkout.buttons.cancel')}
-              </Button>
-              <Button
+              </ProductPageButton>
+              <ProductPageButton
                 type="button"
                 variant="primary"
-                className="flex-1"
+                className="flex-1 py-3"
                 onClick={handleSubmit(
                   (data) => {
                     setShowShippingModal(false);
@@ -1460,7 +1460,7 @@ export default function CheckoutPage() {
                 disabled={isSubmitting}
               >
                 {isSubmitting ? t('checkout.buttons.processing') : t('checkout.buttons.placeOrder')}
-              </Button>
+              </ProductPageButton>
             </div>
           </div>
         </div>
@@ -1646,19 +1646,19 @@ export default function CheckoutPage() {
             )}
 
             <div className="flex gap-3">
-              <Button
+              <ProductPageButton
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="flex-1 py-3"
                 onClick={() => setShowCardModal(false)}
                 disabled={isSubmitting}
               >
                 {t('checkout.buttons.cancel')}
-              </Button>
-              <Button
+              </ProductPageButton>
+              <ProductPageButton
                 type="button"
                 variant="primary"
-                className="flex-1"
+                className="flex-1 py-3"
                 onClick={handleSubmit(
                   (data) => {
                     setShowCardModal(false);
@@ -1684,7 +1684,7 @@ export default function CheckoutPage() {
                 disabled={isSubmitting}
               >
                 {isSubmitting ? t('checkout.buttons.processing') : t('checkout.buttons.continueToPayment')}
-              </Button>
+              </ProductPageButton>
             </div>
           </div>
         </div>

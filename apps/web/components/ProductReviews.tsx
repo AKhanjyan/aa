@@ -6,7 +6,7 @@ import { Button } from '@shop/ui';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useTranslation } from '../lib/i18n-client';
 import { apiClient } from '../lib/api-client';
-import { ProductPageButton } from './ProductPageButton';
+import { ProductPageButton } from './icons/global/globalMobile';
 
 interface Review {
   id: string;

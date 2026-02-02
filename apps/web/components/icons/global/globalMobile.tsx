@@ -707,3 +707,39 @@ export function MobileBottomNavigation() {
   );
 }
 
+/**
+ * Reusable button component for product page, cart, and checkout
+ * Matches the add to cart button styling
+ * Moved to globalMobile.tsx for use across all pages.
+ */
+interface ProductPageButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'icon' | 'cancel' | 'outline';
+}
+
+export function ProductPageButton({ 
+  children, 
+  variant = 'primary',
+  className = '',
+  ...props 
+}: ProductPageButtonProps) {
+  const baseStyles = 'transition-colors font-bold';
+  
+  const variantStyles = {
+    primary: 'bg-[#00d1ff] text-white rounded-[34px] uppercase disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#00b8e6] px-6',
+    secondary: 'bg-[#00d1ff] text-white rounded-[34px] uppercase disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#00b8e6] px-6',
+    icon: 'bg-[#00d1ff] text-white rounded-full uppercase disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#00b8e6] flex items-center justify-center',
+    cancel: 'bg-[#00d1ff] text-white rounded-[34px] disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-[#00b8e6] h-[48px] px-6',
+    outline: 'bg-transparent border-2 border-[#00d1ff] text-[#00d1ff] rounded-[34px] uppercase disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-300 disabled:cursor-not-allowed hover:bg-[#00d1ff] hover:text-white px-6',
+  };
+  
+  return (
+    <button
+      className={`${baseStyles} ${variantStyles[variant]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+

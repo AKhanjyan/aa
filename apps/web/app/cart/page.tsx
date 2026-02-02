@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@shop/ui';
 import { apiClient } from '../../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../../lib/currency';
 import { getStoredLanguage } from '../../lib/language';
 import { useTranslation } from '../../lib/i18n-client';
 import { useAuth } from '../../lib/auth/AuthContext';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 interface CartItem {
   id: string;
@@ -458,9 +458,9 @@ export default function CartPage() {
               {t('common.cart.empty')}
             </h2>
             <Link href="/products">
-              <Button variant="primary" size="lg" className="mt-6">
+              <ProductPageButton variant="primary" className="mt-6 py-3">
                 {t('common.buttons.browseProducts')}
-              </Button>
+              </ProductPageButton>
             </Link>
           </div>
         </div>
@@ -633,27 +633,25 @@ export default function CartPage() {
               </div>
             </div>
           </div>
-          <Button 
+          <ProductPageButton 
             variant="primary" 
-            className="w-full" 
-            size="lg"
+            className="w-full py-3"
             onClick={() => {
               // Allow guest checkout - no redirect to login
               window.location.href = '/checkout';
             }}
           >
             {t('common.buttons.proceedToCheckout')}
-          </Button>
-          <Button
+          </ProductPageButton>
+          <ProductPageButton
             variant="outline"
-            className="w-full mt-3"
-            size="md"
+            className="w-full mt-3 py-3"
             onClick={() => {
               window.location.href = '/products';
             }}
           >
             {t('common.buttons.browseProducts')}
-          </Button>
+          </ProductPageButton>
         </div>
         </div>
       </div>
