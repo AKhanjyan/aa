@@ -174,9 +174,10 @@ export async function addToCart({
   }
 }
 
-// Local image paths - Images stored in public/assets/home/
+// Local image paths - main logo + footer/background wave
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
-const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash1.jpg";
+// Footer/background wave PNG from Figma, saved locally in public/assets/home
+const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielWave.png";
 const imgIcon2 = "/assets/home/imgIcon2.svg";
 const imgSvg = "/assets/home/imgSvg.svg";
 const imgSvg1 = "/assets/home/imgSvg1.svg";
@@ -402,10 +403,10 @@ export function Footer({ router, t, isHomePage = false }: FooterProps) {
   return (
     <>
       {/* Footer */}
-      <div className={`relative h-[620px] lg:h-[620px] md:h-[600px] sm:h-[500px] left-0 w-full overflow-hidden ${isHomePage ? 'mt-[5550px] lg:mt-[5550px] md:mt-[5000px] sm:mt-[4000px]' : ''}`}>
+      <div className={`relative h-[620px] lg:h-[620px] md:h-[600px] sm:h-[500px] left-0 w-full ${isHomePage ? 'overflow-hidden mt-[5550px] lg:mt-[5550px] md:mt-[5000px] sm:mt-[4000px]' : 'overflow-visible'}`}>
         {/* Footer transition gradient - seamless blend with page background (only for non-home pages) */}
         {!isHomePage && (
-          <div className="absolute top-0 left-0 right-0 h-[250px] z-[1]" style={{ background: 'linear-gradient(to bottom, white 0%, white 1%, rgba(255,255,255,0.8) 65%, transparent 100%)' }} />
+          <div className="absolute top-0 left-0 right-0 h-[250px] z-[1]"/>
         )}
         {/* Footer Background Image - daniel sinoca */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

@@ -16,7 +16,8 @@ import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedPr
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
-const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash1.jpg";
+// Wave background PNG from Figma, saved locally in public/assets/home
+const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielWave.png";
 const img = "/assets/home/img.png";
 const img1 = "/assets/home/img1.png";
 const img6Eb12990A37F43358E368Af827A9C8A5Png1 = "/assets/home/img6Eb12990A37F43358E368Af827A9C8A5Png1.png";
@@ -93,7 +94,7 @@ const imgTop1 = "/assets/home/imgTop1.svg";
 const imgGlass1 = "/assets/home/imgGlass1.svg";
 const imgGlass2 = "/assets/home/imgGlass2.svg";
 const imgIcon = "/assets/home/imgIcon.svg";
-const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash3.jpg";
+const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielWave.png";
 const imgEllipse45 = "/assets/home/imgEllipse45.svg";
 const imgHomeVector = "/assets/home/Vector.svg";
 

@@ -15,7 +15,8 @@ const imgGroup2122 = "/assets/home/imgGroup2122.svg";
 const imgGroup2121 = "/assets/home/imgGroup2121.svg";
 const imgGroup2124 = "/assets/home/imgGroup2124.svg";
 const imgGroup2123 = "/assets/home/imgGroup2123.svg";
-const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielSinocaAancLsb0SU0Unsplash3.jpg";
+// Mobile footer/background wave PNG from Figma, saved locally in public/assets/home
+const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielWave.png";
 
 interface MobileHeaderProps {
   router: ReturnType<typeof useRouter>;
@@ -400,7 +401,7 @@ export function ProfileMenuDrawer({ tabs, activeTab, onSelect }: ProfileMenuDraw
 
 export function MobileFooter({ router, t }: MobileFooterProps) {
   return (
-    <div className="xl:hidden relative w-full mt-auto overflow-hidden">
+    <div className="xl:hidden relative w-full mt-auto overflow-visible">
       {/* Mobile Footer Background Images - Daniel Sinoca */}
       <div className="absolute h-[490px] left-[-0.6px] right-0 top-0 w-full pointer-events-none">
         <div className="relative w-full h-full">
