@@ -20,6 +20,16 @@ interface AdminBlogPost {
   excerpt?: string | null;
 }
 
+function generateSlug(title: string): string {
+  return (
+    title
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-')
+      .replace(/^-+|-+$/g, '') || ''
+  );
+}
+
 export default function AdminBlogPage() {
   const { t } = useTranslation();
   const { isLoggedIn, isAdmin, isLoading } = useAuth();
@@ -40,10 +50,7 @@ export default function AdminBlogPage() {
   const [formLocale, setFormLocale] = useState<LanguageCode>(() => getStoredLanguage() as LanguageCode || 'hy');
   const [formTitle, setFormTitle] = useState('');
   const [formSlug, setFormSlug] = useState('');
-  const [formExcerpt, setFormExcerpt] = useState('');
   const [formContentHtml, setFormContentHtml] = useState('');
-  const [formSeoTitle, setFormSeoTitle] = useState('');
-  const [formSeoDescription, setFormSeoDescription] = useState('');
   const [formPublished, setFormPublished] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -84,10 +91,7 @@ export default function AdminBlogPage() {
     setFormLocale(getStoredLanguage() as LanguageCode || 'hy');
     setFormTitle('');
     setFormSlug('');
-    setFormExcerpt('');
     setFormContentHtml('');
-    setFormSeoTitle('');
-    setFormSeoDescription('');
     setFormPublished(false);
   };
 
@@ -116,10 +120,7 @@ export default function AdminBlogPage() {
       setFormLocale((data.locale as LanguageCode) || (language as LanguageCode));
       setFormTitle(data.title || '');
       setFormSlug(data.slug || '');
-      setFormExcerpt(data.excerpt || '');
       setFormContentHtml(data.contentHtml || '');
-      setFormSeoTitle(data.seoTitle || '');
-      setFormSeoDescription(data.seoDescription || '');
       setFormPublished(data.published);
       setEditorOpen(true);
     } catch (err: any) {
@@ -173,9 +174,6 @@ export default function AdminBlogPage() {
         locale: formLocale,
         title: formTitle.trim(),
         contentHtml: formContentHtml || undefined,
-        excerpt: formExcerpt || undefined,
-        seoTitle: formSeoTitle || undefined,
-        seoDescription: formSeoDescription || undefined,
       };
 
       if (editingPost) {
@@ -200,8 +198,7 @@ export default function AdminBlogPage() {
     if (!search.trim()) return true;
     const q = search.trim().toLowerCase();
     return (
-      post.title.toLowerCase().includes(q) ||
-      post.slug.toLowerCase().includes(q)
+      post.title.toLowerCase().includes(q)
     );
   });
 
@@ -219,6 +216,13 @@ export default function AdminBlogPage() {
   if (!isLoggedIn || !isAdmin) {
     return null;
   }
+
+  const handleTitleChange = (value: string) => {
+    setFormTitle(value);
+    if (!editingPost) {
+      setFormSlug(generateSlug(value));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -348,14 +352,6 @@ export default function AdminBlogPage() {
                               <span className="text-sm font-medium text-gray-900">
                                 {post.title}
                               </span>
-                              <span className="text-xs text-gray-500">
-                                {post.slug}
-                              </span>
-                              {post.excerpt && (
-                                <span className="text-xs text-gray-400 mt-1 line-clamp-2">
-                                  {post.excerpt}
-                                </span>
-                              )}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -459,21 +455,8 @@ export default function AdminBlogPage() {
                   <input
                     type="text"
                     value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
+                    onChange={(e) => handleTitleChange(e.target.value)}
                     placeholder={t('admin.blog.titlePlaceholder')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('admin.blog.slugLabel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={formSlug}
-                    onChange={(e) => setFormSlug(e.target.value)}
-                    placeholder={t('admin.blog.slugPlaceholder')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -514,18 +497,6 @@ export default function AdminBlogPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('admin.blog.excerptLabel')}
-                </label>
-                <textarea
-                  value={formExcerpt}
-                  onChange={(e) => setFormExcerpt(e.target.value)}
-                  placeholder={t('admin.blog.excerptPlaceholder')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[60px] resize-y"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t('admin.blog.contentLabel')}
                 </label>
                 <textarea
@@ -534,32 +505,6 @@ export default function AdminBlogPage() {
                   placeholder={t('admin.blog.contentPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[160px] font-mono resize-y"
                 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('admin.blog.seoTitleLabel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={formSeoTitle}
-                    onChange={(e) => setFormSeoTitle(e.target.value)}
-                    placeholder={t('admin.blog.seoTitlePlaceholder')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('admin.blog.seoDescriptionLabel')}
-                  </label>
-                  <textarea
-                    value={formSeoDescription}
-                    onChange={(e) => setFormSeoDescription(e.target.value)}
-                    placeholder={t('admin.blog.seoDescriptionPlaceholder')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[60px] resize-y"
-                  />
-                </div>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">
