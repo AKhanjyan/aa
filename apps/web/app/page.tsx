@@ -800,18 +800,18 @@ export default function HomePage() {
         <div className="absolute bg-gradient-to-b blur-[30px] from-[#62b3e8] h-[300px] left-0 right-0 pointer-events-none to-[rgba(255, 255, 255, 0.07)] top-[738px] w-full z-[1]" data-node-id="3:2019" />
 
         {/* Mobile Featured Products Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[7px] h-[123px] items-center justify-center left-1/2 top-[958px] w-full max-w-[429px] px-4 z-10">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[6px] items-center justify-center left-1/2 top-[958px] w-full max-w-[429px] px-4 z-10">
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
-            <div className="flex flex-col font-['Montserrat:Black',sans-  serif] font-black justify-center leading-[40px] relative shrink-0 text-[40px] text-center text-white tracking-[-0.9px] uppercase whitespace-nowrap">
+            <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[30px] relative shrink-0 text-[28px] text-center text-white tracking-[-0.9px] uppercase break-words">
               <p className="mb-0">{t('home.featuredProducts.title')}</p>
             </div>
           </div>
           <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
-            <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-white whitespace-nowrap">
-              <p className="leading-[24px]">{t('home.featuredProducts.subtitle')}</p>
+            <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center text-white break-words">
+              <p className="leading-[20px]">{t('home.featuredProducts.subtitle')}</p>
             </div>
           </div>
-          <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
+          <div className="bg-[#00d1ff] h-[4px] rounded-[30px] shrink-0 w-[80px]" />
         </div>
 
         {/* Mobile Featured Product Card */}
