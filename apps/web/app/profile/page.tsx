@@ -14,7 +14,7 @@ import { useTranslation } from '../../lib/i18n-client';
 import { getProfileMenuTABS } from '../../components/icons/global/global';
 
 interface Address {
-  _id?: string;
+  id?: string;
   firstName?: string;
   lastName?: string;
   company?: string;
@@ -334,9 +334,9 @@ function ProfilePageContent() {
     setSuccess(null);
 
     try {
-      if (editingAddress?._id) {
+      if (editingAddress?.id) {
         // Update existing address
-        await apiClient.put(`/api/v1/users/addresses/${editingAddress._id}`, addressForm);
+        await apiClient.put(`/api/v1/users/addresses/${editingAddress.id}`, addressForm);
         setSuccess(t('profile.addresses.updatedSuccess'));
       } else {
         // Add new address
@@ -1057,7 +1057,7 @@ function ProfilePageContent() {
               {profile?.addresses && profile.addresses.length > 0 ? (
                 profile.addresses.map((address, index) => (
                   <div
-                    key={address._id || index}
+                    key={address.id || index}
                     className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
                   >
                     <div className="flex items-start justify-between">
@@ -1084,7 +1084,7 @@ function ProfilePageContent() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleSetDefaultAddress(address._id!)}
+                            onClick={() => address.id && handleSetDefaultAddress(address.id)}
                           >
                             {t('profile.addresses.setDefault')}
                           </Button>
@@ -1092,14 +1092,14 @@ function ProfilePageContent() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleEditAddress(address)}
+                            onClick={() => handleEditAddress(address)}
                         >
                           {t('profile.addresses.edit')}
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDeleteAddress(address._id!)}
+                            onClick={() => address.id && handleDeleteAddress(address.id)}
                           className="text-red-600 hover:text-red-700 hover:border-red-300"
                         >
                           {t('profile.addresses.delete')}
