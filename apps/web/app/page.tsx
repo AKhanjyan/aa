@@ -1420,31 +1420,32 @@ export default function HomePage() {
       </div>
 
       {/* Image 13 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-1/2 top-[350px] translate-x-[-50%] size-[606px] pointer-events-none">
+      <div className="absolute flex top-[350px]  items-center justify-center right-[480px] top-[350px]  size-[606px] pointer-events-none">
         <div className="relative rounded-[320px] size-full">
           {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                 <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
+          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
+          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
+              <img
+                alt="Decorative"
+                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
+                src={img}
+                onError={(e) => {
+                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
+                  console.error('Error target:', e.target);
+                }}
+                onLoad={() => {
+                  console.log('✅ [IMAGE] Decorative image loaded:', img);
+                }}
+              />
             </div>
           </div>
+          <div  />
         </div>
       </div>
 
-      {/* <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
-          <div className="flex-none rotate-[100.79deg] size-[210px]">
-            <div className="relative rounded-[320px] size-full">
-             
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
+       
+      
 
       {/* Hero Section - Main Content */}
       <div className="absolute content-stretch flex items-end justify-center left-[calc(50%+0.5px)] px-[20px] md:px-[16px] sm:px-[12px] top-[480px] lg:top-[480px] md:top-[400px] sm:top-[280px] translate-x-[-50%] w-[800px] lg:w-[800px] md:w-[90%] sm:w-[95%]">
