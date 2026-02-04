@@ -743,8 +743,8 @@ export default function HomePage() {
 
 
         {/* Mobile Hero Text */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-[calc(50%-2.5px)] top-[331px] w-[361px] z-10">
-          <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[56px] relative shrink-0 text-[56px] text-white w-full whitespace-pre-wrap">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-1/2 top-[331px] w-full max-w-[380px] px-4 z-10">
+          <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center text-center leading-[44px] relative shrink-0 text-[40px] text-white w-full whitespace-pre-wrap break-words"> 
             <p className="mb-0">{t('home.hero.your')}</p>
             <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.dailyDose')}</p>
             <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.of')}</p>
@@ -766,9 +766,9 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Subtitle */}
-        <div className="absolute content-stretch flex flex-col items-center justify-center left-[32px] max-w-[512px] right-[207px] top-[564px]">
-          <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
-            <p className="leading-[32.5px]">{t('home.hero.subtitle')}</p>
+        <div className="absolute content-stretch flex flex-col items-center justify-center left-[32px] right-[32px] top-[564px]">
+          <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[18px] text-white text-center break-words">
+            <p className="leading-[26px]">{t('home.hero.subtitle')}</p>
           </div>
         </div>
 
