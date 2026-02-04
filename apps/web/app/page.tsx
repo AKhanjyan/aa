@@ -743,12 +743,12 @@ export default function HomePage() {
 
 
         {/* Mobile Hero Text */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-center justify-center left-1/2 top-[331px] w-full max-w-[380px] px-4 z-10">
-          <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center text-center leading-[44px] relative shrink-0 text-[40px] text-white w-full whitespace-pre-wrap break-words"> 
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-start justify-center left-1/2 top-[331px] w-full max-w-[380px] px-6 z-10">
+          <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center text-left leading-[40px] relative shrink-0 text-[34px] text-white w-full whitespace-pre-wrap break-words">
             <p className="mb-0">{t('home.hero.your')}</p>
-            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.dailyDose')}</p>
-            <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.hero.of')}</p>
-            <p>{t('home.hero.freshness')}</p>
+            <p className="mb-0">{t('home.hero.dailyDose')}</p>
+            <p className="mb-0">{t('home.hero.of')}</p>
+            <p className="mb-0">{t('home.hero.freshness')}</p>
           </div>
         </div>
 
