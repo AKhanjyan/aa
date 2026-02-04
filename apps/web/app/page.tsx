@@ -746,8 +746,8 @@ export default function HomePage() {
         <div className="-translate-x-1/2 absolute content-stretch flex flex-col items-start justify-center left-1/2 top-[331px] w-full max-w-[380px] px-6 z-10">
           <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center text-left leading-[40px] relative shrink-0 text-[34px] text-white w-full whitespace-pre-wrap break-words">
             <p className="mb-0">{t('home.hero.your')}</p>
-            <p className="mb-0">{t('home.hero.dailyDose')}</p>
-            <p className="mb-0">{t('home.hero.of')}</p>
+            <p className="mb-0 font-['Montserrat:Light',sans-serif] font-light">{t('home.hero.dailyDose')}</p>
+            <p className="mb-0 font-['Montserrat:Light',sans-serif] font-light">{t('home.hero.of')}</p>
             <p className="mb-0">{t('home.hero.freshness')}</p>
           </div>
         </div>
