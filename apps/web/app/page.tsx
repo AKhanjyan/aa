@@ -1017,18 +1017,18 @@ export default function HomePage() {
           </div>
           <div className="h-[227px] relative shrink-0 w-[208px]">
             <div className="absolute bg-[#1ac0fd] inset-0 rounded-[30px]" />
-            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[69.6%_4.09%_15.58%_36.3%] justify-center leading-[0] text-[48px] text-center text-white tracking-[-0.9px] uppercase">
-              <p className="leading-[40px] whitespace-pre-wrap">98%</p>
+            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[70%_6%_18%_40%] justify-center leading-[0] text-[40px] text-center text-white tracking-[-0.9px] uppercase">
+              <p className="leading-[36px] whitespace-pre-wrap">98%</p>
             </div>
-            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[4.41%_28.61%_36.12%_7.93%] justify-center leading-[24px] text-[0px] text-[24px] text-white tracking-[-0.9px] uppercase whitespace-pre-wrap">
+            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[6%_10%_40%_10%] justify-center leading-[22px] text-[18px] text-white text-left tracking-[-0.9px] uppercase break-words">
               <p className="mb-0">{t('home.cards.pureSpringWater.pure')}</p>
               <p className="mb-0">{t('home.cards.pureSpringWater.spring')}</p>
               <p className="mb-0">{t('home.cards.pureSpringWater.water')}</p>
               <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.cards.pureSpringWater.from')}</p>
               <p className="font-['Montserrat:Light',sans-serif] font-light">{t('home.cards.pureSpringWater.armenia')}</p>
             </div>
-            <div className="absolute flex flex-col font-['Inter:Medium_Italic',sans-serif] font-medium inset-[84.65%_8.65%_6.46%_44.71%] italic justify-center leading-[0] text-[14px] text-right text-white">
-              <p className="leading-[24px] whitespace-pre-wrap">{t('home.cards.pureSpringWater.source')}</p>
+            <div className="absolute flex flex-col font-['Inter:Medium_Italic',sans-serif] font-medium inset-[82%_8%_6%_40%] italic justify-center leading-[0] text-[12px] text-right text-white">
+              <p className="leading-[18px] whitespace-pre-wrap">{t('home.cards.pureSpringWater.source')}</p>
             </div>
           </div>
         </div>
@@ -1036,10 +1036,10 @@ export default function HomePage() {
         <div className="-translate-x-1/2 absolute content-stretch flex gap-[8px] items-start left-[calc(50%+3px)] top-[2708px]">
           <div className="h-[227px] relative shrink-0 w-[208px]">
             <div className="absolute bg-white inset-0 rounded-[30px]" />
-            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[69.6%_3.85%_15.42%_31.25%] justify-center leading-[0] text-[#0f172a] text-[48px] text-center tracking-[-0.9px] uppercase">
-              <p className="leading-[40px] whitespace-pre-wrap">100%</p>
+            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[70%_6%_18%_36%] justify-center leading-[0] text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase">
+              <p className="leading-[36px] whitespace-pre-wrap">100%</p>
             </div>
-            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[4.41%_16.83%_36.12%_7.69%] justify-center leading-[24px] text-[#1ac0fd] text-[0px] text-[24px] tracking-[-0.9px] uppercase whitespace-pre-wrap">
+            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[6%_10%_40%_10%] justify-center leading-[22px] text-[#1ac0fd] text-[18px] tracking-[-0.9px] uppercase break-words">
               <p className="mb-0">{t('home.cards.balancedHydration.balanced')}</p>
               <p className="mb-0">{t('home.cards.balancedHydration.hydration')}</p>
               <p className="font-['Montserrat:Light',sans-serif] font-light mb-0">{t('home.cards.balancedHydration.every')}</p>
