@@ -34,7 +34,7 @@ const imgShape2 = "/assets/home/imgShape2.svg";
 const imgEllipse42 = "/assets/home/imgEllipse42.svg";
 const imgShape3 = "/assets/home/imgShape3.svg";
 const imgEllipse43 = "/assets/home/imgEllipse43.svg";
-const imgGroup2105 = "/assets/home/imgGroup2105.svg";
+const imgGroup2105 = "/assets/home/21056.png";
 const img4 = "/assets/home/img4.svg";
 const imgVector4 = "/assets/home/imgVector4.svg";
 const imgVector5 = "/assets/home/imgVector5.svg";
@@ -1414,7 +1414,7 @@ export default function HomePage() {
       <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-full max-w-[1920px]" />
 
       {/* Hero Section Decorative Group */}
-      <div className="absolute inset-[3.34%_14.2%_90%_14.64%]">
+      <div className="absolute inset-[3.14%_16.2%_90%_14.64%]">
         <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
 
       </div>
