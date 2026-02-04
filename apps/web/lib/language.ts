@@ -10,7 +10,8 @@ export type LanguageCode = keyof typeof LANGUAGES;
 const LANGUAGE_STORAGE_KEY = 'shop_language';
 
 export function getStoredLanguage(): LanguageCode {
-  if (typeof window === 'undefined') return 'en';
+  // Default to Armenian on first load / server-side
+  if (typeof window === 'undefined') return 'hy';
   try {
     const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
     if (stored && stored in LANGUAGES) {
@@ -19,7 +20,8 @@ export function getStoredLanguage(): LanguageCode {
   } catch {
     // Ignore errors
   }
-  return 'en';
+  // Fallback language when nothing is stored
+  return 'hy';
 }
 
 export function setStoredLanguage(language: LanguageCode, options?: { skipReload?: boolean }): void {
