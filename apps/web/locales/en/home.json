@@ -26,6 +26,23 @@
   "waterEnergy": {
     "title": "WATER ENERGY"
   },
+  "waterEnergySection": {
+    "pure": "Pure",
+    "energy": "energy",
+    "subtitle": "Pure energy drawn from nature, captured in every drop.",
+    "drawnFrom": "drawn from",
+    "nature": "nature,",
+    "capturedIn": "captured in",
+    "everyDrop": "every drop.",
+    "balance": "balance",
+    "crystal": "Crystal",
+    "clarityThat": "clarity that",
+    "refreshesThe": "refreshes the",
+    "bodyAnd": "body and",
+    "restores": "restores",
+    "descriptionLine1": "Crystal clarity that refreshes",
+    "descriptionLine2": "the body and restores"
+  },
   "cards": {
     "pureSpringWater": {
       "percentage": "98%",
@@ -111,22 +128,6 @@
       "shop": "Shop"
     },
     "copyright": "Copyright © 2024 | New Aqua LLC | All Rights Reserved"
-  },
-  "waterEnergySection": {
-    "pure": "Pure",
-    "energy": "energy",
-    "drawnFrom": "drawn from",
-    "nature": "nature,",
-    "capturedIn": "captured in",
-    "everyDrop": "every drop.",
-    "balance": "balance",
-    "crystal": "Crystal",
-    "clarityThat": "clarity that",
-    "refreshesThe": "refreshes the",
-    "bodyAnd": "body and",
-    "restores": "restores",
-    "descriptionLine1": "Crystal clarity that refreshes",
-    "descriptionLine2": "the body and restores"
   },
   "search": {
     "placeholder": "Search products..."
