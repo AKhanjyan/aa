@@ -87,26 +87,63 @@ const escapeHtml = (value: string | number): string => {
 
 const createUsersCsvBlob = (users: User[]): Blob => {
   const rows = users.map(mapUserToExportRow);
-  const header = USER_EXPORT_COLUMNS.map((c) => c.header).join(',');
-  const body = rows
-    .map((row) =>
-      USER_EXPORT_COLUMNS.map((c) => escapeCsvValue(row[c.key])).join(','),
-    )
-    .join('\r\n');
-  const csv = `${header}\r\n${body}`;
+
+  // Calculate fixed column widths based on header + data,
+  // so that all rows align visually in a monospaced/text editor.
+  const columnWidths = USER_EXPORT_COLUMNS.map((column) => {
+    const headerLength = column.header.length;
+    const maxDataLength = rows.reduce((max, row) => {
+      const value = String(row[column.key] ?? '');
+      return Math.max(max, value.length);
+    }, 0);
+
+    // Small extra padding between columns
+    return Math.max(headerLength, maxDataLength) + 2;
+  });
+
+  const formatRow = (row: UserExportRow | null): string =>
+    USER_EXPORT_COLUMNS
+      .map((column, index) => {
+        const raw =
+          row === null ? column.header : String(row[column.key] ?? '');
+        // We still escape quotes/newlines, but pad for alignment.
+        const value = escapeCsvValue(raw);
+        return value.padEnd(columnWidths[index], ' ');
+      })
+      .join('');
+
+  const headerLine = formatRow(null);
+  const bodyLines = rows.map((row) => formatRow(row)).join('\r\n');
+
+  const csv = `${headerLine}\r\n${bodyLines}`;
   return new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 };
 
 const createUsersExcelBlob = (users: User[]): Blob => {
   const rows = users.map(mapUserToExportRow);
-  const headerRow = `<tr>${USER_EXPORT_COLUMNS.map((c) => `<th>${escapeHtml(c.header)}</th>`).join('')}</tr>`;
+  const headerRow = `<tr>${USER_EXPORT_COLUMNS.map((c) => `<th>${escapeHtml(c.header)}</th>`).join(' ')}</tr>`;
   const bodyRows = rows
     .map(
       (row) =>
-        `<tr>${USER_EXPORT_COLUMNS.map((c) => `<td>${escapeHtml(row[c.key])}</td>`).join('')}</tr>`,
+        `<tr>${USER_EXPORT_COLUMNS.map((c) => `<td>${escapeHtml(row[c.key])}</td>`).join(' ')}</tr>`,
     )
     .join('');
-  const tableHtml = `<table>${headerRow}${bodyRows}</table>`;
+  const tableHtml = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      table { border-collapse: collapse; }
+      th, td { padding: 4px 8px; }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>${headerRow}</thead>
+      <tbody>${bodyRows}</tbody>
+    </table>
+  </body>
+</html>`;
   return new Blob([tableHtml], {
     type: 'application/vnd.ms-excel;charset=utf-8;',
   });
