@@ -249,8 +249,19 @@ export default function UsersPage() {
         });
       }
 
-      console.log('✅ [ADMIN] All users loaded for export:', allUsers.length);
-      return allUsers;
+      // Apply the same role filter on frontend as in the table,
+      // in case backend does not filter by role param.
+      const filteredForExport =
+        roleFilter === 'all'
+          ? allUsers
+          : allUsers.filter((user) =>
+              roleFilter === 'admin'
+                ? user.roles?.includes('admin')
+                : user.roles?.includes('customer'),
+            );
+
+      console.log('✅ [ADMIN] All users loaded for export (after role filter):', filteredForExport.length);
+      return filteredForExport;
     } catch (err) {
       console.error('❌ [ADMIN] Error fetching all users for export:', err);
       alert('Failed to export users. Please try again.');
