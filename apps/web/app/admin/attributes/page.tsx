@@ -9,6 +9,7 @@ import { useTranslation } from '../../../lib/i18n-client';
 import { showToast } from '../../../components/Toast';
 import { ColorPaletteSelector } from '../../../components/ColorPaletteSelector';
 import { getColorHex } from '../../../lib/colorMap';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface AttributeValue {
   id: string;
@@ -419,15 +420,15 @@ function AttributesPageContent() {
             <h1 className="text-3xl font-bold text-gray-900">{t('admin.attributes.title')}</h1>
             <p className="text-gray-600 mt-2">{t('admin.attributes.subtitle')}</p>
           </div>
-          <button
+          <ProductPageButton
             onClick={() => setShowAddForm(!showAddForm)}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+            className="px-4 py-2 text-sm flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             {showAddForm ? t('admin.attributes.cancel') : t('admin.attributes.addAttribute')}
-          </button>
+          </ProductPageButton>
         </div>
 
         {/* Add Attribute Form */}
@@ -453,22 +454,23 @@ function AttributesPageContent() {
               </div>
 
               <div className="flex gap-3 pt-2">
-                <button
+                <ProductPageButton
                   type="submit"
-                  className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 text-sm"
                 >
                   {t('admin.attributes.createAttribute')}
-                </button>
-                <button
+                </ProductPageButton>
+                <ProductPageButton
+                  variant="outline"
                   type="button"
                   onClick={() => {
                     setShowAddForm(false);
                     setFormData({ name: '' });
                   }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="px-4 py-2 text-sm"
                 >
                   {t('admin.attributes.cancel')}
-                </button>
+                </ProductPageButton>
               </div>
             </form>
           </div>
@@ -529,10 +531,10 @@ function AttributesPageContent() {
                               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-lg font-semibold"
                               autoFocus
                             />
-                            <button
+                            <ProductPageButton
                               onClick={() => handleUpdateAttributeName(attribute.id)}
                               disabled={!editingAttributeName.trim() || savingAttribute}
-                              className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                              className="px-3 py-2 text-sm flex items-center gap-2"
                             >
                               {savingAttribute ? (
                                 <>
@@ -547,14 +549,15 @@ function AttributesPageContent() {
                                   {t('admin.attributes.save') || 'Save'}
                                 </>
                               )}
-                            </button>
-                            <button
+                            </ProductPageButton>
+                            <ProductPageButton
+                              variant="outline"
                               onClick={() => toggleAttributeEdit(attribute)}
                               disabled={savingAttribute}
-                              className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
+                              className="px-3 py-2 text-sm"
                             >
                               {t('admin.attributes.cancel')}
-                            </button>
+                            </ProductPageButton>
                           </div>
                         ) : (
                           <>
@@ -643,10 +646,10 @@ function AttributesPageContent() {
                               </p>
                             )}
                           </div>
-                          <button
+                          <ProductPageButton
                             onClick={() => handleAddValue(attribute.id)}
                             disabled={!newValue.trim() || addingValueTo === attribute.id}
-                            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-4 py-2 text-sm flex items-center gap-2"
                           >
                             {addingValueTo === attribute.id ? (
                               <>
@@ -661,7 +664,7 @@ function AttributesPageContent() {
                                 {t('admin.attributes.add')}
                               </>
                             )}
-                          </button>
+                          </ProductPageButton>
                         </div>
                       </div>
 
@@ -708,10 +711,11 @@ function AttributesPageContent() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                       </svg>
                                     </button>
-                                    <button
+                                    <ProductPageButton
+                                      variant="outline"
                                       onClick={() => handleDeleteValue(attribute.id, value.id, value.label)}
                                       disabled={deletingValue === value.id}
-                                      className="text-red-600 hover:text-red-800 disabled:opacity-50 transition-colors"
+                                      className="px-3 py-1 text-xs text-red-600 border-red-300 hover:bg-red-50 disabled:opacity-50"
                                       title={t('admin.attributes.deleteValue')}
                                     >
                                       {deletingValue === value.id ? (
@@ -721,7 +725,7 @@ function AttributesPageContent() {
                                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                       )}
-                                    </button>
+                                    </ProductPageButton>
                                   </div>
                                 </div>
 
@@ -765,33 +769,35 @@ function AttributesPageContent() {
                                                 alt={t('admin.attributes.valueModal.imagePreview')}
                                                 className="w-32 h-32 object-cover rounded-lg border border-gray-300"
                                               />
-                                              <button
-                                                type="button"
-                                                onClick={handleRemoveImage}
-                                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors flex items-center justify-center"
-                                                title={t('admin.attributes.valueModal.removeImage')}
-                                              >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                              </button>
-                                            </div>
                                             <button
                                               type="button"
+                                              onClick={handleRemoveImage}
+                                              className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors flex items-center justify-center"
+                                              title={t('admin.attributes.valueModal.removeImage')}
+                                            >
+                                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                              </svg>
+                                            </button>
+                                            </div>
+                                            <ProductPageButton
+                                              type="button"
+                                              variant="outline"
                                               onClick={() => fileInputRef.current?.click()}
                                               disabled={imageUploading}
-                                              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                              className="px-4 py-2 text-sm"
                                             >
                                               {imageUploading ? t('admin.attributes.valueModal.uploading') : t('admin.attributes.valueModal.changeImage')}
-                                            </button>
+                                            </ProductPageButton>
                                           </div>
                                         ) : (
                                           <div>
-                                            <button
+                                            <ProductPageButton
                                               type="button"
+                                              variant="outline"
                                               onClick={() => fileInputRef.current?.click()}
                                               disabled={imageUploading}
-                                              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                              className="px-4 py-2 text-sm flex items-center gap-2"
                                             >
                                               {imageUploading ? (
                                                 <>
@@ -806,7 +812,7 @@ function AttributesPageContent() {
                                                   {t('admin.attributes.valueModal.uploadImage')}
                                                 </>
                                               )}
-                                            </button>
+                                            </ProductPageButton>
                                           </div>
                                         )}
                                         <input
@@ -821,19 +827,20 @@ function AttributesPageContent() {
 
                                     {/* Action Buttons */}
                                     <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-200">
-                                      <button
+                                      <ProductPageButton
+                                        variant="outline"
                                         type="button"
                                         onClick={() => toggleValueEdit(attribute.id, value)}
                                         disabled={savingValue}
-                                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-4 py-2 text-sm"
                                       >
                                         {t('admin.attributes.valueModal.cancel')}
-                                      </button>
-                                      <button
+                                      </ProductPageButton>
+                                      <ProductPageButton
                                         type="button"
                                         onClick={handleSaveInlineValue}
                                         disabled={savingValue || !editingLabel.trim()}
-                                        className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                        className="px-4 py-2 text-sm flex items-center gap-2"
                                       >
                                         {savingValue ? (
                                           <>
@@ -843,7 +850,7 @@ function AttributesPageContent() {
                                         ) : (
                                           t('admin.attributes.valueModal.save')
                                         )}
-                                      </button>
+                                      </ProductPageButton>
                                     </div>
                                   </div>
                                 )}

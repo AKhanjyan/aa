@@ -8,6 +8,7 @@ import { Card, Button, Input } from '@shop/ui';
 import { apiClient } from '../../../../lib/api-client';
 import { getColorHex } from '../../../../lib/colorMap';
 import { useTranslation } from '../../../../lib/i18n-client';
+import { ProductPageButton } from '../../../../components/icons/global/globalMobile';
 import { convertPrice, CURRENCIES, type CurrencyCode } from '../../../../lib/currency';
 import {
   smartSplitUrls,
@@ -3740,13 +3741,13 @@ function AddProductPageContent() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-gray-900">{t('admin.products.add.productLabels')}</h2>
-                <Button
-                  type="button"
+                <ProductPageButton
                   variant="outline"
                   onClick={addLabel}
+                  className="px-4 py-2 text-sm"
                 >
                   {t('admin.products.add.addLabel')}
-                </Button>
+                </ProductPageButton>
               </div>
               {formData.labels.length === 0 ? (
                 <div className="text-center py-4 border-2 border-dashed border-gray-300 rounded-lg">
@@ -3758,15 +3759,16 @@ function AddProductPageContent() {
                   {formData.labels.map((label, index) => (
                     <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-medium text-gray-900">{t('admin.products.add.label').replace('{index}', (index + 1).toString())}</h3>
-                        <Button
-                          type="button"
-                          variant="ghost"
+                        <h3 className="text-lg font-medium text-gray-900">
+                          {t('admin.products.add.label').replace('{index}', (index + 1).toString())}
+                        </h3>
+                        <ProductPageButton
+                          variant="outline"
                           onClick={() => removeLabel(index)}
-                          className="text-red-600 hover:text-red-700"
+                          className="px-3 py-1 text-xs text-red-600 border-red-300 hover:bg-red-50"
                         >
                           {t('admin.products.add.remove')}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Label Type */}
@@ -4448,8 +4450,7 @@ function AddProductPageContent() {
                       </div>
 
                       <div className="mt-4 flex justify-end gap-2">
-                        <Button
-                          type="button"
+                        <ProductPageButton
                           variant="outline"
                           onClick={() => {
                             // Add new empty variant
@@ -4473,19 +4474,20 @@ function AddProductPageContent() {
                               return updated;
                             });
                           }}
+                          className="px-4 py-2 text-sm"
                         >
                           {t('admin.products.add.addVariant') || 'Add'}
-                        </Button>
-                        <Button
-                          type="button"
+                        </ProductPageButton>
+                        <ProductPageButton
                           onClick={() => {
                             // Convert generated variants to formData.variants structure
                             // This will be handled in handleSubmit
                             console.log('✅ [VARIANT BUILDER] Variants ready for submission:', generatedVariants);
                           }}
+                          className="px-4 py-2 text-sm"
                         >
                           {t('admin.products.add.variantsReady') || 'Variants Ready'}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                     </div>
                   )}
@@ -4514,22 +4516,23 @@ function AddProductPageContent() {
             {/* Actions - Sticky */}
             <div className="sticky bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg -mx-6 -mb-6 px-6 py-4 mt-8 backdrop-blur-sm bg-white/95">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-full">
-                <Button
+                <ProductPageButton
                   type="submit"
-                  variant="primary"
                   disabled={loading}
                   className="flex-1 w-full sm:w-auto order-2 sm:order-1"
                 >
-                  {loading ? (isEditMode ? t('admin.products.add.updating') : t('admin.products.add.creating')) : (isEditMode ? t('admin.products.add.updateProduct') : t('admin.products.add.createProduct'))}
-                </Button>
-                <Button
-                  type="button"
+                  {loading
+                    ? (isEditMode ? t('admin.products.add.updating') : t('admin.products.add.creating'))
+                    : (isEditMode ? t('admin.products.add.updateProduct') : t('admin.products.add.createProduct'))}
+                </ProductPageButton>
+                <ProductPageButton
                   variant="outline"
+                  type="button"
                   onClick={() => router.push('/admin/products')}
                   className="w-full sm:w-auto order-1 sm:order-2"
                 >
                   {t('admin.common.cancel')}
-                </Button>
+                </ProductPageButton>
               </div>
             </div>
           </form>
@@ -4736,13 +4739,13 @@ function AddProductPageContent() {
 
               {/* Footer */}
               <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 sticky bottom-0 bg-white">
-                <Button
-                  type="button"
+                <ProductPageButton
                   variant="outline"
                   onClick={() => setOpenValueModal(null)}
+                  className="px-4 py-2 text-sm"
                 >
                   {t('admin.common.close')}
-                </Button>
+                </ProductPageButton>
               </div>
             </div>
           </div>
