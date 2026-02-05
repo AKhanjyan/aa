@@ -5,6 +5,7 @@ import type { FormEvent, MouseEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Input, Card } from '@shop/ui';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { apiClient } from '../../lib/api-client';
 import { formatPrice, type CurrencyCode } from '../../lib/currency';
@@ -800,19 +801,21 @@ function ProfilePageContent() {
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold text-gray-900">{t('profile.dashboard.recentOrders')}</h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <ProductPageButton
+                    variant="outline"
+                    className="h-9 px-4 text-sm font-semibold"
                     onClick={() => handleTabChange('orders')}
                   >
                     {t('profile.dashboard.viewAll')}
-                  </Button>
+                  </ProductPageButton>
                 </div>
                 {dashboardData.recentOrders.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-gray-600 mb-4">{t('profile.dashboard.noOrders')}</p>
                     <Link href="/products">
-                      <Button variant="primary">{t('profile.dashboard.startShopping')}</Button>
+                      <ProductPageButton className="mt-2 px-6 py-2">
+                        {t('profile.dashboard.startShopping')}
+                      </ProductPageButton>
                     </Link>
                   </div>
                 ) : (
@@ -862,37 +865,37 @@ function ProfilePageContent() {
               <Card className="p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('profile.dashboard.quickActions')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button
+                  <ProductPageButton
                     variant="outline"
                     onClick={() => handleTabChange('orders')}
-                    className="justify-start"
+                    className="justify-start w-full text-sm py-2"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                     {t('profile.dashboard.viewAllOrders')}
-                  </Button>
-                  <Button
+                  </ProductPageButton>
+                  <ProductPageButton
                     variant="outline"
                     onClick={() => handleTabChange('addresses')}
-                    className="justify-start"
+                    className="justify-start w-full text-sm py-2"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     {t('profile.dashboard.manageAddresses')}
-                  </Button>
+                  </ProductPageButton>
                   <Link href="/products">
-                    <Button
+                    <ProductPageButton
                       variant="outline"
-                      className="w-full justify-start"
+                      className="w-full justify-start text-sm py-2"
                     >
                       <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                       </svg>
                       {t('profile.dashboard.continueShopping')}
-                    </Button>
+                    </ProductPageButton>
                   </Link>
                 </div>
               </Card>
@@ -939,9 +942,9 @@ function ProfilePageContent() {
               placeholder={t('profile.personal.phonePlaceholder')}
             />
             <div className="flex items-center gap-2 pt-4">
-              <Button type="submit" variant="primary" disabled={savingPersonal}>
+              <ProductPageButton type="submit" disabled={savingPersonal}>
                 {savingPersonal ? t('profile.personal.saving') : t('profile.personal.save')}
-              </Button>
+              </ProductPageButton>
               <Button
                 type="button"
                 variant="outline"
@@ -967,8 +970,7 @@ function ProfilePageContent() {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-900">{t('profile.addresses.title')}</h2>
-              <Button
-                variant="primary"
+              <ProductPageButton
                 onClick={() => {
                   resetAddressForm();
                   setShowAddressForm(!showAddressForm);
@@ -976,7 +978,7 @@ function ProfilePageContent() {
                 }}
               >
                 {showAddressForm ? t('profile.addresses.form.cancel') : `+ ${t('profile.addresses.addNew')}`}
-              </Button>
+              </ProductPageButton>
             </div>
 
             {/* Address Form */}
@@ -1034,12 +1036,11 @@ function ProfilePageContent() {
                   <span className="ml-2 text-sm text-gray-700">{t('profile.addresses.form.isDefault')}</span>
                 </label>
                 <div className="flex gap-2">
-                  <Button type="submit" variant="primary" disabled={savingAddress}>
+                  <ProductPageButton type="submit" disabled={savingAddress}>
                     {savingAddress ? t('profile.addresses.form.saving') : editingAddress ? t('profile.addresses.form.update') : t('profile.addresses.form.add')}
-                  </Button>
-                  <Button
+                  </ProductPageButton>
+                  <ProductPageButton
                     type="button"
-                    variant="outline"
                     onClick={() => {
                       setShowAddressForm(false);
                       setEditingAddress(null);
@@ -1047,7 +1048,7 @@ function ProfilePageContent() {
                     }}
                   >
                     {t('profile.addresses.form.cancel')}
-                  </Button>
+                  </ProductPageButton>
                 </div>
               </form>
             )}
@@ -1081,29 +1082,28 @@ function ProfilePageContent() {
                       </div>
                       <div className="flex gap-2 ml-4">
                         {!address.isDefault && (
-                          <Button
+                          <ProductPageButton
                             variant="outline"
-                            size="sm"
+                            className="text-xs px-3 py-1"
                             onClick={() => address.id && handleSetDefaultAddress(address.id)}
                           >
                             {t('profile.addresses.setDefault')}
-                          </Button>
+                          </ProductPageButton>
                         )}
-                        <Button
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
-                            onClick={() => handleEditAddress(address)}
+                          className="text-xs px-3 py-1"
+                          onClick={() => handleEditAddress(address)}
                         >
                           {t('profile.addresses.edit')}
-                        </Button>
-                        <Button
+                        </ProductPageButton>
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
-                            onClick={() => address.id && handleDeleteAddress(address.id)}
-                          className="text-red-600 hover:text-red-700 hover:border-red-300"
+                          className="text-xs px-3 py-1 text-red-600 border-red-300 hover:bg-red-50 hover:text-red-700"
+                          onClick={() => address.id && handleDeleteAddress(address.id)}
                         >
                           {t('profile.addresses.delete')}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                     </div>
                   </div>
@@ -1132,7 +1132,9 @@ function ProfilePageContent() {
             <div className="text-center py-12">
               <p className="text-gray-600 mb-4">{t('profile.orders.noOrders')}</p>
               <Link href="/products">
-                <Button variant="primary">{t('profile.dashboard.startShopping')}</Button>
+                <ProductPageButton className="mt-2 px-6 py-2">
+                  {t('profile.dashboard.startShopping')}
+                </ProductPageButton>
               </Link>
             </div>
           ) : (
@@ -1182,22 +1184,22 @@ function ProfilePageContent() {
                     {t('profile.orders.page')} {ordersMeta.page} {t('profile.orders.of')} {ordersMeta.totalPages} • {ordersMeta.total} {t('profile.orders.totalOrders')}
                   </p>
                   <div className="flex gap-2">
-                    <Button
+                    <ProductPageButton
                       variant="outline"
-                      size="sm"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setOrdersPage(prev => Math.max(1, prev - 1))}
                       disabled={ordersPage === 1 || ordersLoading}
                     >
                       {t('profile.orders.previous')}
-                    </Button>
-                    <Button
+                    </ProductPageButton>
+                    <ProductPageButton
                       variant="outline"
-                      size="sm"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setOrdersPage(prev => Math.min(ordersMeta.totalPages, prev + 1))}
                       disabled={ordersPage === ordersMeta.totalPages || ordersLoading}
                     >
                       {t('profile.orders.next')}
-                    </Button>
+                    </ProductPageButton>
                   </div>
                 </div>
               )}
@@ -1236,9 +1238,9 @@ function ProfilePageContent() {
               required
             />
             <div className="pt-4">
-              <Button type="submit" variant="primary" disabled={savingPassword}>
+              <ProductPageButton type="submit" disabled={savingPassword}>
                 {savingPassword ? t('profile.password.changing') : t('profile.password.change')}
-              </Button>
+              </ProductPageButton>
             </div>
           </form>
         </Card>
@@ -1265,14 +1267,13 @@ function ProfilePageContent() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Button
+                  <ProductPageButton
                     onClick={handleReOrder}
                     disabled={isReordering}
-                    variant="primary"
-                    size="sm"
+                    className="h-9 px-4 text-sm"
                   >
                     {isReordering ? t('profile.orderDetails.adding') : t('profile.orderDetails.reorder')}
-                  </Button>
+                  </ProductPageButton>
                   <button
                     onClick={() => setSelectedOrder(null)}
                     className="text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -1295,7 +1296,13 @@ function ProfilePageContent() {
                 ) : orderDetailsError ? (
                   <div className="text-center py-12">
                     <p className="text-red-600 mb-4">{orderDetailsError}</p>
-                    <Button onClick={() => setSelectedOrder(null)} variant="outline">{t('profile.orderDetails.close')}</Button>
+                    <ProductPageButton
+                      variant="outline"
+                      className="mt-4 px-6 py-2"
+                      onClick={() => setSelectedOrder(null)}
+                    >
+                      {t('profile.orderDetails.close')}
+                    </ProductPageButton>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

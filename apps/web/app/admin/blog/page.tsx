@@ -2,12 +2,13 @@
 
 import { useEffect, useState, FormEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Card, Button } from '@shop/ui';
+import { Card } from '@shop/ui';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { apiClient } from '../../../lib/api-client';
 import { useTranslation } from '../../../lib/i18n-client';
 import { getStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface AdminBlogPost {
   id: string;
@@ -285,9 +286,9 @@ export default function AdminBlogPage() {
                 />
               </div>
               <div className="w-full md:w-auto">
-                <button
+                <ProductPageButton
                   onClick={openCreateModal}
-                  className="w-full md:w-auto px-4 py-2.5 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                  className="w-full md:w-auto px-4 py-2.5 text-sm font-medium flex items-center justify-center gap-2"
                 >
                   <svg
                     className="w-4 h-4"
@@ -303,7 +304,7 @@ export default function AdminBlogPage() {
                     />
                   </svg>
                   {t('admin.blog.addNewPost')}
-                </button>
+                </ProductPageButton>
               </div>
             </div>
 
@@ -385,22 +386,20 @@ export default function AdminBlogPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
+                              <ProductPageButton
+                                variant="outline"
+                                className="text-xs px-3 py-1 text-blue-600 border-blue-300 hover:bg-blue-50"
                                 onClick={() => openEditModal(post)}
-                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                               >
                                 {t('admin.blog.edit')}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
+                              </ProductPageButton>
+                              <ProductPageButton
+                                variant="outline"
+                                className="text-xs px-3 py-1 text-red-600 border-red-300 hover:bg-red-50"
                                 onClick={() => handleDelete(post)}
-                                className="text-red-600 hover:text-red-800 hover:bg-red-50"
                               >
                                 {t('admin.blog.delete')}
-                              </Button>
+                              </ProductPageButton>
                             </div>
                           </td>
                         </tr>
@@ -508,20 +507,21 @@ export default function AdminBlogPage() {
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">
-                <button
+                <ProductPageButton
+                  variant="outline"
                   type="button"
+                  className="px-4 py-2 text-sm"
                   onClick={() => {
                     setEditorOpen(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                   disabled={saving}
                 >
                   {t('admin.common.cancel')}
-                </button>
-                <button
+                </ProductPageButton>
+                <ProductPageButton
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md hover:bg-gray-800 disabled:opacity-70"
+                  className="px-4 py-2 text-sm"
                   disabled={saving}
                 >
                   {saving
@@ -529,7 +529,7 @@ export default function AdminBlogPage() {
                     : editingPost
                     ? t('admin.blog.updatePost')
                     : t('admin.blog.createPost')}
-                </button>
+                </ProductPageButton>
               </div>
             </form>
           </div>

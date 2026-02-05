@@ -3,10 +3,11 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button, Input } from '@shop/ui';
+import { Card, Input } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
 import { useTranslation } from '../../../lib/i18n-client';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 export default function PriceFilterSettingsPage() {
   const { t } = useTranslation();
@@ -413,11 +414,10 @@ export default function PriceFilterSettingsPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <Button
-                      variant="primary"
+                    <ProductPageButton
                       onClick={handleSave}
                       disabled={saving}
-                      className="px-6"
+                      className="px-6 py-2 text-sm"
                     >
                       {saving ? (
                         <div className="flex items-center gap-2">
@@ -427,9 +427,9 @@ export default function PriceFilterSettingsPage() {
                       ) : (
                         t('admin.priceFilter.saveSettings')
                       )}
-                    </Button>
-                    <Button
-                      variant="ghost"
+                    </ProductPageButton>
+                    <ProductPageButton
+                      variant="outline"
                       onClick={() => {
                         setMinPrice('');
                         setMaxPrice('');
@@ -439,9 +439,10 @@ export default function PriceFilterSettingsPage() {
                         setStepSizeGEL('');
                         prevStepSizeRef.current = '';
                       }}
+                      className="px-4 py-2 text-sm"
                     >
                       {t('admin.priceFilter.clear')}
-                    </Button>
+                    </ProductPageButton>
                   </div>
                 </div>
               )}

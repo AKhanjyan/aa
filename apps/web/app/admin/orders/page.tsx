@@ -3,10 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button } from '@shop/ui';
+import { Card } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { useTranslation } from '../../../lib/i18n-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface Order {
   id: string;
@@ -442,13 +443,14 @@ export default function OrdersPage() {
             <div className="text-sm text-gray-700">
               {t('admin.orders.selectedOrders').replace('{count}', selectedIds.size.toString())}
             </div>
-            <Button
+            <ProductPageButton
               variant="outline"
+              className="px-4 py-2 text-sm"
               onClick={handleBulkDelete}
               disabled={selectedIds.size === 0 || bulkDeleting}
             >
               {bulkDeleting ? t('admin.orders.deleting') : t('admin.orders.deleteSelected')}
-            </Button>
+            </ProductPageButton>
           </div>
         </Card>
 
@@ -636,20 +638,22 @@ export default function OrdersPage() {
                     {t('admin.orders.showingPage').replace('{page}', meta.page.toString()).replace('{totalPages}', meta.totalPages.toString()).replace('{total}', meta.total.toString())}
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
+                    <ProductPageButton
+                      variant="outline"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
                     >
                       {t('admin.orders.previous')}
-                    </Button>
-                    <Button
-                      variant="ghost"
+                    </ProductPageButton>
+                    <ProductPageButton
+                      variant="outline"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                       disabled={page === meta.totalPages}
                     >
                       {t('admin.orders.next')}
-                    </Button>
+                    </ProductPageButton>
                   </div>
                 </div>
               )}

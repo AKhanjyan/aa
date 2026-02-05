@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button } from '@shop/ui';
+import { Card } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { useTranslation } from '../../../lib/i18n-client';
 import { clearCurrencyRatesCache } from '../../../lib/currency';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface Settings {
   defaultCurrency?: string;
@@ -469,20 +470,21 @@ export default function SettingsPage() {
 
         {/* Actions */}
         <div className="flex gap-4">
-          <Button
-            variant="primary"
+          <ProductPageButton
             onClick={handleSave}
             disabled={saving}
+            className="px-6 py-2 text-sm"
           >
             {saving ? t('admin.settings.saving') : t('admin.settings.saveSettings')}
-          </Button>
-          <Button
-            variant="ghost"
+          </ProductPageButton>
+          <ProductPageButton
+            variant="outline"
             onClick={() => router.push('/admin')}
             disabled={saving}
+            className="px-4 py-2 text-sm"
           >
             {t('admin.settings.cancel')}
-          </Button>
+          </ProductPageButton>
         </div>
           </div>
         </div>

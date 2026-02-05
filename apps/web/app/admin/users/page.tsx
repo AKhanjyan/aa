@@ -3,10 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button, Input } from '@shop/ui';
+import { Card, Input } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { useTranslation } from '../../../lib/i18n-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface User {
   id: string;
@@ -207,9 +208,9 @@ export default function UsersPage() {
                 placeholder={t('admin.users.searchPlaceholder')}
                 className="flex-1"
               />
-              <Button type="submit" variant="primary">
+              <ProductPageButton type="submit">
                 {t('admin.users.search')}
-              </Button>
+              </ProductPageButton>
             </div>
 
             {/* Admin / Customer filter */}
@@ -393,32 +394,37 @@ export default function UsersPage() {
                     {t('admin.users.showingPage').replace('{page}', meta.page.toString()).replace('{totalPages}', meta.totalPages.toString()).replace('{total}', meta.total.toString())}
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
+                    <ProductPageButton
+                      variant="outline"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
                     >
                       {t('admin.users.previous')}
-                    </Button>
-                    <Button
-                      variant="ghost"
+                    </ProductPageButton>
+                    <ProductPageButton
+                      variant="outline"
+                      className="px-4 py-1 text-sm"
                       onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                       disabled={page === meta.totalPages}
                     >
                       {t('admin.users.next')}
-                    </Button>
+                    </ProductPageButton>
                   </div>
                 </div>
               )}
               <div className="mt-4 flex items-center justify-between">
-                <div className="text-sm text-gray-700">{t('admin.users.selectedUsers').replace('{count}', selectedIds.size.toString())}</div>
-                <Button
+                <div className="text-sm text-gray-700">
+                  {t('admin.users.selectedUsers').replace('{count}', selectedIds.size.toString())}
+                </div>
+                <ProductPageButton
                   variant="outline"
+                  className="px-4 py-2 text-sm"
                   onClick={handleBulkDelete}
                   disabled={selectedIds.size === 0 || bulkDeleting}
                 >
                   {bulkDeleting ? t('admin.users.deleting') : t('admin.users.deleteSelected')}
-                </Button>
+                </ProductPageButton>
               </div>
             </>
           )}

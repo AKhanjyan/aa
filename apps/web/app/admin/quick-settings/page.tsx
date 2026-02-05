@@ -3,10 +3,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button, Input } from '@shop/ui';
+import { Card, Input } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
 import { useTranslation } from '../../../lib/i18n-client';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface AdminSettingsResponse {
   globalDiscount: number;
@@ -484,11 +485,10 @@ export default function QuickSettingsPage() {
                           placeholder="0"
                         />
                         <span className="text-sm font-medium text-gray-700 w-8">%</span>
-                        <Button
-                          variant="primary"
+                        <ProductPageButton
                           onClick={handleDiscountSave}
                           disabled={discountSaving}
-                          className="px-6"
+                          className="px-6 py-2 text-sm"
                         >
                           {discountSaving ? (
                             <div className="flex items-center gap-2">
@@ -498,7 +498,7 @@ export default function QuickSettingsPage() {
                           ) : (
                             t('admin.quickSettings.save')
                           )}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                       
                       {globalDiscount > 0 ? (
@@ -516,46 +516,41 @@ export default function QuickSettingsPage() {
                       )}
                       
                       <div className="flex gap-2">
-                        <Button
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
+                          className="flex-1 py-1 text-sm"
                           onClick={() => setGlobalDiscount(10)}
-                          className="flex-1"
                         >
                           10%
-                        </Button>
-                        <Button
+                        </ProductPageButton>
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
+                          className="flex-1 py-1 text-sm"
                           onClick={() => setGlobalDiscount(20)}
-                          className="flex-1"
                         >
                           20%
-                        </Button>
-                        <Button
+                        </ProductPageButton>
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
+                          className="flex-1 py-1 text-sm"
                           onClick={() => setGlobalDiscount(30)}
-                          className="flex-1"
                         >
                           30%
-                        </Button>
-                        <Button
+                        </ProductPageButton>
+                        <ProductPageButton
                           variant="outline"
-                          size="sm"
+                          className="flex-1 py-1 text-sm"
                           onClick={() => setGlobalDiscount(50)}
-                          className="flex-1"
                         >
                           50%
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        </ProductPageButton>
+                        <ProductPageButton
+                          variant="outline"
+                          className="px-3 py-1 text-sm"
                           onClick={() => setGlobalDiscount(0)}
-                          className="px-3"
                         >
                           {t('admin.quickSettings.cancel')}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                     </div>
                   )}
@@ -595,14 +590,13 @@ export default function QuickSettingsPage() {
                   </div>
                   
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <ProductPageButton
+                      variant="outline"
+                      className="w-full py-2 text-sm"
                       onClick={() => router.push('/admin/settings')}
-                      className="w-full"
                     >
                       {t('admin.quickSettings.moreSettings')}
-                    </Button>
+                    </ProductPageButton>
                   </div>
                 </div>
               </div>
@@ -615,10 +609,10 @@ export default function QuickSettingsPage() {
                   <h2 className="text-xl font-semibold text-gray-900">{t('admin.quickSettings.categoryDiscounts')}</h2>
                   <p className="text-sm text-gray-600">{t('admin.quickSettings.categoryDiscountsSubtitle')}</p>
                 </div>
-                <Button
-                  variant="primary"
+                <ProductPageButton
                   onClick={handleCategoryDiscountSave}
                   disabled={categorySaving || categories.length === 0}
+                  className="px-4 py-2 text-sm"
                 >
                   {categorySaving ? (
                     <div className="flex items-center gap-2">
@@ -628,7 +622,7 @@ export default function QuickSettingsPage() {
                   ) : (
                     t('admin.quickSettings.save')
                   )}
-                </Button>
+                </ProductPageButton>
               </div>
 
               {categoriesLoading ? (
@@ -671,14 +665,14 @@ export default function QuickSettingsPage() {
                             placeholder="0"
                           />
                           <span className="text-sm font-medium text-gray-700">%</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
+                          <ProductPageButton
+                            variant="outline"
+                            className="px-3 py-1 text-xs"
                             onClick={() => clearCategoryDiscount(category.id)}
                             disabled={currentValue === undefined}
                           >
                             {t('admin.quickSettings.clear')}
-                          </Button>
+                          </ProductPageButton>
                         </div>
                       </div>
                     );
@@ -694,10 +688,10 @@ export default function QuickSettingsPage() {
                   <h2 className="text-xl font-semibold text-gray-900">{t('admin.quickSettings.brandDiscounts')}</h2>
                   <p className="text-sm text-gray-600">{t('admin.quickSettings.brandDiscountsSubtitle')}</p>
                 </div>
-                <Button
-                  variant="primary"
+                <ProductPageButton
                   onClick={handleBrandDiscountSave}
                   disabled={brandSaving || brands.length === 0}
+                  className="px-4 py-2 text-sm"
                 >
                   {brandSaving ? (
                     <div className="flex items-center gap-2">
@@ -707,7 +701,7 @@ export default function QuickSettingsPage() {
                   ) : (
                     t('admin.quickSettings.save')
                   )}
-                </Button>
+                </ProductPageButton>
               </div>
 
               {brandsLoading ? (
@@ -748,14 +742,14 @@ export default function QuickSettingsPage() {
                             placeholder="0"
                           />
                           <span className="text-sm font-medium text-gray-700">%</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
+                          <ProductPageButton
+                            variant="outline"
+                            className="px-3 py-1 text-xs"
                             onClick={() => clearBrandDiscount(brand.id)}
                             disabled={currentValue === undefined}
                           >
                             {t('admin.quickSettings.clear')}
-                          </Button>
+                          </ProductPageButton>
                         </div>
                       </div>
                     );
@@ -875,12 +869,10 @@ export default function QuickSettingsPage() {
                           placeholder="0"
                         />
                         <span className="text-sm font-medium text-gray-700 w-6">%</span>
-                        <Button
-                          variant="primary"
-                          size="sm"
+                        <ProductPageButton
+                          className="px-4 py-2 text-sm"
                           onClick={() => handleProductDiscountSave(product.id)}
                           disabled={savingProductId === product.id}
-                          className="px-4"
                         >
                           {savingProductId === product.id ? (
                             <div className="flex items-center gap-2">
@@ -889,7 +881,7 @@ export default function QuickSettingsPage() {
                           ) : (
                             t('admin.quickSettings.save')
                           )}
-                        </Button>
+                        </ProductPageButton>
                       </div>
                     </div>
                   ))}

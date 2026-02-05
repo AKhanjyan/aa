@@ -3,10 +3,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../lib/auth/AuthContext';
-import { Card, Button } from '@shop/ui';
+import { Card } from '@shop/ui';
 import { apiClient } from '../../lib/api-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../components/icons/global/global';
 import { useTranslation } from '../../lib/i18n-client';
+import { ProductPageButton } from '../../components/icons/global/globalMobile';
 
 
 
@@ -440,13 +441,13 @@ export default function AdminPanel() {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">{t('admin.dashboard.recentOrders')}</h2>
-              <Button
-                variant="ghost"
-                size="sm"
+              <ProductPageButton
+                variant="outline"
+                className="h-9 px-4 text-sm font-semibold"
                 onClick={() => router.push('/admin/orders')}
               >
                 {t('admin.dashboard.viewAll')}
-              </Button>
+              </ProductPageButton>
             </div>
             <div className="space-y-4">
               {recentOrdersLoading ? (
@@ -506,13 +507,13 @@ export default function AdminPanel() {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">{t('admin.dashboard.topSellingProducts')}</h2>
-              <Button
-                variant="ghost"
-                size="sm"
+              <ProductPageButton
+                variant="outline"
+                className="h-9 px-4 text-sm font-semibold"
                 onClick={() => router.push('/admin/products')}
               >
                 {t('admin.dashboard.viewAll')}
-              </Button>
+              </ProductPageButton>
             </div>
             <div className="space-y-4">
               {topProductsLoading ? (
@@ -632,10 +633,10 @@ export default function AdminPanel() {
         <Card className="p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.dashboard.quickActions')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button
+            <ProductPageButton
               variant="outline"
               onClick={() => router.push('/admin/products/add')}
-              className="justify-start h-auto py-4"
+              className="justify-start w-full h-auto py-4 text-sm"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -648,11 +649,11 @@ export default function AdminPanel() {
                   <p className="text-xs text-gray-500">{t('admin.dashboard.createNewProduct')}</p>
                 </div>
               </div>
-            </Button>
-            <Button
+            </ProductPageButton>
+            <ProductPageButton
               variant="outline"
               onClick={() => router.push('/admin/orders')}
-              className="justify-start h-auto py-4"
+              className="justify-start w-full h-auto py-4 text-sm"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -665,11 +666,11 @@ export default function AdminPanel() {
                   <p className="text-xs text-gray-500">{t('admin.dashboard.viewAllOrders')}</p>
                 </div>
               </div>
-            </Button>
-            <Button
+            </ProductPageButton>
+            <ProductPageButton
               variant="outline"
               onClick={() => router.push('/admin/users')}
-              className="justify-start h-auto py-4"
+              className="justify-start w-full h-auto py-4 text-sm"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
@@ -682,11 +683,11 @@ export default function AdminPanel() {
                   <p className="text-xs text-gray-500">{t('admin.dashboard.viewAllUsers')}</p>
                 </div>
               </div>
-            </Button>
-            <Button
+            </ProductPageButton>
+            <ProductPageButton
               variant="outline"
               onClick={() => router.push('/admin/settings')}
-              className="justify-start h-auto py-4"
+              className="justify-start w-full h-auto py-4 text-sm"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
@@ -700,7 +701,7 @@ export default function AdminPanel() {
                   <p className="text-xs text-gray-500">{t('admin.dashboard.configureSystem')}</p>
                 </div>
               </div>
-            </Button>
+            </ProductPageButton>
           </div>
         </Card>
 

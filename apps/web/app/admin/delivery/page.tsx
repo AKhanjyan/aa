@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
-import { Card, Button } from '@shop/ui';
+import { Card } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
 import { useTranslation } from '../../../lib/i18n-client';
+import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
 interface DeliveryLocation {
   id?: string;
@@ -170,13 +171,13 @@ export default function DeliveryPage() {
             <Card className="p-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-gray-900">{t('admin.delivery.deliveryPricesByLocation')}</h2>
-                <Button
-                  variant="primary"
+                <ProductPageButton
                   onClick={handleAddLocation}
                   disabled={saving}
+                  className="px-4 py-2 text-sm"
                 >
                   {t('admin.delivery.addLocation')}
-                </Button>
+                </ProductPageButton>
               </div>
               
               {locations.length === 0 ? (
@@ -226,15 +227,16 @@ export default function DeliveryPage() {
                             min="0"
                             step="100"
                           />
-                            <button
+                            <ProductPageButton
+                              variant="outline"
+                              className="px-3 py-2 text-xs text-red-600 border-red-300 hover:bg-red-50"
                               onClick={() => handleDeleteLocation(index)}
-                              className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-md"
                               disabled={saving}
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
-                            </button>
+                            </ProductPageButton>
                           </div>
                         </div>
                       </div>
@@ -246,20 +248,21 @@ export default function DeliveryPage() {
 
             {/* Actions */}
             <div className="flex gap-4">
-              <Button
-                variant="primary"
+              <ProductPageButton
                 onClick={handleSave}
                 disabled={saving || locations.length === 0}
+                className="px-6 py-2 text-sm"
               >
                 {saving ? t('admin.delivery.saving') : t('admin.delivery.saveSettings')}
-              </Button>
-              <Button
-                variant="ghost"
+              </ProductPageButton>
+              <ProductPageButton
+                variant="outline"
                 onClick={() => router.push('/admin')}
                 disabled={saving}
+                className="px-4 py-2 text-sm"
               >
                 {t('admin.delivery.cancel')}
-              </Button>
+              </ProductPageButton>
             </div>
           </div>
         </div>
