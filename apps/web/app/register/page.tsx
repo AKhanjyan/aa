@@ -130,7 +130,7 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -171,7 +171,7 @@ export default function RegisterPage() {
             </label>
             <Input
               id="email"
-              type="email"
+              type="text"
               placeholder={t('register.placeholders.email')}
               className="w-full"
               value={email}
