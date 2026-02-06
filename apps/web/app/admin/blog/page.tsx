@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Card } from '@shop/ui';
 import { useAuth } from '../../../lib/auth/AuthContext';
@@ -9,6 +9,8 @@ import { useTranslation } from '../../../lib/i18n-client';
 import { getStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
 import { ProductPageButton } from '../../../components/icons/global/globalMobile';
+import { processImageFile } from '../../../lib/utils/image-utils';
+import Image from 'next/image';
 
 interface AdminBlogPost {
   id: string;
@@ -52,8 +54,14 @@ export default function AdminBlogPage() {
   const [formTitle, setFormTitle] = useState('');
   const [formSlug, setFormSlug] = useState('');
   const [formContentHtml, setFormContentHtml] = useState('');
+  const [formExcerpt, setFormExcerpt] = useState('');
+  const [formSeoTitle, setFormSeoTitle] = useState('');
+  const [formSeoDescription, setFormSeoDescription] = useState('');
+  const [formFeaturedImage, setFormFeaturedImage] = useState<string | null>(null);
+  const [formOgImage, setFormOgImage] = useState<string | null>(null);
   const [formPublished, setFormPublished] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState<'featured' | 'og' | null>(null);
 
   useEffect(() => {
     if (!isLoading) {
@@ -93,6 +101,11 @@ export default function AdminBlogPage() {
     setFormTitle('');
     setFormSlug('');
     setFormContentHtml('');
+    setFormExcerpt('');
+    setFormSeoTitle('');
+    setFormSeoDescription('');
+    setFormFeaturedImage(null);
+    setFormOgImage(null);
     setFormPublished(false);
   };
 
@@ -109,8 +122,11 @@ export default function AdminBlogPage() {
       const language = getStoredLanguage();
       const response = await apiClient.get<AdminBlogPost & {
         contentHtml?: string | null;
+        excerpt?: string | null;
         seoTitle?: string | null;
         seoDescription?: string | null;
+        featuredImage?: string | null;
+        ogImage?: string | null;
       }>(`/api/v1/admin/blog/${post.id}`, {
         params: { locale: language },
       });
@@ -122,6 +138,11 @@ export default function AdminBlogPage() {
       setFormTitle(data.title || '');
       setFormSlug(data.slug || '');
       setFormContentHtml(data.contentHtml || '');
+      setFormExcerpt(data.excerpt || '');
+      setFormSeoTitle(data.seoTitle || '');
+      setFormSeoDescription(data.seoDescription || '');
+      setFormFeaturedImage(data.featuredImage || null);
+      setFormOgImage(data.ogImage || null);
       setFormPublished(data.published);
       setEditorOpen(true);
     } catch (err: any) {
@@ -175,6 +196,11 @@ export default function AdminBlogPage() {
         locale: formLocale,
         title: formTitle.trim(),
         contentHtml: formContentHtml || undefined,
+        excerpt: formExcerpt.trim() || undefined,
+        seoTitle: formSeoTitle.trim() || undefined,
+        seoDescription: formSeoDescription.trim() || undefined,
+        featuredImage: formFeaturedImage || undefined,
+        ogImage: formOgImage || undefined,
       };
 
       if (editingPost) {
@@ -222,6 +248,56 @@ export default function AdminBlogPage() {
     setFormTitle(value);
     if (!editingPost) {
       setFormSlug(generateSlug(value));
+      // Auto-generate SEO title if empty
+      if (!formSeoTitle) {
+        setFormSeoTitle(value);
+      }
+    }
+  };
+
+  const handleImageUpload = async (
+    event: ChangeEvent<HTMLInputElement>,
+    type: 'featured' | 'og'
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert(t('admin.blog.selectImageFile'));
+      return;
+    }
+
+    try {
+      setUploadingImage(type);
+      const base64 = await processImageFile(file, {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        initialQuality: 0.8,
+      });
+
+      if (type === 'featured') {
+        setFormFeaturedImage(base64);
+      } else {
+        setFormOgImage(base64);
+      }
+    } catch (error: any) {
+      console.error('❌ [ADMIN BLOG] Error uploading image:', error);
+      const message = error?.message || t('admin.blog.unknownError');
+      alert(t('admin.blog.errorUploadingImage').replace('{message}', message));
+    } finally {
+      setUploadingImage(null);
+      if (event.target) {
+        event.target.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = (type: 'featured' | 'og') => {
+    if (type === 'featured') {
+      setFormFeaturedImage(null);
+    } else {
+      setFormOgImage(null);
     }
   };
 
@@ -449,7 +525,7 @@ export default function AdminBlogPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('admin.blog.titleLabel')}
+                    {t('admin.blog.titleLabel')} *
                   </label>
                   <input
                     type="text"
@@ -460,6 +536,32 @@ export default function AdminBlogPage() {
                     required
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('admin.blog.slugLabelRequired')}
+                  </label>
+                  <input
+                    type="text"
+                    value={formSlug}
+                    onChange={(e) => setFormSlug(e.target.value)}
+                    placeholder={t('admin.blog.articleSlugPlaceholder')}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('admin.blog.excerptLabel')}
+                </label>
+                <textarea
+                  value={formExcerpt}
+                  onChange={(e) => setFormExcerpt(e.target.value)}
+                  placeholder={t('admin.blog.excerptPlaceholderFull')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px] resize-y"
+                  rows={3}
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -494,16 +596,138 @@ export default function AdminBlogPage() {
                 </div>
               </div>
 
+              {/* Featured Image */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('admin.blog.featuredImageLabel')}
+                </label>
+                {formFeaturedImage ? (
+                  <div className="relative">
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
+                      <Image
+                        src={formFeaturedImage}
+                        alt="Featured"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 512px"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage('featured')}
+                      className="mt-2 text-sm text-red-600 hover:text-red-800"
+                    >
+                      {t('admin.blog.removeImage')}
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'featured')}
+                      disabled={uploadingImage === 'featured'}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                    {uploadingImage === 'featured' && (
+                      <p className="mt-1 text-xs text-gray-500">{t('admin.blog.uploading')}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* SEO Section */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('admin.blog.seoSettingsTitle')}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t('admin.blog.metaTitleLabel')}
+                    </label>
+                    <input
+                      type="text"
+                      value={formSeoTitle}
+                      onChange={(e) => setFormSeoTitle(e.target.value)}
+                      placeholder={t('admin.blog.metaTitlePlaceholder')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      {t('admin.blog.metaTitleHint')}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t('admin.blog.metaDescriptionLabel')}
+                    </label>
+                    <textarea
+                      value={formSeoDescription}
+                      onChange={(e) => setFormSeoDescription(e.target.value)}
+                      placeholder={t('admin.blog.metaDescriptionPlaceholder')}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px] resize-y"
+                      rows={3}
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      {t('admin.blog.metaDescriptionHint')}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t('admin.blog.ogImageLabel')}
+                    </label>
+                    {formOgImage ? (
+                      <div className="relative">
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-gray-300">
+                          <Image
+                            src={formOgImage}
+                            alt="OG Image"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 512px"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage('og')}
+                          className="mt-2 text-sm text-red-600 hover:text-red-800"
+                        >
+                          {t('admin.blog.removeImage')}
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'og')}
+                          disabled={uploadingImage === 'og'}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        />
+                        {uploadingImage === 'og' && (
+                          <p className="mt-1 text-xs text-gray-500">{t('admin.blog.uploading')}</p>
+                        )}
+                        <p className="mt-1 text-xs text-gray-500">
+                          {t('admin.blog.ogImageHint')}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('admin.blog.contentLabel')}
+                  {t('admin.blog.contentLabel')} (HTML)
                 </label>
                 <textarea
                   value={formContentHtml}
                   onChange={(e) => setFormContentHtml(e.target.value)}
                   placeholder={t('admin.blog.contentPlaceholder')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[160px] font-mono resize-y"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[200px] font-mono resize-y"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  {t('admin.blog.contentHint')}
+                </p>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">

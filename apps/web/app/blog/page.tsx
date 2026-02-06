@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from '../../lib/i18n-client';
 import { apiClient } from '../../lib/api-client';
+import { BlogCard } from '../../components/BlogCard';
+import { BlogPagination } from '../../components/BlogPagination';
 
 interface PublicBlogPost {
   id: string;
@@ -11,29 +13,48 @@ interface PublicBlogPost {
   title: string;
   contentHtml: string | null;
   excerpt: string | null;
+  featuredImage: string | null;
   publishedAt: string | null;
+}
+
+interface BlogListResponse {
+  data: PublicBlogPost[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
 export default function BlogPage() {
   const { t, lang } = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [posts, setPosts] = useState<PublicBlogPost[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [meta, setMeta] = useState<BlogListResponse['meta'] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
   useEffect(() => {
     void loadPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang]);
+  }, [lang, currentPage]);
 
   async function loadPosts() {
     try {
       setLoading(true);
-      const response = await apiClient.get<{ data: PublicBlogPost[] }>('/api/v1/blog', {
-        params: { lang },
+      setError(null);
+      const response = await apiClient.get<BlogListResponse>('/api/v1/blog', {
+        params: { lang, page: currentPage, limit: 12 },
       });
       setPosts(response.data || []);
-    } catch (error) {
-      console.error('❌ [BLOG] Failed to load posts', error);
+      setMeta(response.meta || null);
+    } catch (err) {
+      console.error('❌ [BLOG] Failed to load posts', err);
+      setError(t('blog.errorLoading'));
     } finally {
       setLoading(false);
     }
@@ -41,7 +62,8 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {/* Header */}
         <div className="mb-10 text-center">
           <p className="text-sm md:text-base font-semibold uppercase tracking-wider text-[#00d1ff] mb-2">
             {t('blog.subtitle')}
@@ -54,6 +76,14 @@ export default function BlogPage() {
           </p>
         </div>
 
+        {/* Error State */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-center">
+            {error}
+          </div>
+        )}
+
+        {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -63,61 +93,39 @@ export default function BlogPage() {
           </div>
         )}
 
-        {!loading && posts.length === 0 && (
-          <p className="text-center text-gray-500 text-sm md:text-base">
-            {t('blog.empty')}
-          </p>
+        {/* Empty State */}
+        {!loading && !error && posts.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-sm md:text-base">
+              {t('blog.empty')}
+            </p>
+          </div>
         )}
 
-        {!loading && posts.length > 0 && (
-          <div className="space-y-8">
-            {posts.map((post) => {
-              const publishedLabel = post.publishedAt
-                ? new Date(post.publishedAt).toLocaleDateString()
-                : '';
-
-              return (
-                <article
+        {/* Blog Posts Grid */}
+        {!loading && !error && posts.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {posts.map((post) => (
+                <BlogCard
                   key={post.id}
-                  className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow bg-white"
-                >
-                  <header className="mb-3">
-                    <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-1">
-                      {post.title}
-                    </h2>
-                    {publishedLabel && (
-                      <p className="text-xs text-gray-400">
-                        {t('blog.publishedAt').replace('{date}', publishedLabel)}
-                      </p>
-                    )}
-                  </header>
+                  slug={post.slug}
+                  title={post.title}
+                  excerpt={post.excerpt}
+                  featuredImage={post.featuredImage}
+                  publishedAt={post.publishedAt}
+                />
+              ))}
+            </div>
 
-                  {post.excerpt && (
-                    <p className="text-sm md:text-base text-gray-700 mb-3">
-                      {post.excerpt}
-                    </p>
-                  )}
-
-                  {post.contentHtml && (
-                    <div
-                      className="prose prose-sm md:prose max-w-none text-gray-800"
-                      dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-                    />
-                  )}
-
-                  {!post.contentHtml && (
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/blog/${post.slug}`)}
-                      className="mt-3 inline-flex items-center text-sm font-medium text-[#00d1ff] hover:text-[#00b8e6]"
-                    >
-                      {t('blog.readMore')}
-                    </button>
-                  )}
-                </article>
-              );
-            })}
-          </div>
+            {/* Pagination */}
+            {meta && meta.totalPages > 1 && (
+              <BlogPagination
+                currentPage={meta.page}
+                totalPages={meta.totalPages}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

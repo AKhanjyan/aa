@@ -10,6 +10,8 @@ interface BlogPostTranslation {
   excerpt?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
+  featuredImage?: string | null;
+  ogImage?: string | null;
 }
 
 interface BlogPost {
@@ -116,6 +118,8 @@ class BlogService {
           excerpt: translation?.excerpt || null,
           seoTitle: translation?.seoTitle || null,
           seoDescription: translation?.seoDescription || null,
+          featuredImage: translation?.featuredImage || null,
+          ogImage: translation?.ogImage || null,
         };
       });
   }
@@ -145,6 +149,8 @@ class BlogService {
       excerpt: translation?.excerpt || null,
       seoTitle: translation?.seoTitle || null,
       seoDescription: translation?.seoDescription || null,
+      featuredImage: translation?.featuredImage || null,
+      ogImage: translation?.ogImage || null,
     };
   }
 
@@ -160,6 +166,8 @@ class BlogService {
     excerpt?: string | null;
     seoTitle?: string | null;
     seoDescription?: string | null;
+    featuredImage?: string | null;
+    ogImage?: string | null;
   }) {
     const now = new Date().toISOString();
     const posts = await loadAllPosts();
@@ -189,6 +197,8 @@ class BlogService {
           excerpt: input.excerpt ?? null,
           seoTitle: input.seoTitle ?? null,
           seoDescription: input.seoDescription ?? null,
+          featuredImage: input.featuredImage ?? null,
+          ogImage: input.ogImage ?? null,
         },
       ],
     };
@@ -212,6 +222,8 @@ class BlogService {
     excerpt?: string;
     seoTitle?: string;
     seoDescription?: string;
+    featuredImage?: string | null;
+    ogImage?: string | null;
   }) {
     const posts = await loadAllPosts();
     const index = posts.findIndex((p) => p.id === input.id && !p.deletedAt);
@@ -264,6 +276,8 @@ class BlogService {
         excerpt: input.excerpt ?? null,
         seoTitle: input.seoTitle ?? null,
         seoDescription: input.seoDescription ?? null,
+        featuredImage: input.featuredImage ?? null,
+        ogImage: input.ogImage ?? null,
       };
       translations.push(translation);
     } else {
@@ -281,6 +295,12 @@ class BlogService {
       }
       if (typeof input.seoDescription === "string") {
         translation.seoDescription = input.seoDescription;
+      }
+      if (input.featuredImage !== undefined) {
+        translation.featuredImage = input.featuredImage;
+      }
+      if (input.ogImage !== undefined) {
+        translation.ogImage = input.ogImage;
       }
     }
 
@@ -317,16 +337,24 @@ class BlogService {
   /**
    * Public: list published posts for locale
    */
-  async listPublished(locale: Locale) {
+  async listPublished(locale: Locale, page: number = 1, limit: number = 10) {
     const posts = await loadAllPosts();
 
-    return posts
+    const published = posts
       .filter((p) => p.published && !p.deletedAt)
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
-      .map((post) => {
+      );
+
+    const total = published.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedPosts = published.slice(startIndex, endIndex);
+
+    return {
+      data: paginatedPosts.map((post) => {
         const translation = pickTranslation(post, locale);
 
         return {
@@ -338,10 +366,52 @@ class BlogService {
           contentHtml: translation?.contentHtml || null,
           seoTitle: translation?.seoTitle || null,
           seoDescription: translation?.seoDescription || null,
+          featuredImage: translation?.featuredImage || null,
+          ogImage: translation?.ogImage || null,
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
+          publishedAt: post.createdAt,
         };
-      });
+      }),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
+  }
+
+  /**
+   * Public: get single published post by slug
+   */
+  async getBySlug(slug: string, locale: Locale) {
+    const posts = await loadAllPosts();
+    const post = posts.find(
+      (p) => p.slug === slug && p.published && !p.deletedAt
+    );
+
+    if (!post) {
+      return null;
+    }
+
+    const translation = pickTranslation(post, locale);
+
+    return {
+      id: post.id,
+      slug: post.slug,
+      locale: translation?.locale || locale,
+      title: translation?.title || post.slug,
+      excerpt: translation?.excerpt || null,
+      contentHtml: translation?.contentHtml || null,
+      seoTitle: translation?.seoTitle || null,
+      seoDescription: translation?.seoDescription || null,
+      featuredImage: translation?.featuredImage || null,
+      ogImage: translation?.ogImage || null,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      publishedAt: post.createdAt,
+    };
   }
 }
 

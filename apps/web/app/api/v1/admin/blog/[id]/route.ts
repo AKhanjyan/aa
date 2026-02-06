@@ -118,6 +118,9 @@ export async function PUT(
         typeof body.seoDescription === "string"
           ? body.seoDescription
           : undefined,
+      featuredImage:
+        body.featuredImage !== undefined ? body.featuredImage : undefined,
+      ogImage: body.ogImage !== undefined ? body.ogImage : undefined,
     });
 
     return NextResponse.json(updated);

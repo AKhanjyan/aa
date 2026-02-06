@@ -134,6 +134,8 @@ export async function POST(req: NextRequest) {
       excerpt: body.excerpt,
       seoTitle: body.seoTitle,
       seoDescription: body.seoDescription,
+      featuredImage: body.featuredImage,
+      ogImage: body.ogImage,
     });
 
     return NextResponse.json(post, { status: 201 });

@@ -5,5 +5,7 @@
   "loading": "Loading posts...",
   "empty": "No blog posts available at the moment.",
   "publishedAt": "Published on {date}",
-  "readMore": "Read More"
+  "readMore": "Read More",
+  "backToBlog": "Back to Blog",
+  "errorLoading": "Failed to load posts"
 }
