@@ -91,6 +91,7 @@ export function setStoredCurrency(currency: CurrencyCode): void {
  * Format price with currency conversion
  * Uses cached rates from API if available, otherwise falls back to default rates
  * Works both on client and server side
+ * NOTE: This function assumes price is in USD base currency and converts it to target currency
  */
 export function formatPrice(price: number, currency: CurrencyCode = 'USD'): string {
   const currencyInfo = CURRENCIES[currency];
@@ -119,8 +120,29 @@ export function formatPrice(price: number, currency: CurrencyCode = 'USD'): stri
   
   // Debug logging (only in development)
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log(`💱 [formatPrice] ${price} ${currencyInfo.code} × ${rate} = ${formatted}`);
+    console.log(`💱 [formatPrice] ${price} USD × ${rate} = ${formatted}`);
   }
+  
+  return formatted;
+}
+
+/**
+ * Format price that is already in the target currency (no conversion)
+ * Useful for prices that are stored in specific currency (e.g., shipping prices in AMD)
+ */
+export function formatPriceInCurrency(price: number, currency: CurrencyCode): string {
+  const currencyInfo = CURRENCIES[currency];
+  
+  // Show all currencies without decimals (remove .00)
+  const minimumFractionDigits = 0;
+  const maximumFractionDigits = 0;
+  
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currencyInfo.code,
+    minimumFractionDigits,
+    maximumFractionDigits,
+  }).format(price);
   
   return formatted;
 }

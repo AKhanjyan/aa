@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Card, Input } from '@shop/ui';
 import { apiClient, ApiError } from '../../lib/api-client';
-import { formatPrice, getStoredCurrency } from '../../lib/currency';
+import { formatPrice, formatPriceInCurrency, getStoredCurrency, convertPrice, type CurrencyCode } from '../../lib/currency';
 import { getStoredLanguage } from '../../lib/language';
 import { useAuth } from '../../lib/auth/AuthContext';
 import { useTranslation } from '../../lib/i18n-client';
@@ -1210,7 +1210,7 @@ export default function CheckoutPage() {
                     {loadingDeliveryPrice
                       ? t('checkout.shipping.loading')
                       : deliveryPrice !== null
-                        ? formatPrice(deliveryPrice, currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
+                        ? formatPrice(convertPrice(deliveryPrice, 'AMD', 'USD'), currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
                         : t('checkout.shipping.enterCity')}
                   </span>
                 </div>
@@ -1220,7 +1220,7 @@ export default function CheckoutPage() {
                     <span>
                       {formatPrice(
                         cart.totals.subtotal + 
-                        (deliveryPrice !== null ? deliveryPrice : 0),
+                        (deliveryPrice !== null ? convertPrice(deliveryPrice, 'AMD', 'USD') : 0),
                         currency
                       )}
                     </span>
