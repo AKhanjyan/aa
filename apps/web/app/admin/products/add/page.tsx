@@ -472,21 +472,14 @@ function AddProductPageContent() {
               const defaultColorLabel = t('admin.products.add.defaultColor');
               
               if (!colorDataMap.has(defaultColor)) {
-                // Convert prices from USD (database) to defaultCurrency (display)
-                const priceInDefaultCurrency = variant.price !== undefined && variant.price !== null 
-                  ? convertPrice(variant.price, 'USD', defaultCurrency) 
-                  : 0;
-                const compareAtPriceInDefaultCurrency = variant.compareAtPrice !== undefined && variant.compareAtPrice !== null 
-                  ? convertPrice(variant.compareAtPrice, 'USD', defaultCurrency) 
-                  : 0;
-                
+                // Prices are stored in AMD, use directly (no conversion)
                 const colorData: ColorData = {
                   colorValue: defaultColor,
                   colorLabel: defaultColorLabel,
                   images: smartSplitUrls(variant.imageUrl),
                   stock: size ? '' : stockValue,
-                  price: variant.price !== undefined && variant.price !== null ? String(priceInDefaultCurrency) : '',
-                  compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? String(compareAtPriceInDefaultCurrency) : '',
+                  price: variant.price !== undefined && variant.price !== null ? String(variant.price) : '',
+                  compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? String(variant.compareAtPrice) : '',
                   sizes: [],
                   sizeStocks: {},
                   sizePrices: {},
@@ -499,10 +492,12 @@ function AddProductPageContent() {
                   colorData.sizes = [size];
                   colorData.sizeStocks = { [size]: stockValue };
                   if (variant.price !== undefined && variant.price !== null) {
-                    colorData.sizePrices![size] = String(priceInDefaultCurrency);
+                    // Prices are stored in AMD, use directly (no conversion)
+                    colorData.sizePrices![size] = String(variant.price);
                   }
                   if (variant.compareAtPrice !== undefined && variant.compareAtPrice !== null) {
-                    colorData.sizeCompareAtPrices![size] = String(compareAtPriceInDefaultCurrency);
+                    // Prices are stored in AMD, use directly (no conversion)
+                    colorData.sizeCompareAtPrices![size] = String(variant.compareAtPrice);
                   }
                 }
                 
@@ -533,13 +528,13 @@ function AddProductPageContent() {
                   existingColorData.sizeStocks[size] = stockValue;
                   if (!existingColorData.sizePrices) existingColorData.sizePrices = {};
                   if (variant.price !== undefined && variant.price !== null) {
-                    const priceInDefaultCurrency = convertPrice(variant.price, 'USD', defaultCurrency);
-                    existingColorData.sizePrices[size] = String(priceInDefaultCurrency);
+                    // Prices are stored in AMD, use directly (no conversion)
+                    existingColorData.sizePrices[size] = String(variant.price);
                   }
                   if (!existingColorData.sizeCompareAtPrices) existingColorData.sizeCompareAtPrices = {};
                   if (variant.compareAtPrice !== undefined && variant.compareAtPrice !== null) {
-                    const compareAtPriceInDefaultCurrency = convertPrice(variant.compareAtPrice, 'USD', defaultCurrency);
-                    existingColorData.sizeCompareAtPrices[size] = String(compareAtPriceInDefaultCurrency);
+                    // Prices are stored in AMD, use directly (no conversion)
+                    existingColorData.sizeCompareAtPrices[size] = String(variant.compareAtPrice);
                   }
                 } else {
                   const currentStockNum = parseInt(existingColorData.stock) || 0;
@@ -556,21 +551,14 @@ function AddProductPageContent() {
                   (color.charAt(0).toUpperCase() + color.slice(1).replace(/-/g, ' '));
                 
                 // Initialize color data with empty sizes
-                // Convert prices from USD (database) to defaultCurrency (display)
-                const priceInDefaultCurrency = variant.price !== undefined && variant.price !== null 
-                  ? convertPrice(variant.price, 'USD', defaultCurrency) 
-                  : 0;
-                const compareAtPriceInDefaultCurrency = variant.compareAtPrice !== undefined && variant.compareAtPrice !== null 
-                  ? convertPrice(variant.compareAtPrice, 'USD', defaultCurrency) 
-                  : 0;
-                
+                // Prices are stored in AMD, use directly (no conversion)
                 const colorData: ColorData = {
                   colorValue: color,
                   colorLabel: colorLabel,
                   images: smartSplitUrls(variant.imageUrl),
                   stock: size ? '' : stockValue, // Base stock only if no size
-                  price: variant.price !== undefined && variant.price !== null ? String(priceInDefaultCurrency) : '',
-                  compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? String(compareAtPriceInDefaultCurrency) : '',
+                  price: variant.price !== undefined && variant.price !== null ? String(variant.price) : '',
+                  compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? String(variant.compareAtPrice) : '',
                   sizes: [],
                   sizeStocks: {},
                   sizePrices: {},
@@ -583,13 +571,12 @@ function AddProductPageContent() {
                 if (size) {
                   colorData.sizes = [size];
                   colorData.sizeStocks = { [size]: stockValue };
-                  // Store size-specific price (converted to defaultCurrency)
+                  // Prices are stored in AMD, use directly (no conversion)
                   if (variant.price !== undefined && variant.price !== null) {
-                    colorData.sizePrices![size] = String(priceInDefaultCurrency);
+                    colorData.sizePrices![size] = String(variant.price);
                   }
-                  // Store size-specific compareAtPrice (converted to defaultCurrency)
                   if (variant.compareAtPrice !== undefined && variant.compareAtPrice !== null) {
-                    colorData.sizeCompareAtPrices![size] = String(compareAtPriceInDefaultCurrency);
+                    colorData.sizeCompareAtPrices![size] = String(variant.compareAtPrice);
                   }
                   // Get size label if it's a custom size (not from attributes)
                   if (variant.sizeLabel) {
@@ -629,17 +616,14 @@ function AddProductPageContent() {
                   }
                   // Update stock for this size
                   existingColorData.sizeStocks[size] = stockValue;
-                  // Store size-specific price (converted to defaultCurrency)
+                  // Prices are stored in AMD, use directly (no conversion)
                   if (!existingColorData.sizePrices) existingColorData.sizePrices = {};
                   if (variant.price !== undefined && variant.price !== null) {
-                    const priceInDefaultCurrency = convertPrice(variant.price, 'USD', defaultCurrency);
-                    existingColorData.sizePrices[size] = String(priceInDefaultCurrency);
+                    existingColorData.sizePrices[size] = String(variant.price);
                   }
-                  // Store size-specific compareAtPrice (converted to defaultCurrency)
                   if (!existingColorData.sizeCompareAtPrices) existingColorData.sizeCompareAtPrices = {};
                   if (variant.compareAtPrice !== undefined && variant.compareAtPrice !== null) {
-                    const compareAtPriceInDefaultCurrency = convertPrice(variant.compareAtPrice, 'USD', defaultCurrency);
-                    existingColorData.sizeCompareAtPrices[size] = String(compareAtPriceInDefaultCurrency);
+                    existingColorData.sizeCompareAtPrices[size] = String(variant.compareAtPrice);
                   }
                   // Update size label if available
                   if (variant.sizeLabel) {
@@ -660,12 +644,11 @@ function AddProductPageContent() {
               }
             }
             
-            // Use first variant's price, compareAtPrice, sku as defaults (converted to defaultCurrency)
+            // Use first variant's price, compareAtPrice, sku as defaults
+            // Prices are stored in AMD, use directly (no conversion)
             if (index === 0) {
-              const firstPriceUSD = variant.price !== undefined && variant.price !== null ? variant.price : 0;
-              const firstCompareAtPriceUSD = variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? variant.compareAtPrice : 0;
-              firstPrice = firstPriceUSD > 0 ? String(convertPrice(firstPriceUSD, 'USD', defaultCurrency)) : '';
-              firstCompareAtPrice = firstCompareAtPriceUSD > 0 ? String(convertPrice(firstCompareAtPriceUSD, 'USD', defaultCurrency)) : '';
+              firstPrice = variant.price !== undefined && variant.price !== null && variant.price > 0 ? String(variant.price) : '';
+              firstCompareAtPrice = variant.compareAtPrice !== undefined && variant.compareAtPrice !== null && variant.compareAtPrice > 0 ? String(variant.compareAtPrice) : '';
               firstSku = variant.sku || '';
             }
           });
@@ -870,11 +853,12 @@ function AddProductPageContent() {
             setProductType('simple');
             
             // Also set simple product data from first variant if available
+            // Prices are stored in AMD, use directly (no conversion)
             if (hasVariants && variants.length > 0) {
               const firstVariant = variants[0] as any;
               setSimpleProductData({
-                price: firstVariant.price ? String(convertPrice(typeof firstVariant.price === 'number' ? firstVariant.price : parseFloat(String(firstVariant.price || '0')), 'USD', defaultCurrency)) : '',
-                compareAtPrice: firstVariant.compareAtPrice ? String(convertPrice(typeof firstVariant.compareAtPrice === 'number' ? firstVariant.compareAtPrice : parseFloat(String(firstVariant.compareAtPrice || '0')), 'USD', defaultCurrency)) : '',
+                price: firstVariant.price ? String(typeof firstVariant.price === 'number' ? firstVariant.price : parseFloat(String(firstVariant.price || '0'))) : '',
+                compareAtPrice: firstVariant.compareAtPrice ? String(typeof firstVariant.compareAtPrice === 'number' ? firstVariant.compareAtPrice : parseFloat(String(firstVariant.compareAtPrice || '0'))) : '',
                 sku: firstVariant.sku || '',
                 quantity: String(firstVariant.stock || 0),
               });
@@ -1113,19 +1097,12 @@ function AddProductPageContent() {
           console.log(`🖼️ [ADMIN] Variant ${variantIndex} has no imageUrl`);
         }
         
-        // Convert prices from USD to defaultCurrency for display
-        const priceInDefaultCurrency = variant.price !== undefined && variant.price !== null 
-          ? convertPrice(variant.price, 'USD', defaultCurrency)
-          : 0;
-        const compareAtPriceInDefaultCurrency = variant.compareAtPrice !== undefined && variant.compareAtPrice !== null 
-          ? convertPrice(variant.compareAtPrice, 'USD', defaultCurrency)
-          : null;
-        
+        // Prices are stored in AMD, use directly (no conversion)
         variantDataList.push({
           id: variant.id || `variant-${Date.now()}-${variantIndex}-${Math.random()}`,
           selectedValueIds: selectedValueIds.sort(), // Sort for consistent grouping
-          price: priceInDefaultCurrency,
-          compareAtPrice: compareAtPriceInDefaultCurrency,
+          price: variant.price !== undefined && variant.price !== null ? variant.price : 0,
+          compareAtPrice: variant.compareAtPrice !== undefined && variant.compareAtPrice !== null ? variant.compareAtPrice : null,
           stock: variant.stock !== undefined && variant.stock !== null ? variant.stock : 0,
           sku: variant.sku || '',
           image: variantImage,
@@ -2271,22 +2248,22 @@ function AddProductPageContent() {
           return;
         }
         
-        // Convert prices from defaultCurrency to USD
-        const priceUSD = convertPrice(parseFloat(simpleProductData.price), defaultCurrency, 'USD');
-        const compareAtPriceUSD = simpleProductData.compareAtPrice && simpleProductData.compareAtPrice.trim() !== ''
-          ? convertPrice(parseFloat(simpleProductData.compareAtPrice), defaultCurrency, 'USD')
+        // Save prices directly in AMD (no conversion)
+        const priceAMD = parseFloat(simpleProductData.price);
+        const compareAtPriceAMD = simpleProductData.compareAtPrice && simpleProductData.compareAtPrice.trim() !== ''
+          ? parseFloat(simpleProductData.compareAtPrice)
           : undefined;
         
         // Create a single variant without attributes
         const simpleVariant: any = {
-          price: priceUSD,
+          price: priceAMD,
           stock: parseInt(simpleProductData.quantity) || 0,
           sku: simpleProductData.sku.trim(),
           published: true,
         };
         
-        if (compareAtPriceUSD) {
-          simpleVariant.compareAtPrice = compareAtPriceUSD;
+        if (compareAtPriceAMD) {
+          simpleVariant.compareAtPrice = compareAtPriceAMD;
         }
         
         // No attributes for simple products - options array is empty/undefined
@@ -2307,10 +2284,10 @@ function AddProductPageContent() {
         console.log('🔍 [ADMIN] Size attribute:', sizeAttribute ? { id: sizeAttribute.id, key: sizeAttribute.key } : 'not found');
         
         generatedVariants.forEach((genVariant, variantIndex) => {
-          // Convert prices from defaultCurrency to USD (database stores prices in USD)
-          const variantPriceUSD = convertPrice(parseFloat(genVariant.price || '0'), defaultCurrency, 'USD');
-          const variantCompareAtPriceUSD = genVariant.compareAtPrice 
-            ? convertPrice(parseFloat(genVariant.compareAtPrice), defaultCurrency, 'USD')
+          // Save prices directly in AMD (no conversion)
+          const variantPriceAMD = parseFloat(genVariant.price || '0');
+          const variantCompareAtPriceAMD = genVariant.compareAtPrice 
+            ? parseFloat(genVariant.compareAtPrice)
             : undefined;
           
           // Group valueIds by attribute
@@ -2357,8 +2334,8 @@ function AddProductPageContent() {
             variantSkuSet.add(uniqueSku);
             
             variants.push({
-              price: variantPriceUSD,
-              compareAtPrice: variantCompareAtPriceUSD,
+              price: variantPriceAMD,
+              compareAtPrice: variantCompareAtPriceAMD,
               stock: parseInt(genVariant.stock || '0') || 0,
               sku: uniqueSku,
               imageUrl: genVariant.image || undefined,
@@ -2434,13 +2411,13 @@ function AddProductPageContent() {
               console.log(`  ✅ Creating variant combination ${comboIndex + 1}/${combinations.length}:`, {
                 options: variantOptions.map(o => `${o.attributeKey}=${o.value}`).join(', '),
                 sku: uniqueSku,
-                price: variantPriceUSD,
+                price: variantPriceAMD,
                 stock: genVariant.stock,
               });
               
               variants.push({
-                price: variantPriceUSD,
-                compareAtPrice: variantCompareAtPriceUSD,
+                price: variantPriceAMD,
+                compareAtPrice: variantCompareAtPriceAMD,
                 stock: parseInt(genVariant.stock || '0') || 0,
                 sku: uniqueSku,
                 imageUrl: genVariant.image || undefined,
@@ -2458,15 +2435,15 @@ function AddProductPageContent() {
         console.log('🔍 [ADMIN] Size attribute:', sizeAttribute ? { id: sizeAttribute.id, key: sizeAttribute.key } : 'not found');
         
         formData.variants.forEach((variant, variantIndex) => {
-        // Convert prices from defaultCurrency to USD (database stores prices in USD)
-        const variantPriceUSD = convertPrice(parseFloat(variant.price || '0'), defaultCurrency, 'USD');
+        // Save prices directly in AMD (no conversion)
+        const variantPriceAMD = parseFloat(variant.price || '0');
         const baseVariantData: any = {
-          price: variantPriceUSD,
+          price: variantPriceAMD,
           published: true,
         };
 
         if (variant.compareAtPrice) {
-          baseVariantData.compareAtPrice = convertPrice(parseFloat(variant.compareAtPrice), defaultCurrency, 'USD');
+          baseVariantData.compareAtPrice = parseFloat(variant.compareAtPrice);
         }
 
         // Получаем цвета из новой структуры ColorData
@@ -2519,24 +2496,22 @@ function AddProductPageContent() {
                 : undefined;
               
               // Используем цену размера, если указана, иначе цену цвета, иначе цену варианта
-              // Convert from defaultCurrency to USD
+              // Save prices directly in AMD (no conversion)
               const sizePrice = colorData.sizePrices?.[size];
-              const finalPriceRaw = sizePrice && sizePrice.trim() !== ''
+              const finalPrice = sizePrice && sizePrice.trim() !== ''
                 ? parseFloat(sizePrice)
                 : (colorData.price && colorData.price.trim() !== '' 
                   ? parseFloat(colorData.price) 
                   : baseVariantData.price);
-              const finalPrice = convertPrice(finalPriceRaw, defaultCurrency, 'USD');
               
               // Используем compareAtPrice размера, если указана, иначе compareAtPrice цвета, иначе compareAtPrice варианта
-              // Convert from defaultCurrency to USD
               const sizeCompareAtPrice = colorData.sizeCompareAtPrices?.[size];
               const finalCompareAtPriceRaw = sizeCompareAtPrice && sizeCompareAtPrice.trim() !== ''
                 ? parseFloat(sizeCompareAtPrice)
                 : (colorData.compareAtPrice && colorData.compareAtPrice.trim() !== ''
                   ? parseFloat(colorData.compareAtPrice)
                   : baseVariantData.compareAtPrice);
-              const finalCompareAtPrice = finalCompareAtPriceRaw ? convertPrice(finalCompareAtPriceRaw, defaultCurrency, 'USD') : undefined;
+              const finalCompareAtPrice = finalCompareAtPriceRaw ? finalCompareAtPriceRaw : undefined;
               
               // Collect all attribute options for this variant
               const variantOptions: Array<{ attributeKey: string; value: string; valueId?: string }> = [];
@@ -2628,17 +2603,16 @@ function AddProductPageContent() {
 
             // Используем цену цвета, если указана, иначе цену варианта
             // For empty colors (non-color attributes), always use variant base price
-            // Convert from defaultCurrency to USD
+            // Save prices directly in AMD (no conversion)
             const hasColor = colorData.colorValue && colorData.colorValue.trim() !== '';
-            const finalPriceRaw = hasColor && colorData.price && colorData.price.trim() !== '' 
+            const finalPrice = hasColor && colorData.price && colorData.price.trim() !== '' 
               ? parseFloat(colorData.price) 
               : baseVariantData.price;
-            const finalPrice = convertPrice(finalPriceRaw, defaultCurrency, 'USD');
 
             const finalCompareAtPriceRaw = hasColor && colorData.compareAtPrice && colorData.compareAtPrice.trim() !== ''
               ? parseFloat(colorData.compareAtPrice)
               : baseVariantData.compareAtPrice;
-            const finalCompareAtPrice = finalCompareAtPriceRaw ? convertPrice(finalCompareAtPriceRaw, defaultCurrency, 'USD') : undefined;
+            const finalCompareAtPrice = finalCompareAtPriceRaw ? finalCompareAtPriceRaw : undefined;
 
             // Collect all attribute options for this variant
             const variantOptions: Array<{ attributeKey: string; value: string; valueId?: string }> = [];
@@ -2718,11 +2692,9 @@ function AddProductPageContent() {
                 finalSku = uniqueSku;
               }
               
-              // Convert prices from defaultCurrency to USD
-              const finalPrice = convertPrice(baseVariantData.price, defaultCurrency, 'USD');
-              const finalCompareAtPrice = baseVariantData.compareAtPrice 
-                ? convertPrice(baseVariantData.compareAtPrice, defaultCurrency, 'USD')
-                : undefined;
+              // Use prices directly in AMD (no conversion)
+              const finalPrice = baseVariantData.price;
+              const finalCompareAtPrice = baseVariantData.compareAtPrice;
               
               // Collect all attribute options for this variant
               const variantOptions: Array<{ attributeKey: string; value: string; valueId?: string }> = [];

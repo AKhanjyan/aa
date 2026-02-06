@@ -1210,7 +1210,7 @@ export default function CheckoutPage() {
                     {loadingDeliveryPrice
                       ? t('checkout.shipping.loading')
                       : deliveryPrice !== null
-                        ? formatPrice(convertPrice(deliveryPrice, 'AMD', 'USD'), currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
+                        ? formatPrice(deliveryPrice, currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
                         : t('checkout.shipping.enterCity')}
                   </span>
                 </div>
@@ -1220,7 +1220,7 @@ export default function CheckoutPage() {
                     <span>
                       {formatPrice(
                         cart.totals.subtotal + 
-                        (deliveryPrice !== null ? convertPrice(deliveryPrice, 'AMD', 'USD') : 0),
+                        (deliveryPrice !== null ? deliveryPrice : 0),
                         currency
                       )}
                     </span>

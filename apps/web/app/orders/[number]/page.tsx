@@ -389,7 +389,7 @@ export default function OrderPage() {
                 // Use shipping price from API if available, convert from AMD to USD like checkout does
                 // Otherwise use order.totals.shipping (already converted)
                 const shipping = shippingPrice !== null 
-                  ? convertPrice(shippingPrice, 'AMD', 'USD')
+                  ? shippingPrice
                   : (order.totals?.shipping || 0);
                 // Calculate total the same way checkout does: subtotal + shipping
                 const total = subtotal + shipping;

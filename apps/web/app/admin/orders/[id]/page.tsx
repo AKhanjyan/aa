@@ -532,7 +532,7 @@ export default function OrderDetailsPage() {
                     : (order.totals?.shipping ?? order.shippingAmount ?? 0);
                   // Use deliveryPrice if shipping is 0 and deliveryPrice is available
                   const shipping = baseShipping === 0 && deliveryPrice !== null
-                    ? convertPrice(deliveryPrice, 'AMD', 'USD')
+                    ? deliveryPrice
                     : baseShipping;
                   const tax = order.totals?.tax ?? order.taxAmount ?? 0;
                   // Calculate total the same way Checkout does: subtotal + shipping

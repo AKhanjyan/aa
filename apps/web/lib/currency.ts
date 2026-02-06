@@ -91,21 +91,34 @@ export function setStoredCurrency(currency: CurrencyCode): void {
  * Format price with currency conversion
  * Uses cached rates from API if available, otherwise falls back to default rates
  * Works both on client and server side
- * NOTE: This function assumes price is in USD base currency and converts it to target currency
+ * NOTE: This function assumes price is in AMD base currency and converts it to target currency
  */
-export function formatPrice(price: number, currency: CurrencyCode = 'USD'): string {
+export function formatPrice(price: number, currency: CurrencyCode = 'AMD'): string {
+  // If price is already in target currency, no conversion needed
+  if (currency === 'AMD') {
+    return formatPriceInCurrency(price, 'AMD');
+  }
+  
   const currencyInfo = CURRENCIES[currency];
   
   // Use cached rates if available (client-side only), otherwise use default rates
   // On server-side, currencyRatesCache will be null, so it will use default rates
-  let rate: number;
-  if (typeof window !== 'undefined' && currencyRatesCache && currencyRatesCache[currency] !== undefined) {
-    rate = currencyRatesCache[currency];
+  let amdRate: number;
+  let targetRate: number;
+  
+  if (typeof window !== 'undefined' && currencyRatesCache) {
+    amdRate = currencyRatesCache['AMD'] ?? CURRENCIES['AMD'].rate;
+    targetRate = currencyRatesCache[currency] ?? currencyInfo.rate;
   } else {
-    rate = currencyInfo.rate;
+    amdRate = CURRENCIES['AMD'].rate;
+    targetRate = currencyInfo.rate;
   }
   
-  const convertedPrice = price * rate;
+  // Convert from AMD to target currency via USD
+  // AMD -> USD: divide by AMD rate
+  // USD -> Target: multiply by target rate
+  const usdPrice = price / amdRate;
+  const convertedPrice = usdPrice * targetRate;
   
   // Show all currencies without decimals (remove .00)
   const minimumFractionDigits = 0;
@@ -120,7 +133,7 @@ export function formatPrice(price: number, currency: CurrencyCode = 'USD'): stri
   
   // Debug logging (only in development)
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log(`💱 [formatPrice] ${price} USD × ${rate} = ${formatted}`);
+    console.log(`💱 [formatPrice] ${price} AMD → ${convertedPrice.toFixed(2)} ${currency}`);
   }
   
   return formatted;
@@ -170,7 +183,9 @@ export function convertPrice(price: number, fromCurrency: CurrencyCode, toCurren
   const fromRate = currencyRatesCache?.[fromCurrency] ?? CURRENCIES[fromCurrency].rate;
   const toRate = currencyRatesCache?.[toCurrency] ?? CURRENCIES[toCurrency].rate;
   
-  // Convert to USD first, then to target currency
+  // Convert via USD: fromCurrency -> USD -> toCurrency
+  // If fromCurrency is AMD (rate 400), divide by 400 to get USD
+  // Then multiply by target rate to get target currency
   const usdPrice = price / fromRate;
   return usdPrice * toRate;
 }
