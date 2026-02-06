@@ -564,9 +564,9 @@ export function MobileFooter({ router, t }: MobileFooterProps) {
 
 // Mobile Bottom Navigation Images
 const imgEllipse2 = "/assets/home/imgEllipse2.svg";
-const imgHomeVector = "/assets/home/Vector.svg";
+const imgHomeVector = "/assets/home/Vector1.svg";
 const imgVector1 = "/assets/home/imgVector1.svg";
-const imgGroup2148 = "/assets/home/imgGroup2148.svg";
+const imgGroup2148 = "/assets/home/Cart.svg";
 const imgGroup2149 = "/assets/home/imgGroup2149.svg";
 
 /**
