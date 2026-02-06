@@ -412,7 +412,7 @@ export default function OrderPage() {
                         {order.shippingMethod === 'pickup'
                           ? t('common.cart.free')
                           : shipping > 0
-                            ? formatPrice(shipping, currency) + (order.shippingAddress?.city ? ` (${order.shippingAddress.city})` : ` (${t('checkout.shipping.delivery')})`)
+                            ? formatPrice(shipping, currency)
                             : t('checkout.shipping.enterCity')}
                       </span>
                     </div>

@@ -7,6 +7,7 @@ import { Card } from '@shop/ui';
 import { apiClient } from '../../../../lib/api-client';
 import { useTranslation } from '../../../../lib/i18n-client';
 import { ProductPageButton } from '../../../../components/icons/global/globalMobile';
+import { formatPrice, getStoredCurrency, convertPrice, type CurrencyCode } from '../../../../lib/currency';
 
 interface OrderDetails {
   id: string;
@@ -20,6 +21,14 @@ interface OrderDetails {
   shippingAmount: number;
   discountAmount: number;
   taxAmount: number;
+  totals?: {
+    subtotal: number;
+    discount: number;
+    shipping: number;
+    tax: number;
+    total: number;
+    currency: string;
+  };
   customerEmail?: string;
   customerPhone?: string;
   customer?: {
@@ -72,14 +81,21 @@ export default function OrderDetailsPage() {
   const [order, setOrder] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<CurrencyCode>(getStoredCurrency());
+  const [deliveryPrice, setDeliveryPrice] = useState<number | null>(null);
+  const [loadingDeliveryPrice, setLoadingDeliveryPrice] = useState(false);
 
-  const formatCurrency = (amount: number, currency: string = 'AMD') => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
+  useEffect(() => {
+    const handleCurrencyUpdate = () => {
+      setCurrency(getStoredCurrency());
+    };
+
+    window.addEventListener('currency-updated', handleCurrencyUpdate);
+
+    return () => {
+      window.removeEventListener('currency-updated', handleCurrencyUpdate);
+    };
+  }, []);
 
   // Helper function to get color hex/rgb from color name
   const getColorValue = (colorName: string): string => {
@@ -133,6 +149,46 @@ export default function OrderDetailsPage() {
       loadOrder();
     }
   }, [isLoggedIn, isAdmin, orderId]);
+
+  // Fetch delivery price when order is loaded and shipping is 0 but city exists
+  useEffect(() => {
+    const fetchDeliveryPrice = async () => {
+      if (!order) return;
+      
+      const shippingCity = order.shippingAddress?.city;
+      const currentShipping = order.totals?.shipping ?? order.shippingAmount ?? 0;
+      
+      // Only fetch if: delivery method, city exists, and shipping is 0
+      if (
+        order.shippingMethod === 'delivery' &&
+        shippingCity &&
+        shippingCity.trim().length > 0 &&
+        currentShipping === 0
+      ) {
+        setLoadingDeliveryPrice(true);
+        try {
+          console.log('🚚 [ADMIN][OrderDetails] Fetching delivery price for city:', shippingCity);
+          const response = await apiClient.get<{ price: number }>('/api/v1/delivery/price', {
+            params: {
+              city: shippingCity.trim(),
+              country: 'Armenia',
+            },
+          });
+          console.log('✅ [ADMIN][OrderDetails] Delivery price fetched:', response.price);
+          setDeliveryPrice(response.price);
+        } catch (err: any) {
+          console.error('❌ [ADMIN][OrderDetails] Error fetching delivery price:', err);
+          setDeliveryPrice(null);
+        } finally {
+          setLoadingDeliveryPrice(false);
+        }
+      } else {
+        setDeliveryPrice(null);
+      }
+    };
+
+    fetchDeliveryPrice();
+  }, [order]);
 
   if (isLoading || loading) {
     return (
@@ -201,7 +257,7 @@ export default function OrderDetailsPage() {
                     </div>
                     <div>
                       <span className="font-medium">{t('admin.orders.orderDetails.total')}</span>{' '}
-                      {formatCurrency(order.total, order.currency || 'AMD')}
+                      {formatPrice(order.totals?.total ?? order.total, currency)}
                     </div>
                     <div>
                       <span className="font-medium">{t('admin.orders.orderDetails.status')}</span> {order.status}
@@ -338,7 +394,7 @@ export default function OrderDetailsPage() {
                     {order.payment.method && <div>{t('admin.orders.orderDetails.method')} {order.payment.method}</div>}
                     <div>
                       {t('admin.orders.orderDetails.amount')}{' '}
-                      {formatCurrency(order.payment.amount, order.payment.currency || 'AMD')}
+                      {formatPrice(order.payment.amount, currency)}
                     </div>
                     <div>{t('admin.orders.orderDetails.status')} {order.payment.status}</div>
                     {order.payment.cardBrand && order.payment.cardLast4 && (
@@ -439,10 +495,10 @@ export default function OrderDetailsPage() {
                             </td>
                             <td className="px-3 py-2 text-right">{item.quantity}</td>
                             <td className="px-3 py-2 text-right">
-                              {formatCurrency(item.unitPrice, order.currency || 'AMD')}
+                              {formatPrice(item.unitPrice, currency)}
                             </td>
                             <td className="px-3 py-2 text-right">
-                              {formatCurrency(item.total, order.currency || 'AMD')}
+                              {formatPrice(item.total, currency)}
                             </td>
                           </tr>
                         );
@@ -459,31 +515,68 @@ export default function OrderDetailsPage() {
             <Card className="p-4 md:p-6">
               <h2 className="text-sm font-semibold text-gray-900 mb-4">{t('checkout.orderSummary')}</h2>
               <div className="space-y-3">
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>{t('checkout.summary.subtotal')}</span>
-                  <span>{formatCurrency(
-                    order.subtotal || 0,
-                    order.currency || 'AMD'
-                  )}</span>
-                </div>
-                {order.shippingAmount > 0 && (
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>{t('checkout.summary.shipping')}</span>
-                    <span>{formatCurrency(order.shippingAmount, order.currency || 'AMD')}</span>
-                  </div>
-                )}
-                {order.discountAmount > 0 && (
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>{t('checkout.summary.discount')}</span>
-                    <span>-{formatCurrency(order.discountAmount, order.currency || 'AMD')}</span>
-                  </div>
-                )}
-                <div className="border-t border-gray-200 pt-3 mt-3">
-                  <div className="flex justify-between text-base font-bold text-gray-900">
-                    <span>{t('checkout.summary.total')}</span>
-                    <span>{formatCurrency(order.total, order.currency || 'AMD')}</span>
-                  </div>
-                </div>
+                {(() => {
+                  // Use same calculation logic as Checkout Order Summary
+                  // Order totals.subtotal is non-discounted, discount is stored separately
+                  const originalSubtotal = order.totals?.subtotal ?? order.subtotal ?? 0;
+                  const discount = order.totals?.discount ?? order.discountAmount ?? 0;
+                  // Calculate discounted subtotal: original - discount
+                  // If discount is 0, items might already be discounted, so use items total
+                  const subtotal = discount > 0 
+                    ? originalSubtotal - discount
+                    : order.items.reduce((sum, item) => sum + (item.total || 0), 0);
+                  // Shipping: 0 for pickup, otherwise use shipping amount or fetched delivery price
+                  // If shipping is 0 but deliveryPrice is fetched, use deliveryPrice (same as Checkout)
+                  const baseShipping = order.shippingMethod === 'pickup' 
+                    ? 0 
+                    : (order.totals?.shipping ?? order.shippingAmount ?? 0);
+                  // Use deliveryPrice if shipping is 0 and deliveryPrice is available
+                  const shipping = baseShipping === 0 && deliveryPrice !== null
+                    ? convertPrice(deliveryPrice, 'AMD', 'USD')
+                    : baseShipping;
+                  const tax = order.totals?.tax ?? order.taxAmount ?? 0;
+                  // Calculate total the same way Checkout does: subtotal + shipping
+                  const total = subtotal + shipping;
+
+                  return (
+                    <>
+                      <div className="flex justify-between text-sm text-gray-600">
+                        <span>{t('checkout.summary.subtotal')}</span>
+                        <span>{formatPrice(subtotal, currency)}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-sm text-gray-600">
+                          <span>{t('checkout.summary.discount')}</span>
+                          <span>-{formatPrice(discount, currency)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-sm text-gray-600">
+                        <span>{t('checkout.summary.shipping')}</span>
+                        <span>
+                          {order.shippingMethod === 'pickup'
+                            ? t('common.cart.free')
+                            : loadingDeliveryPrice
+                              ? t('checkout.shipping.loading')
+                              : order.shippingAddress?.city
+                                ? formatPrice(shipping, currency) + (order.shippingAddress.city ? ` (${order.shippingAddress.city})` : '')
+                                : t('checkout.shipping.enterCity')}
+                        </span>
+                      </div>
+                      {tax > 0 && (
+                        <div className="flex justify-between text-sm text-gray-600">
+                          <span>{t('checkout.summary.tax')}</span>
+                          <span>{formatPrice(tax, currency)}</span>
+                        </div>
+                      )}
+                      <div className="border-t border-gray-200 pt-3 mt-3">
+                        <div className="flex justify-between text-base font-bold text-gray-900">
+                          <span>{t('checkout.summary.total')}</span>
+                          <span>{formatPrice(total, currency)}</span>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </Card>
           </div>

@@ -438,8 +438,8 @@ class AdminService {
 
       const quantity = item.quantity ?? 0;
       const total = item.total ?? 0;
-      const unitPrice =
-        quantity > 0 ? Number((total / quantity).toFixed(2)) : total;
+      // Use item.price directly (same as Orders service), not calculated from total/quantity
+      const unitPrice = Number(item.price ?? 0);
 
       // Extract variant options (color, size, etc.)
       // Support both new format (AttributeValue) and old format (attributeKey/value)
@@ -531,6 +531,14 @@ class AdminService {
       shippingAmount: order.shippingAmount || 0,
       discountAmount: order.discountAmount || 0,
       taxAmount: order.taxAmount || 0,
+      totals: {
+        subtotal: Number(order.subtotal),
+        discount: Number(order.discountAmount),
+        shipping: Number(order.shippingAmount),
+        tax: Number(order.taxAmount),
+        total: Number(order.total),
+        currency: order.currency || "AMD",
+      },
       customerEmail: order.customerEmail || user?.email || undefined,
       customerPhone: order.customerPhone || user?.phone || undefined,
       billingAddress: order.billingAddress as any || null,
