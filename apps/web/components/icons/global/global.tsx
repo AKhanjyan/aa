@@ -333,7 +333,7 @@ export function Header({
   return (
     <>
       {/* Header Section - Navigation Bar */}
-      <div className={`fixed ${bgClass} backdrop-blur-[15px] content-stretch flex flex-col h-[66px] md:h-[60px] sm:h-[52px] items-center justify-center left-1/2 px-[28px] md:px-[22px] sm:px-[14px] rounded-[64px] md:rounded-[56px] sm:rounded-[40px] ${topPosition} translate-x-[-50%] w-[1300px] xl:w-[1300px] lg:w-[1180px] md:w-[90%] sm:w-[95%] z-50 border ${borderClass} ${shadowClass}`}>
+      <div className={`fixed ${bgClass} backdrop-blur-[15px] content-stretch flex flex-col h-[66px] md:h-[60px] sm:h-[52px] items-center justify-center left-1/2 px-[28px] md:px-[22px] sm:px-[14px] rounded-[64px] md:rounded-[56px] sm:rounded-[40px] ${topPosition} translate-x-[-50%] w-[1200px] xl:w-[1200px] lg:w-[1100px] md:w-[90%] sm:w-[95%] z-50 border ${borderClass} ${shadowClass}`}>
         <div className="content-stretch flex gap-[110px] lg:gap-[100px] md:gap-[70px] sm:gap-[16px] h-[42px] md:h-[38px] sm:h-[34px] items-center justify-center relative shrink-0">
           {/* Logo */}
           <div
@@ -378,7 +378,7 @@ export function Header({
           </div>
 
           {/* Header Icons - Separate Vector Groups */}
-          <div className="content-stretch flex gap-[28px] lg:gap-[28px] md:gap-[20px] sm:gap-[12px] items-center justify-center relative shrink-0">
+          <div className="content-stretch flex gap-[20px] lg:gap-[18px] md:gap-[16px] sm:gap-[10px] items-center justify-center relative shrink-0">
             {/* Currency Display (e.g. AMD ▼) */}
             <div
               className="hidden sm:flex items-center justify-center relative shrink-0 h-[20px] md:h-[18px] sm:h-[16px]"
@@ -475,9 +475,9 @@ export function Header({
               <div className="relative shrink-0" ref={userMenuRef}>
                 <div
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="h-[34px] md:h-[30px] sm:h-[26px] w-[34px] md:w-[30px] sm:w-[26px] relative cursor-pointer flex items-center justify-center"
+                  className="h-[26px] md:h-[24px] sm:h-[20px] w-[26px] md:w-[22px] sm:w-[20px] relative cursor-pointer flex items-center justify-center"
                 >
-                  <ExitIcon size={34} className="brightness-0" />
+                  <ExitIcon size={26} className="brightness-0" />
                 </div>
                 {showUserMenu && (
                   <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
