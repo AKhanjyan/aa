@@ -264,7 +264,7 @@ export default function CartPage() {
       totals: {
         ...cart.totals,
         subtotal: newSubtotal,
-        total: newSubtotal + cart.totals.tax + cart.totals.shipping - cart.totals.discount,
+        total: newSubtotal + cart.totals.shipping - cart.totals.discount,
       },
       itemsCount: newItemsCount,
     });
@@ -343,7 +343,7 @@ export default function CartPage() {
         totals: {
           ...cart.totals,
           subtotal: newSubtotal,
-          total: newSubtotal + cart.totals.tax + cart.totals.shipping - cart.totals.discount,
+          total: newSubtotal + cart.totals.shipping - cart.totals.discount,
         },
         itemsCount: newItemsCount,
       });
@@ -622,14 +622,10 @@ export default function CartPage() {
               <span>{t('common.cart.shipping')}</span>
               <span>{t('common.cart.free')}</span>
             </div>
-            <div className="flex justify-between text-gray-600">
-              <span>{t('common.cart.tax')}</span>
-              <span>{formatPrice(cart.totals.tax, currency)}</span>
-            </div>
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between text-lg font-bold text-gray-900">
                 <span>{t('common.cart.total')}</span>
-                <span>{formatPrice(cart.totals.total, currency)}</span>
+                <span>{formatPrice(cart.totals.subtotal, currency)}</span>
               </div>
             </div>
           </div>

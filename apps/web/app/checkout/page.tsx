@@ -1214,17 +1214,12 @@ export default function CheckoutPage() {
                         : t('checkout.shipping.enterCity')}
                   </span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>{t('checkout.summary.tax')}</span>
-                  <span>{formatPrice(cart.totals.tax, currency)}</span>
-                </div>
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>{t('checkout.summary.total')}</span>
                     <span>
                       {formatPrice(
                         cart.totals.subtotal + 
-                        cart.totals.tax + 
                         (deliveryPrice !== null ? deliveryPrice : 0),
                         currency
                       )}
@@ -1475,7 +1470,6 @@ export default function CheckoutPage() {
                         <span className="font-bold text-gray-900">
                           {formatPrice(
                             cart.totals.subtotal + 
-                            cart.totals.tax + 
                             (deliveryPrice !== null ? deliveryPrice : 0),
                             currency
                           )}
@@ -1681,33 +1675,28 @@ export default function CheckoutPage() {
                   <span className="text-gray-600">{t('checkout.summary.subtotal')}:</span>
                   <span className="font-medium">{formatPrice(cart.totals.subtotal, currency)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{t('checkout.summary.shipping')}:</span>
-                  <span className="font-medium">
-                    {loadingDeliveryPrice
-                      ? t('checkout.shipping.loading')
-                      : deliveryPrice !== null
-                        ? formatPrice(deliveryPrice, currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
-                        : t('checkout.shipping.enterCity')}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{t('checkout.summary.tax')}:</span>
-                  <span className="font-medium">{formatPrice(cart.totals.tax, currency)}</span>
-                </div>
-                <div className="border-t border-gray-200 pt-2 mt-2">
-                  <div className="flex justify-between">
-                    <span className="font-semibold text-gray-900">{t('checkout.summary.total')}:</span>
-                    <span className="font-bold text-gray-900">
-                      {formatPrice(
-                        cart.totals.subtotal + 
-                        cart.totals.tax + 
-                        (deliveryPrice !== null ? deliveryPrice : 0),
-                        currency
-                      )}
-                    </span>
-                  </div>
-                </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">{t('checkout.summary.shipping')}:</span>
+                      <span className="font-medium">
+                        {loadingDeliveryPrice
+                          ? t('checkout.shipping.loading')
+                          : deliveryPrice !== null
+                            ? formatPrice(deliveryPrice, currency) + (shippingCity ? ` (${shippingCity})` : ` (${t('checkout.shipping.delivery')})`)
+                            : t('checkout.shipping.enterCity')}
+                      </span>
+                    </div>
+                    <div className="border-t border-gray-200 pt-2 mt-2">
+                      <div className="flex justify-between">
+                        <span className="font-semibold text-gray-900">{t('checkout.summary.total')}:</span>
+                        <span className="font-bold text-gray-900">
+                          {formatPrice(
+                            cart.totals.subtotal + 
+                            (deliveryPrice !== null ? deliveryPrice : 0),
+                            currency
+                          )}
+                        </span>
+                      </div>
+                    </div>
               </div>
             )}
 
