@@ -496,14 +496,14 @@ export default function AdminBlogPage() {
                             <div className="flex items-center gap-2">
                               <ProductPageButton
                                 variant="outline"
-                                className="text-xs px-3 py-1 text-blue-600 border-blue-300 hover:bg-blue-50"
+                                className="text-xs px-3 py-1 !text-blue-600 !border-blue-300 hover:!bg-blue-50 hover:!text-blue-600 hover:!border-blue-300"
                                 onClick={() => openEditModal(post)}
                               >
                                 {t('admin.blog.edit')}
                               </ProductPageButton>
                               <ProductPageButton
                                 variant="outline"
-                                className="text-xs px-3 py-1 text-red-600 border-red-300 hover:bg-red-50"
+                                className="text-xs px-3 py-1 !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-600 hover:!border-red-300"
                                 onClick={() => handleDelete(post)}
                               >
                                 {t('admin.blog.delete')}

@@ -329,7 +329,7 @@ export default function DeliveryPage() {
                               variant="outline"
                               onClick={() => handleDeleteLocation(index)}
                               disabled={saving}
-                              className="px-0.5 py-5 text-xs border-none  text-red-600 hover:bg-red-50  border-none"
+                              className="px-0.5 py-5 text-xs border-none !text-red-600 hover:!bg-red-50 hover:!text-red-600 border-none"
                               title={t('admin.delivery.deleteLocation')}
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -424,7 +424,7 @@ export default function DeliveryPage() {
                           variant="outline"
                           onClick={() => handleDeleteTimeSlot(index)}
                           disabled={saving || timeSlots.length <= 1}
-                          className="px-2 py-1 text-xs text-red-600 border-red-300 hover:bg-red-50"
+                          className="px-2 py-1 text-xs !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-600 hover:!border-red-300"
                           title={t('admin.delivery.deleteTimeSlot') || 'Delete time slot'}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

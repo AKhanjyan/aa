@@ -747,7 +747,7 @@ function AttributesPageContent() {
                                       variant="outline"
                                       onClick={() => handleDeleteValue(attribute.id, value.id, value.label)}
                                       disabled={deletingValue === value.id}
-                                      className="px-3 py-1 text-xs text-red-600 border-red-300 hover:bg-red-50 disabled:opacity-50"
+                                      className="px-3 py-1 text-xs !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-600 hover:!border-red-300 disabled:opacity-50"
                                       title={t('admin.attributes.deleteValue')}
                                     >
                                       {deletingValue === value.id ? (
