@@ -123,9 +123,6 @@ function ProfilePageContent() {
     addressLine1: '',
     addressLine2: '',
     city: '',
-    state: '',
-    postalCode: '',
-    countryCode: 'AM',
     phone: '',
     isDefault: false,
   });
@@ -389,9 +386,6 @@ function ProfilePageContent() {
       addressLine1: address.addressLine1 || '',
       addressLine2: address.addressLine2 || '',
       city: address.city || '',
-      state: address.state || '',
-      postalCode: address.postalCode || '',
-      countryCode: address.countryCode || 'AM',
       phone: address.phone || '',
       isDefault: address.isDefault || false,
     });
@@ -406,9 +400,6 @@ function ProfilePageContent() {
       addressLine1: '',
       addressLine2: '',
       city: '',
-      state: '',
-      postalCode: '',
-      countryCode: 'AM',
       phone: profile?.phone || '',
       isDefault: false,
     });
@@ -639,71 +630,71 @@ function ProfilePageContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Profile Header Section */}
-      <Card className="mb-8 p-6">
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          {/* Avatar */}
-          <UserAvatar
-            firstName={profile?.firstName}
-            lastName={profile?.lastName}
-            size="xl"
-            className="mx-auto sm:mx-0"
-          />
-          
-          {/* User Info */}
-          <div className="flex-1 text-center sm:text-left">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {profile?.firstName && profile?.lastName
-                ? `${profile.firstName} ${profile.lastName}`
-                : profile?.firstName
-                ? profile.firstName
-                : profile?.lastName
-                ? profile.lastName
-                : t('profile.myProfile')}
-            </h1>
-            {profile?.email && (
-              <p className="text-gray-600 text-lg mb-1">{profile.email}</p>
-            )}
-            {profile?.phone && (
-              <p className="text-gray-500 text-sm">{profile.phone}</p>
-            )}
-            <p className="text-gray-600 mt-3 text-sm">
-              {t('profile.subtitle')}
-            </p>
-          </div>
-        </div>
-      </Card>
-
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:hidden mb-6">
-          <ProfileMenuDrawer
-            tabs={tabs}
-            activeTab={activeTab}
-            onSelect={(tabId) => handleTabChange(tabId as typeof activeTab)}
-          />
-        </div>
+        {/* Left Sidebar */}
+        <div className="lg:w-64 flex-shrink-0 space-y-4">
+          {/* Profile Header Section */}
+          <Card className="p-6">
+            <div className="flex items-center gap-4">
+              {/* Avatar */}
+              <UserAvatar
+                firstName={profile?.firstName}
+                lastName={profile?.lastName}
+                size="md"
+              />
+              
+              {/* User Info */}
+              <div className="flex-1">
+                <h1 className="text-lg font-semibold text-gray-900 mb-1">
+                  {profile?.firstName && profile?.lastName
+                    ? `${profile.firstName} ${profile.lastName}`
+                    : profile?.firstName
+                    ? profile.firstName
+                    : profile?.lastName
+                    ? profile.lastName
+                    : t('profile.myProfile')}
+                </h1>
+                {profile?.email && (
+                  <p className="text-sm text-gray-600 mb-1">{profile.email}</p>
+                )}
+                <p className="text-xs text-gray-500">
+                  {t('profile.subtitle')}
+                </p>
+              </div>
+            </div>
+          </Card>
 
-        {/* Sidebar Navigation */}
-        <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-          <nav className="bg-white border border-gray-200 rounded-lg p-2 space-y-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-gray-900 text-white'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                <span className={`flex-shrink-0 ${activeTab === tab.id ? 'text-white' : 'text-gray-500'}`}>
-                  {tab.icon}
-                </span>
-                <span className="text-left">{tab.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
+          {/* Mobile Menu */}
+          <div className="lg:hidden">
+            <ProfileMenuDrawer
+              tabs={tabs}
+              activeTab={activeTab}
+              onSelect={(tabId) => handleTabChange(tabId as typeof activeTab)}
+            />
+          </div>
+
+          {/* Desktop Sidebar Navigation */}
+          <aside className="hidden lg:block">
+            <nav className="bg-white border border-gray-200 rounded-lg p-2 space-y-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-all ${
+                    activeTab === tab.id
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  <span className={`flex-shrink-0 ${activeTab === tab.id ? 'text-white' : 'text-gray-500'}`}>
+                    {tab.icon}
+                  </span>
+                  <span className="text-left">{tab.label}</span>
+                </button>
+              ))}
+            </nav>
+          </aside>
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 min-w-0">
@@ -999,39 +990,12 @@ function ProfilePageContent() {
                   onChange={(e) => setAddressForm({ ...addressForm, addressLine1: e.target.value })}
                   required
                 />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Input
-                    label={t('profile.addresses.form.city')}
-                    value={addressForm.city}
-                    onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
-                    required
-                  />
-                  <Input
-                    label={t('profile.addresses.form.state')}
-                    value={addressForm.state}
-                    onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
-                  />
-                  <Input
-                    label={t('profile.addresses.form.postalCode')}
-                    value={addressForm.postalCode}
-                    onChange={(e) => setAddressForm({ ...addressForm, postalCode: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t('profile.addresses.country')}
-                  </label>
-                  <select
-                    value={addressForm.countryCode}
-                    onChange={(e) => setAddressForm({ ...addressForm, countryCode: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
-                  >
-                    <option value="AM">{t('profile.addresses.countryArmenia')}</option>
-                    <option value="US">{t('profile.addresses.countryUS')}</option>
-                    <option value="RU">{t('profile.addresses.countryRU')}</option>
-                    <option value="GE">{t('profile.addresses.countryGE')}</option>
-                  </select>
-                </div>
+                <Input
+                  label={t('profile.addresses.form.city')}
+                  value={addressForm.city}
+                  onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
+                  required
+                />
                 <label className="flex items-center">
                   <input
                     type="checkbox"
@@ -1086,10 +1050,7 @@ function ProfilePageContent() {
                         </p>
                         <p className="text-sm text-gray-700">
                           {address.city}
-                          {address.state && `, ${address.state}`}
-                          {address.postalCode && ` ${address.postalCode}`}
                         </p>
-                        <p className="text-sm text-gray-700">{address.countryCode}</p>
                       </div>
                       <div className="flex gap-1.5 ml-4">
                         {!address.isDefault && (
