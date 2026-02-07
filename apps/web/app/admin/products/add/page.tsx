@@ -3589,17 +3589,6 @@ function AddProductPageContent() {
                           placeholder={t('admin.products.add.enterNewCategoryName')}
                           className="w-full"
                         />
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={newCategoryRequiresSizes}
-                            onChange={(e) => setNewCategoryRequiresSizes(e.target.checked)}
-                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                          />
-                          <span className="text-sm text-gray-700">
-                            {t('admin.products.add.categoryRequiresSizes')}
-                          </span>
-                        </label>
                       </div>
                     )}
                   </div>

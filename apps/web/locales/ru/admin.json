@@ -353,7 +353,6 @@
       "selectBrands": "Выбрать бренды",
       "brandSelected": "{count} бренд выбран",
       "brandsSelected": "{count} брендов выбрано",
-      "categoryRequiresSizes": "Эта категория требует размеры (например, одежда, обувь)",
       "productLabels": "Метки товара",
       "addLabel": "+ Добавить метку",
       "label": "Метка {index}",
