@@ -361,16 +361,9 @@ export default function AdminPanel() {
                 {statsLoading ? (
                   <div className="animate-pulse h-8 w-16 bg-gray-200 rounded mt-1"></div>
                 ) : (
-                  <>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {stats?.products.total ?? 0}
-                    </p>
-                    {stats && stats.products.lowStock > 0 && (
-                      <p className="text-xs text-orange-600 mt-1">
-                        {t('admin.dashboard.lowStock').replace('{count}', stats.products.lowStock.toString())}
-                      </p>
-                    )}
-                  </>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                    {stats?.products.total ?? 0}
+                  </p>
                 )}
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -391,16 +384,9 @@ export default function AdminPanel() {
                 {statsLoading ? (
                   <div className="animate-pulse h-8 w-16 bg-gray-200 rounded mt-1"></div>
                 ) : (
-                  <>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">
-                      {stats?.orders.total ?? 0}
-                    </p>
-                    {stats && stats.orders.pending > 0 && (
-                      <p className="text-xs text-yellow-600 mt-1">
-                        {t('admin.dashboard.pending').replace('{count}', stats.orders.pending.toString())}
-                      </p>
-                    )}
-                  </>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">
+                    {stats?.orders.total ?? 0}
+                  </p>
                 )}
               </div>
               <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
@@ -509,10 +495,12 @@ export default function AdminPanel() {
               <h2 className="text-xl font-semibold text-gray-900">{t('admin.dashboard.topSellingProducts')}</h2>
               <ProductPageButton
                 variant="outline"
-                className="h-9 px-4 text-sm font-semibold"
+                className="h-9 px-4 text-sm font-semibold flex items-center gap-1"
                 onClick={() => router.push('/admin/products')}
               >
-                {t('admin.dashboard.viewAll')}
+                {t('admin.dashboard.viewAll').split(' ').map((word, index) => (
+                  <span key={index}>{word}</span>
+                ))}
               </ProductPageButton>
             </div>
             <div className="space-y-4">
@@ -702,38 +690,6 @@ export default function AdminPanel() {
                 </div>
               </div>
             </ProductPageButton>
-          </div>
-        </Card>
-
-        {/* Admin Info */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.dashboard.adminInformation')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('admin.dashboard.email')}</p>
-              <p className="text-gray-900">{user?.email || t('admin.dashboard.na')}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('admin.dashboard.phone')}</p>
-              <p className="text-gray-900">{user?.phone || t('admin.dashboard.na')}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('admin.dashboard.roles')}</p>
-              <div className="flex gap-2 mt-1">
-                {user?.roles?.map((role) => (
-                  <span
-                    key={role}
-                    className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"
-                  >
-                    {role}
-                  </span>
-                )) || <span className="text-gray-900">{t('admin.dashboard.customer')}</span>}
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">{t('admin.dashboard.userId')}</p>
-              <p className="text-gray-900 font-mono text-sm">{user?.id || t('admin.dashboard.na')}</p>
-            </div>
           </div>
         </Card>
           </div>

@@ -17,11 +17,11 @@
   "dashboard": {
     "title": "Admin Panel",
     "welcome": "Welcome back, {name}!",
-    "totalUsers": "Total Users",
-    "totalProducts": "Total Products",
-    "lowStock": "{count} low stock",
-    "totalOrders": "Total Orders",
-    "pending": "{count} pending",
+    "totalUsers": " Users",
+    "totalProducts": " Products",
+    
+    "totalOrders": "Orders",
+  
     "revenue": "Revenue",
     "recentOrders": "Recent Orders",
     "viewAll": "View All",
@@ -48,13 +48,7 @@
     "manageUsers": "Manage Users",
     "viewAllUsers": "View all users",
     "settings": "Settings",
-    "configureSystem": "Configure system",
-    "adminInformation": "Admin Information",
-    "email": "Email",
-    "phone": "Phone",
-    "roles": "Roles",
-    "userId": "User ID",
-    "na": "N/A",
+   
     "customer": "customer"
   },
   "analytics": {
