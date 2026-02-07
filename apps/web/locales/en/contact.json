@@ -24,7 +24,11 @@
     "subjectPlaceholder": "What is this about?",
     "message": "Message",
     "messagePlaceholder": "Your message...",
-    "submit": "Submit"
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "allFieldsRequired": "Please fill in all required fields",
+    "successMessage": "Your message has been sent successfully! We will contact you soon.",
+    "errorMessage": "Failed to send message. Please try again later."
   }
 }
 

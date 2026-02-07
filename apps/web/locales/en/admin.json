@@ -12,7 +12,8 @@
     "filterByPrice": "Filter by Price",
     "delivery": "Delivery",
     "settings": "Settings",
-    "blog": "Blog"
+    "blog": "Blog",
+    "messages": "Messages"
   },
   "dashboard": {
     "title": "Admin Panel",
@@ -702,6 +703,19 @@
       "totalCol": "Total",
       "noItemsFound": "No items found for this order"
     }
+  },
+  "messages": {
+    "title": "Contact Messages",
+    "backToAdmin": "Back to Admin Panel",
+    "loadingMessages": "Loading messages...",
+    "noMessages": "No messages yet",
+    "from": "From",
+    "deleteConfirm": "Are you sure you want to delete the message '{subject}'?",
+    "deletedSuccess": "Message deleted successfully",
+    "errorDeleting": "Error deleting message: {message}",
+    "showingPage": "Showing page {page} of {totalPages} ({total} total messages)",
+    "previous": "Previous",
+    "next": "Next"
   },
   "common": {
     "loading": "Loading...",

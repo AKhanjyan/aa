@@ -11,7 +11,9 @@
     "analytics": "Аналитика",
     "filterByPrice": "Фильтр по цене",
     "delivery": "Доставка",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "blog": "Блог",
+    "messages": "Сообщения"
   },
   "dashboard": {
     "title": "Панель администратора",
@@ -693,6 +695,19 @@
       "noItemsFound": "Товары для этого заказа не найдены"
     },
     "showingPage": "Показана страница {page} из {totalPages} ({total} всего)",
+    "previous": "Предыдущая",
+    "next": "Следующая"
+  },
+  "messages": {
+    "title": "Контактные сообщения",
+    "backToAdmin": "Вернуться в панель администратора",
+    "loadingMessages": "Загрузка сообщений...",
+    "noMessages": "Сообщений пока нет",
+    "from": "От",
+    "deleteConfirm": "Вы уверены, что хотите удалить сообщение '{subject}'?",
+    "deletedSuccess": "Сообщение успешно удалено",
+    "errorDeleting": "Ошибка при удалении сообщения: {message}",
+    "showingPage": "Показана страница {page} из {totalPages} ({total} всего сообщений)",
     "previous": "Предыдущая",
     "next": "Следующая"
   },

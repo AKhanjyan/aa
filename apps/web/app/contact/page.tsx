@@ -7,6 +7,8 @@ import { getStoredLanguage } from '@/lib/language';
 import { useTranslation } from '../../lib/i18n-client';
 import contactData from '../../../../config/contact.json';
 import { ProductPageButton } from '../../components/icons/global/globalMobile';
+import { apiClient } from '../../lib/api-client';
+import { showToast } from '../../components/Toast';
 
 // Icons
 const PhoneIcon = () => (
@@ -37,6 +39,7 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const storedLang = getStoredLanguage();
@@ -48,11 +51,37 @@ export default function ContactPage() {
     }
   }, []);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // You can add API call here
+    
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      showToast(t('contact.form.allFieldsRequired'), 'warning');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await apiClient.post('/api/v1/contact', {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      });
+      
+      showToast(t('contact.form.successMessage'), 'success');
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
+    } catch (err: any) {
+      console.error('Error submitting contact form:', err);
+      const errorMessage = err?.data?.detail || err?.message || t('contact.form.errorMessage');
+      showToast(errorMessage, 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -183,8 +212,9 @@ export default function ContactPage() {
                 type="submit"
                 variant="primary"
                 className="w-full py-3"
+                disabled={submitting}
               >
-                {t('contact.form.submit')}
+                {submitting ? t('contact.form.submitting') : t('contact.form.submit')}
               </ProductPageButton>
             </form>
           </div>

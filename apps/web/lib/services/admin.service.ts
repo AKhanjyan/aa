@@ -5049,6 +5049,144 @@ class AdminService {
       throw error;
     }
   }
+
+  /**
+   * Get all contact messages
+   */
+  async getContactMessages() {
+    try {
+      // Check if contactMessage model exists (in case Prisma client wasn't regenerated)
+      if (!db.contactMessage) {
+        console.error('❌ [ADMIN SERVICE] ContactMessage model not found. Please run: npx prisma generate');
+        throw {
+          status: 500,
+          type: "https://api.shop.am/problems/internal-error",
+          title: "Database Model Not Found",
+          detail: "ContactMessage model is not available. Please run 'npx prisma generate' in the packages/db directory and restart the server.",
+        };
+      }
+
+      const messages = await db.contactMessage.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return {
+        data: messages,
+      };
+    } catch (error: any) {
+      console.error('❌ [ADMIN SERVICE] Error fetching contact messages:', error);
+      
+      // If it's already our custom error, re-throw it
+      if (error.status && error.type) {
+        throw error;
+      }
+      
+      throw {
+        status: 500,
+        type: "https://api.shop.am/problems/internal-error",
+        title: "Internal Server Error",
+        detail: error.message || "Failed to fetch contact messages",
+      };
+    }
+  }
+
+  /**
+   * Create a new contact message
+   */
+  async createContactMessage(data: {
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+  }) {
+    try {
+      // Check if contactMessage model exists (in case Prisma client wasn't regenerated)
+      if (!db.contactMessage) {
+        console.error('❌ [ADMIN SERVICE] ContactMessage model not found. Please run: npx prisma generate');
+        throw {
+          status: 500,
+          type: "https://api.shop.am/problems/internal-error",
+          title: "Database Model Not Found",
+          detail: "ContactMessage model is not available. Please run 'npx prisma generate' in the packages/db directory and restart the server.",
+        };
+      }
+
+      const message = await db.contactMessage.create({
+        data: {
+          name: data.name.trim(),
+          email: data.email.trim(),
+          subject: data.subject.trim(),
+          message: data.message.trim(),
+        },
+      });
+
+      return {
+        data: message,
+      };
+    } catch (error: any) {
+      console.error('❌ [ADMIN SERVICE] Error creating contact message:', error);
+      
+      // If it's already our custom error, re-throw it
+      if (error.status && error.type) {
+        throw error;
+      }
+      
+      throw {
+        status: 500,
+        type: "https://api.shop.am/problems/internal-error",
+        title: "Internal Server Error",
+        detail: error.message || "Failed to create contact message",
+      };
+    }
+  }
+
+  /**
+   * Delete a contact message
+   */
+  async deleteContactMessage(id: string) {
+    try {
+      // Check if contactMessage model exists (in case Prisma client wasn't regenerated)
+      if (!db.contactMessage) {
+        console.error('❌ [ADMIN SERVICE] ContactMessage model not found. Please run: npx prisma generate');
+        throw {
+          status: 500,
+          type: "https://api.shop.am/problems/internal-error",
+          title: "Database Model Not Found",
+          detail: "ContactMessage model is not available. Please run 'npx prisma generate' in the packages/db directory and restart the server.",
+        };
+      }
+
+      await db.contactMessage.delete({
+        where: { id },
+      });
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('❌ [ADMIN SERVICE] Error deleting contact message:', error);
+      
+      // If it's already our custom error, re-throw it
+      if (error.status && error.type) {
+        throw error;
+      }
+      
+      if (error.code === 'P2025') {
+        throw {
+          status: 404,
+          type: "https://api.shop.am/problems/not-found",
+          title: "Not Found",
+          detail: "Contact message not found",
+        };
+      }
+      throw {
+        status: 500,
+        type: "https://api.shop.am/problems/internal-error",
+        title: "Internal Server Error",
+        detail: error.message || "Failed to delete contact message",
+      };
+    }
+  }
 }
 
 export const adminService = new AdminService();
