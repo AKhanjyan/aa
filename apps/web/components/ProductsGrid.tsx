@@ -149,13 +149,13 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
   const getGridClasses = () => {
     switch (viewMode) {
       case 'list':
-        return 'grid grid-cols-1 gap-6';
+        return 'grid grid-cols-1 gap-12';
       case 'grid-2':
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
+        return 'grid grid-cols-2 gap-12 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2';
       case 'grid-3':
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
+        return 'grid grid-cols-2 gap-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
       default:
-        return 'grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
+        return 'grid grid-cols-2 gap-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
     }
   };
 

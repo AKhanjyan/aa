@@ -179,6 +179,20 @@
     box-shadow: 0 20px 40px rgba(0, 209, 255, 0.2);
   }
 
+  /* Compact cards (shop page & related products) - card should NOT move on hover */
+  .product-card-compact {
+    transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+    border: 1px solid rgba(0, 209, 255, 0.3);
+  }
+
+  /* Override product-card-hover transform for compact cards - card stays still */
+  .product-card-compact.product-card-hover:hover,
+  .product-card-hover.product-card-compact:hover {
+    transform: none !important;
+    box-shadow: 0 20px 40px rgba(0, 209, 255, 0.2);
+    border-color: rgba(0, 209, 255, 0.5);
+  }
+
   .product-card-hover-centered {
     transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
   }
@@ -193,30 +207,31 @@
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 209, 255, 0.3);
     border-radius: 3rem;
     transition: all 0.3s ease-out;
   }
 
   .product-card-glass:hover {
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(0, 209, 255, 0.3);
+    border-color: rgba(0, 209, 255, 0.5);
     box-shadow: 0 8px 32px rgba(0, 209, 255, 0.15);
   }
 
   /* Image container - allows overflow on hover for home page */
   .product-image-container {
     overflow: hidden;
-    transition: overflow 0.3s ease-out;
+    transition: overflow 0.3s ease-out, padding 0.3s ease-out;
   }
 
   .product-card-hover:hover .product-image-container {
     overflow: visible;
   }
 
-  /* Compact cards (related products) - keep overflow hidden */
+  /* Compact cards (shop page & related products) - allow overflow so image can go over border */
   .product-card-compact:hover .product-image-container {
-    overflow: hidden;
+    overflow: visible;
+    padding: 8px;
   }
 
   .product-image-hover {
@@ -237,9 +252,10 @@
     position: relative;
   }
 
-  /* Compact cards (related products) - smaller scale, no overflow */
+  /* Compact cards (shop page & related products) - only image moves, card stays still */
+  /* Image scales up and moves up to sit on top of border */
   .product-card-compact:hover .product-image-hover {
-    transform: scale(1.05);
+    transform: scale(1.15) translateY(-12px);
     z-index: 10;
     position: relative;
   }
