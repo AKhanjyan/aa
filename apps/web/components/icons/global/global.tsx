@@ -823,7 +823,7 @@ export function Button({ router, t }: ButtonProps) {
         </div>
         <div
           onClick={() => router.push('/about')}
-          className="bg-[rgba(0,0,0,0)] content-stretch flex flex-col h-[54px] lg:h-[54px] md:h-[52px] sm:h-[44px] items-center justify-center px-[36px] lg:px-[36px] md:px-[32px] sm:px-[24px] py-[14px] lg:py-[14px] md:py-[12px] sm:py-[10px] relative rounded-[9999px] shrink-0 cursor-pointer hover:bg-white/10 transition-colors"
+          className="bg-[rgba(0,0,0,0)] border border-white/30 content-stretch flex flex-col h-[54px] lg:h-[54px] md:h-[52px] sm:h-[44px] items-center justify-center px-[36px] lg:px-[36px] md:px-[32px] sm:px-[24px] py-[14px] lg:py-[14px] md:py-[12px] sm:py-[10px] relative rounded-[9999px] shrink-0 cursor-pointer hover:bg-white/10 transition-colors"
         >
           <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[17px] lg:h-[17px] md:h-[17px] sm:h-[15px] justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white w-[80px] lg:w-[80px] md:w-[75px] sm:w-[65px]">
             <p className="leading-[22px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px] whitespace-pre-wrap">{t('home.hero.learnMore')}</p>

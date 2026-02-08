@@ -2037,7 +2037,7 @@ export default function HomePage() {
                 console.log('🖱️ [TRUSTED BY] Next button clicked');
                 handleNextTrustedBy(e);
               }}
-              className="bg-[#00d1ff]/90 backdrop-blur-sm border-[#eee] border-[0.5px] border-solid size-[45px] lg:size-[56px] hover:bg-[#00d1ff] hover:border-white hover:shadow-lg hover:shadow-[#00d1ff]/50 active:bg-[#00d1ff]/80 relative z-[101] left-0 right-auto"
+              className="size-[45px] lg:size-[56px] relative z-[101] left-0 right-auto border border-black border-solid shadow-none hover:shadow-none [&_svg_path]:fill-black [&_svg_path]:hover:fill-[#00d1ff]"
               ariaLabel="Next partner"
             />
 
@@ -2052,7 +2052,7 @@ export default function HomePage() {
                 console.log('🖱️ [TRUSTED BY] Previous button clicked');
                 handlePreviousTrustedBy(e);
               }}
-              className="bg-[#00d1ff]/90 backdrop-blur-sm border-[#eee] border-[0.5px] border-solid size-[45px] lg:size-[56px] hover:bg-[#00d1ff] hover:border-white active:bg-[#00d1ff]/80 relative z-[101] right-0 left-auto shadow-md"
+              className="size-[45px] lg:size-[56px] relative z-[101] right-0 left-auto border border-black border-solid shadow-none hover:shadow-none [&_svg_path]:fill-black [&_svg_path]:hover:fill-[#00d1ff]"
               ariaLabel="Previous partner"
             />
           </div>
