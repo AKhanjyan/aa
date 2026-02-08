@@ -434,9 +434,9 @@ export function Header({
             ) : (
               <div
                 onClick={() => router.push('/login')}
-                className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
+                className="h-[26px] md:h-[24px] sm:h-[20px] w-[26px] md:w-[22px] sm:w-[20px] relative shrink-0 cursor-pointer flex items-center justify-center"
               >
-                <ExitIcon size={20} className="brightness-0" />
+                <ExitIcon size={26} className="brightness-0" />
               </div>
             )}
 
