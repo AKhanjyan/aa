@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { Card } from '@shop/ui';
@@ -264,6 +264,7 @@ export default function OrdersPage() {
   const [currency, setCurrency] = useState<CurrencyCode>(getStoredCurrency());
   const [deliveryPrice, setDeliveryPrice] = useState<number | null>(null);
   const [loadingDeliveryPrice, setLoadingDeliveryPrice] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize filters from URL params on mount and when URL changes
   useEffect(() => {
@@ -331,6 +332,15 @@ export default function OrdersPage() {
     window.addEventListener('currency-updated', handleCurrencyUpdate);
     return () => {
       window.removeEventListener('currency-updated', handleCurrencyUpdate);
+    };
+  }, []);
+
+  // Cleanup search timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -816,10 +826,49 @@ export default function OrdersPage() {
                 const newSearch = e.target.value;
                 setSearchKeyword(newSearch);
                 setPage(1);
-                // Update URL without causing navigation
+                
+                // Clear existing timeout
+                if (searchTimeoutRef.current) {
+                  clearTimeout(searchTimeoutRef.current);
+                }
+                
+                // Debounce URL update - search after 2 seconds of no typing
+                searchTimeoutRef.current = setTimeout(() => {
+                  const params = new URLSearchParams(searchParams?.toString() || '');
+                  if (newSearch.trim()) {
+                    params.set('search', newSearch.trim());
+                  } else {
+                    params.delete('search');
+                  }
+                  const newUrl = params.toString() ? `/admin/orders?${params.toString()}` : '/admin/orders';
+                  router.push(newUrl, { scroll: false });
+                }, 2000);
+              }}
+              onKeyDown={(e) => {
+                // Allow Tab key to work normally
+                if (e.key === 'Tab') {
+                  // Update URL immediately when Tab is pressed
+                  if (searchTimeoutRef.current) {
+                    clearTimeout(searchTimeoutRef.current);
+                  }
+                  const params = new URLSearchParams(searchParams?.toString() || '');
+                  if (searchKeyword.trim()) {
+                    params.set('search', searchKeyword.trim());
+                  } else {
+                    params.delete('search');
+                  }
+                  const newUrl = params.toString() ? `/admin/orders?${params.toString()}` : '/admin/orders';
+                  router.push(newUrl, { scroll: false });
+                }
+              }}
+              onBlur={() => {
+                // Update URL when input loses focus
+                if (searchTimeoutRef.current) {
+                  clearTimeout(searchTimeoutRef.current);
+                }
                 const params = new URLSearchParams(searchParams?.toString() || '');
-                if (newSearch.trim()) {
-                  params.set('search', newSearch.trim());
+                if (searchKeyword.trim()) {
+                  params.set('search', searchKeyword.trim());
                 } else {
                   params.delete('search');
                 }

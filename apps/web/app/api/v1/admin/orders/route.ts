@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
     const paymentStatus = searchParams.get('paymentStatus') || undefined;
     const sortBy = searchParams.get('sortBy') || undefined;
     const sortOrder = searchParams.get('sortOrder') || undefined;
+    const search = searchParams.get('search') || undefined;
 
     const filters = {
       page,
@@ -34,6 +35,7 @@ export async function GET(req: NextRequest) {
       ...(paymentStatus && { paymentStatus }),
       ...(sortBy && { sortBy }),
       ...(sortOrder && { sortOrder: sortOrder as 'asc' | 'desc' }),
+      ...(search && { search }),
     };
 
     console.log('📦 [ADMIN ORDERS] GET request with filters:', filters);

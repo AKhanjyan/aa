@@ -260,6 +260,7 @@ class AdminService {
     paymentStatus?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
+    search?: string;
   } = {}) {
     const page = filters.page || 1;
     const limit = filters.limit || 20;
@@ -275,6 +276,26 @@ class AdminService {
     // Apply payment status filter
     if (filters.paymentStatus) {
       where.paymentStatus = filters.paymentStatus;
+    }
+
+    // Apply search filter
+    if (filters.search && filters.search.trim()) {
+      const searchTerm = filters.search.trim();
+      where.OR = [
+        { number: { contains: searchTerm, mode: 'insensitive' } },
+        { customerEmail: { contains: searchTerm, mode: 'insensitive' } },
+        { customerPhone: { contains: searchTerm, mode: 'insensitive' } },
+        {
+          user: {
+            OR: [
+              { firstName: { contains: searchTerm, mode: 'insensitive' } },
+              { lastName: { contains: searchTerm, mode: 'insensitive' } },
+              { email: { contains: searchTerm, mode: 'insensitive' } },
+              { phone: { contains: searchTerm, mode: 'insensitive' } },
+            ],
+          },
+        },
+      ];
     }
 
     // Determine sort field and order
