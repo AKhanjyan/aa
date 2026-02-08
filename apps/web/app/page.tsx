@@ -1503,20 +1503,9 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[527px] left-1/2 top-[1158px] translate-x-[-50%] w-full max-w-[1920px] z-0">
+      <div className="absolute h-[527px] left-1/2 top-[1050px] translate-x-[-50%] w-full max-w-[1920px] z-0">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
-        </div>
-      </div>
-
-      {/* Blurred Reflection */}
-      <div className="absolute flex h-[807px] items-center justify-center left-1/2 top-[1741px] translate-x-[-50%] w-full max-w-[1920px]">
-        <div className="flex-none scale-y-[-100%]">
-          <div className="blur-[2px] h-[807px] relative w-full max-w-[1920px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <img alt="Water Wave Reflection" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
-            </div>
-          </div>
         </div>
       </div>
 
@@ -1585,7 +1574,7 @@ export default function HomePage() {
         <div
           className="absolute w-full h-full"
           style={{
-            top: "50%",
+            top: "40%",
             left: 0,
             right: 0,
             bottom: 0,
