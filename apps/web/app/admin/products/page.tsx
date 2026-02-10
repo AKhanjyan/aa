@@ -8,6 +8,7 @@ import { Card } from '@shop/ui';
 import { apiClient } from '../../../lib/api-client';
 import { useTranslation } from '../../../lib/i18n-client';
 import { formatPrice, getStoredCurrency, initializeCurrencyRates, type CurrencyCode } from '../../../lib/currency';
+import { getStoredLanguage } from '../../../lib/language';
 import { AdminMenuDrawer, getAdminMenuTABS } from '../../../components/icons/global/global';
 import { ProductPageButton } from '../../../components/icons/global/globalMobile';
 
@@ -302,6 +303,7 @@ export default function ProductsPage() {
     const params: Record<string, string> = {
       page: pageValue.toString(),
       limit: limitValue.toString(),
+      lang: getStoredLanguage(), // Add language parameter
     };
 
     if (search.trim()) {

@@ -872,6 +872,7 @@ class AdminService {
     minPrice?: number;
     maxPrice?: number;
     sort?: string;
+    lang?: string;
   }) {
     console.log("📦 [ADMIN SERVICE] getProducts called with filters:", filters);
     const startTime = Date.now();
@@ -879,6 +880,7 @@ class AdminService {
     const page = filters.page || 1;
     const limit = filters.limit || 20;
     const skip = (page - 1) * limit;
+    const lang = filters.lang || 'en'; // Use provided language or default to English
 
     const where: any = {
       deletedAt: null,
@@ -980,10 +982,7 @@ class AdminService {
         take: limit,
         orderBy,
         include: {
-          translations: {
-            where: { locale: "en" },
-            take: 1,
-          },
+          translations: true, // Get all translations, we'll filter by lang later
           variants: {
             where: { published: true },
             take: 1,
@@ -1026,10 +1025,7 @@ class AdminService {
             take: limit,
             orderBy,
             include: {
-              translations: {
-                where: { locale: "en" },
-                take: 1,
-              },
+              translations: true, // Get all translations, we'll filter by lang later
               variants: {
                 where: { published: true },
                 take: 1,
@@ -1088,9 +1084,9 @@ class AdminService {
 
     const data = products.map((product) => {
       // Безопасное получение translation с проверкой на существование массива
-      const translation = Array.isArray(product.translations) && product.translations.length > 0
-        ? product.translations[0]
-        : null;
+      // Try to find translation for the requested language, fallback to first available
+      const translations = Array.isArray(product.translations) ? product.translations : [];
+      const translation = translations.find((t: { locale: string }) => t.locale === lang) || translations[0] || null;
       
       // Безопасное получение variant с проверкой на существование массива
       const variant = Array.isArray(product.variants) && product.variants.length > 0

@@ -17,6 +17,7 @@ function validateAndNormalizeFilters(searchParams: URLSearchParams): {
     minPrice?: number;
     maxPrice?: number;
     sort?: string;
+    lang?: string;
   };
   error?: {
     type: string;
@@ -103,6 +104,9 @@ function validateAndNormalizeFilters(searchParams: URLSearchParams): {
   const categoryParam = searchParams.get("category");
   const categories = categoryParam ? categoryParam.split(',').filter(Boolean) : undefined;
 
+  // Get language parameter (default to 'en' if not provided)
+  const lang = searchParams.get("lang")?.trim() || 'en';
+
   return {
     filters: {
       page,
@@ -113,6 +117,7 @@ function validateAndNormalizeFilters(searchParams: URLSearchParams): {
       minPrice,
       maxPrice,
       sort: searchParams.get("sort")?.trim() || undefined,
+      lang,
     },
   };
 }
@@ -130,6 +135,7 @@ function validateAndNormalizeFilters(searchParams: URLSearchParams): {
  * - minPrice: number (optional, non-negative)
  * - maxPrice: number (optional, non-negative)
  * - sort: string (optional)
+ * - lang: string (optional, default: 'en') - Language code for product translations
  */
 export async function GET(req: NextRequest) {
   const requestStartTime = Date.now();
