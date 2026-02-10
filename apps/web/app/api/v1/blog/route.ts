@@ -19,14 +19,16 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const lang = searchParams.get("lang") || "en";
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const limit = parseInt(searchParams.get("limit") || "6", 10);
 
-    console.log(`📝 [BLOG API] Fetching posts: lang=${lang}, page=${page}, limit=${limit}`);
-    
+    // Reduced logging for better performance
     const result = await blogService.listPublished(lang, page, limit);
     
     const duration = Date.now() - startTime;
-    console.log(`✅ [BLOG API] Posts fetched in ${duration}ms: ${result.data.length} posts`);
+    // Only log if response is slow
+    if (duration > 1000) {
+      console.warn(`⚠️ [BLOG API] Slow response: ${duration}ms for ${result.data.length} posts`);
+    }
 
     return NextResponse.json(result);
   } catch (error: any) {

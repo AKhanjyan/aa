@@ -1861,8 +1861,10 @@ export default function HomePage() {
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[61.19%_13.33%_22.03%_13.6%] lg:inset-[61.19%_13.33%_22.03%_13.6%] md:inset-[61.19%_13.33%_22.03%_13.6%] sm:inset-[61.19%_13.33%_22.03%_13.6%] justify-center leading-[18px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[12px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.richInMinerals.description')}</p>
+          <p className="mb-0">{t('home.whyChooseUs.richInMinerals.descriptionLine1')}</p>
+          <p>{t('home.whyChooseUs.richInMinerals.descriptionLine2')}</p>
         </div>
-        <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[49.3%_12%_40.91%_12%] lg:inset-[49.3%_12%_40.91%_12%] md:inset-[49.3%_12%_40.91%_12%] sm:inset-[49.3%_12%_40.91%_12%] justify-center leading-[0] text-[#0f172a] text-[13px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-center uppercase whitespace-normal">
+        <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46%_12%_52%_12%] lg:inset-[46%_12%_52%_12%] md:inset-[46%_12%_52%_12%] sm:inset-[46%_12%_52%_12%] justify-center leading-[0] text-[#0f172a] text-[13px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-center uppercase whitespace-normal z-10">
           <p className="leading-[18px] lg:leading-[22px] md:leading-[22px] sm:leading-[20px]">{t('home.whyChooseUs.richInMinerals.title')}</p>
         </div>
       </div>
@@ -1887,6 +1889,8 @@ export default function HomePage() {
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[60.66%_13.33%_24.63%_13.6%] lg:inset-[60.66%_13.33%_24.63%_13.6%] md:inset-[60.66%_13.33%_24.63%_13.6%] sm:inset-[60.66%_13.33%_24.63%_13.6%] justify-center leading-[14px] lg:leading-[18px] md:leading-[18px] sm:leading-[16px] not-italic text-[#64748b] text-[12px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.description')}</p>
+          <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.descriptionLine1')}</p>
+          <p>{t('home.whyChooseUs.nonCarbonated.descriptionLine2')}</p>
         </div>
         <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46.69%_12%_43.01%_12%] lg:inset-[46.69%_12%_43.01%_12%] md:inset-[46.69%_12%_43.01%_12%] sm:inset-[46.69%_12%_43.01%_12%] justify-center leading-[0] text-[#0f172a] text-[13px] lg:text-[16px] md:text-[16px] sm:text-[14px] text-center uppercase whitespace-normal">
           <p className="leading-[18px] lg:leading-[22px] md:leading-[22px] sm:leading-[20px]">{t('home.whyChooseUs.nonCarbonated.title')}</p>
@@ -1911,8 +1915,10 @@ export default function HomePage() {
         </div>
         <div className="absolute flex flex-col font-['Inter',sans-serif] font-normal inset-[63%_10.4%_20%_10.67%] lg:inset-[63%_10.4%_20%_10.67%] md:inset-[63%_10.4%_20%_10.67%] sm:inset-[63%_10.4%_20%_10.67%] justify-center leading-[18px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px] not-italic text-[#64748b] text-[12px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-center">
           <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.description')}</p>
+          <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.descriptionLine1')}</p>
+          <p>{t('home.whyChooseUs.noArtificialIngredients.descriptionLine2')}</p>
         </div>
-        <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46%_10%_44%_10%] lg:inset-[46%_10%_44%_10%] md:inset-[46%_10%_44%_10%] sm:inset-[46%_10%_44%_10%] justify-center leading-[0] text-[#0f172a] text-[12px] lg:text-[14px] md:text-[14px] sm:text-[13px] text-center uppercase whitespace-normal">
+        <div className="absolute flex flex-col font-['Montserrat',sans-serif] font-bold inset-[46%_10%_50%_10%] lg:inset-[46%_10%_50%_10%] md:inset-[46%_10%_50%_10%] sm:inset-[46%_10%_50%_10%] justify-center leading-[0] text-[#0f172a] text-[12px] lg:text-[14px] md:text-[14px] sm:text-[13px] text-center uppercase whitespace-normal z-10">
           <p className="leading-[16px] lg:leading-[20px] md:leading-[20px] sm:leading-[18px]">{t('home.whyChooseUs.noArtificialIngredients.title')}</p>
         </div>
       </div>

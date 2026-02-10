@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { TeamCarousel } from '../../components/TeamCarousel';
 import { useTranslation } from '../../lib/i18n-client';
 
 export const dynamic = 'force-dynamic';
@@ -9,9 +8,8 @@ export const dynamicParams = true;
 
 /**
  * Страница About Us
- * Содержит две основные секции:
+ * Содержит секцию:
  * 1. About our online store - информация о магазине с изображением
- * 2. Our Team - карусель с членами команды
  */
 export default function AboutPage() {
   const { t } = useTranslation();
@@ -62,32 +60,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Секция: Our Team */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            {/* Подзаголовок */}
-            <p className="text-sm md:text-base font-semibold uppercase tracking-wider text-[#7CB342] mb-4">
-              {t('about.team.subtitle')}
-            </p>
-
-            {/* Заголовок */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-              {t('about.team.title')}
-            </h2>
-
-            {/* Описание */}
-            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-              {t('about.team.description')}
-            </p>
-          </div>
-
-          {/* Карусель команды */}
-          <div className="max-w-6xl mx-auto">
-            <TeamCarousel />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

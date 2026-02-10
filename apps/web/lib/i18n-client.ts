@@ -8,7 +8,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { type LanguageCode } from './language';
 import { getStoredLanguage } from './language';
-import { t, getProductText, getAttributeLabel, clearTranslationCache, type ProductField } from './i18n';
+import { t, getProductText, clearTranslationCache, type ProductField } from './i18n';
 
 // Import translations to check available languages
 import enCommon from '../locales/en/common.json';
@@ -93,25 +93,13 @@ export function useTranslation() {
     [lang]
   );
 
-  // Memoized attribute label getter
-  const getAttribute = useCallback(
-    (type: string, value: string) => {
-      if (!type || !value || typeof type !== 'string' || typeof value !== 'string') {
-        return value || '';
-      }
-      return getAttributeLabel(lang, type, value);
-    },
-    [lang]
-  );
-
   return useMemo(
     () => ({
       t: translate,
       lang,
       getProductText: getProduct,
-      getAttributeLabel: getAttribute,
     }),
-    [translate, lang, getProduct, getAttribute]
+    [translate, lang, getProduct]
   );
 }
 

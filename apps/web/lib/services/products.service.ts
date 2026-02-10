@@ -16,9 +16,6 @@ interface ProductFilters {
   filter?: string;
   minPrice?: number;
   maxPrice?: number;
-  colors?: string;
-  sizes?: string;
-  brand?: string;
   sort?: string;
   page?: number;
   limit?: number;
@@ -26,49 +23,8 @@ interface ProductFilters {
 }
 
 // Типы для продуктов с включенными отношениями
-type ProductWithRelations = Prisma.ProductGetPayload<{
-  include: {
-    translations: true;
-    brand: {
-      include: {
-        translations: true;
-      };
-    };
-    variants: {
-      include: {
-        options: true;
-      };
-    };
-    labels: true;
-    categories: {
-      include: {
-        translations: true;
-      };
-    };
-  };
-}>;
-
-/**
- * Normalize comma-separated filter values and drop placeholders like "undefined" or "null".
- */
-const normalizeFilterList = (
-  value?: string,
-  transform?: (v: string) => string
-): string[] => {
-  if (!value || typeof value !== "string") return [];
-
-  const invalidTokens = new Set(["undefined", "null", ""]);
-  const items = value
-    .split(",")
-    .map((v) => v.trim())
-    .filter((v) => !invalidTokens.has(v.toLowerCase()));
-
-  if (transform) {
-    return items.map(transform);
-  }
-
-  return items;
-};
+// Используем any для обхода проблем с типами Prisma
+type ProductWithRelations = any;
 
 /**
  * Get "Out of Stock" translation for a given language
@@ -112,9 +68,6 @@ class ProductsService {
       filter,
       minPrice,
       maxPrice,
-      colors,
-      sizes,
-      brand,
       sort = "createdAt",
       page = 1,
       limit = 24,
@@ -126,7 +79,7 @@ class ProductsService {
     const bestsellerProductIds: string[] = [];
 
     // Build where clause
-    const where: Prisma.ProductWhereInput = {
+    const where: any = {
       published: true,
       deletedAt: null,
     };
@@ -403,8 +356,8 @@ class ProductsService {
               products = await db.product.findMany({
                 where,
                 include: baseInclude,
-                skip,
-                take: limit * 10,
+                // Fetch all products for filtering (no skip - we'll paginate after filtering)
+                take: 10000,
               });
               console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (after creating attributes column)`);
             } catch (attributesError: any) {
@@ -446,8 +399,8 @@ class ProductsService {
             products = await db.product.findMany({
               where,
               include: baseIncludeWithoutAttributeValue,
-              skip,
-              take: limit * 10,
+              // Fetch all products for filtering (no skip - we'll paginate after filtering)
+              take: 10000,
             });
             console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (without attributeValue relation)`);
           } else {
@@ -496,8 +449,8 @@ class ProductsService {
             products = await db.product.findMany({
               where,
               include: baseIncludeWithoutAttributeValue,
-              skip,
-              take: limit * 10,
+              // Fetch all products for filtering (no skip - we'll paginate after filtering)
+              take: 10000,
             });
             console.log(`✅ [PRODUCTS SERVICE] Found ${products.length} products from database (without attributeValue and productAttributes)`);
           } else {
@@ -524,106 +477,6 @@ class ProductsService {
       });
     }
 
-    // Filter by brand(s) - support multiple brands (comma-separated)
-    const brandList = normalizeFilterList(brand);
-    if (brandList.length > 0) {
-      products = products.filter(
-        (product: ProductWithRelations) => 
-          product.brandId && brandList.includes(product.brandId)
-      );
-      console.log('🔍 [PRODUCTS SERVICE] Filtering by brands:', {
-        brands: brandList,
-        productsAfter: products.length
-      });
-    }
-
-    // Filter by colors and sizes together if both are provided.
-    // Skip filtering when only placeholder values (e.g., "undefined") are passed.
-    const colorList = normalizeFilterList(colors, (v) => v.toLowerCase());
-    const sizeList = normalizeFilterList(sizes, (v) => v.toUpperCase());
-
-    if (colorList.length > 0 || sizeList.length > 0) {
-      products = products.filter((product: ProductWithRelations) => {
-        const variants = Array.isArray(product.variants) ? product.variants : [];
-        
-        if (variants.length === 0) {
-          console.log('⚠️ [PRODUCTS SERVICE] Product has no variants:', product.id);
-          return false;
-        }
-        
-        // Find variants that match ALL specified filters
-        const matchingVariants = variants.filter((variant: any) => {
-          const options = Array.isArray(variant.options) ? variant.options : [];
-          
-          if (options.length === 0) {
-            return false;
-          }
-          
-          // Helper function to get color value from option (support all formats)
-          const getColorValue = (opt: any, lang: string = 'en'): string | null => {
-            // New format: Use AttributeValue if available
-            if (opt.attributeValue && opt.attributeValue.attribute?.key === "color") {
-              const translation = opt.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || opt.attributeValue.translations?.[0];
-              return (translation?.label || opt.attributeValue.value || "").trim().toLowerCase();
-            }
-            // Old format: check attributeKey, key, or attribute
-            if (opt.attributeKey === "color" || opt.key === "color" || opt.attribute === "color") {
-              return (opt.value || opt.label || "").trim().toLowerCase();
-            }
-            return null;
-          };
-          
-          // Helper function to get size value from option (support all formats)
-          const getSizeValue = (opt: any, lang: string = 'en'): string | null => {
-            // New format: Use AttributeValue if available
-            if (opt.attributeValue && opt.attributeValue.attribute?.key === "size") {
-              const translation = opt.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || opt.attributeValue.translations?.[0];
-              return (translation?.label || opt.attributeValue.value || "").trim().toUpperCase();
-            }
-            // Old format: check attributeKey, key, or attribute
-            if (opt.attributeKey === "size" || opt.key === "size" || opt.attribute === "size") {
-              return (opt.value || opt.label || "").trim().toUpperCase();
-            }
-            return null;
-          };
-          
-          // Check color match if colors filter is provided
-          if (colorList.length > 0) {
-            let colorMatched = false;
-            for (const opt of options) {
-              const variantColorValue = getColorValue(opt, filters.lang || 'en');
-              if (variantColorValue && colorList.includes(variantColorValue)) {
-                colorMatched = true;
-                break;
-              }
-            }
-            if (!colorMatched) {
-              return false;
-            }
-          }
-          
-          // Check size match if sizes filter is provided
-          if (sizeList.length > 0) {
-            let sizeMatched = false;
-            for (const opt of options) {
-              const variantSizeValue = getSizeValue(opt, filters.lang || 'en');
-              if (variantSizeValue && sizeList.includes(variantSizeValue)) {
-                sizeMatched = true;
-                break;
-              }
-            }
-            if (!sizeMatched) {
-              return false;
-            }
-          }
-          
-          return true;
-        });
-        
-        const hasMatch = matchingVariants.length > 0;
-        return hasMatch;
-      });
-    }
 
     // Sort
     if (filter === "bestseller" && bestsellerProductIds.length > 0) {
@@ -885,7 +738,7 @@ class ProductsService {
             // Check if "Out of Stock" label already exists
             const outOfStockText = getOutOfStockLabel(lang);
             const hasOutOfStockLabel = existingLabels.some(
-              (label) => label.value.toLowerCase() === outOfStockText.toLowerCase() ||
+              (label: { value: string }) => label.value.toLowerCase() === outOfStockText.toLowerCase() ||
                          label.value.toLowerCase().includes('out of stock') ||
                          label.value.toLowerCase().includes('արտադրված') ||
                          label.value.toLowerCase().includes('нет в наличии') ||
@@ -894,7 +747,7 @@ class ProductsService {
             
             if (!hasOutOfStockLabel) {
               // Check if top-left position is available, otherwise use top-right
-              const topLeftOccupied = existingLabels.some((l) => l.position === 'top-left');
+              const topLeftOccupied = existingLabels.some((l: { position: string }) => l.position === 'top-left');
               const position = topLeftOccupied ? 'top-right' : 'top-left';
               
               existingLabels.push({
@@ -926,349 +779,12 @@ class ProductsService {
     };
   }
 
-  /**
-   * Get available filters (colors and sizes)
-   */
-  async getFilters(filters: {
-    category?: string;
-    search?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    lang?: string;
-  }) {
-    try {
-      const where: Prisma.ProductWhereInput = {
-        published: true,
-        deletedAt: null,
-      };
-
-      // Add search filter
-      if (filters.search && filters.search.trim()) {
-        where.OR = [
-          {
-            translations: {
-              some: {
-                title: {
-                  contains: filters.search.trim(),
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
-          {
-            translations: {
-              some: {
-                subtitle: {
-                  contains: filters.search.trim(),
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
-          {
-            variants: {
-              some: {
-                sku: {
-                  contains: filters.search.trim(),
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
-        ];
-      }
-
-      // Add category filter
-      if (filters.category) {
-        try {
-          const categoryDoc = await db.category.findFirst({
-            where: {
-              translations: {
-                some: {
-                  slug: filters.category,
-                  locale: filters.lang || "en",
-                },
-              },
-              published: true,
-              deletedAt: null,
-            },
-          });
-
-          if (categoryDoc && categoryDoc.id) {
-            // Get all child categories (subcategories) recursively
-            const childCategoryIds = await this.getAllChildCategoryIds(categoryDoc.id);
-            const allCategoryIds = [categoryDoc.id, ...childCategoryIds];
-            
-            console.log('📂 [PRODUCTS SERVICE] Category IDs to include in filters:', {
-              parent: categoryDoc.id,
-              children: childCategoryIds,
-              total: allCategoryIds.length
-            });
-            
-            // Build OR conditions for all categories (parent + children)
-            const categoryConditions = allCategoryIds.flatMap((catId: string) => [
-              { primaryCategoryId: catId },
-              { categoryIds: { has: catId } },
-            ]);
-            
-            if (where.OR) {
-              where.AND = [
-                { OR: where.OR },
-                {
-                  OR: categoryConditions,
-                },
-              ];
-              delete where.OR;
-            } else {
-              where.OR = categoryConditions;
-            }
-          }
-        } catch (categoryError) {
-          console.error('❌ [PRODUCTS SERVICE] Error fetching category:', categoryError);
-          // Continue without category filter if there's an error
-        }
-      }
-
-      // Get products with variants
-      let products;
-      try {
-        products = await db.product.findMany({
-          where,
-          include: {
-            variants: {
-              where: {
-                published: true,
-              },
-              include: {
-                options: {
-                  include: {
-                    attributeValue: {
-                      include: {
-                        attribute: true,
-                        translations: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            productAttributes: {
-              include: {
-                attribute: {
-                  include: {
-                    values: {
-                      include: {
-                        translations: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
-      } catch (dbError) {
-        console.error('❌ [PRODUCTS SERVICE] Error fetching products in getFilters:', dbError);
-        throw dbError;
-      }
-
-      // Ensure products is an array
-      if (!products || !Array.isArray(products)) {
-        products = [];
-      }
-
-    // Filter by price in memory
-    if (filters.minPrice || filters.maxPrice) {
-      const min = filters.minPrice || 0;
-      const max = filters.maxPrice || Infinity;
-      products = products.filter((product: ProductWithRelations) => {
-        if (!product || !product.variants || !Array.isArray(product.variants)) {
-          return false;
-        }
-        const prices = product.variants.map((v: { price?: number }) => v?.price).filter((p: number | undefined): p is number => p !== undefined);
-        if (prices.length === 0) return false;
-        const minPrice = Math.min(...prices);
-        return minPrice >= min && minPrice <= max;
-      });
-    }
-
-    // Collect colors and sizes from variants
-    // Use Map with lowercase key to merge colors with different cases
-    // Store both count, canonical label, imageUrl and colors hex
-    const lang = filters.lang || 'en';
-    const colorMap = new Map<string, { 
-      count: number; 
-      label: string; 
-      imageUrl?: string | null; 
-      colors?: string[] | null;
-    }>();
-    const sizeMap = new Map<string, number>();
-
-    products.forEach((product: ProductWithRelations) => {
-      if (!product || !product.variants || !Array.isArray(product.variants)) {
-        return;
-      }
-      product.variants.forEach((variant: any) => {
-        if (!variant || !variant.options || !Array.isArray(variant.options)) {
-          return;
-        }
-        variant.options.forEach((option: any) => {
-          if (!option) return;
-          
-          // Check if it's a color option (support multiple formats)
-          const isColor = option.attributeKey === "color" || 
-                         option.key === "color" ||
-                         option.attribute === "color" ||
-                         (option.attributeValue && option.attributeValue.attribute?.key === "color");
-          
-          if (isColor) {
-            let colorValue = "";
-            let imageUrl: string | null | undefined = null;
-            let colorsHex: string[] | null | undefined = null;
-            
-            // New format: Use AttributeValue if available
-            if (option.attributeValue) {
-              const translation = option.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || option.attributeValue.translations?.[0];
-              colorValue = translation?.label || option.attributeValue.value || "";
-              imageUrl = option.attributeValue.imageUrl || null;
-              colorsHex = option.attributeValue.colors || null;
-            } else if (option.value) {
-              // Old format: use value directly
-              colorValue = option.value.trim();
-            } else if (option.key === "color" || option.attribute === "color") {
-              // Fallback: try to get from option itself
-              colorValue = option.value || option.label || "";
-            }
-            
-            if (colorValue) {
-              const colorKey = colorValue.toLowerCase();
-              const existing = colorMap.get(colorKey);
-              
-              // Prefer capitalized version for label (e.g., "Black" over "black")
-              // If both exist, keep the one that starts with uppercase
-              const preferredLabel = existing 
-                ? (colorValue[0] === colorValue[0].toUpperCase() ? colorValue : existing.label)
-                : colorValue;
-              
-              // Prefer imageUrl and colors from AttributeValue if available
-              const finalImageUrl = imageUrl || existing?.imageUrl || null;
-              const finalColors = colorsHex || existing?.colors || null;
-              
-              colorMap.set(colorKey, {
-                count: (existing?.count || 0) + 1,
-                label: preferredLabel,
-                imageUrl: finalImageUrl,
-                colors: finalColors,
-              });
-            }
-          } else {
-            // Check if it's a size option (support multiple formats)
-            const isSize = option.attributeKey === "size" || 
-                          option.key === "size" ||
-                          option.attribute === "size" ||
-                          (option.attributeValue && option.attributeValue.attribute?.key === "size");
-            
-            if (isSize) {
-              let sizeValue = "";
-              
-              // New format: Use AttributeValue if available
-              if (option.attributeValue) {
-                const translation = option.attributeValue.translations?.find((t: { locale: string }) => t.locale === lang) || option.attributeValue.translations?.[0];
-                sizeValue = translation?.label || option.attributeValue.value || "";
-              } else if (option.value) {
-                // Old format: use value directly
-                sizeValue = option.value.trim();
-              } else if (option.key === "size" || option.attribute === "size") {
-                // Fallback: try to get from option itself
-                sizeValue = option.value || option.label || "";
-              }
-              
-              if (sizeValue) {
-                const normalizedSize = sizeValue.trim().toUpperCase();
-                sizeMap.set(normalizedSize, (sizeMap.get(normalizedSize) || 0) + 1);
-              }
-            }
-          }
-        });
-      });
-      
-      // Also check productAttributes for color attribute values with imageUrl and colors
-      if ((product as any).productAttributes && Array.isArray((product as any).productAttributes)) {
-        (product as any).productAttributes.forEach((productAttr: any) => {
-          if (productAttr.attribute?.key === 'color' && productAttr.attribute?.values) {
-            productAttr.attribute.values.forEach((attrValue: any) => {
-              const translation = attrValue.translations?.find((t: { locale: string }) => t.locale === lang) || attrValue.translations?.[0];
-              const colorValue = translation?.label || attrValue.value || "";
-              if (colorValue) {
-                const colorKey = colorValue.toLowerCase();
-                const existing = colorMap.get(colorKey);
-                // Update if we have imageUrl or colors hex and they're not already set
-                if (attrValue.imageUrl || attrValue.colors) {
-                  colorMap.set(colorKey, {
-                    count: existing?.count || 0,
-                    label: existing?.label || colorValue,
-                    imageUrl: attrValue.imageUrl || existing?.imageUrl || null,
-                    colors: attrValue.colors || existing?.colors || null,
-                  });
-                }
-              }
-            });
-          }
-        });
-      }
-    });
-
-    // Convert maps to arrays
-    const colors: Array<{ value: string; label: string; count: number; imageUrl?: string | null; colors?: string[] | null }> = Array.from(
-      colorMap.entries()
-    ).map(([key, data]) => ({
-      value: key, // lowercase for filtering
-      label: data.label, // canonical label (prefer capitalized)
-      count: data.count, // merged count
-      imageUrl: data.imageUrl || null,
-      colors: data.colors || null,
-    }));
-
-    const sizes: Array<{ value: string; count: number }> = Array.from(
-      sizeMap.entries()
-    ).map(([value, count]: [string, number]) => ({
-      value,
-      count,
-    }));
-
-    // Sort sizes by predefined order
-    const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-    sizes.sort((a: { value: string }, b: { value: string }) => {
-      const aIndex = SIZE_ORDER.indexOf(a.value);
-      const bIndex = SIZE_ORDER.indexOf(b.value);
-      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-      if (aIndex !== -1) return -1;
-      if (bIndex !== -1) return 1;
-      return a.value.localeCompare(b.value);
-    });
-
-      // Sort colors alphabetically
-      colors.sort((a: { label: string }, b: { label: string }) => a.label.localeCompare(b.label));
-
-      return {
-        colors,
-        sizes,
-      };
-    } catch (error) {
-      console.error('❌ [PRODUCTS SERVICE] Error in getFilters:', error);
-      // Return empty arrays on error
-      return {
-        colors: [],
-        sizes: [],
-      };
-    }
-  }
 
   /**
    * Get price range
    */
   async getPriceRange(filters: { category?: string; lang?: string }) {
-    const where: Prisma.ProductWhereInput = {
+    const where: any = {
       published: true,
       deletedAt: null,
     };

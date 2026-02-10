@@ -46,14 +46,16 @@ export default function BlogPage() {
         setLoading(true);
         setError(null);
         
-        // Use a shorter timeout for blog posts (5 seconds)
+        // 6 posts per page (3x2 grid layout)
         const startTime = Date.now();
         const response = await apiClient.get<BlogListResponse>('/api/v1/blog', {
-          params: { lang, page: currentPage, limit: 12 },
+          params: { lang, page: currentPage, limit: 6 },
         });
         const duration = Date.now() - startTime;
-        if (duration > 2000) {
+        if (duration > 1500) {
           console.warn(`⚠️ [BLOG] Slow response: ${duration}ms`);
+        } else {
+          console.log(`✅ [BLOG] Loaded in ${duration}ms`);
         }
         
         if (!cancelled) {

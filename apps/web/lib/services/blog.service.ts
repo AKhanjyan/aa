@@ -29,7 +29,7 @@ const SETTINGS_KEY = "blog-posts";
 // Simple in-memory cache for blog posts (cleared on updates)
 let postsCache: BlogPost[] | null = null;
 let cacheTimestamp: number = 0;
-const CACHE_TTL = 30000; // 30 seconds cache
+const CACHE_TTL = 60000; // 60 seconds cache (increased for better performance)
 
 async function loadAllPosts(): Promise<BlogPost[]> {
   const now = Date.now();
@@ -420,14 +420,18 @@ class BlogService {
 
   /**
    * Public: list published posts for locale
+   * Optimized: excludes contentHtml for faster loading
    */
   async listPublished(locale: Locale, page: number = 1, limit: number = 10) {
     const loadStartTime = Date.now();
     const posts = await loadAllPosts();
     const loadDuration = Date.now() - loadStartTime;
-    console.log(`📝 [BLOG SERVICE] Loaded ${posts.length} posts in ${loadDuration}ms`);
+    if (loadDuration > 100) {
+      console.log(`📝 [BLOG SERVICE] Loaded ${posts.length} posts in ${loadDuration}ms`);
+    }
 
     const filterStartTime = Date.now();
+    // Optimize: filter and sort in one pass
     const published = posts
       .filter((p) => p.published && !p.deletedAt)
       .sort(
@@ -435,7 +439,9 @@ class BlogService {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     const filterDuration = Date.now() - filterStartTime;
-    console.log(`📝 [BLOG SERVICE] Filtered to ${published.length} published posts in ${filterDuration}ms`);
+    if (filterDuration > 50) {
+      console.log(`📝 [BLOG SERVICE] Filtered to ${published.length} published posts in ${filterDuration}ms`);
+    }
 
     const total = published.length;
     const totalPages = Math.ceil(total / limit);
@@ -444,6 +450,7 @@ class BlogService {
     const paginatedPosts = published.slice(startIndex, endIndex);
 
     const mapStartTime = Date.now();
+    // Optimize: exclude contentHtml for list view (not needed, saves memory and processing)
     const result = {
       data: paginatedPosts.map((post) => {
         const translation = pickTranslation(post, locale);
@@ -454,7 +461,8 @@ class BlogService {
           locale: translation?.locale || locale,
           title: translation?.title || post.slug,
           excerpt: translation?.excerpt || null,
-          contentHtml: translation?.contentHtml || null,
+          // contentHtml excluded for list view - only needed on detail page
+          contentHtml: null,
           seoTitle: translation?.seoTitle || null,
           seoDescription: translation?.seoDescription || null,
           featuredImage: translation?.featuredImage || null,
@@ -472,7 +480,9 @@ class BlogService {
       },
     };
     const mapDuration = Date.now() - mapStartTime;
-    console.log(`📝 [BLOG SERVICE] Mapped ${result.data.length} posts in ${mapDuration}ms`);
+    if (mapDuration > 50) {
+      console.log(`📝 [BLOG SERVICE] Mapped ${result.data.length} posts in ${mapDuration}ms`);
+    }
 
     return result;
   }

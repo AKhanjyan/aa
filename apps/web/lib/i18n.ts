@@ -12,7 +12,6 @@ import enCommon from '../locales/en/common.json';
 import enHome from '../locales/en/home.json';
 import enProduct from '../locales/en/product.json';
 import enProducts from '../locales/en/products.json';
-import enAttributes from '../locales/en/attributes.json';
 import enDelivery from '../locales/en/delivery.json';
 import enAbout from '../locales/en/about.json';
 import enContact from '../locales/en/contact.json';
@@ -37,7 +36,6 @@ import hyCommon from '../locales/hy/common.json';
 import hyHome from '../locales/hy/home.json';
 import hyProduct from '../locales/hy/product.json';
 import hyProducts from '../locales/hy/products.json';
-import hyAttributes from '../locales/hy/attributes.json';
 import hyDelivery from '../locales/hy/delivery.json';
 import hyAbout from '../locales/hy/about.json';
 import hyContact from '../locales/hy/contact.json';
@@ -62,7 +60,6 @@ import ruCommon from '../locales/ru/common.json';
 import ruHome from '../locales/ru/home.json';
 import ruProduct from '../locales/ru/product.json';
 import ruProducts from '../locales/ru/products.json';
-import ruAttributes from '../locales/ru/attributes.json';
 import ruDelivery from '../locales/ru/delivery.json';
 import ruAbout from '../locales/ru/about.json';
 import ruContact from '../locales/ru/contact.json';
@@ -84,7 +81,7 @@ import ruAdmin from '../locales/ru/admin.json';
 import ruBlog from '../locales/ru/blog.json';
 
 // Type definitions for better type safety
-export type Namespace = 'common' | 'home' | 'product' | 'products' | 'attributes' | 'delivery' | 'about' | 'contact' | 'faq' | 'login' | 'delivery-terms' | 'terms' | 'privacy' | 'support' | 'stores' | 'returns' | 'refund-policy' | 'profile' | 'checkout' | 'register' | 'categories' | 'orders' | 'admin' | 'blog';
+export type Namespace = 'common' | 'home' | 'product' | 'products' | 'delivery' | 'about' | 'contact' | 'faq' | 'login' | 'delivery-terms' | 'terms' | 'privacy' | 'support' | 'stores' | 'returns' | 'refund-policy' | 'profile' | 'checkout' | 'register' | 'categories' | 'orders' | 'admin' | 'blog';
 export type ProductField = 'title' | 'shortDescription' | 'longDescription';
 
 // Translation store - organized by language and namespace
@@ -95,7 +92,6 @@ const translations: Partial<Record<LanguageCode, Record<Namespace, any>>> = {
     home: enHome,
     product: enProduct,
     products: enProducts,
-    attributes: enAttributes,
     delivery: enDelivery,
     about: enAbout,
     contact: enContact,
@@ -121,7 +117,6 @@ const translations: Partial<Record<LanguageCode, Record<Namespace, any>>> = {
     home: hyHome,
     product: hyProduct,
     products: hyProducts,
-    attributes: hyAttributes,
     delivery: hyDelivery,
     about: hyAbout,
     contact: hyContact,
@@ -147,7 +142,6 @@ const translations: Partial<Record<LanguageCode, Record<Namespace, any>>> = {
     home: ruHome,
     product: ruProduct,
     products: ruProducts,
-    attributes: ruAttributes,
     delivery: ruDelivery,
     about: ruAbout,
     contact: ruContact,
@@ -254,7 +248,7 @@ export function t(lang: LanguageCode | undefined, path: string): string {
   }
 
   // Validate namespace
-  const validNamespaces: Namespace[] = ['common', 'home', 'product', 'products', 'attributes', 'delivery', 'about', 'contact', 'faq', 'login', 'delivery-terms', 'terms', 'privacy', 'support', 'stores', 'returns', 'refund-policy', 'profile', 'checkout', 'register', 'categories', 'orders', 'admin', 'blog'];
+  const validNamespaces: Namespace[] = ['common', 'home', 'product', 'products', 'delivery', 'about', 'contact', 'faq', 'login', 'delivery-terms', 'terms', 'privacy', 'support', 'stores', 'returns', 'refund-policy', 'profile', 'checkout', 'register', 'categories', 'orders', 'admin', 'blog'];
   if (!validNamespaces.includes(namespace)) {
     if (process.env.NODE_ENV === 'development') {
       console.warn(`[i18n] Invalid namespace: "${namespace}". Valid namespaces: ${validNamespaces.join(', ')}`);
@@ -396,101 +390,6 @@ export function getProductText(
   }
 }
 
-/**
- * Get attribute label: getAttributeLabel(lang, type, value)
- * Reads from attributes.json for the given language
- * 
- * Features:
- * - Automatic fallback to English
- * - Returns original value if label not found (graceful degradation)
- * 
- * @param lang - Language code (optional, uses stored language if not provided)
- * @param type - Attribute type (e.g., 'color', 'size')
- * @param value - Attribute value code (e.g., 'red', 'xl')
- * @returns Translated label or the original value if not found
- */
-export function getAttributeLabel(
-  lang: LanguageCode | undefined,
-  type: string,
-  value: string
-): string {
-  // Use stored language if not provided
-  if (!lang) {
-    lang = getStoredLanguage();
-  }
-
-  // Validate inputs
-  if (!type || !value || typeof type !== 'string' || typeof value !== 'string') {
-    return value || '';
-  }
-
-  // Normalize value (lowercase for case-insensitive lookup)
-  const normalizedValue = value.toLowerCase().trim();
-
-  try {
-    // Try to load attributes for the requested language
-    let attributes = loadTranslation(lang, 'attributes');
-    
-    // Fallback to English if not found
-    if ((!attributes || typeof attributes !== 'object') && lang !== 'en') {
-      attributes = loadTranslation('en', 'attributes');
-    }
-
-    if (!attributes || typeof attributes !== 'object') {
-      return value;
-    }
-
-    // Get attribute type object
-    if (type in attributes) {
-      const typeObj = attributes[type];
-      if (typeObj && typeof typeObj === 'object') {
-        // Try exact match first
-        if (normalizedValue in typeObj) {
-          const label = typeObj[normalizedValue];
-          if (typeof label === 'string') {
-            return label;
-          }
-        }
-        // Try case-insensitive match
-        for (const [key, label] of Object.entries(typeObj)) {
-          if (key.toLowerCase() === normalizedValue && typeof label === 'string') {
-            return label;
-          }
-        }
-      }
-    }
-
-    // Fallback to English
-    if (lang !== 'en') {
-      const enAttributes = loadTranslation('en', 'attributes');
-      if (enAttributes && typeof enAttributes === 'object' && type in enAttributes) {
-        const enTypeObj = enAttributes[type];
-        if (enTypeObj && typeof enTypeObj === 'object') {
-          if (normalizedValue in enTypeObj) {
-            const label = enTypeObj[normalizedValue];
-            if (typeof label === 'string') {
-              return label;
-            }
-          }
-          // Try case-insensitive match
-          for (const [key, label] of Object.entries(enTypeObj)) {
-            if (key.toLowerCase() === normalizedValue && typeof label === 'string') {
-              return label;
-            }
-          }
-        }
-      }
-    }
-
-    // Return original value if no translation found (graceful degradation)
-    return value;
-  } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[i18n] Failed to get attribute label: ${lang}/${type}/${value}`, error);
-    }
-    return value;
-  }
-}
 
 // Note: useTranslation hook has been moved to i18n-client.ts
 // Import it from './i18n-client' in Client Components
@@ -506,7 +405,7 @@ export function clearTranslationCache(): void {
  * Get all available namespaces
  */
 export function getAvailableNamespaces(): Namespace[] {
-  return ['common', 'home', 'product', 'products', 'attributes', 'delivery', 'about', 'contact', 'faq', 'login', 'delivery-terms', 'terms', 'privacy', 'support', 'stores', 'returns', 'refund-policy', 'profile', 'checkout', 'register', 'categories', 'orders', 'admin', 'blog'];
+  return ['common', 'home', 'product', 'products', 'delivery', 'about', 'contact', 'faq', 'login', 'delivery-terms', 'terms', 'privacy', 'support', 'stores', 'returns', 'refund-policy', 'profile', 'checkout', 'register', 'categories', 'orders', 'admin', 'blog'];
 }
 
 /**

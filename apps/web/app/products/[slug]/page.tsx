@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { apiClient } from '../../../lib/api-client';
 import { formatPrice, getStoredCurrency } from '../../../lib/currency';
 import { getStoredLanguage, type LanguageCode } from '../../../lib/language';
-import { t, getProductText, getAttributeLabel } from '../../../lib/i18n';
+import { t, getProductText } from '../../../lib/i18n';
 import { useAuth } from '../../../lib/auth/AuthContext';
 import { RelatedProducts } from '../../../components/RelatedProducts';
 import { ProductReviews } from '../../../components/ProductReviews';
@@ -1687,7 +1687,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                                       : 'border-2 border-gray-300 hover:scale-105'
                                 }`}
                                 style={hasImage ? {} : { backgroundColor: colorHex }}
-                                title={`${getAttributeLabel(language, attrKey, g.value)}${g.stock > 0 ? ` (${g.stock} ${t(language, 'product.pcs')})` : ` (${t(language, 'product.outOfStock')})`}`} 
+                                title={`${g.value}${g.stock > 0 ? ` (${g.stock} ${t(language, 'product.pcs')})` : ` (${t(language, 'product.outOfStock')})`}`} 
                               >
                                 {hasImage && processedImageUrl ? (
                                   <img 
@@ -1772,7 +1772,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                                 />
                               )}
                               <div className="flex flex-col text-center">
-                                <span className={`${textSizeClass} font-medium`}>{getAttributeLabel(language, attrKey, g.value)}</span>
+                                <span className={`${textSizeClass} font-medium`}>{g.value}</span>
                                 <span className={`${totalValues > 10 ? 'text-[10px]' : 'text-xs'} ${displayStock > 0 ? 'text-gray-500' : 'text-gray-400'}`}>({displayStock})</span>
                               </div>
                             </button>
@@ -1861,7 +1861,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                                   style={{ backgroundColor: colorHex }}
                                 />
                               ) : null}
-                              <span className={textSizeClass}>{getAttributeLabel(language, attrKey, g.value)}</span>
+                              <span className={textSizeClass}>{g.value}</span>
                             </button>
                           );
                         })}
@@ -1894,7 +1894,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                                     : 'border-2 border-gray-300 hover:scale-105'
                               }`}
                               style={{ backgroundColor: getColorValue(g.color) }} 
-                              title={isDisabled ? `${getAttributeLabel(language, 'color', g.color)} (${t(language, 'product.outOfStock')})` : `${getAttributeLabel(language, 'color', g.color)}${g.stock > 0 ? ` (${g.stock} ${t(language, 'product.pcs')})` : ''}`} 
+                              title={isDisabled ? `${g.color} (${t(language, 'product.outOfStock')})` : `${g.color}${g.stock > 0 ? ` (${g.stock} ${t(language, 'product.pcs')})` : ''}`} 
                             />
                             {g.stock > 0 && (
                               <span className="text-xs text-gray-500">{g.stock}</span>
@@ -1939,7 +1939,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                         }`}
                       >
                         <div className="flex flex-col text-center">
-                          <span className={`text-sm font-medium ${isDisabled ? 'text-gray-400' : 'text-gray-900'}`}>{getAttributeLabel(language, 'size', g.size)}</span>
+                          <span className={`text-sm font-medium ${isDisabled ? 'text-gray-400' : 'text-gray-900'}`}>{g.size}</span>
                           {displayStock > 0 && (
                             <span className={`text-xs ${isDisabled ? 'text-gray-300' : 'text-gray-500'}`}>{displayStock} {t(language, 'product.pcs')}</span>
                           )}
