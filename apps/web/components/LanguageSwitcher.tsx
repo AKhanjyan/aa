@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../lib/language';
 import { useTranslation } from '../lib/i18n-client';
 
@@ -12,6 +13,7 @@ import { useTranslation } from '../lib/i18n-client';
  * <LanguageSwitcher />
  */
 export function LanguageSwitcher() {
+  const router = useRouter();
   const [currentLang, setCurrentLang] = useState<LanguageCode>(getStoredLanguage());
   const [showMenu, setShowMenu] = useState(false);
   const { t } = useTranslation();
@@ -29,8 +31,8 @@ export function LanguageSwitcher() {
 
   const handleLanguageChange = (langCode: LanguageCode) => {
     if (langCode !== currentLang) {
-      setStoredLanguage(langCode);
-      // setStoredLanguage automatically reloads the page
+      setStoredLanguage(langCode, { skipReload: true });
+      router.refresh(); // Refresh server components without full reload
     }
     setShowMenu(false);
   };
@@ -116,6 +118,7 @@ export function LanguageSwitcher() {
  * Just shows flags/icons without dropdown
  */
 export function SimpleLanguageSwitcher() {
+  const router = useRouter();
   const [currentLang, setCurrentLang] = useState<LanguageCode>(getStoredLanguage());
 
   useEffect(() => {
@@ -131,7 +134,8 @@ export function SimpleLanguageSwitcher() {
 
   const handleLanguageChange = (langCode: LanguageCode) => {
     if (langCode !== currentLang) {
-      setStoredLanguage(langCode);
+      setStoredLanguage(langCode, { skipReload: true });
+      router.refresh(); // Refresh server components without full reload
     }
   };
 

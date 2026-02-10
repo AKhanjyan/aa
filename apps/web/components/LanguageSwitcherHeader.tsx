@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { LANGUAGES, type LanguageCode, getStoredLanguage, setStoredLanguage } from '../lib/language';
 
 const ChevronDownIcon = () => (
@@ -65,6 +66,7 @@ const getLanguageColor = (code: LanguageCode, isActive: boolean): string => {
  * Uses only locales-based translations, no Google Translate
  */
 export function LanguageSwitcherHeader() {
+  const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
   // Start with 'en' to avoid hydration mismatch, then update in useEffect
   const [currentLang, setCurrentLang] = useState<LanguageCode>('en');
@@ -117,12 +119,14 @@ export function LanguageSwitcherHeader() {
       // Close menu first
       setShowMenu(false);
       
-      // Immediately update the UI state to prevent showing 'en' during reload
+      // Immediately update the UI state
       setCurrentLang(langCode);
       
-      // Update language - this will reload the page after a small delay
-      // The delay ensures the UI state is updated before reload
-      setStoredLanguage(langCode);
+      // Update language without full reload - components will listen to 'language-updated' event
+      setStoredLanguage(langCode, { skipReload: true });
+      
+      // Refresh server components without full page reload
+      router.refresh();
     }
   };
 

@@ -1,5 +1,6 @@
 import { getStoredLanguage } from '../../lib/language';
 import { t } from '../../lib/i18n';
+import { cookies } from 'next/headers';
 
 import { ProductsGrid } from '../../components/ProductsGrid';
 import { ProductsHero } from '../../components/ProductsHero';
@@ -49,7 +50,20 @@ async function getProducts(
   limit: number = 24
 ): Promise<ProductsResponse> {
   try {
-    const language = getStoredLanguage();
+    // Try to get language from cookies (server-side) first, then fallback to getStoredLanguage
+    let language: string = 'en';
+    try {
+      const cookieStore = await cookies();
+      const langCookie = cookieStore.get('shop_language');
+      if (langCookie && langCookie.value && ['hy', 'en', 'ru'].includes(langCookie.value)) {
+        language = langCookie.value;
+      } else {
+        language = getStoredLanguage();
+      }
+    } catch {
+      // If cookies() fails, use getStoredLanguage (will return 'en' on server-side)
+      language = getStoredLanguage();
+    }
     
     // Build filters object for productsService
     const filters = {
@@ -115,8 +129,19 @@ export default async function ProductsPage({ searchParams }: any) {
     labels: p.labels ?? []            // ⭐ Add labels array (includes "Out of Stock" label)
   }));
 
-  // Get language for translations
-  const language = getStoredLanguage();
+  // Get language for translations - try cookies first, then fallback
+  let language: string = 'en';
+  try {
+    const cookieStore = await cookies();
+    const langCookie = cookieStore.get('shop_language');
+    if (langCookie && langCookie.value && ['hy', 'en', 'ru'].includes(langCookie.value)) {
+      language = langCookie.value;
+    } else {
+      language = getStoredLanguage();
+    }
+  } catch {
+    language = getStoredLanguage();
+  }
 
   return (
     <div className="w-full overflow-x-hidden max-w-full">
