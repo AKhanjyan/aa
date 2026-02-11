@@ -1942,7 +1942,7 @@ export default function HomePage() {
       {/* Card 1: Rich in Minerals */}
       <div className="absolute h-[208px] lg:h-[260px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] top-[4200px] lg:top-[4200px] md:top-[3700px] sm:top-[3000px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
-        <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] top-0">
+        <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] lg:left-[38%] lg:right-[38%] top-0">
           <div className="absolute inset-[9.48%_0_18.97%_34.91%] overflow-hidden">
             <div className="absolute inset-0">
               <img alt="PC Icon" className="block max-w-none size-full" src={img13} />
@@ -1967,7 +1967,7 @@ export default function HomePage() {
       {/* Card 2: Non-Carbonated */}
       <div className="absolute h-[200px] lg:h-[250px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[-700px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4580px] lg:top-[4580px] md:top-[4000px] sm:top-[3280px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[13.97%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
-        <div className="absolute aspect-[100/100] left-[37.07%] overflow-clip right-[32%] top-0">
+        <div className="absolute aspect-[100/100] left-[37.07%] overflow-clip right-[32%] lg:left-[36%] lg:right-[36%] top-0">
           <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]">
             <div className="absolute inset-0">
               <img alt="Leaf" className="block max-w-none size-full" src={img7} />
@@ -1995,7 +1995,7 @@ export default function HomePage() {
       {/* Card 3: No Artificial Ingredients */}
       <div className="absolute h-[204px] lg:h-[255px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] lg:translate-x-[330px] md:translate-x-[-50%] sm:translate-x-[-50%] top-[4430px] lg:top-[4430px] md:top-[4300px] sm:top-[3560px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
         <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
-        <div className="absolute aspect-[100/100] left-[34.53%] right-[34.53%] top-0">
+        <div className="absolute aspect-[100/100] left-[34.53%] right-[34.53%] lg:left-[38%] lg:right-[38%] top-0">
           <div className="absolute inset-[5.88%_0_26.15%_50.33%] overflow-hidden">
             <img alt="Group" className="block max-w-none size-full" src={img10} />
           </div>
@@ -2421,7 +2421,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <div className="absolute left-1/2 top-[4820px] translate-x-[-50%] w-[88px] h-[88px] z-[12]">
+      <div className="absolute left-1/2 top-[4820px] translate-x-[-50%] w-[70px] h-[88px] z-[12]">
         <img alt="Vector" className="block max-w-none size-full" src={imgVector}  />
       </div>
 

@@ -644,7 +644,16 @@ export function TopHeaderBar({
   };
 
   return (
-    <div className="xl:hidden fixed top-0 left-0 right-0 w-full z-[100] bg-[rgba(255,255,255,0.32)] backdrop-blur-[15px] border-b shadow-sm overflow-hidden" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+    <div 
+      className="xl:hidden fixed top-0 left-0 right-0 w-full z-[100] border-b shadow-sm overflow-hidden" 
+      style={{ 
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3), rgba(55, 105, 205, 0.08), rgba(75, 135, 225, 0.08))',
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+      }}
+    >
       <div className="flex items-center justify-between pl-4 pr-4 py-3 h-[73px] w-full">
         <div className="flex items-center gap-2">
           {/* Hamburger Menu Button */}
