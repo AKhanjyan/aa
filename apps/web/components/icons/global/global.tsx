@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
+import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { apiClient } from '../../../lib/api-client';
 import { type CurrencyCode, CURRENCIES, getStoredCurrency, setStoredCurrency } from '../../../lib/currency';
 import { SearchIcon } from '../SearchIcon';
@@ -196,16 +196,11 @@ interface HeaderProps {
   router: ReturnType<typeof useRouter>;
   t: (key: string) => string;
   setShowSearchModal: (show: boolean) => void;
-  setShowLanguageMenu: (show: boolean) => void;
-
-  showLanguageMenu: boolean;
-  handleLanguageChange: (langCode: LanguageCode) => void;
   isLoggedIn: boolean;
   isAdmin: boolean;
   setShowUserMenu: (show: boolean) => void;
   showUserMenu: boolean;
   handleLogout: () => void;
-  languageMenuRef: React.RefObject<HTMLDivElement>;
   userMenuRef: React.RefObject<HTMLDivElement>;
   isHomePage?: boolean;
 }
@@ -214,24 +209,22 @@ export function Header({
   router,
   t,
   setShowSearchModal,
-  setShowLanguageMenu,
-  showLanguageMenu,
-  handleLanguageChange,
   isLoggedIn,
   isAdmin,
   setShowUserMenu,
   showUserMenu,
   handleLogout,
-  languageMenuRef,
   userMenuRef,
   isHomePage = false,
 }: HeaderProps) {
   // Cart count state
   const [cartCount, setCartCount] = useState<number>(0);
-  // Header currency display (e.g. AMD)
+  // Language and currency state
+  const [language, setLanguage] = useState<LanguageCode>('en');
   const [currency, setCurrency] = useState<CurrencyCode>('AMD');
-  const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
-  const currencyMenuRef = useRef<HTMLDivElement | null>(null);
+  const [showLangCurrencyMenu, setShowLangCurrencyMenu] = useState(false);
+  const langCurrencyMenuRef = useRef<HTMLDivElement | null>(null);
+  const imgLanguageIcon = "/assets/home/Vector.svg";
 
   // Fetch cart count
   useEffect(() => {
@@ -282,33 +275,73 @@ export function Header({
     };
   }, [isLoggedIn]);
 
-  // Initialize and keep header currency in sync with stored currency
+  // Initialize language and currency from storage
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    setLanguage(getStoredLanguage());
+    setCurrency(getStoredCurrency());
 
-    const updateCurrency = () => {
+    // Listen for updates
+    const handleLanguageUpdate = () => {
+      setLanguage(getStoredLanguage());
+    };
+    const handleCurrencyUpdate = () => {
       setCurrency(getStoredCurrency());
     };
 
-    // Set initial value
-    updateCurrency();
-
-    // Listen for currency changes
-    window.addEventListener('currency-updated', updateCurrency);
+    window.addEventListener('language-updated', handleLanguageUpdate);
+    window.addEventListener('currency-updated', handleCurrencyUpdate);
 
     return () => {
-      window.removeEventListener('currency-updated', updateCurrency);
+      window.removeEventListener('language-updated', handleLanguageUpdate);
+      window.removeEventListener('currency-updated', handleCurrencyUpdate);
     };
   }, []);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langCurrencyMenuRef.current && !langCurrencyMenuRef.current.contains(event.target as Node)) {
+        setShowLangCurrencyMenu(false);
+      }
+    };
+
+    if (showLangCurrencyMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLangCurrencyMenu]);
+
+  // Get language code for display (EN, HY, RU)
+  const getLanguageDisplayCode = (code: LanguageCode): string => {
+    const codes: Record<LanguageCode, string> = {
+      en: 'EN',
+      hy: 'HY',
+      ru: 'RU',
+    };
+    return codes[code] || 'EN';
+  };
+
+  const handleLanguageChange = (code: LanguageCode) => {
+    if (code === language) {
+      setShowLangCurrencyMenu(false);
+      return;
+    }
+    setLanguage(code);
+    setStoredLanguage(code, { skipReload: false });
+    setShowLangCurrencyMenu(false);
+  };
+
   const handleCurrencyChange = (code: CurrencyCode) => {
     if (code === currency) {
-      setShowCurrencyMenu(false);
+      setShowLangCurrencyMenu(false);
       return;
     }
     setCurrency(code);
     setStoredCurrency(code);
-    setShowCurrencyMenu(false);
+    setShowLangCurrencyMenu(false);
   };
 
   // Header positioned on top of white spacer section
@@ -380,12 +413,96 @@ export function Header({
 
           {/* Header Icons - Separate Vector Groups */}
           <div className="content-stretch flex gap-[20px] lg:gap-[18px] md:gap-[16px] sm:gap-[10px] items-center justify-center relative shrink-0 ml-[20px] md:ml-[16px] sm:ml-[12px]">
+            {/* Language & Currency Selector */}
+            <div className="relative" ref={langCurrencyMenuRef}>
+              <button
+                onClick={() => setShowLangCurrencyMenu(!showLangCurrencyMenu)}
+                className="bg-[#1ac0fd] rounded-[70px] flex items-center gap-2 px-3 py-2 transition-all duration-200 hover:bg-[#6bb8dc] active:scale-95"
+                aria-expanded={showLangCurrencyMenu}
+              >
+                {/* Globe Icon */}
+                <img 
+                  src={imgLanguageIcon} 
+                  alt="Language" 
+                  className="w-4 h-4 block"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+                {/* Language / Currency Text */}
+                <span className="text-white text-sm font-medium whitespace-nowrap">
+                  {getLanguageDisplayCode(language)} / {currency}
+                </span>
+                {/* Dropdown Arrow */}
+                <svg 
+                  className={`w-3 h-3 text-white transition-transform duration-200 ${showLangCurrencyMenu ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showLangCurrencyMenu && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* Language Section */}
+                  <div className="px-3 py-2 border-b border-gray-200">
+                    <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Language</div>
+                    {Object.entries(LANGUAGES).map(([code, lang]) => (
+                      <button
+                        key={code}
+                        onClick={() => handleLanguageChange(code as LanguageCode)}
+                        className={`w-full text-left px-3 py-2 text-sm rounded transition-all duration-150 ${
+                          language === code
+                            ? 'bg-gray-100 text-gray-900 font-semibold'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {lang.name}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Currency Section */}
+                  <div className="px-3 py-2">
+                    <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Currency</div>
+                    {(['USD', 'AMD', 'EUR', 'RUB', 'GEL'] as CurrencyCode[]).map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => handleCurrencyChange(code)}
+                        className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${
+                          currency === code
+                            ? 'bg-gray-100 text-gray-900 font-semibold cursor-default'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {code}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Search Icon */}
             <div
               onClick={() => setShowSearchModal(true)}
               className="h-[21px] md:h-[18px] sm:h-[16px] w-[21px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
             >
               <SearchIcon size={21} className="brightness-0" />
+            </div>
+
+            {/* Cart Icon */}
+            <div
+              onClick={() => router.push('/cart')}
+              className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
+            >
+              <HeaderCartIcon size={20} className="brightness-0" />
+              {/* Cart Count Badge */}
+              {cartCount > 0 && (
+                <span className="absolute -top-5 -right-4 bg-[#00d1ff] text-white text-[10px] font-bold rounded-full min-w-[16px] h-5 px-1.5 flex items-center justify-center border-2 border-white">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </div>
 
             {/* Exit/Logout Icon with User Menu */}
@@ -439,130 +556,6 @@ export function Header({
                 <ExitIcon size={26} className="brightness-0" />
               </div>
             )}
-
-            {/* Cart Icon */}
-            <div
-              onClick={() => router.push('/cart')}
-              className="h-[20px] md:h-[18px] sm:h-[16px] w-[20px] md:w-[18px] sm:w-[16px] relative shrink-0 cursor-pointer flex items-center justify-center"
-            >
-              <HeaderCartIcon size={20} className="brightness-0" />
-              {/* Cart Count Badge */}
-              {cartCount > 0 && (
-                <span className="absolute -top-5 -right-4 bg-[#00d1ff] text-white text-[10px] font-bold rounded-full min-w-[16px] h-5 px-1.5 flex items-center justify-center border-2 border-white">
-                  {cartCount > 99 ? '99+' : cartCount}
-                </span>
-              )}
-            </div>
-
-            {/* Language Icon with Badge */}
-            <div className="relative shrink-0 flex items-center" ref={languageMenuRef}>
-              <div
-                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className="relative cursor-pointer flex items-center"
-              >
-                {/* Globe Icon */}
-                <div className="relative shrink-0 w-[19px] h-[19px]">
-                  <Image 
-                    alt="Language" 
-                    src="/assets/icons/vector1.svg"
-                    width={19}
-                    height={19}
-                    className="block max-w-none w-full h-full"
-                    unoptimized
-                  />
-                </div>
-                {/* Language Badge - positioned on top of icon */}
-                <div className="absolute left-[11.5px] top-[-4px] flex items-center">
-                  <div className="bg-[#9bcdef] border-[#151e21] border-[1.5px] border-solid h-[15.2px] rounded-[4px] w-[19px] relative flex items-center justify-center">
-                    <span className="capitalize font-['Montserrat_arm:Bold',sans-serif] font-bold text-[#151e21] text-[9px] leading-[18px]">
-                      {(() => {
-                        const currentLang = getStoredLanguage();
-                        // Show the current language code
-                        if (currentLang === 'hy') {
-                          return 'HY';
-                        }
-                        if (currentLang === 'ru') {
-                          return 'RU';
-                        }
-                        // English
-                        return 'EN';
-                      })()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              {showLanguageMenu && (
-                <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                  {Object.entries(LANGUAGES).map(([code, lang]) => (
-                    <button
-                      key={code}
-                      onClick={() => handleLanguageChange(code as LanguageCode)}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 ${getStoredLanguage() === code
-                          ? 'bg-gray-100 text-gray-900 font-semibold'
-                          : 'text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                      {lang.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Currency Display (e.g. AMD ▼) */}
-            <div
-              className="hidden sm:flex items-center justify-center relative shrink-0 h-[20px] md:h-[18px] sm:h-[16px]"
-              ref={currencyMenuRef}
-            >
-              <button
-                type="button"
-                onClick={() => setShowCurrencyMenu((prev) => !prev)}
-                className="flex items-center gap-[6px] md:gap-[4px] font-['Inter:Bold',sans-serif] font-bold text-[#151e21] text-[15px] md:text-[14px] leading-none cursor-pointer focus:outline-none"
-                aria-haspopup="listbox"
-                aria-expanded={showCurrencyMenu}
-              >
-                <span>{currency}</span>
-                <span className="flex items-center justify-center h-[12px] w-[12px] md:h-[12px] md:w-[12px]">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="transition-transform duration-150"
-                    style={{
-                      transform: showCurrencyMenu ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
-                  >
-                    <path
-                      d="M2 3L5 6L8 3"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </button>
-              {showCurrencyMenu && (
-                <div className="absolute top-full right-0 mt-2 w-24 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
-                  {(['USD', 'AMD', 'EUR', 'RUB', 'GEL'] as CurrencyCode[]).map((code) => (
-                    <button
-                      key={code}
-                      type="button"
-                      onClick={() => handleCurrencyChange(code)}
-                      className={`w-full text-left px-3 py-2 text-xs md:text-sm transition-colors ${
-                        currency === code
-                          ? 'bg-gray-100 text-gray-900 font-semibold cursor-default'
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {code}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
         </div>
@@ -825,8 +818,8 @@ export function Button({ router, t }: ButtonProps) {
           onClick={() => router.push('/about')}
           className="bg-[rgba(0,0,0,0)] border border-white/30 content-stretch flex flex-col h-[54px] lg:h-[54px] md:h-[52px] sm:h-[44px] items-center justify-center px-[36px] lg:px-[36px] md:px-[32px] sm:px-[24px] py-[14px] lg:py-[14px] md:py-[12px] sm:py-[10px] relative rounded-[9999px] shrink-0 cursor-pointer hover:bg-white/10 transition-colors"
         >
-          <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[17px] lg:h-[17px] md:h-[17px] sm:h-[15px] justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white w-[80px] lg:w-[80px] md:w-[75px] sm:w-[65px]">
-            <p className="leading-[22px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px] whitespace-pre-wrap">{t('home.hero.learnMore')}</p>
+          <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[17px] lg:h-[17px] md:h-[17px] sm:h-[15px] justify-center leading-[0] not-italic relative shrink-0 text-[14px] lg:text-[14px] md:text-[14px] sm:text-[12px] text-white">
+            <p className="leading-[22px] lg:leading-[22px] md:leading-[20px] sm:leading-[18px] whitespace-nowrap">{t('home.hero.learnMore')}</p>
           </div>
         </div>
       </div>

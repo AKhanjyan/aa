@@ -175,15 +175,11 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
             router={router}
             t={t}
             setShowSearchModal={setShowSearchModal}
-            setShowLanguageMenu={setShowLanguageMenu}
-            showLanguageMenu={showLanguageMenu}
-            handleLanguageChange={handleLanguageChange}
             isLoggedIn={isLoggedIn}
             isAdmin={isAdmin}
             setShowUserMenu={setShowUserMenu}
             showUserMenu={showUserMenu}
             handleLogout={handleLogout}
-            languageMenuRef={languageMenuRef}
             userMenuRef={userMenuRef}
             isHomePage={false}
           />

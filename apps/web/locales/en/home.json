@@ -12,14 +12,14 @@
     "your": "Modern",
     "dailyDose": "solutions for clean ",
     "of": "and",
-    "freshness": "high quality water.",
+    "freshness": "high quality water",
     "subtitle": "Natural spring water",
     "shopNow": "Shop Now",
     "learnMore": "Learn More"
   },
   "featuredProducts": {
     "title": "FEATURED PRODUCTS",
-    "subtitle": "Pure water. The right choice.",
+    "subtitle": "Pure water The right choice",
     "viewAllProducts": "View All Products",
     "adding": "Adding...",
     "addToCart": "Add to Cart"
@@ -32,11 +32,11 @@
   "waterEnergySection": {
     "pure": "Pure",
     "energy": "energy",
-    "subtitle": "BORBOR — the choice for a healthy life.",
+    "subtitle": "BORBOR — the choice for a healthy life",
     "drawnFrom": "drawn from",
     "nature": "nature,",
     "capturedIn": "captured in",
-    "everyDrop": "every drop.",
+    "everyDrop": "every drop",
     "balance": "balance",
     "crystal": "Crystal",
     "clarityThat": "clarity that",
@@ -73,15 +73,15 @@
     "title": "WHY CHOOSE US",
     "richInMinerals": {
       "title": "RICH IN MINERALS",
-      "description": "Rich in Natural Minerals that provide valuable health benefits.",
+      "description": "Rich in Natural Minerals that provide valuable health benefits",
       "descriptionLine1": "Rich in Natural Minerals that provide",
-      "descriptionLine2": "valuable health benefits."
+      "descriptionLine2": "valuable health benefits"
     },
     "nonCarbonated": {
       "title": "NON-CARBONATED",
-      "description": "Borbor Aqua does not infuse carbon dioxide in any of its bottled water.",
+      "description": "Borbor Aqua does not infuse carbon dioxide in any of its bottled water",
       "descriptionLine1": "Borbor Aqua does not infuse carbon",
-      "descriptionLine2": "dioxide in any of its bottled water."
+      "descriptionLine2": "dioxide in any of its bottled water"
     },
     "noArtificialIngredients": {
       "title": "no artifical ingridients",
@@ -139,6 +139,6 @@
     "noVariantsAvailable": "No variants available",
     "productNotFound": "Product not found",
     "noMoreStockAvailable": "No more stock available",
-    "failedToAddToCart": "Failed to add product to cart. Please try again."
+    "failedToAddToCart": "Failed to add product to cart. Please try again"
   }
 }

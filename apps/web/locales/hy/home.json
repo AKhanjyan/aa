@@ -8,18 +8,18 @@
     "delivery": "ԱՌԱՔՈՒՄ"
   },
   "hero": {
-    "experiencePurity": " Որակ, որին կարող եք վստահել։",
+    "experiencePurity": " Որակ, որին կարող եք վստահել",
     "your": "Ժամանակակից",
     "dailyDose": "լուծումներ՝",
     "of": "մաքուր և",
-    "freshness": "որակյալ ջրի համար։",
-    "subtitle": "BORBOR — ընտրություն առողջ կյանքի համար։",
+    "freshness": "որակյալ ջրի համար",
+    "subtitle": "BORBOR — ընտրություն առողջ կյանքի համար",
     "shopNow": "Գնել հիմա",
     "learnMore": "Իմանալ ավելին"
   },
   "featuredProducts": {
     "title": "ԱՌԱՋԱՐԿՎԱԾ ԱՊՐԱՆՔՆԵՐ",
-    "subtitle": "Մաքուր ջուր։ Ճիշտ ընտրություն։",
+    "subtitle": "Մաքուր ջուր Ճիշտ ընտրություն",
     "viewAllProducts": "Դիտել բոլոր ապրանքները",
     "adding": "Ավելացվում է...",
     "addToCart": "Ավելացնել զամբյուղ"
@@ -32,11 +32,11 @@
   "waterEnergySection": {
     "pure": "Մաքուր",
     "energy": "էներգիա",
-    "subtitle": "Մաքուր էներգիա, բնությունից վերցված, ամեն կաթիլում բռնված։",
+    "subtitle": "Մաքուր էներգիա, բնությունից վերցված, ամեն կաթիլում բռնված",
     "drawnFrom": "բնությունից վերցված",
     "nature": "բնությունից,",
     "capturedIn": "ամեն կաթիլում բռնված",
-    "everyDrop": "ամեն կաթիլում:",
+    "everyDrop": "ամեն կաթիլում",
     "balance": "հավասարակշռություն",
     "crystal": "Բյուրեղային",
     "clarityThat": "պարզություն, որը",
@@ -75,19 +75,19 @@
       "title": "ՀԱՆՔԱՆՅՈՒԹԵՐՈՎ ՀԱՐՈՒՍՏ",
       "description": "Բնական հանքանյութերով և տարրերով հարուստ ջուր,",
       "descriptionLine1": "որը օգտակար է թե՛ երեխաների, թե՛ մեծահասակների",
-      "descriptionLine2": "առողջության համար։"
+      "descriptionLine2": "առողջության համար"
     },
     "nonCarbonated": {
       "title": "ԶԳԱՑՎԱԾ",
       "description": "BORBOR AQUA-ի",
       "descriptionLine1": "շշալցված ջուրը չի պարունակում",
-      "descriptionLine2": " ածխաթթու գազ։"
+      "descriptionLine2": " ածխաթթու գազ"
     },
     "noArtificialIngredients": {
       "title": "ԱՌԱՆՑ ԱՐՀԵՍՏԱԿԱՆ ԲԱՂԱԴՐԻՉՆԵՐԻ",
       "description": "BORBOR AQUA-ի արտադրանքը էկոլոգիապես մաքուր է,",
       "descriptionLine1": "ֆիլտրացված և զերծ է ",
-      "descriptionLine2": "որևէ արհեստական բաղադրիչից։"
+      "descriptionLine2": "որևէ արհեստական բաղադրիչից"
     }
   },
   "trustedBy": {

@@ -836,7 +836,7 @@ export default function HomePage() {
         <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 right-0 to-[rgba(221,216,216,0.75)] top-0 w-full" />
 
         {/* Mobile Hero Section Decorative Group */}
-        <div className="absolute inset-[12%_8%_76%_8%]">
+        <div className="absolute inset-[19%_10%_70%_10%]">
           <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
         </div>
 
@@ -1040,8 +1040,8 @@ export default function HomePage() {
             onClick={() => router.push('/about')}
             className="bg-[rgba(0,0,0,0)] border-2 border-white/30 content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 hover:scale-105 active:scale-95"
           >
-            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[19px] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white w-[89px]">
-              <p className="leading-[24px] whitespace-pre-wrap">{t('home.hero.learnMore')}</p>
+            <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[19px] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
+              <p className="leading-[24px] whitespace-nowrap">{t('home.hero.learnMore')}</p>
             </div>
           </button>
         </div>
@@ -1646,15 +1646,11 @@ export default function HomePage() {
         router={router}
         t={t}
         setShowSearchModal={setShowSearchModal}
-        setShowLanguageMenu={setShowLanguageMenu}
-        showLanguageMenu={showLanguageMenu}
-        handleLanguageChange={handleLanguageChange}
         isLoggedIn={isLoggedIn}
         isAdmin={isAdmin}
         setShowUserMenu={setShowUserMenu}
         showUserMenu={showUserMenu}
         handleLogout={handleLogout}
-        languageMenuRef={languageMenuRef}
         userMenuRef={userMenuRef}
         isHomePage={true}
       />
@@ -1663,7 +1659,7 @@ export default function HomePage() {
       <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-full max-w-[1920px]" />
 
       {/* Hero Section Decorative Group */}
-      <div className="absolute inset-[3.14%_16.2%_90%_14.64%]">
+      <div className="absolute inset-[4.14%_16.2%_92%_14.64%]">
         <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
 
       </div>
@@ -1785,7 +1781,7 @@ export default function HomePage() {
       <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] size-[541.928px] top-[3100px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg]">
           <div className="relative size-[524.132px]">
-            <img alt="Shape" className="block max-w-none size-full" src={imgShape2} />
+            <img alt="Shape" className="block max-w-none size-full" src={imgShape} />
           </div>
         </div>
       </div>
