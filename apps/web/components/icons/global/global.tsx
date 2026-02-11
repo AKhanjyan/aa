@@ -1006,7 +1006,7 @@ export function FeaturedProductCard({
             className="absolute block cursor-pointer left-[120px] size-[45px] top-[5px] bg-[#1ac0fd] hover:bg-[#6bb8dc] rounded-full flex items-center justify-center transition-all disabled:opacity-50"
             aria-label={t('home.featuredProducts.addToCart')}
           >
-            <div className="flex flex-col font-['Hiragino_Maru_Gothic_ProN:W4',sans-serif] justify-center leading-[0] not-italic text-[30px] text-center text-white">
+            <div className="flex flex-col font-['Hiragino_Maru_Gothic_ProN:W4',sans-serif] justify-center leading-[0] not-italic text-[30px] text-center text-white -mt-[2px]">
               <p className="leading-[24px] whitespace-pre-wrap">+</p>
             </div>
           </button>

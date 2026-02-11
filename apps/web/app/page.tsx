@@ -952,23 +952,25 @@ export default function HomePage() {
           );
         })()}
 
-        {/* Mobile Carousel Navigation */}
-        <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-1/2 top-[1180px] w-full max-w-[500px] px-4">
-          <FeaturedProductsNavigationArrow
-            direction="prev"
-            onClick={handlePreviousProducts}
-            isMobile={true}
-            className="bg-[#00d1ff]/90"
-            ariaLabel={t('home.trustedBy.previousProducts')}
-          />
-          <FeaturedProductsNavigationArrow
-            direction="next"
-            onClick={handleNextProducts}
-            isMobile={true}
-            className="bg-[#00d1ff]/90"
-            ariaLabel={t('home.trustedBy.nextProducts')}
-          />
-        </div>
+        {/* Mobile Carousel Navigation - Only show if 3 or more products */}
+        {featuredProducts.length >= 3 && (
+          <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-1/2 top-[1180px] w-full max-w-[500px] px-4">
+            <FeaturedProductsNavigationArrow
+              direction="prev"
+              onClick={handlePreviousProducts}
+              isMobile={true}
+              className="bg-[#00d1ff]/90"
+              ariaLabel={t('home.trustedBy.previousProducts')}
+            />
+            <FeaturedProductsNavigationArrow
+              direction="next"
+              onClick={handleNextProducts}
+              isMobile={true}
+              className="bg-[#00d1ff]/90"
+              ariaLabel={t('home.trustedBy.nextProducts')}
+            />
+          </div>
+        )}
 
         {/* Mobile Pagination Dots (interactive, synced with featured products carousel) - 2 products per page */}
         {featuredProducts.length > 2 && (() => {
