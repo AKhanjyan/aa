@@ -595,8 +595,8 @@ export function Footer({ router, t, isHomePage = false }: FooterProps) {
         </div>
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0" />
-        <div className="absolute h-[400px] lg:h-[400px] md:h-[400px] sm:h-[350px] left-[calc(50%+0.5px)] top-[200px] lg:top-[200px] md:top-[180px] sm:top-[120px] translate-x-[-50%] w-[1080px] lg:w-[1080px] md:w-[90%] sm:w-[95%] relative z-10">
-          <div className="absolute content-stretch flex gap-[230px] lg:gap-[230px] md:gap-[120px] sm:gap-[40px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%] flex-col md:flex-row sm:flex-col">
+        <div className="absolute h-[400px] lg:h-[400px] md:h-[400px] sm:h-[350px] left-[calc(50%+0.5px)] top-[200px] lg:top-[200px] md:top-[180px] sm:top-[120px] translate-x-[-50%] w-[1080px] lg:w-[1080px] md:w-[90%] sm:w-[95%] relative z-10 px-[20px] lg:px-[20px] md:px-[40px] sm:px-[20px]">
+          <div className="absolute content-stretch flex gap-[100px] lg:gap-[100px] md:gap-[80px] sm:gap-[50px] items-start justify-start left-[calc(50%-16px)] top-0 translate-x-[-50%] flex-col md:flex-row sm:flex-col">
             {/* Column 1: Logo + Description */}
             <div className="flex flex-col h-[280px] lg:h-[280px] md:h-[280px] sm:h-auto relative shrink-0 w-[300px] lg:w-[300px] md:w-[45%] sm:w-full gap-[30px] lg:gap-[30px] md:gap-[24px] sm:gap-[20px]">
               <div className="content-stretch flex h-[14px] items-center left-0 top-0 w-[300px] lg:w-[300px] md:w-full sm:w-full">
@@ -737,7 +737,7 @@ export function Footer({ router, t, isHomePage = false }: FooterProps) {
           </div>
 
           {/* Social Media Icons */}
-          <div className="absolute content-stretch flex gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] h-[44px] lg:h-[44px] md:h-[48px] sm:h-[48px] items-center left-[-150px] lg:left-[-150px] md:left-[-150px] sm:left-[-150px] pt-[7px] lg:pt-[7px] md:pt-[8px] sm:pt-[8px] top-[295px] lg:top-[295px] md:top-[332px] sm:top-[332px] w-[300px] lg:w-[300px] md:w-[336px] sm:w-[336px]">
+          <div className="absolute content-stretch flex gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] h-[44px] lg:h-[44px] md:h-[48px] sm:h-[48px] items-center left-[-90px] lg:left-[-90px] md:left-[-120px] sm:left-[-150px] pt-[7px] lg:pt-[7px] md:pt-[8px] sm:pt-[8px] top-[295px] lg:top-[295px] md:top-[332px] sm:top-[332px] w-[300px] lg:w-[300px] md:w-[336px] sm:w-[336px]">
             <div className="border border-solid border-white content-stretch flex items-center justify-center p-px relative rounded-[9999px] shrink-0 size-[36px] lg:size-[36px] md:size-[40px] sm:size-[40px]">
               <div className="relative shrink-0 size-[18px] lg:size-[18px] md:size-[20px] sm:size-[20px]">
                 <img alt="Social" className="block max-w-none size-full" src={imgSvg} onClick={() => window.open('https://www.instagram.com/borbor_aqua/', '_blank')} />
@@ -764,8 +764,8 @@ export function Footer({ router, t, isHomePage = false }: FooterProps) {
         </div>
 
         {/* Copyright & Payment Icons - Full width border on desktop */}
-        <div className="absolute border-[#e2e8f0] border-solid border-t left-0 right-0 top-[550px] lg:top-[550px] md:top-[520px] sm:top-[480px] w-full z-10">
-          <div className="max-w-[1080px] lg:max-w-[1080px] mx-auto px-[20px] lg:px-[20px] md:px-[16px] sm:px-[12px] pt-[36px] lg:pt-[36px] md:pt-[32px] sm:pt-[24px] content-stretch flex items-center justify-between flex-col sm:flex-col md:flex-row">
+        <div className="absolute border-[#e2e8f0] border-solid border-t left-[calc(50%-25px)] top-[550px] lg:top-[550px] md:top-[520px] sm:top-[480px] translate-x-[-50%] w-[1200px] lg:w-[1200px] md:w-[90%] sm:w-[95%] z-10">
+          <div className="max-w-[1200px] lg:max-w-[1200px] mx-auto px-[20px] lg:px-[20px] md:px-[50px] sm:px-[30px] pt-[36px] lg:pt-[36px] md:pt-[32px] sm:pt-[24px] content-stretch flex items-center justify-between flex-col sm:flex-col md:flex-row">
             <div className="relative shrink-0">
               <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex flex-col items-center justify-center relative">
                 <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[12px] lg:text-[12px] md:text-[11px] sm:text-[10px] text-white whitespace-nowrap">

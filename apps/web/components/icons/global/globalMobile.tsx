@@ -17,8 +17,6 @@ const imgGroup2122 = "/assets/home/imgGroup2122.svg";
 const imgGroup2121 = "/assets/home/imgGroup2121.svg";
 const imgGroup2124 = "/assets/home/imgGroup2124.svg";
 const imgGroup2123 = "/assets/home/imgGroup2123.svg";
-// Mobile footer/background wave PNG from Figma, saved locally in public/assets/home
-const imgDanielSinocaAancLsb0SU0Unsplash3 = "/assets/home/imgDanielWave.png";
 
 interface MobileHeaderProps {
   router: ReturnType<typeof useRouter>;
@@ -422,11 +420,6 @@ export function MobileSearch({
   );
 }
 
-interface MobileFooterProps {
-  router: ReturnType<typeof useRouter>;
-  t: (key: string) => string;
-}
-
 export interface ProfileMenuItem {
   id: string;
   label: string;
@@ -539,168 +532,6 @@ export function ProfileMenuDrawer({ tabs, activeTab, onSelect }: ProfileMenuDraw
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-export function MobileFooter({ router, t }: MobileFooterProps) {
-  return (
-    <div className="xl:hidden relative w-full mt-auto overflow-visible">
-      {/* Mobile Footer Background Images - Daniel Sinoca */}
-      <div className="absolute h-[490px] left-[-0.6px] right-0 top-0 w-full pointer-events-none">
-        <div className="relative w-full h-full">
-          <img
-            alt=""
-            className="absolute left-1/2 -translate-x-1/2 w-[120%] h-full object-cover"
-            src={imgDanielSinocaAancLsb0SU0Unsplash3}
-          />
-        </div>
-      </div>
-      <div className="absolute flex h-[873px] items-center justify-center left-0 right-0 top-[480px] w-full pointer-events-none">
-        <div className="-scale-y-100 flex-none">
-          <div className="blur-[2px] h-[873px] relative w-[2078px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <img alt="" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash3} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Footer */}
-      <div className="relative z-10 content-stretch flex flex-col gap-[24px] items-start justify-center left-0 w-[339px] max-w-[calc(1200%-70px)] mx-auto pb-[0px] pt-48 px-4">
-        <div className="h-[312px] relative shrink-0 w-full">
-          <div className="absolute content-stretch flex h-[34px] items-center left-0 top-0 w-[336px]">
-            <div className="h-[34px] relative shrink-0 w-[112px]">
-              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgBorborAguaLogoColorB2024Colored1} />
-            </div>
-          </div>
-          <div className="absolute content-stretch flex flex-col items-start left-0 top-[68px] w-[336px]">
-            <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white w-full">
-              <p className="leading-[22px] whitespace-pre-wrap break-words">{t('home.footer.description')}</p>
-            </div>
-          </div>
-          <div className="absolute flex items-center gap-[9px] left-0 top-[280px] cursor-pointer" onClick={() => router.push('/about')}>
-            <div className="flex flex-col font-['Inter',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#00d1ff] text-[13px] break-words">
-              <p className="leading-[20px] whitespace-pre-wrap">{t('home.footer.more')}</p>
-            </div>
-            <div className="content-stretch flex flex-col items-start relative shrink-0">
-              <div className="flex items-center justify-center relative shrink-0">
-                <div className="flex-none scale-y-[-100%]">
-                  <div className="h-[28px] relative w-[24.02px]">
-                    <img alt="Icon" className="block max-w-none size-full" src={imgIcon2} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="content-stretch flex flex-col gap-[1px] h-[165px] items-start relative shrink-0 w-full">
-          <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-            <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[13px] text-white tracking-[1.2px] uppercase w-full">
-              <p className="leading-[20px] whitespace-pre-wrap">CONTACT</p>
-            </div>
-          </div>
-          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-[249px]">
-            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="mb-0 leading-[22px]">Office: <a href="tel:0037433000401" className="underline">+374 33 000401</a></p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">Delivery: <a href="tel:0037441012004" className="underline">+374 41 012004</a></p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">Email: <a href="mailto:borboraqua.am@gmail.com" className="underline">info@borboraqua.am</a></p>
-              </div>
-            </div>
-            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[22px] not-italic relative shrink-0 text-[14px] text-white w-[228px] whitespace-pre-wrap break-words">
-                <p className="mb-0">Location: {t('home.footer.contact.locationLine1')}</p>
-                <p className="mb-0">{t('home.footer.contact.locationLine2')}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="content-stretch flex flex-col gap-[6px] h-[140px] items-start relative shrink-0 w-full">
-          <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-            <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[13px] text-white tracking-[1.2px] uppercase w-full">
-              <p className="leading-[20px] whitespace-pre-wrap">POLICIES</p>
-            </div>
-          </div>
-          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-            <button onClick={() => router.push('/privacy')} className="text-left">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.policies.privacyPolicy')}</p>
-              </div>
-            </button>
-            <button onClick={() => router.push('/terms')} className="text-left">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.policies.termsConditions')}</p>
-              </div>
-            </button>
-            <button onClick={() => router.push('/delivery-terms')} className="text-left">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.policies.deliveryTerms')}</p>
-              </div>
-            </button>
-            <button onClick={() => router.push('/refund-policy')} className="text-left">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white w-full break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.policies.refundPolicy')}</p>
-              </div>
-            </button>
-          </div>
-        </div>
-        <div className="content-stretch flex flex-col gap-[6px] h-[312px] items-start relative shrink-0 w-[94px]">
-          <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-            <div className="flex flex-col font-['Montserrat:Bold',sans-serif] font-bold justify-center leading-[0] relative shrink-0 text-[13px] text-white tracking-[1.2px] uppercase w-full">
-              <p className="leading-[20px] whitespace-pre-wrap">SITE MAP</p>
-            </div>
-          </div>
-          <div className="content-stretch flex flex-col gap-[6px] items-start relative shrink-0 w-full">
-            <button onClick={() => router.push('/about')} className="text-left w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.siteMap.aboutUs')}</p>
-              </div>
-            </button>
-            <button onClick={() => router.push('/contact')} className="text-left w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.siteMap.contact')}</p>
-              </div>
-            </button>
-            <button onClick={() => router.push('/products')} className="text-left w-full">
-              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white break-words">
-                <p className="leading-[22px] whitespace-pre-wrap">{t('home.footer.siteMap.shop')}</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Footer Copyright */}
-      <div className="relative z-10 border-[#e2e8f0] border-solid border-t content-stretch flex flex-col gap-[14px] items-center justify-center w-full max-w-[386px] mx-auto top-[-160px] px-4">
-        <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11px] text-center text-white break-words mt-[12px]">
-          <p className="leading-[16px] whitespace-pre-wrap">{t('home.footer.copyright')}</p>
-        </div>
-        <div className="relative shrink-0">
-          <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex gap-[13px] items-center justify-end relative">
-            <div className="h-[25.998px] relative shrink-0 w-[35.198px] left-[-50px]">
-              <img alt="" className="block max-w-none size-full" src={imgGroup2122} />
-            </div>
-            <div className="h-[25.209px] relative shrink-0 w-[35.946px] left-[-30px]">
-              <img alt="" className="block max-w-none size-full" src={imgGroup2121} />
-            </div>
-            <div className="h-[25.209px] relative shrink-0 w-[35.706px] left-[-15px]">
-              <img alt="" className="block max-w-none size-full" src={imgGroup2124} />
-            </div>
-            <div className="h-[35px] relative shrink-0 w-[55.735px] left-[15px]">
-              <img alt="" className="block max-w-none size-full" src={imgGroup2123} />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
