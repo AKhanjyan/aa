@@ -874,37 +874,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="-translate-x-1/2 absolute h-[1001px] left-[calc(50%+3px)] top-[3427px] w-[460px]">
-          <div className="absolute inset-[-36.46%_-79.35%]">
-            <img alt="" className="block max-w-none size-full" src={imgEllipse44} />
-          </div>
-        </div>
-        <div className="absolute flex h-[325px] items-center justify-center left-[164px] mix-blend-lighten top-[3409px] w-[211.999px]">
-          <div className="flex-none rotate-180">
-            <div className="h-[325px] relative w-[211.999px]">
-              <img alt="" className="block max-w-none size-full" src={imgVector5} />
-            </div>
-          </div>
-        </div>
-        <div className="absolute flex h-[325px] items-center justify-center left-[154px] mix-blend-lighten top-[3694px] w-[211.999px]">
-          <div className="-scale-y-100 flex-none rotate-180">
-            <div className="h-[365px] relative w-[178.352px]">
-              <img alt="" className="block max-w-none size-full" src={imgVector5} />
-            </div>
-          </div>
-        </div>
-        <div className="-translate-x-1/2 absolute h-[703px] left-[calc(50%-551.5px)] top-[2900px] w-[745px]">
-          <div className="absolute inset-[-66.15%_-62.42%]">
-            <img alt="" className="block max-w-none size-full" src={imgEllipse43} />
-          </div>
-        </div>
-        <div className="-translate-x-1/2 absolute flex items-center justify-center left-[calc(50%-341.38px)] mix-blend-luminosity size-[748.757px] top-[2846.24px]">
-          <div className="flex-none rotate-[-145.33deg]">
-            <div className="relative size-[538.18px]">
-              <img alt="" className="block max-w-none size-full" src={imgShape2} />
-            </div>
-          </div>
-        </div>
+      
+       
         <div className="-translate-x-1/2 absolute flex items-center justify-center left-[calc(50%-257.56px)] mix-blend-luminosity size-[336.875px] top-[2207px]">
           <div className="flex-none rotate-[75.86deg]">
             <div className="relative size-[277.505px]">
@@ -1436,120 +1407,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Mobile Why Choose Us Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[12px] items-start left-[calc(50%+0.5px)] top-[3113px] w-full max-w-[429px] px-4">
-          <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-            <div className="content-stretch flex flex-col items-center relative shrink-0 w-full mt-8">
-              <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[32px] relative shrink-0 text-[#0f172a] text-[28px] text-center tracking-[-0.9px] uppercase w-full break-words">
-                <p className="leading-[32px] whitespace-pre-wrap">{t('home.whyChooseUs.title')}</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-center relative shrink-0 w-full">
-            <div className="-scale-y-100 flex-none w-full">
-              <div className="content-stretch flex h-[9px] items-start justify-center relative w-full">
-                <div className="bg-[#00d1ff] h-[5px] rounded-[30px] shrink-0 w-[90px]" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Why Choose Us Cards */}
-        <div className="-translate-x-1/2 absolute left-[calc(50%+0.5px)] top-[3235px] w-[361px] px-4 overflow-visible">
-          <div className="relative content-stretch flex flex-col gap-[50px] items-end w-full overflow-visible">
-          {/* Decorative Vectors - Same as Water Energy */}
-          <div className="absolute contents inset-[5.91%_9.77%_0.02%_3.97%]">
-            <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
-              <div className="absolute contents inset-[5.91%_9.77%_0.02%_16.13%]">
-                <div className="absolute inset-[9.43%_9.77%_67.89%_74%]" data-name="Vector">
-                  <div className="absolute inset-[0_3.7%_4.59%_0.78%]">
-                    <img alt="" className="block max-w-none size-full" src={imgVector8} />
-                  </div>
-                </div>
-          
-              </div>
-            </div>
-          </div>
-          <div className="h-[286px] relative shrink-0 w-full overflow-visible" data-node-id="3:2132">
-            <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[37px]" data-node-id="3:2133" />
-            <div className="absolute aspect-[100/100] left-[33.98%] right-[33.7%] top-0" data-name="pc" data-node-id="0:182">
-              <div className="relative size-full">
-                <div className="absolute inset-[9.48%_-14.22%_18.97%_34.91%]" data-name="Vector" data-node-id="0:183">
-                  <img alt="" className="block max-w-none size-full" src={img13} />
-                </div>
-                <div className="absolute inset-[29.31%_16.81%_0_9.91%]" data-name="glass" data-node-id="0:184">
-                  <div className="absolute inset-[-3.66%_-4.71%_-6.1%_-4.71%]">
-                    <img alt="" className="block max-w-none size-full" src={img14} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[65%_11.7%_18%_11.98%] justify-center leading-[22px] not-italic text-[#64748b] text-[14px] text-center break-words z-10" data-node-id="3:2135">
-              <p className="mb-0">{t('home.whyChooseUs.richInMinerals.description')}</p>
-              <p className="mb-0">{t('home.whyChooseUs.richInMinerals.descriptionLine1')}</p>
-              <p>{t('home.whyChooseUs.richInMinerals.descriptionLine2')}</p>
-            </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[45%_18%_46%_18%] justify-center leading-[22px] text-[#0f172a] text-[16px] text-center uppercase break-words" data-node-id="3:2136">
-              <p className="leading-[22px] whitespace-pre-wrap">{t('home.whyChooseUs.richInMinerals.title')}</p>
-            </div>
-          </div>
-          <div className="h-[278px] relative shrink-0 w-full overflow-visible" data-node-id="3:2137">
-            <div className="absolute bg-white inset-[15.83%_0_0_0] rounded-[37px]" data-node-id="3:2138" />
-            <div className="absolute aspect-[100/100] left-[33.52%] right-[34.08%] top-0" data-name="warning" data-node-id="0:165">
-              <div className="relative size-full">
-                <div className="absolute inset-[5.88%_-4.86%_26.15%_50.33%]" data-name="Group" data-node-id="0:166">
-                  <img alt="" className="block max-w-none size-full" src={img10} />
-                </div>
-                <div className="absolute inset-[13.93%_8.94%_9.09%_8.94%]" data-name="glass" data-node-id="0:169">
-                  <div className="absolute inset-[-3.36%_-4.2%_-5.6%_-4.2%]">
-                    <img alt="" className="block max-w-none size-full" src={img11} />
-                  </div>
-                </div>
-                <div className="absolute inset-[39.77%_45.45%_20.45%_45.45%]" data-name="top" data-node-id="0:170">
-                  <img alt="" className="block max-w-none size-full" src={img12} />
-                </div>
-              </div>
-            </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[64.5%_8.94%_19%_8.38%] justify-center leading-[22px] not-italic text-[#64748b] text-[14px] text-center break-words z-10" data-node-id="3:2140">
-              <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.description')}</p>
-              <p className="mb-0">{t('home.whyChooseUs.noArtificialIngredients.descriptionLine1')}</p>
-              <p>{t('home.whyChooseUs.noArtificialIngredients.descriptionLine2')}</p>
-            </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[41.5%_5%_49%_5%] justify-center leading-[22px] text-[#0f172a] text-[16px] text-center uppercase whitespace-nowrap overflow-hidden" data-node-id="3:2141">
-              <p className="leading-[22px]">{t('home.whyChooseUs.noArtificialIngredients.title')}</p>
-            </div>
-          </div>
-          <div className="h-[272px] relative shrink-0 w-full overflow-visible" data-node-id="3:2142">
-            <div className="absolute bg-white inset-[13.97%_-0.55%_0_0] rounded-[37px]" data-node-id="3:2143" />
-            <div className="absolute aspect-[100/100] left-[34.07%] overflow-clip right-[33.8%] top-0" data-name="leaf" data-node-id="0:150">
-              <div className="relative size-full">
-                <div className="absolute inset-[10.22%_10.23%_61.04%_62.5%]" data-name="bg" data-node-id="0:151">
-                  <img alt="" className="block max-w-none size-full" src={img7} />
-                </div>
-                <div className="absolute inset-[16.22%_15.91%_6.5%_4.41%]" data-name="glass" data-node-id="0:152">
-                  <div className="absolute inset-[-3.35%_-4.33%_-5.58%_-4.33%]">
-                    <img alt="" className="block max-w-none size-full" src={img8} />
-                  </div>
-                </div>
-                <div className="absolute inset-[32.96%_31.82%_25.5%_35.23%]" data-name="top" data-node-id="0:153">
-                  <img alt="" className="block max-w-none size-full" src={img9} />
-                </div>
-              </div>
-            </div>
-            <div className="absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal inset-[65%_11.91%_20%_12.19%] justify-center leading-[20px] not-italic text-[#64748b] text-[14px] text-center break-words z-10" data-node-id="3:2145">
-              <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.description')}</p>
-              <p className="mb-0">{t('home.whyChooseUs.nonCarbonated.descriptionLine1')}</p>
-              <p>{t('home.whyChooseUs.nonCarbonated.descriptionLine2')}</p>
-            </div>
-            <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[43.5%_16%_47%_16%] justify-center leading-[22px] text-[#0f172a] text-[16px] text-center uppercase break-words" data-node-id="3:2146">
-              <p className="leading-[22px] whitespace-pre-wrap">{t('home.whyChooseUs.nonCarbonated.title')}</p>
-            </div>
-          </div>
+        {/* Mobile Trusted By Background Ellipse */}
+        <div className="-translate-x-1/2 absolute flex items-center justify-center left-1/2 top-[3100px] w-full h-[500px] z-0 overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img alt="Trusted By Background" className="block max-w-none w-[150%] h-[150%] object-cover opacity-30" src={imgEllipse41} />
           </div>
         </div>
 
         {/* Mobile Trusted By Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-center justify-center left-[calc(50%+0.5px)] top-[4187px] w-full max-w-[429px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-center justify-center left-[calc(50%+0.5px)] top-[3113px] w-full max-w-[429px] z-10">
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-full">
@@ -1570,7 +1436,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Trusted By Logo - uses same 3 logos as desktop via trustedByIndex */}
-        <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-[4359px] w-full z-0">
+        <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-[3285px] w-full z-0">
           <div className="h-[72px] relative shrink-0 w-[260px]">
             <img
               alt={TRUSTED_BY_LOGOS[trustedByIndex].alt}
@@ -1581,25 +1447,25 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Trusted By Navigation - same handlers as desktop */}
-        <div className="-translate-x-1/2 absolute content-stretch flex h-[41px] items-center justify-between left-1/2 top-[4359px] w-full max-w-[470px] px-4 z-20">
+        <div className="-translate-x-1/2 absolute content-stretch flex h-[41px] items-center justify-between left-1/2 top-[3285px] w-full max-w-[470px] px-4 z-20">
           <FeaturedProductsNavigationArrow
             direction="prev"
             onClick={handlePreviousTrustedBy}
             isMobile={true}
-            className="border-[#eee]"
+            className="bg-transparent border-black border-solid [&_svg_path]:fill-black [&_svg_path]:hover:fill-[#00d1ff]"
             ariaLabel="Previous partner"
           />
           <FeaturedProductsNavigationArrow
             direction="next"
             onClick={handleNextTrustedBy}
             isMobile={true}
-            className="border-[#eee]"
+            className="bg-transparent border-black border-solid [&_svg_path]:fill-black [&_svg_path]:hover:fill-[#00d1ff]"
             ariaLabel="Next partner"
           />
         </div>
 
         {/* Mobile Trusted By Pagination Dots */}
-        <div className="-translate-x-1/2 absolute flex items-center justify-center gap-[10px] left-1/2 top-[4500px]">
+        <div className="-translate-x-1/2 absolute flex items-center justify-center gap-[10px] left-1/2 top-[3426px]">
           <button
             type="button"
             onClick={() => setTrustedByIndex(0)}
@@ -1631,6 +1497,9 @@ export default function HomePage() {
             aria-label={t('home.trustedBy.showThirdPartner')}
           />
         </div>
+
+        {/* Mobile Spacer Block - Reduces scroll */}
+        <div className="-translate-x-1/2 absolute left-1/2 top-[3500px] w-full h-[50px]" />
 
      
 
