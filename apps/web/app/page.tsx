@@ -656,7 +656,7 @@ export default function HomePage() {
 
         {/* Mobile Featured Products Section Decorative Bubbles */}
         <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
-          <div className="flex-none rotate-[100.79deg] size-[210px]">
+          <div className="flex-none rotate-[100.79deg] size-[130px]">
             <div className="relative rounded-[320px] size-full">
               {/* Soft blue glow bubble without dark blend artifacts */}
               <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
@@ -668,8 +668,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-          <div className="absolute flex items-center justify-center left-[67.67%] right-[4.12%] top-[calc(16.72%+958px)] bottom-[calc(100%-81.17%)]">
-            <div className="flex-none rotate-[100.79deg] size-[100px]">
+          <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
+            <div className="flex-none rotate-[100.79deg] size-[50px]">
               <div className="relative rounded-[320px] size-full">
                 {/* Soft blue glow bubble without dark blend artifacts */}
                 <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
@@ -681,8 +681,8 @@ export default function HomePage() {
               </div>
             </div>
         </div>
-        <div className="absolute flex items-center justify-center left-[-15.81%] right-[67.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
-          <div className="flex-none rotate-[100.79deg] size-[160px]">
+        <div className="absolute flex items-center justify-center left-[-15.81%] right-[77.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
+          <div className="flex-none rotate-[100.79deg] size-[130px]">
             <div className="relative rounded-[320px] size-full">
               {/* Soft blue glow bubble without dark blend artifacts */}
               <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
@@ -695,19 +695,7 @@ export default function HomePage() {
           </div>
         </div>
         {/* Left decorative bubble near Featured Products - fixed 200px from left on all mobile widths */}
-        <div className="absolute flex items-center justify-center left-[-70px] top-[calc(-2%+958px)]">
-          <div className="flex-none rotate-[100.79deg] size-[160px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+       
 
        
 
@@ -1156,7 +1144,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Trusted By Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-center justify-center left-[calc(50%+0.5px)] top-[4227px] w-full max-w-[429px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-center justify-center left-[calc(50%+0.5px)] top-[3800px] w-full max-w-[429px]">
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
               <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-full">
@@ -1177,7 +1165,7 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Trusted By Logo - uses same 3 logos as desktop via trustedByIndex */}
-        <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-[4360px] w-full">
+        <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-[3930px] w-full">
           <div className="h-[72px] relative shrink-0 w-[260px]">
             <img
               alt={TRUSTED_BY_LOGOS[trustedByIndex].alt}
