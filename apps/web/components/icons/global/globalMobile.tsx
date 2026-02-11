@@ -811,10 +811,10 @@ export function MobileBottomNavigation() {
   const activeIndex = getActiveIndex();
 
   return (
-    <div className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[430px] px-4 pb-5 z-50">
+    <div className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[500px] px-4 pb-5 z-50">
       <div className="relative bg-white/5 backdrop-blur-3xl h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border border-white/10 overflow-hidden">
-        <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[348px]">
-          <div className="content-stretch flex items-center justify-between relative shrink-0 w-[252px]">
+        <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[420px]">
+          <div className="content-stretch flex items-center justify-center gap-10 relative shrink-0 w-[360px]">
             {/* Home */}
             <button
               onClick={() => router.push('/')}
