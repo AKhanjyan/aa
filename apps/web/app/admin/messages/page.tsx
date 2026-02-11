@@ -31,8 +31,22 @@ function MessagesSection() {
       setLoading(true);
       console.log('📬 [ADMIN] Fetching messages...');
       const response = await apiClient.get<{ data: ContactMessage[] }>('/api/v1/admin/messages');
-      setMessages(response.data || []);
-      console.log('✅ [ADMIN] Messages loaded:', response.data?.length || 0);
+      const messages = response.data || [];
+      
+      // Debug: Log first message to check subject field
+      if (messages.length > 0) {
+        console.log('🔍 [ADMIN] First message data:', {
+          id: messages[0].id,
+          name: messages[0].name,
+          email: messages[0].email,
+          subject: messages[0].subject,
+          hasSubject: !!messages[0].subject,
+          message: messages[0].message?.substring(0, 50),
+        });
+      }
+      
+      setMessages(messages);
+      console.log('✅ [ADMIN] Messages loaded:', messages.length);
     } catch (err) {
       console.error('❌ [ADMIN] Error fetching messages:', err);
       setMessages([]);
@@ -119,7 +133,9 @@ function MessagesSection() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{message.subject}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {message.subject || t('admin.messages.noSubject')}
+                      </h3>
                       <span className="text-xs text-gray-500">{formatDate(message.createdAt)}</span>
                     </div>
                     <div className="text-sm text-gray-600 mb-2">

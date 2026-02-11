@@ -5184,7 +5184,28 @@ class AdminService {
         orderBy: {
           createdAt: 'desc',
         },
+        // Explicitly select all fields including subject
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          subject: true,
+          message: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       });
+
+      // Debug: Log first message to verify subject is included
+      if (messages.length > 0) {
+        console.log('🔍 [ADMIN SERVICE] First message from DB:', {
+          id: messages[0].id,
+          name: messages[0].name,
+          email: messages[0].email,
+          subject: messages[0].subject,
+          hasSubject: !!messages[0].subject,
+        });
+      }
 
       return {
         data: messages,
@@ -5227,6 +5248,15 @@ class AdminService {
         };
       }
 
+      // Debug: Log data being saved
+      console.log('💾 [ADMIN SERVICE] Creating contact message:', {
+        name: data.name.trim(),
+        email: data.email.trim(),
+        subject: data.subject.trim(),
+        hasSubject: !!data.subject.trim(),
+        messageLength: data.message.trim().length,
+      });
+
       const message = await db.contactMessage.create({
         data: {
           name: data.name.trim(),
@@ -5234,6 +5264,15 @@ class AdminService {
           subject: data.subject.trim(),
           message: data.message.trim(),
         },
+      });
+
+      // Debug: Log created message to verify subject was saved
+      console.log('✅ [ADMIN SERVICE] Contact message created:', {
+        id: message.id,
+        name: message.name,
+        email: message.email,
+        subject: message.subject,
+        hasSubject: !!message.subject,
       });
 
       return {

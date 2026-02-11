@@ -711,6 +711,7 @@
     "loadingMessages": "Loading messages...",
     "noMessages": "No messages yet",
     "from": "From",
+    "noSubject": "(No subject)",
     "deleteConfirm": "Are you sure you want to delete the message '{subject}'?",
     "deletedSuccess": "Message deleted successfully",
     "errorDeleting": "Error deleting message: {message}",
