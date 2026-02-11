@@ -967,7 +967,7 @@ export function FeaturedProductCard({
         onClick={() => onProductClick(product)}
       >
         {/* Product Image */}
-        <div className="absolute aspect-[305/854] left-[27.27%] right-[30.48%] top-0 overflow-visible">
+        <div className="absolute aspect-[305/854] left-[29%] right-[32%] top-0 overflow-visible">
           <div className="absolute inset-0 overflow-visible pointer-events-none">
             <img
               alt={product.title}
