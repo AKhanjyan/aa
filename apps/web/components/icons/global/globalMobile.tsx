@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter, usePathname } from 'next/navigation';
 import { getStoredLanguage, setStoredLanguage, LANGUAGES, type LanguageCode } from '../../../lib/language';
 import { type CurrencyCode, getStoredCurrency, setStoredCurrency } from '../../../lib/currency';
@@ -571,7 +572,9 @@ export function TopHeaderBar({
   const [language, setLanguage] = useState<LanguageCode>('en');
   const [currency, setCurrency] = useState<CurrencyCode>('AMD');
   const [showLangCurrencyMenu, setShowLangCurrencyMenu] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
   const langCurrencyMenuRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const imgLanguageIcon = "/assets/home/Vector.svg";
 
   // Initialize language and currency from storage
@@ -596,16 +599,35 @@ export function TopHeaderBar({
     };
   }, []);
 
+  // Calculate dropdown position when menu opens
+  useEffect(() => {
+    if (showLangCurrencyMenu && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8, // 8px = mt-2 (margin-top)
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, [showLangCurrencyMenu]);
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (langCurrencyMenuRef.current && !langCurrencyMenuRef.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+      // Check if click is outside both button and dropdown menu (which is in Portal)
+      const isClickOutsideButton = langCurrencyMenuRef.current && !langCurrencyMenuRef.current.contains(target);
+      const isClickOutsideDropdown = !target.closest('.language-currency-dropdown');
+      
+      if (isClickOutsideButton && isClickOutsideDropdown) {
         setShowLangCurrencyMenu(false);
       }
     };
 
     if (showLangCurrencyMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
+      // Use setTimeout to avoid immediate closure when opening
+      setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 0);
     }
 
     return () => {
@@ -645,7 +667,7 @@ export function TopHeaderBar({
 
   return (
     <div 
-      className="xl:hidden fixed top-0 left-0 right-0 w-full z-[100] border-b shadow-sm overflow-hidden" 
+      className="xl:hidden fixed top-0 left-0 right-0 w-full z-[100] border-b shadow-sm overflow-x-hidden overflow-y-visible" 
       style={{ 
         paddingTop: 'env(safe-area-inset-top, 0px)',
         background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3), rgba(55, 105, 205, 0.08), rgba(75, 135, 225, 0.08))',
@@ -685,8 +707,9 @@ export function TopHeaderBar({
         </div>
         
         {/* Language & Currency Selector */}
-        <div className="relative z-[100]" ref={langCurrencyMenuRef}>
+        <div className="relative z-[200]" ref={langCurrencyMenuRef}>
           <button
+            ref={buttonRef}
             onClick={() => setShowLangCurrencyMenu(!showLangCurrencyMenu)}
             className="bg-[#1ac0fd] rounded-[70px] flex items-center gap-2 px-3 py-2 transition-all duration-200 hover:bg-[#6bb8dc] active:scale-95"
             aria-expanded={showLangCurrencyMenu}
@@ -713,21 +736,32 @@ export function TopHeaderBar({
             </svg>
           </button>
 
-          {/* Dropdown Menu */}
-          {showLangCurrencyMenu && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-[101] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          {/* Dropdown Menu - Using Portal to escape overflow-hidden */}
+          {showLangCurrencyMenu && typeof window !== 'undefined' && createPortal(
+            <div 
+              className="language-currency-dropdown fixed w-48 bg-white rounded-lg shadow-lg z-[9999] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+              style={{
+                top: `${dropdownPosition.top}px`,
+                right: `${dropdownPosition.right}px`,
+                pointerEvents: 'auto',
+              }}
+            >
               {/* Language Section */}
               <div className="px-3 py-2 border-b border-gray-200">
                 <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Language</div>
                 {Object.entries(LANGUAGES).map(([code, lang]) => (
                   <button
                     key={code}
-                    onClick={() => handleLanguageChange(code as LanguageCode)}
-                    className={`w-full text-left px-3 py-2 text-sm rounded transition-all duration-150 ${
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLanguageChange(code as LanguageCode);
+                    }}
+                    className={`w-full text-left px-3 py-2 text-sm rounded transition-all duration-150 cursor-pointer ${
                       language === code
                         ? 'bg-gray-100 text-gray-900 font-semibold'
                         : 'text-gray-700 hover:bg-gray-50'
                     }`}
+                    style={{ pointerEvents: 'auto' }}
                   >
                     {lang.name}
                   </button>
@@ -739,18 +773,23 @@ export function TopHeaderBar({
                 {(['USD', 'AMD', 'EUR', 'RUB', 'GEL'] as CurrencyCode[]).map((code) => (
                   <button
                     key={code}
-                    onClick={() => handleCurrencyChange(code)}
-                    className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCurrencyChange(code);
+                    }}
+                    className={`w-full text-left px-3 py-2 text-sm rounded transition-colors cursor-pointer ${
                       currency === code
                         ? 'bg-gray-100 text-gray-900 font-semibold cursor-default'
                         : 'text-gray-700 hover:bg-gray-50'
                     }`}
+                    style={{ pointerEvents: 'auto' }}
                   >
                     {code}
                   </button>
                 ))}
               </div>
-            </div>
+            </div>,
+            document.body
           )}
         </div>
       </div>
