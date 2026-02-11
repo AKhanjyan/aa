@@ -958,12 +958,12 @@ export function FeaturedProductCard({
 }: FeaturedProductCardProps) {
   if (isMobile) {
     // Extract volume from title or subtitle (e.g., "0.5L", "0.33L", "0.25L")
-    const extractVolume = (product: FeaturedProduct): string => {
+    const extractVolume = (product: FeaturedProduct): string | null => {
       const title = product.title || '';
       const subtitle = product.subtitle || '';
       const combined = `${title} ${subtitle}`;
       const volumeMatch = combined.match(/(\d+\.?\d*)\s*[Ll]/);
-      return volumeMatch ? `${volumeMatch[1]}L` : '0.5L';
+      return volumeMatch ? `${volumeMatch[1]}L` : null;
     };
 
     const volume = extractVolume(product);
@@ -991,9 +991,11 @@ export function FeaturedProductCard({
             <p className="leading-[28px]">{formatPrice(product.price, currency)}</p>
           </div>
           {/* Volume */}
-          <div className="-translate-y-1/2 absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] left-[15px] not-italic text-[#9f9f9f] text-[12px] top-[41px] tracking-[1.2px] uppercase whitespace-nowrap">
-            <p className="leading-[16px]">{volume}</p>
-          </div>
+          {volume && (
+            <div className="-translate-y-1/2 absolute flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] left-[15px] not-italic text-[#9f9f9f] text-[12px] top-[41px] tracking-[1.2px] uppercase whitespace-nowrap">
+              <p className="leading-[16px]">{volume}</p>
+            </div>
+          )}
           {/* Add to Cart Button */}
           <button
             onClick={(e) => {

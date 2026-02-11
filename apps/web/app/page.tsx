@@ -1049,12 +1049,12 @@ export default function HomePage() {
                 if (!currentProduct) return null;
 
                 // Extract volume from title or subtitle (e.g., "0.5L", "0.33L", "0.25L")
-                const extractVolume = (product: Product): string => {
+                const extractVolume = (product: Product): string | null => {
                   const title = product.title || '';
                   const subtitle = product.subtitle || '';
                   const combined = `${title} ${subtitle}`;
                   const volumeMatch = combined.match(/(\d+\.?\d*)\s*[Ll]/);
-                  return volumeMatch ? `${volumeMatch[1]}L` : '0.5L';
+                  return volumeMatch ? `${volumeMatch[1]}L` : null;
                 };
 
                 const volume = extractVolume(currentProduct);
@@ -1165,11 +1165,13 @@ export default function HomePage() {
                           </div>
 
                           {/* Volume */}
-                          <div className="absolute content-stretch flex flex-col items-start left-0 right-0 top-[51px]">
-                            <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
-                              <p className="leading-[16px]">{volume}</p>
+                          {volume && (
+                            <div className="absolute content-stretch flex flex-col items-start left-0 right-0 top-[51px]">
+                              <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#94a3b8] text-[12px] tracking-[1.2px] uppercase whitespace-nowrap">
+                                <p className="leading-[16px]">{volume}</p>
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
 
                         {/* Price and Order Button */}
