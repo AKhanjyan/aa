@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Header, Footer } from './icons/global/global';
-import { MobileHeader, MobileMenu, MobileSearch, MobileFooter, MobileBottomNavigation, TopHeaderBar } from './icons/global/globalMobile';
+import { MobileHeader, MobileMenu, MobileSearch, MobileBottomNavigation, TopHeaderBar } from './icons/global/globalMobile';
 import { Breadcrumb } from './Breadcrumb';
 import { useAuth } from '../lib/auth/AuthContext';
 import { useTranslation } from '../lib/i18n-client';
@@ -206,9 +206,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
       <div className="hidden xl:block">
         <Footer router={router} t={t} isHomePage={false} />
       </div>
-      <div className="xl:hidden relative w-full -mt-8">
-        <MobileFooter router={router} t={t} />
-      </div>           
+      {/* Mobile Footer - Removed from all pages */}
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <MobileBottomNavigation />
 
