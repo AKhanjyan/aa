@@ -770,7 +770,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  MY ACCOUNT
+                  {t('common.navigation.myAccount').toUpperCase()}
                 </button>
                 <button
                   onClick={() => {
@@ -779,7 +779,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  HOME
+                  {t('home.navigation.home')}
                 </button>
                 <button
                   onClick={() => {
@@ -788,7 +788,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  SHOP
+                  {t('home.navigation.shop')}
                 </button>
                 <button
                   onClick={() => {
@@ -797,7 +797,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  CART
+                  {t('common.navigation.cart').toUpperCase()}
                 </button>
                 <button
                   onClick={() => {
@@ -806,7 +806,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  ABOUT US
+                  {t('home.navigation.aboutUs')}
                 </button>
                 <button
                   onClick={() => {
@@ -815,7 +815,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  CONTACT US
+                  {t('home.navigation.contactUs')}
                 </button>
                 <button
                   onClick={() => {
@@ -824,7 +824,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  BLOG
+                  {t('home.navigation.blog')}
                 </button>
                 <button
                   onClick={() => {
@@ -837,7 +837,7 @@ export default function HomePage() {
                   }}
                   className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
                 >
-                  LOGOUT
+                  {t('common.navigation.logout').toUpperCase()}
                 </button>
               </nav>
             </div>

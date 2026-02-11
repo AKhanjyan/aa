@@ -221,7 +221,7 @@ export function HomePageHeader() {
                       }}
                       className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150"
                     >
-                      Profile
+                      {t('common.navigation.profile')}
                     </button>
                     {isAdmin && (
                       <button
@@ -231,7 +231,7 @@ export function HomePageHeader() {
                         }}
                         className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-150"
                       >
-                        Admin Panel
+                        {t('common.navigation.adminPanel')}
                       </button>
                     )}
                     <button
@@ -241,7 +241,7 @@ export function HomePageHeader() {
                       }}
                       className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-all duration-150"
                     >
-                      Logout
+                      {t('common.navigation.logout')}
                     </button>
                   </div>
                 )}
