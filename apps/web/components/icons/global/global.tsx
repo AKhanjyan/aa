@@ -963,12 +963,12 @@ export function FeaturedProductCard({
 
     return (
       <div
-        className="h-[293px] relative w-[187px] cursor-pointer"
+        className="h-[293px] relative w-[187px] cursor-pointer overflow-visible"
         onClick={() => onProductClick(product)}
       >
         {/* Product Image */}
-        <div className="absolute aspect-[305/854] left-[27.27%] right-[30.48%] top-0">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute aspect-[305/854] left-[27.27%] right-[30.48%] top-0 overflow-visible">
+          <div className="absolute inset-0 overflow-visible pointer-events-none">
             <img
               alt={product.title}
               className="absolute h-[110.66%] left-[-104.92%] max-w-none top-[-5.74%] w-[309.84%] object-contain"

@@ -1113,7 +1113,7 @@ export default function HomePage() {
 
         {/* Mobile Carousel Navigation - Only show if 3 or more products */}
         {featuredProducts.length >= 3 && (
-          <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-1/2 top-[1180px] w-full max-w-[500px] px-4">
+          <div className="-translate-x-1/2 absolute content-stretch flex items-center justify-between left-1/2 top-[1200px] w-full max-w-[500px] px-4">
             <FeaturedProductsNavigationArrow
               direction="prev"
               onClick={handlePreviousProducts}
