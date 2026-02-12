@@ -806,8 +806,8 @@ function AddProductPageContent() {
             categoryIds: product.categoryIds || [],
             published: product.published || false,
             featured: product.featured || false,
-            minimumOrderQuantity: (product as any).minimumOrderQuantity || 1,
-            orderQuantityIncrement: (product as any).orderQuantityIncrement || 1,
+            minimumOrderQuantity: (product as any).minimumOrderQuantity ?? 1,
+            orderQuantityIncrement: (product as any).orderQuantityIncrement ?? 1,
             imageUrls: normalizedMedia,
             featuredImageIndex:
               featuredIndexFromApi >= 0 && featuredIndexFromApi < normalizedMedia.length

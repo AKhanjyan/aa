@@ -1279,6 +1279,9 @@ class AdminService {
       categoryIds: product.categoryIds || [],
       attributeIds: allAttributeIds, // All attribute IDs that this product has
       published: product.published,
+      featured: (product as any).featured || false,
+      minimumOrderQuantity: (product as any).minimumOrderQuantity ?? 1,
+      orderQuantityIncrement: (product as any).orderQuantityIncrement ?? 1,
       media: Array.isArray(product.media) ? product.media : [],
       labels: labels.map((label: { id: string; type: string; value: string; position: string; color: string | null }) => ({
         id: label.id,
