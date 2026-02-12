@@ -991,14 +991,14 @@ export function MobileBottomNavigation() {
 
   return (
     <div 
-      className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[500px] px-4 z-50"
+      className="-translate-x-1/2 fixed xl:hidden left-1/2 bottom-0 w-full max-w-[85%] sm:max-w-[320px] px-2 z-50 overflow-x-hidden"
       style={{ 
         paddingBottom: 'max(20px, env(safe-area-inset-bottom, 20px))',
       }}
     >
       <div 
         ref={navRef}
-        className="relative h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border overflow-hidden"
+        className="relative h-[72px] rounded-[999px] shadow-[0_20px_55px_rgba(0,0,0,0.25)] border overflow-hidden w-full"
         style={{
           background: 'linear-gradient(135deg, rgba(55, 105, 205, 0.3), rgba(75, 135, 225, 0.3))',
           backdropFilter: 'blur(40px) saturate(180%)',
@@ -1008,8 +1008,8 @@ export function MobileBottomNavigation() {
           transition: 'none', // Disable CSS transitions, we use RAF for smooth 60fps
         }}
       >
-        <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-[420px]">
-          <div className="content-stretch flex items-center justify-center gap-10 relative shrink-0 w-[360px]">
+        <div className="-translate-x-1/2 -translate-y-1/2 absolute content-stretch flex items-center justify-center left-1/2 top-1/2 w-full max-w-[320px] sm:max-w-[340px] px-1">
+          <div className="content-stretch flex items-center justify-center gap-7 sm:gap-9 md:gap-11 relative shrink-0 w-full">
             {/* Home */}
             <button
               onClick={() => router.push('/')}
@@ -1017,7 +1017,7 @@ export function MobileBottomNavigation() {
             >
               {activeIndex === 0 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                  <img className="block max-w-none size-[48px] opacity-70" alt="" src={imgEllipse2} />
                 </div>
               )}
               <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
@@ -1036,7 +1036,7 @@ export function MobileBottomNavigation() {
             >
               {activeIndex === 1 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                  <img className="block max-w-none size-[48px] opacity-70" alt="" src={imgEllipse2} />
                 </div>
               )}
               <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
@@ -1055,7 +1055,7 @@ export function MobileBottomNavigation() {
             >
               {activeIndex === 2 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                  <img className="block max-w-none size-[48px] opacity-70" alt="" src={imgEllipse2} />
                 </div>
               )}
               <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
@@ -1080,7 +1080,7 @@ export function MobileBottomNavigation() {
             >
               {activeIndex === 3 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                  <img className="block max-w-none size-[56px] opacity-70" alt="" src={imgEllipse2} />
+                  <img className="block max-w-none size-[48px] opacity-70" alt="" src={imgEllipse2} />
                 </div>
               )}
               <span className="absolute inset-0 rounded-full bg-white/15 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-250" />
