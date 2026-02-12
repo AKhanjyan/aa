@@ -629,10 +629,10 @@ export default function HomePage() {
   return (
     <div className="w-full bg-white overflow-x-hidden">
       {/* Mobile / Tablet Version - Visible up to xl, but hidden on desktop screens (zoom-independent) */}
-      <div className={`${isDesktopScreen ? 'hidden' : 'xl:hidden'} bg-white relative w-full max-w-[430px] sm:max-w-none mx-auto min-h-screen overflow-x-hidden`}>
+      <div className={`${isDesktopScreen ? 'hidden' : 'xl:hidden'} bg-white relative w-full max-w-[430px] sm:max-w-none mx-auto min-h-screen overflow-x-hidden max-w-full`}>
         {/* Mobile Header (hidden when menu/search popups are open) */}
         {!showMobileMenu && !showSearchModal && (
-        <div className="absolute content-stretch flex items-center justify-between left-[17px] right-[17px] top-[35px] z-50">
+        <div className="absolute content-stretch flex items-center justify-between left-4 right-4 top-[35px] z-50 max-w-full">
           <div className="content-stretch flex gap-[6px] items-center relative shrink-0">
             {/* Mobile Menu Button (Hamburger) */}
             <button
@@ -1004,7 +1004,7 @@ export default function HomePage() {
               </div>
             </div>
         </div>
-        <div className="absolute flex items-center justify-center left-[-15.81%] right-[77.75%] top-[calc(17.4%+958px)] bottom-[calc(100%-79%)]">
+        <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+900px)] bottom-auto max-w-[130px] overflow-hidden">
           <div className="flex-none rotate-[100.79deg] size-[130px]">
             <div className="relative rounded-[320px] size-full">
               {/* Soft blue glow bubble without dark blend artifacts */}
@@ -1052,7 +1052,7 @@ export default function HomePage() {
         <div className="absolute bg-gradient-to-b blur-[40px] from-[rgba(98,179,232,0.85)] h-[150px] left-0 right-0 opacity-75 to-[rgba(221,216,216,0.6)] top-[520px] z-0" />
 
         {/* Mobile Experience Purity Label */}
-        <div className="absolute content-stretch flex gap-[12px] items-center left-[32px] right-[-32px] top-[311px]">
+        <div className="absolute content-stretch flex gap-[12px] items-center left-[32px] right-4 top-[311px] max-w-[calc(100%-32px)]">
           <div className="bg-white h-[2px] shrink-0 w-[48px]" />
           <div className="content-stretch flex flex-col items-start relative shrink-0">
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-white tracking-[1.4px] uppercase whitespace-nowrap">
@@ -1075,7 +1075,7 @@ export default function HomePage() {
         <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[8px] h-[136px] items-center justify-end left-1/2 pt-[16px] top-[675px] w-full max-w-[430px] px-4 z-10">
           <button
             onClick={() => router.push('/products')}
-            className="bg-[#31daff] content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#31daff]/50 hover:scale-105 active:scale-95"
+            className="bg-[#31daff] content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-full max-w-[368px] cursor-pointer transition-all duration-300 hover:bg-[#00b8e6] hover:shadow-lg hover:shadow-[#31daff]/50 hover:scale-105 active:scale-95"
           >
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white whitespace-nowrap">
               <p className="leading-[24px]">{t('home.hero.shopNow')}</p>
@@ -1083,7 +1083,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={() => router.push('/about')}
-            className="bg-[rgba(0,0,0,0)] border-2 border-white/30 content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-[368px] cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 hover:scale-105 active:scale-95"
+            className="bg-[rgba(0,0,0,0)] border-2 border-white/30 content-stretch flex flex-col h-[60px] items-center justify-center px-[40px] py-[16px] relative rounded-[9999px] shrink-0 w-full max-w-[368px] cursor-pointer transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 hover:scale-105 active:scale-95"
           >
             <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold h-[19px] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
               <p className="leading-[24px] whitespace-nowrap">{t('home.hero.learnMore')}</p>
@@ -1204,11 +1204,11 @@ export default function HomePage() {
         </div>
 
         {/* Mobile Water Energy Section */}
-        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-start left-[calc(50%+1.5px)] top-[1840px] lg:top-[1835px] w-full max-w-[429px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex flex-col gap-[9px] items-start left-[calc(50%+1.5px)] top-[1740px] lg:top-[1835px] w-full max-w-[429px] px-4">
           <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
             <div className="content-stretch flex flex-col items-center relative shrink-0 w-full">
-              <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-[641px]">
-                <p className="leading-[40px] whitespace-pre-wrap">{t('home.waterEnergy.title')}</p>
+            <div className="flex flex-col font-['Montserrat:Black',sans-serif] font-black justify-center leading-[0] relative shrink-0 text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase w-[641px]">
+            <p className="leading-[40px] whitespace-pre-wrap">{t('home.waterEnergy.title')}</p>
               </div>
             </div>
           </div>
@@ -1360,7 +1360,7 @@ export default function HomePage() {
 
                         {/* Price and Order Button */}
                         <div className="content-stretch flex flex-col items-center justify-center mb-[-24px] pt-[16px] relative shrink-0 w-full">
-                          <div className="content-stretch flex gap-[101px] items-center justify-center relative shrink-0 w-full">
+                        <div className="content-stretch flex gap-[101px] items-center justify-center relative shrink-0 w-full">
                             {/* Price */}
                             <div className="content-stretch flex flex-col items-start min-w-[98.28px] relative shrink-0">
                               <div className="content-stretch flex items-center justify-center relative shrink-0">
@@ -1430,15 +1430,15 @@ export default function HomePage() {
         )}
 
         {/* Mobile Stats Cards */}
-        <div className="-translate-x-1/2 absolute content-stretch flex gap-[8px] items-start left-[calc(50%+3px)] top-[2462px]">
-          <div className="h-[227px] relative rounded-[30px] shrink-0 w-[180px] overflow-hidden">
+        <div className="-translate-x-1/2 absolute content-stretch flex gap-[8px] items-start left-1/2 top-[2462px] w-full max-w-[400px] px-4">
+          <div className="h-[227px] relative rounded-[30px] shrink-0 w-[calc(50%-4px)] min-w-0 overflow-hidden">
             <img
               alt=""
               className="absolute h-[149.05%] left-[-49.49%] max-w-none top-[-32.36%] w-[149.49%]"
               src={imgScreenshot20260114At0835551}
             />
           </div>
-          <div className="h-[227px] relative shrink-0 w-[208px]">
+          <div className="h-[227px] relative shrink-0 w-[calc(50%-4px)] min-w-0">
             <div className="absolute bg-[#1ac0fd] inset-0 rounded-[30px]" />
             <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[70%_6%_18%_40%] justify-center leading-[0] text-[40px] text-center text-white tracking-[-0.9px] uppercase">
               <p className="leading-[36px] whitespace-pre-wrap">98%</p>
@@ -1456,10 +1456,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="-translate-x-1/2 absolute content-stretch flex gap-[8px] items-start left-[calc(50%+3px)] top-[2708px]">
-          <div className="h-[227px] relative shrink-0 w-[208px]">
+        <div className="-translate-x-1/2 absolute content-stretch flex gap-[8px] items-start left-1/2 top-[2708px] w-full max-w-[400px] px-4">
+          <div className="h-[227px] relative shrink-0 w-[calc(50%-4px)] min-w-0">
             <div className="absolute bg-white inset-0 rounded-[30px]" />
-            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[70%_6%_18%_36%] justify-center leading-[0] text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase">
+            <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[65%_6%_18%_26%] justify-center leading-[0] text-[#0f172a] text-[40px] text-center tracking-[-0.9px] uppercase">
               <p className="leading-[36px] whitespace-pre-wrap">100%</p>
             </div>
             <div className="absolute flex flex-col font-['Montserrat:Black',sans-serif] font-black inset-[6%_10%_40%_10%] justify-center leading-[22px] text-[#1ac0fd] text-[18px] tracking-[-0.9px] uppercase break-words">
@@ -1472,7 +1472,7 @@ export default function HomePage() {
               <p className="leading-[24px] whitespace-pre-wrap">{t('home.cards.balancedHydration.source')}</p>
             </div>
           </div>
-          <div className="h-[227px] relative rounded-[30px] shrink-0 w-[180px] overflow-hidden">
+          <div className="h-[227px] relative rounded-[30px] shrink-0 w-[calc(50%-4px)] min-w-0 overflow-hidden">
             <img
               alt=""
               className="absolute h-[101.64%] left-[-13.07%] max-w-none top-[-1.52%] w-[126.15%]"
