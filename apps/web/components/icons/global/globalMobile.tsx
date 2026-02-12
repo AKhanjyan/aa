@@ -303,42 +303,6 @@ export function MobileMenu({
         <nav className="flex flex-col gap-6">
           <button
             onClick={() => {
-              router.push('/profile');
-              setShowMobileMenu(false);
-            }}
-            className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
-          >
-            {t('common.navigation.myAccount').toUpperCase()}
-          </button>
-          <button
-            onClick={() => {
-              router.push('/');
-              setShowMobileMenu(false);
-            }}
-            className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
-          >
-            {t('home.navigation.home')}
-          </button>
-          <button
-            onClick={() => {
-              router.push('/products');
-              setShowMobileMenu(false);
-            }}
-            className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
-          >
-            {t('home.navigation.shop')}
-          </button>
-          <button
-            onClick={() => {
-              router.push('/cart');
-              setShowMobileMenu(false);
-            }}
-            className="text-left text-gray-400 font-bold text-lg uppercase tracking-wide hover:text-gray-600 transition-colors"
-          >
-            {t('common.navigation.cart').toUpperCase()}
-          </button>
-          <button
-            onClick={() => {
               router.push('/about');
               setShowMobileMenu(false);
             }}
