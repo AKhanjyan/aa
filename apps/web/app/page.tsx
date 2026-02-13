@@ -13,12 +13,12 @@ import { HeaderCartIcon } from '../components/icons/HeaderCartIcon';
 import { LanguageIcon } from '../components/icons/LanguageIcon';
 import { ExitIcon } from '../components/icons/ExitIcon';
 import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedProduct, FeaturedProductsNavigationArrow } from '../components/icons/global/global';
+import { DraggableBulb } from '../components/DraggableBulb';
 
 // Local image paths - Images stored in public/assets/home/
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
 // Wave background PNG from Figma, saved locally in public/assets/home
 const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielWave.png";
-const img = "/assets/home/img.png";
 const img1 = "/assets/home/img1.png";
 const img6Eb12990A37F43358E368Af827A9C8A5Png1 = "/assets/home/img6Eb12990A37F43358E368Af827A9C8A5Png1.png";
 const imgLogo1 = "/assets/home/imgLogo1.png";
@@ -32,7 +32,6 @@ const imgEllipse44 = "/assets/home/imgEllipse44.svg";
 const imgShape1 = "/assets/home/imgShape1.svg";
 const imgShape2 = "/assets/home/imgShape2.svg";
 const imgEllipse42 = "/assets/home/imgEllipse42.svg";
-const imgShape3 = "/assets/home/imgShape3.svg";
 const imgEllipse43 = "/assets/home/imgEllipse43.svg";
 const imgGroup2105 = "/assets/home/21056.png";
 const img4 = "/assets/home/img4.svg";
@@ -70,10 +69,7 @@ const TRUSTED_BY_LOGOS = [
 const img15 = "/assets/home/img15.svg";
 const img16 = "/assets/home/img16.svg";
 const img18 = "/assets/home/img18.svg";
-// Image 5 and Image 11 for decorative bubbles with specific colors from Figma
-const imgImage5 = "/assets/home/imgImage5.png";
-const imgImage11 = "/assets/home/imgImage11.png";
-
+const imgBulb = "/assets/home/bulb.svg";
 // Mobile-specific images from Figma
 const imgBorborAquaProductKids033L2 = "/assets/home/imgBorborAquaProductKids033L2.png";
 const imgSqawdef1 = "/assets/home/imgSqawdef1.png";
@@ -877,9 +873,11 @@ export default function HomePage() {
         {/* Mobile Background Gradient */}
         <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[850px] left-0 right-0 to-[rgba(221,216,216,0.75)] top-0 w-full" />
 
-        {/* Mobile Hero Section Decorative Group */}
-        <div className="absolute inset-[15%_10%_70%_10%] sm:inset-[12%_10%_70%_10%] md:inset-[10%_10%_70%_10%] z-0">
-          <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
+        {/* Mobile Hero Section Decorative Group — 140% size */}
+        <div className="absolute inset-[15%_10%_70%_10%] sm:inset-[12%_10%_70%_10%] md:inset-[10%_10%_70%_10%] z-0 overflow-visible flex items-center justify-center">
+          <div className="absolute left-1/2 top-1/2 w-[140%] h-[140%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <img alt="Decorative Group" className="block size-full object-contain object-center figma-fade-in" src={imgGroup2105} />
+          </div>
         </div>
 
         {/* Mobile Decorative Background Images */}
@@ -918,13 +916,6 @@ export default function HomePage() {
         </div>
       
        
-        <div className="-translate-x-1/2 absolute flex items-center justify-center left-[calc(50%-257.56px)] mix-blend-luminosity size-[336.875px] top-[2207px]">
-          <div className="flex-none rotate-[75.86deg]">
-            <div className="relative size-[277.505px]">
-              <img alt="" className="block max-w-none size-full" src={imgShape3} />
-            </div>
-          </div>
-        </div>
         <div className="-translate-x-1/2 absolute h-[777px] left-[calc(50%+397.5px)] top-[1819px] w-[823px]">
           <div className="absolute inset-[-59.85%_-56.5%]">
             <img alt="" className="block max-w-none size-full" src={imgEllipse42} />
@@ -945,64 +936,21 @@ export default function HomePage() {
         </div>
 
 
-        {/* Mobile Featured Products Section Decorative Bubbles */}
+        {/* Mobile Featured Products — bulb.svg (medium, small, medium), float + drag */}
         <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
-          <div className="flex-none rotate-[100.79deg] size-[130px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-0 flex-none rotate-[100.79deg] size-[130px]" maxDrag={80} />
         </div>
-          <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
-            <div className="flex-none rotate-[100.79deg] size-[50px]">
-              <div className="relative rounded-[320px] size-full">
-                {/* Soft blue glow bubble without dark blend artifacts */}
-                <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-                <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                    <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+900px)] bottom-auto max-w-[130px] overflow-hidden">
-          <div className="flex-none rotate-[100.79deg] size-[130px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
+          <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-3 flex-none rotate-[100.79deg] size-[50px]" maxDrag={50} />
         </div>
         {/* Left decorative bubble near Featured Products - fixed 200px from left on all mobile widths */}
        
 
        
 
-        {/* Mobile Hero Image */}
+        {/* Mobile Hero — bulb.svg centered, float + drag */}
         <div className="-translate-x-1/2 absolute flex items-center justify-center left-1/2 top-[190px] sm:top-[220px] md:top-[240px] w-full max-w-[440px] z-[2]">
-          <div className="flex-none rotate-[100.79deg] size-[320px] sm:size-[360px] md:size-[400px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow behind the bottle without darkening artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.42)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-1 size-[320px] sm:size-[360px] md:size-[400px] flex items-center justify-center" maxDrag={110} />
         </div>
 
 
@@ -1076,6 +1024,11 @@ export default function HomePage() {
               <p className="leading-[20px]">{t('home.featuredProducts.subtitle')}</p>
             </div>
           </div>
+        </div>
+
+        {/* Left bulb — after Featured title, float + drag */}
+        <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+965px)] bottom-auto z-10 max-w-[130px] overflow-visible">
+          <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-7 flex-none rotate-[100.79deg] size-[130px]" maxDrag={80} />
         </div>
 
         {/* Mobile Featured Products - 2 products side by side */}
@@ -1569,35 +1522,16 @@ export default function HomePage() {
       {/* Background Gradient */}
       <div className="absolute bg-gradient-to-b blur-[50px] from-[#62b3e8] h-[1075px] left-1/2 to-[rgba(221,216,216,0.75)] top-0 translate-x-[-50%] w-full max-w-[1920px]" />
 
-      {/* Hero Section Decorative Group */}
-      <div className="absolute inset-[4.14%_16.2%_92%_14.64%]">
-        <img alt="Decorative Group" className="block max-w-none size-full figma-fade-in" src={imgGroup2105} />
-
+      {/* Hero Section Decorative Group — 140% size */}
+      <div className="absolute inset-[4.14%_16.2%_92%_14.64%] overflow-visible flex items-center justify-center">
+        <div className="absolute left-1/2 top-1/2 w-[140%] h-[140%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+          <img alt="Decorative Group" className="block size-full object-contain object-center figma-fade-in" src={imgGroup2105} />
+        </div>
       </div>
 
-      {/* Image 13 - Decorative Element */}
-      <div className="absolute flex top-[350px]  items-center justify-center right-[480px] top-[350px]  size-[606px] pointer-events-none">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      {/* Hero decorative ball (bulb.svg) — drag to move a little */}
+      <div className="absolute left-1/2 top-[315px] flex size-[606px] -translate-x-1/2 items-center justify-center pointer-events-auto md:top-[315px] sm:top-[252px]">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active size-full flex items-center justify-center" maxDrag={140} />
       </div>
 
        
@@ -1640,7 +1574,7 @@ export default function HomePage() {
       </div>
 
       {/* Water Wave Graphic */}
-      <div className="absolute h-[527px] left-1/2 top-[1050px] translate-x-[-50%] w-full max-w-[1920px] z-0">
+      <div className="absolute left-0 right-0 h-[527px] top-[1050px] w-full z-0">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img alt="Water Wave" className="absolute h-[158.63%] left-0 max-w-none top-[-58.62%] w-full" src={imgDanielSinocaAancLsb0SU0Unsplash1} />
         </div>
@@ -1648,7 +1582,7 @@ export default function HomePage() {
 
       {/* Decorative Elements - Ellipses */}
       <div className="absolute h-[1124px] left-[calc(50%+953.5px)] top-[2396px] translate-x-[-50%] w-[1191px] overflow-hidden">
-        <div className="absolute inset-0 figma-float-slow">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
         </div>
       </div>
@@ -1660,7 +1594,7 @@ export default function HomePage() {
       </div>
 
       <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px] overflow-hidden">
-        <div className="absolute inset-0 figma-float-slow">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse42} />
         </div>
       </div>
@@ -1680,15 +1614,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] size-[956.401px]  top-[5197px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-16.26deg] scale-y-[-100%] ">
-          <div className="relative size-[524.132px] ">
-            <img alt="Shape" className="block max-w-none size-full " src={imgShape3}   />
-            {/* White background overlay with gradient for bottom section */}
-          </div>
-        </div>
-      </div>
-
       <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] size-[541.928px] top-[3100px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg]">
           <div className="relative size-[524.132px]">
@@ -1697,16 +1622,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] size-[944.637px] top-[3493px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-165deg]">
-          <div className="relative size-[771.293px]">
-            <img alt="Shape" className="block max-w-none size-full" src={imgShape3} />
-          </div>
-        </div>
-      </div>
-
       {/* Featured Products Section */}
-      <div className="absolute h-[1050px] lg:h-[1050px] md:h-[900px] sm:h-[700px] left-1/2 top-[1150px] lg:top-[1150px] md:top-[1000px] sm:top-[800px] translate-x-[-50%] w-full max-w-[1920px] overflow-hidden">
+      <div className="absolute left-0 right-0 h-[1050px] lg:h-[1050px] md:h-[900px] sm:h-[700px] top-[1150px] lg:top-[1150px] md:top-[1000px] sm:top-[800px] w-full overflow-hidden">
         {/* Background Image - Daniel Sianca Flipped */}
         <div
           className="absolute w-full h-full"
@@ -1748,8 +1665,8 @@ export default function HomePage() {
 
           
 
-          {/* Products Grid - Uniform Layout */}
-          <div className="absolute h-[390px] lg:h-[390px] md:h-[330px] sm:h-[270px] left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[140px] lg:top-[140px] md:top-[110px] sm:top-[80px] z-[10]">
+          {/* Products Grid - Uniform Layout (lowered so bottles don't cover section header) */}
+          <div className="absolute h-[390px] lg:h-[390px] md:h-[330px] sm:h-[270px] left-0 lg:left-0 md:left-[16px] sm:left-[12px] right-0 lg:right-0 md:right-[16px] sm:right-[12px] top-[270px] lg:top-[270px] md:top-[240px] sm:top-[195px] z-[10]">
             {productsLoading ? (
               // Loading state - show placeholder with uniform grid
               <div className="flex gap-[32px] lg:gap-[32px] md:gap-[30px] sm:gap-[20px] justify-center items-start h-full">
@@ -1983,7 +1900,7 @@ export default function HomePage() {
       {/* Why Choose Us Cards */}
       {/* Card 1: Rich in Minerals */}
       <div className="absolute h-[208px] lg:h-[260px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] top-[4200px] lg:top-[4200px] md:top-[3700px] sm:top-[3000px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
-        <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
+        <div className="absolute bg-white inset-[18.18%_0_0_-5%] rounded-[30px] lg:rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] lg:left-[38%] lg:right-[38%] top-0">
           <div className="absolute inset-[9.48%_0_18.97%_34.91%] overflow-hidden">
             <div className="absolute inset-0">
@@ -2205,180 +2122,33 @@ export default function HomePage() {
         <img alt="Background Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
       </div>
 
-      {/* Main large bubble */}
-      <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[384.622px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      {/* Decorative bubbles — bulb.svg, float + drag */}
+      <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-2 size-[385px] flex items-center justify-center" maxDrag={110} />
       </div>
 
-      {/* Image 5 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[100px]">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img alt="Image 5" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage5} />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[300px] pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-5 size-full flex items-center justify-center" maxDrag={95} />
       </div>
 
-
-      
-
-      {/* Image 11 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[100px]">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img alt="Image 11" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage11} />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[100px] pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-9 size-full flex items-center justify-center" maxDrag={65} />
       </div>
 
-      <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center">
-        <div className="relative rounded-[320px] size-[102.381px]">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-6 size-[102px] flex items-center justify-center" maxDrag={65} />
       </div>
 
-      {/* Upper bubble - move to the right side a bit higher */}
-      <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[339px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-visible pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-8 size-[339px] flex items-center justify-center" maxDrag={110} />
       </div>
 
-      <div className="absolute flex top-[52%] right-[-6%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[329px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
+      <div className="absolute flex top-[52%] right-[1%] bottom-[35.23%] left-auto items-center justify-center overflow-hidden pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-3 size-[228px] flex items-center justify-center" maxDrag={95} />
       </div>
 
-
-      {/* Lower bubble 3 - move fully to the right side */}
-      <div className="absolute flex top-[52%] right-[1%] bottom-[35.23%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[227.625px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[228.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
-      </div>
-
-      {/* Featured Products Section Decorative Elements */}
-
-      <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[156.082px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
+      <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden pointer-events-none">
+        <DraggableBulb src={imgBulb} wrapperClassName="figma-float-active-0 size-[156px] flex items-center justify-center" maxDrag={80} />
       </div>
 
       {/* Water Energy Section Main Graphic */}
@@ -2396,11 +2166,15 @@ export default function HomePage() {
                   <img alt="Vector" className="block max-w-none size-full" src={img16} />
                 </div>
               </div>
-              <div className="absolute aspect-[244.35066986310085/678.8584334167344] flex items-center justify-center left-[33.81%] mix-blend-multiply right-[39.46%] top-0">
-                <div className="flex-none h-[541px] rotate-[-0.5deg] w-[191px]">
-                  <div className="relative size-full">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <img alt="Water Bottle" className="absolute h-full left-[-91.91%] max-w-none top-0 w-[283.83%]" src={img17} />
+              <div className="group/bottle absolute aspect-[244.35066986310085/678.8584334167344] flex items-center justify-center left-[33.81%] mix-blend-multiply right-[39.46%] top-0 overflow-visible">
+                <div className="flex-none h-[541px] rotate-[-0.5deg] w-[191px] overflow-visible">
+                  <div className="relative size-full flex items-center justify-center overflow-visible">
+                    <div className="absolute inset-0 overflow-visible pointer-events-none flex items-center justify-center">
+                      <img
+                        alt="Water Bottle"
+                        className="h-full w-auto max-h-full object-contain object-center scale-[2] transition-transform duration-500 ease-out group-hover/bottle:scale-[4] group-hover/bottle:rotate-90"
+                        src={img17}
+                      />
                     </div>
                   </div>
                 </div>

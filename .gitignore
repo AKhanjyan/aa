@@ -1,2 +1,26 @@
+# Dependencies & build
 node_modules/
 apps/web/.next/
+.turbo/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temp
+*.log
+npm-debug.log*
+tmp/
+temp/
+.cache/
+
+# IDE (optional)
+# .idea/
+# .vscode/
+# *.swp
+# *.swo
