@@ -2197,11 +2197,15 @@ export default function HomePage() {
                   <img alt="Vector" className="block max-w-none size-full" src={img16} />
                 </div>
               </div>
-              <div className="absolute aspect-[244.35066986310085/678.8584334167344] flex items-center justify-center left-[33.81%] mix-blend-multiply right-[39.46%] top-0">
-                <div className="flex-none h-[541px] rotate-[-0.5deg] w-[191px]">
-                  <div className="relative size-full">
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <img alt="Water Bottle" className="absolute h-full left-[-91.91%] max-w-none top-0 w-[283.83%]" src={img17} />
+              <div className="group/bottle absolute aspect-[244.35066986310085/678.8584334167344] flex items-center justify-center left-[33.81%] mix-blend-multiply right-[39.46%] top-0 overflow-visible">
+                <div className="flex-none h-[541px] rotate-[-0.5deg] w-[191px] overflow-visible">
+                  <div className="relative size-full flex items-center justify-center overflow-visible">
+                    <div className="absolute inset-0 overflow-visible pointer-events-none flex items-center justify-center">
+                      <img
+                        alt="Water Bottle"
+                        className="h-full w-auto max-h-full object-contain object-center scale-[2] transition-transform duration-500 ease-out group-hover/bottle:scale-[4] group-hover/bottle:rotate-90"
+                        src={img17}
+                      />
                     </div>
                   </div>
                 </div>
