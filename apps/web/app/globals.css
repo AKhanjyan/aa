@@ -85,6 +85,23 @@
     }
   }
 
+  /* More active float for main hero sphere */
+  @keyframes figma-float-active {
+    0%,
+    100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-35px) translateX(18px);
+    }
+    50% {
+      transform: translateY(-18px) translateX(-12px);
+    }
+    75% {
+      transform: translateY(-42px) translateX(8px);
+    }
+  }
+
   @keyframes figma-pulse {
 
     0%,
@@ -127,9 +144,21 @@
     animation: figma-float 8s ease-in-out infinite;
   }
 
-  .figma-float-slow {
-    animation: figma-float 12s ease-in-out infinite;
+  .figma-float-active {
+    animation: figma-float-active 6s ease-in-out infinite;
   }
+
+  /* Out-of-sync active float for all bubbles */
+  .figma-float-active-0 { animation: figma-float-active 6s ease-in-out 0s infinite; }
+  .figma-float-active-1 { animation: figma-float-active 6s ease-in-out 0.8s infinite; }
+  .figma-float-active-2 { animation: figma-float-active 6s ease-in-out 1.6s infinite; }
+  .figma-float-active-3 { animation: figma-float-active 6s ease-in-out 2.4s infinite; }
+  .figma-float-active-4 { animation: figma-float-active 6s ease-in-out 3.2s infinite; }
+  .figma-float-active-5 { animation: figma-float-active 6s ease-in-out 4s infinite; }
+  .figma-float-active-6 { animation: figma-float-active 6s ease-in-out 4.8s infinite; }
+  .figma-float-active-7 { animation: figma-float-active 6s ease-in-out 1.2s infinite; }
+  .figma-float-active-8 { animation: figma-float-active 6s ease-in-out 2.8s infinite; }
+  .figma-float-active-9 { animation: figma-float-active 6s ease-in-out 5.2s infinite; }
 
   .figma-pulse {
     animation: figma-pulse 3s ease-in-out infinite;

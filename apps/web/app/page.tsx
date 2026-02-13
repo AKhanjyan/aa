@@ -31,7 +31,6 @@ const imgEllipse44 = "/assets/home/imgEllipse44.svg";
 const imgShape1 = "/assets/home/imgShape1.svg";
 const imgShape2 = "/assets/home/imgShape2.svg";
 const imgEllipse42 = "/assets/home/imgEllipse42.svg";
-const imgShape3 = "/assets/home/imgShape3.svg";
 const imgEllipse43 = "/assets/home/imgEllipse43.svg";
 const imgGroup2105 = "/assets/home/21056.png";
 const img4 = "/assets/home/img4.svg";
@@ -914,13 +913,6 @@ export default function HomePage() {
         </div>
       
        
-        <div className="-translate-x-1/2 absolute flex items-center justify-center left-[calc(50%-257.56px)] mix-blend-luminosity size-[336.875px] top-[2207px]">
-          <div className="flex-none rotate-[75.86deg]">
-            <div className="relative size-[277.505px]">
-              <img alt="" className="block max-w-none size-full" src={imgShape3} />
-            </div>
-          </div>
-        </div>
         <div className="-translate-x-1/2 absolute h-[777px] left-[calc(50%+397.5px)] top-[1819px] w-[823px]">
           <div className="absolute inset-[-59.85%_-56.5%]">
             <img alt="" className="block max-w-none size-full" src={imgEllipse42} />
@@ -941,19 +933,14 @@ export default function HomePage() {
         </div>
 
 
-        {/* Mobile Featured Products — bulb.svg (medium, small, medium) */}
+        {/* Mobile Featured Products — bulb.svg (medium, small, medium), float */}
         <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
-          <div className="flex-none rotate-[100.79deg] size-[130px]">
+          <div className="figma-float-active-0 flex-none rotate-[100.79deg] size-[130px]">
             <img alt="" className="block size-full object-contain" src={imgBulb} />
           </div>
         </div>
         <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
-          <div className="flex-none rotate-[100.79deg] size-[50px]">
-            <img alt="" className="block size-full object-contain" src={imgBulb} />
-          </div>
-        </div>
-        <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+900px)] bottom-auto max-w-[130px] overflow-hidden">
-          <div className="flex-none rotate-[100.79deg] size-[130px]">
+          <div className="figma-float-active-3 flex-none rotate-[100.79deg] size-[50px]">
             <img alt="" className="block size-full object-contain" src={imgBulb} />
           </div>
         </div>
@@ -962,13 +949,15 @@ export default function HomePage() {
 
        
 
-        {/* Mobile Hero — bulb.svg centered, no matte */}
+        {/* Mobile Hero — bulb.svg centered, no matte, float */}
         <div className="-translate-x-1/2 absolute flex items-center justify-center left-1/2 top-[190px] sm:top-[220px] md:top-[240px] w-full max-w-[440px] z-[2]">
-          <img
-            alt=""
-            className="size-[320px] object-contain sm:size-[360px] md:size-[400px]"
-            src={imgBulb}
-          />
+          <div className="figma-float-active-1 size-[320px] sm:size-[360px] md:size-[400px] flex items-center justify-center">
+            <img
+              alt=""
+              className="size-full object-contain"
+              src={imgBulb}
+            />
+          </div>
         </div>
 
 
@@ -1041,6 +1030,13 @@ export default function HomePage() {
             <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center text-white break-words">
               <p className="leading-[20px]">{t('home.featuredProducts.subtitle')}</p>
             </div>
+          </div>
+        </div>
+
+        {/* Left bulb — after Featured title so it paints on top (same as other bulbs) */}
+        <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+965px)] bottom-auto z-10 max-w-[130px] overflow-visible">
+          <div className="figma-float-active-7 flex-none rotate-[100.79deg] size-[130px]">
+            <img alt="" className="block size-full object-contain" src={imgBulb} />
           </div>
         </div>
 
@@ -1541,13 +1537,15 @@ export default function HomePage() {
 
       </div>
 
-      {/* Hero decorative ball (bulb.svg) — centered, no matte/blur */}
+      {/* Hero decorative ball (bulb.svg) — centered, no matte/blur, gentle float */}
       <div className="absolute left-1/2 top-[350px] flex size-[606px] -translate-x-1/2 items-center justify-center pointer-events-none md:top-[350px] sm:top-[280px]">
-        <img
-          alt=""
-          className="block h-full w-full max-w-full object-contain"
-          src={imgBulb}
-        />
+        <div className="figma-float-active-4 size-full flex items-center justify-center">
+          <img
+            alt=""
+            className="block h-full w-full max-w-full object-contain"
+            src={imgBulb}
+          />
+        </div>
       </div>
 
        
@@ -1598,7 +1596,7 @@ export default function HomePage() {
 
       {/* Decorative Elements - Ellipses */}
       <div className="absolute h-[1124px] left-[calc(50%+953.5px)] top-[2396px] translate-x-[-50%] w-[1191px] overflow-hidden">
-        <div className="absolute inset-0 figma-float-slow">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
         </div>
       </div>
@@ -1610,7 +1608,7 @@ export default function HomePage() {
       </div>
 
       <div className="absolute h-[1124px] left-[calc(50%-1113.5px)] top-[3102px] translate-x-[-50%] w-[1191px] overflow-hidden">
-        <div className="absolute inset-0 figma-float-slow">
+        <div className="absolute inset-0 figma-float">
           <img alt="Ellipse" className="block max-w-none size-full" src={imgEllipse42} />
         </div>
       </div>
@@ -1630,27 +1628,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[calc(50%+119.2px)] size-[956.401px]  top-[5197px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-16.26deg] scale-y-[-100%] ">
-          <div className="relative size-[524.132px] ">
-            <img alt="Shape" className="block max-w-none size-full " src={imgShape3}   />
-            {/* White background overlay with gradient for bottom section */}
-          </div>
-        </div>
-      </div>
-
       <div className="absolute flex items-center justify-center left-[calc(50%-587.04px)] size-[541.928px] top-[3100px] translate-x-[-50%]">
         <div className="flex-none rotate-[-165deg]">
           <div className="relative size-[524.132px]">
             <img alt="Shape" className="block max-w-none size-full" src={imgShape} />
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute flex items-center justify-center left-[calc(50%-1082.68px)] size-[944.637px] top-[3493px] translate-x-[-50%]">
-        <div className="flex-none rotate-[-165deg]">
-          <div className="relative size-[771.293px]">
-            <img alt="Shape" className="block max-w-none size-full" src={imgShape3} />
           </div>
         </div>
       </div>
@@ -1933,7 +1914,7 @@ export default function HomePage() {
       {/* Why Choose Us Cards */}
       {/* Card 1: Rich in Minerals */}
       <div className="absolute h-[208px] lg:h-[260px] md:h-[240px] sm:h-[220px] left-1/2 translate-x-[-50%] top-[4200px] lg:top-[4200px] md:top-[3700px] sm:top-[3000px] w-[272px] lg:w-[340px] md:w-[45%] sm:w-[90%] z-[100]">
-        <div className="absolute bg-white inset-[18.18%_0_0_0] rounded-[30px] lg:rounded-[37px]" />
+        <div className="absolute bg-white inset-[18.18%_0_0_-5%] rounded-[30px] lg:rounded-[37px]" />
         <div className="absolute aspect-[100/100] left-[34.13%] right-[34.93%] lg:left-[38%] lg:right-[38%] top-0">
           <div className="absolute inset-[9.48%_0_18.97%_34.91%] overflow-hidden">
             <div className="absolute inset-0">
@@ -2155,37 +2136,47 @@ export default function HomePage() {
         <img alt="Background Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
       </div>
 
-      {/* Decorative bubbles — bulb.svg (medium/small), no matte */}
+      {/* Decorative bubbles — bulb.svg (medium/small), no matte, float */}
       <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden pointer-events-none">
-        <img alt="" className="size-[385px] object-contain" src={imgBulb} />
+        <div className="figma-float-active-2 size-[385px] flex items-center justify-center">
+          <img alt="" className="size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
-      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[100px] pointer-events-none">
-        <img alt="" className="block size-full object-contain" src={imgBulb} />
+      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[300px] pointer-events-none">
+        <div className="figma-float-active-5 size-full flex items-center justify-center">
+          <img alt="" className="block size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[100px] pointer-events-none">
-        <img alt="" className="block size-full object-contain" src={imgBulb} />
+        <div className="figma-float-active-9 size-full flex items-center justify-center">
+          <img alt="" className="block size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center pointer-events-none">
-        <img alt="" className="size-[102px] object-contain" src={imgBulb} />
+        <div className="figma-float-active-6 size-[102px] flex items-center justify-center">
+          <img alt="" className="size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-visible pointer-events-none">
-        <img alt="" className="size-[339px] object-contain" src={imgBulb} />
-      </div>
-
-      <div className="absolute flex top-[52%] right-[-6%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden pointer-events-none">
-        <img alt="" className="size-[329px] object-contain" src={imgBulb} />
+        <div className="figma-float-active-8 size-[339px] flex items-center justify-center">
+          <img alt="" className="size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       <div className="absolute flex top-[52%] right-[1%] bottom-[35.23%] left-auto items-center justify-center overflow-hidden pointer-events-none">
-        <img alt="" className="size-[228px] object-contain" src={imgBulb} />
+        <div className="figma-float-active-3 size-[228px] flex items-center justify-center">
+          <img alt="" className="size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden pointer-events-none">
-        <img alt="" className="size-[156px] object-contain" src={imgBulb} />
+        <div className="figma-float-active-0 size-[156px] flex items-center justify-center">
+          <img alt="" className="size-full object-contain" src={imgBulb} />
+        </div>
       </div>
 
       {/* Water Energy Section Main Graphic */}
