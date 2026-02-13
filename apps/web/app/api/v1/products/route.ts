@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { productsService } from "@/lib/services/products.service";
 
+const isDbUnavailableError = (error: unknown): boolean => {
+  if (!error || typeof error !== "object") return false;
+  const e = error as { name?: string; message?: string; code?: string };
+  return (
+    e.name === "PrismaClientInitializationError" ||
+    e.code === "P1001" ||
+    e.code === "P1002" ||
+    (typeof e.message === "string" &&
+      (e.message.includes("does not exist on the database server") ||
+        e.message.includes("Can't reach database server")))
+  );
+};
+
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const page = searchParams.get("page") ? parseInt(searchParams.get("page")!, 10) : 1;
+  const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!, 10) : 24;
+
   try {
-    const { searchParams } = new URL(req.url);
     const filters = {
       category: searchParams.get("category") || undefined,
       search: searchParams.get("search") || undefined,
@@ -18,12 +34,8 @@ export async function GET(req: NextRequest) {
       sizes: searchParams.get("sizes") || undefined,
       brand: searchParams.get("brand") || undefined,
       sort: searchParams.get("sort") || "createdAt",
-      page: searchParams.get("page")
-        ? parseInt(searchParams.get("page")!)
-        : 1,
-      limit: searchParams.get("limit")
-        ? parseInt(searchParams.get("limit")!)
-        : 24,
+      page,
+      limit,
       lang: searchParams.get("lang") || "en",
     };
 
@@ -36,17 +48,25 @@ export async function GET(req: NextRequest) {
       totalPages: result.meta?.totalPages || 0
     });
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (isDbUnavailableError(error)) {
+      console.warn("⚠️ [PRODUCTS] Database unavailable, returning empty list:", (error as Error).message);
+      return NextResponse.json({
+        data: [],
+        meta: { total: 0, page, limit, totalPages: 0 },
+      });
+    }
     console.error("❌ [PRODUCTS] Error:", error);
+    const e = error as { type?: string; title?: string; status?: number; detail?: string; message?: string };
     return NextResponse.json(
       {
-        type: error.type || "https://api.shop.am/problems/internal-error",
-        title: error.title || "Internal Server Error",
-        status: error.status || 500,
-        detail: error.detail || error.message || "An error occurred",
+        type: e.type || "https://api.shop.am/problems/internal-error",
+        title: e.title || "Internal Server Error",
+        status: e.status || 500,
+        detail: e.detail || e.message || "An error occurred",
         instance: req.url,
       },
-      { status: error.status || 500 }
+      { status: e.status ?? 500 }
     );
   }
 }
