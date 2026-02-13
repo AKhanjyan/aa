@@ -18,7 +18,6 @@ import { Header, Footer, Button, addToCart, FeaturedProductCard, type FeaturedPr
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
 // Wave background PNG from Figma, saved locally in public/assets/home
 const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielWave.png";
-const img = "/assets/home/img.png";
 const img1 = "/assets/home/img1.png";
 const img6Eb12990A37F43358E368Af827A9C8A5Png1 = "/assets/home/img6Eb12990A37F43358E368Af827A9C8A5Png1.png";
 const imgLogo1 = "/assets/home/imgLogo1.png";
@@ -70,10 +69,7 @@ const TRUSTED_BY_LOGOS = [
 const img15 = "/assets/home/img15.svg";
 const img16 = "/assets/home/img16.svg";
 const img18 = "/assets/home/img18.svg";
-// Image 5 and Image 11 for decorative bubbles with specific colors from Figma
-const imgImage5 = "/assets/home/imgImage5.png";
-const imgImage11 = "/assets/home/imgImage11.png";
-
+const imgBulb = "/assets/home/bulb.svg";
 // Mobile-specific images from Figma
 const imgBorborAquaProductKids033L2 = "/assets/home/imgBorborAquaProductKids033L2.png";
 const imgSqawdef1 = "/assets/home/imgSqawdef1.png";
@@ -945,44 +941,20 @@ export default function HomePage() {
         </div>
 
 
-        {/* Mobile Featured Products Section Decorative Bubbles */}
+        {/* Mobile Featured Products — bulb.svg (medium, small, medium) */}
         <div className="absolute flex items-center justify-center left-[67.21%] right-[-23.97%] top-[calc(.09%+958px)] bottom-[calc(100%-82.65%)]">
           <div className="flex-none rotate-[100.79deg] size-[130px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
+            <img alt="" className="block size-full object-contain" src={imgBulb} />
           </div>
         </div>
-          <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
-            <div className="flex-none rotate-[100.79deg] size-[50px]">
-              <div className="relative rounded-[320px] size-full">
-                {/* Soft blue glow bubble without dark blend artifacts */}
-                <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-                <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                    <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="absolute flex items-center justify-center left-[47.67%] right-[4.12%] top-[calc(13.72%+958px)] bottom-[calc(100%-81.17%)]">
+          <div className="flex-none rotate-[100.79deg] size-[50px]">
+            <img alt="" className="block size-full object-contain" src={imgBulb} />
+          </div>
         </div>
         <div className="absolute flex items-center justify-center -left-20 right-auto top-[calc(0%+900px)] bottom-auto max-w-[130px] overflow-hidden">
           <div className="flex-none rotate-[100.79deg] size-[130px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow bubble without dark blend artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
+            <img alt="" className="block size-full object-contain" src={imgBulb} />
           </div>
         </div>
         {/* Left decorative bubble near Featured Products - fixed 200px from left on all mobile widths */}
@@ -990,19 +962,13 @@ export default function HomePage() {
 
        
 
-        {/* Mobile Hero Image */}
+        {/* Mobile Hero — bulb.svg centered, no matte */}
         <div className="-translate-x-1/2 absolute flex items-center justify-center left-1/2 top-[190px] sm:top-[220px] md:top-[240px] w-full max-w-[440px] z-[2]">
-          <div className="flex-none rotate-[100.79deg] size-[320px] sm:size-[360px] md:size-[400px]">
-            <div className="relative rounded-[320px] size-full">
-              {/* Soft blue glow behind the bottle without darkening artifacts */}
-              <div className="absolute inset-0 backdrop-blur-[4px] bg-[rgba(118,179,233,0.42)] rounded-full" />
-              <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-                  <img alt="" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={img} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <img
+            alt=""
+            className="size-[320px] object-contain sm:size-[360px] md:size-[400px]"
+            src={imgBulb}
+          />
         </div>
 
 
@@ -1575,29 +1541,13 @@ export default function HomePage() {
 
       </div>
 
-      {/* Image 13 - Decorative Element */}
-      <div className="absolute flex top-[350px]  items-center justify-center right-[480px] top-[350px]  size-[606px] pointer-events-none">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      {/* Hero decorative ball (bulb.svg) — centered, no matte/blur */}
+      <div className="absolute left-1/2 top-[350px] flex size-[606px] -translate-x-1/2 items-center justify-center pointer-events-none md:top-[350px] sm:top-[280px]">
+        <img
+          alt=""
+          className="block h-full w-full max-w-full object-contain"
+          src={imgBulb}
+        />
       </div>
 
        
@@ -2205,180 +2155,37 @@ export default function HomePage() {
         <img alt="Background Ellipse" className="block max-w-none size-full" src={imgEllipse41} />
       </div>
 
-      {/* Main large bubble */}
-      <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[384.622px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      {/* Decorative bubbles — bulb.svg (medium/small), no matte */}
+      <div className="absolute flex top-[43.44%] right-[71%] bottom-[43.57%] left-0 items-center justify-center overflow-hidden pointer-events-none">
+        <img alt="" className="size-[385px] object-contain" src={imgBulb} />
       </div>
 
-      {/* Image 5 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[100px]">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img alt="Image 5" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage5} />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex items-center justify-center left-[1394px] top-[1190px] size-[100px] pointer-events-none">
+        <img alt="" className="block size-full object-contain" src={imgBulb} />
       </div>
 
-
-      
-
-      {/* Image 11 - Decorative Element */}
-      <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[100px]">
-        <div className="relative rounded-[320px] size-full">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img alt="Image 11" className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]" src={imgImage11} />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex items-center justify-center left-[203px] top-[1433px] size-[100px] pointer-events-none">
+        <img alt="" className="block size-full object-contain" src={imgBulb} />
       </div>
 
-      <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center">
-        <div className="relative rounded-[320px] size-[102.381px]">
-          {/* Soft blue glow bubble without dark blend artifacts */}
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div />
-        </div>
+      <div className="absolute flex inset-[22%_0.5%_77.5%_76.61%] items-center justify-center pointer-events-none">
+        <img alt="" className="size-[102px] object-contain" src={imgBulb} />
       </div>
 
-      {/* Upper bubble - move to the right side a bit higher */}
-      <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[339px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div  />
-        </div>
+      <div className="absolute flex top-[44%] right-[1%] bottom-[50.88%] left-auto items-center justify-center overflow-hidden pointer-events-none">
+        <img alt="" className="size-[339px] object-contain" src={imgBulb} />
       </div>
 
-      <div className="absolute flex top-[52%] right-[-6%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[329px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
+      <div className="absolute flex top-[52%] right-[-6%] bottom-[41.8%] left-auto items-center justify-center overflow-hidden pointer-events-none">
+        <img alt="" className="size-[329px] object-contain" src={imgBulb} />
       </div>
 
-
-      {/* Lower bubble 3 - move fully to the right side */}
-      <div className="absolute flex top-[52%] right-[1%] bottom-[35.23%] left-auto items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[227.625px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[228.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
+      <div className="absolute flex top-[52%] right-[1%] bottom-[35.23%] left-auto items-center justify-center overflow-hidden pointer-events-none">
+        <img alt="" className="size-[228px] object-contain" src={imgBulb} />
       </div>
 
-      {/* Featured Products Section Decorative Elements */}
-
-      <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden">
-        <div className="relative rounded-[320px] size-[156.082px]">
-          <div className="absolute backdrop-blur-[4px] bg-[rgba(118,179,233,0.1)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[770px]" />
-          <div className="absolute inset-0 mix-blend-lighten rounded-[880px]">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[880px]">
-              <img
-                alt="Decorative"
-                className="absolute left-[-14.37%] max-w-none size-[128.74%] top-[-14.67%]"
-                src={img}
-                onError={(e) => {
-                  console.error('❌ [IMAGE] Failed to load decorative image:', img);
-                  console.error('Error target:', e.target);
-                }}
-                onLoad={() => {
-                  console.log('✅ [IMAGE] Decorative image loaded:', img);
-                }}
-              />
-            </div>
-          </div>
-          <div className="absolute bg-[rgba(0,132,255,0.15)] inset-[0.83%_1.25%_1.25%_1.25%] mix-blend-darken rounded-[900px]" />
-        </div>
+      <div className="absolute flex top-[1%] right-[75.18%] bottom-[55.65%] left-[-9.5%] items-center justify-center overflow-hidden pointer-events-none">
+        <img alt="" className="size-[156px] object-contain" src={imgBulb} />
       </div>
 
       {/* Water Energy Section Main Graphic */}
