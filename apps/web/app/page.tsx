@@ -1539,7 +1539,7 @@ export default function HomePage() {
 
       {/* Hero decorative ball (bulb.svg) — centered, no matte/blur, gentle float */}
       <div className="absolute left-1/2 top-[350px] flex size-[606px] -translate-x-1/2 items-center justify-center pointer-events-none md:top-[350px] sm:top-[280px]">
-        <div className="figma-float-active-4 size-full flex items-center justify-center">
+        <div className="figma-float-active size-full flex items-center justify-center">
           <img
             alt=""
             className="block h-full w-full max-w-full object-contain"
