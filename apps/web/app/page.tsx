@@ -19,7 +19,6 @@ import { DraggableBulb } from '../components/DraggableBulb';
 const imgBorborAguaLogoColorB2024Colored1 = "/assets/home/imgBorborAguaLogoColorB2024Colored1.png";
 // Wave background PNG from Figma, saved locally in public/assets/home
 const imgDanielSinocaAancLsb0SU0Unsplash1 = "/assets/home/imgDanielWave.png";
-const img1 = "/assets/home/img1.png";
 const img6Eb12990A37F43358E368Af827A9C8A5Png1 = "/assets/home/img6Eb12990A37F43358E368Af827A9C8A5Png1.png";
 const imgLogo1 = "/assets/home/imgLogo1.png";
 const imgSas20Logo1 = "/assets/home/imgSas20Logo1.png";
@@ -78,7 +77,7 @@ const imgScreenshot20260112At1535403 = "/assets/home/imgScreenshot20260112At1535
 const imgEllipse2 = "/assets/home/imgEllipse2.svg";
 const imgVector2 = "/assets/home/imgVector2.svg";
 const imgVector3 = "/assets/home/imgVector3.svg";
-const imgGroup2148 = "/assets/home/imgGroup2148.svg";
+const imgGroup2148 = "/assets/home/Cart.svg";
 const imgGroup2149 = "/assets/home/imgGroup2149.svg";
 const imgVector8 = "/assets/home/imgVector8.svg";
 const imgGlass3 = "/assets/home/imgGlass3.svg";
