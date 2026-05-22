@@ -1,6 +1,19 @@
 import { db } from "@white-shop/db";
 import * as bcrypt from "bcryptjs";
 
+type ProfileUpdateInput = {
+  firstName?: string;
+  lastName?: string;
+  locale?: string;
+  phone?: string;
+};
+
+function normalizeOptionalPhone(value?: string): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
 class UsersService {
   /**
    * Get user profile
@@ -44,32 +57,48 @@ class UsersService {
   /**
    * Update user profile
    */
-  async updateProfile(userId: string, data: any) {
-    const user = await db.user.update({
-      where: { id: userId },
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        locale: data.locale,
-      },
-      select: {
-        id: true,
-        email: true,
-        phone: true,
-        firstName: true,
-        lastName: true,
-        locale: true,
-      },
-    });
+  async updateProfile(userId: string, data: ProfileUpdateInput) {
+    try {
+      const user = await db.user.update({
+        where: { id: userId },
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          locale: data.locale,
+          ...(data.phone !== undefined
+            ? { phone: normalizeOptionalPhone(data.phone) }
+            : {}),
+        },
+        select: {
+          id: true,
+          email: true,
+          phone: true,
+          firstName: true,
+          lastName: true,
+          locale: true,
+        },
+      });
 
-    return {
-      id: user.id,
-      email: user.email,
-      phone: user.phone,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      locale: user.locale,
-    };
+      return {
+        id: user.id,
+        email: user.email,
+        phone: user.phone,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        locale: user.locale,
+      };
+    } catch (error: unknown) {
+      const prismaError = error as { code?: string };
+      if (prismaError.code === "P2002") {
+        throw {
+          status: 409,
+          type: "https://api.shop.am/problems/conflict",
+          title: "Phone already in use",
+          detail: "This phone number is already registered to another account",
+        };
+      }
+      throw error;
+    }
   }
 
   /**
