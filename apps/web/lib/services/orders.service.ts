@@ -1,7 +1,5 @@
 import { db } from "@white-shop/db";
-import { sendOrderNotificationToAdmin } from "@/lib/email-templates/order-admin-notification";
-import { isCashLikePaymentMethod } from "@/lib/payments/constants";
-import { notifyCustomerCashOrderEmail } from "@/lib/email-templates/notify-customer-order-paid";
+import { scheduleCheckoutOrderEmails } from "@/lib/email-templates/schedule-checkout-emails";
 import { couponsService, type CheckoutCouponValidationResult } from "@/lib/services/coupons.service";
 
 /**
@@ -673,42 +671,7 @@ class OrdersService {
         }
       );
 
-      // Notify admin by email (non-blocking: failures are logged only)
-      const fullOrder = order.order as {
-        number: string;
-        customerEmail: string | null;
-        customerPhone: string | null;
-        total: number;
-        currency: string | null;
-        shippingAddress: unknown;
-        shippingMethod: string | null;
-        items: Array<{
-          productTitle: string;
-          variantTitle: string | null;
-          sku: string;
-          quantity: number;
-          price: number;
-          total: number;
-        }>;
-      };
-      sendOrderNotificationToAdmin({
-        number: fullOrder.number,
-        customerEmail: fullOrder.customerEmail,
-        customerPhone: fullOrder.customerPhone,
-        total: fullOrder.total,
-        currency: fullOrder.currency ?? "AMD",
-        shippingAddress: fullOrder.shippingAddress,
-        shippingMethod: fullOrder.shippingMethod,
-        paymentMethod: paymentMethod ?? null,
-        items: fullOrder.items,
-        createdNotice: isCashLikePaymentMethod(paymentMethod ?? null)
-          ? "cash_like"
-          : "awaiting_online_payment",
-      }).catch(() => {});
-
-      if (isCashLikePaymentMethod(paymentMethod ?? null)) {
-        notifyCustomerCashOrderEmail(order.order.id).catch(() => {});
-      }
+      scheduleCheckoutOrderEmails(order.order.id);
 
       // Return order and payment info
       return {
