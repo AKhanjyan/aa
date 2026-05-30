@@ -5,7 +5,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "dev": "next dev --port 3000",
+    "dev": "node scripts/dev.js",
     "dev:webpack": "next dev --no-turbo",
     "dev:clean": "node -e \"require('fs').rmSync('.next', {recursive: true, force: true})\" && next dev",
     "dev:tunnel": "concurrently -n dev,tunnel \"npm run dev\" \"npm run tunnel\"",

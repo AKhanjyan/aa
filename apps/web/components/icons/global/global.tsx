@@ -1093,7 +1093,7 @@ export function FeaturedProductCard({
     const compactContent = (
       <>
         {/* Image Container - fixed height, does not grow with img/title */}
-        <div className={`${isRelated ? (isMobile ? 'h-[160px]' : 'md:h-[260px]') : (isMobile ? 'h-[180px]' : 'md:h-[340px]')} w-full relative product-image-container flex items-end justify-center bg-transparent rounded-lg overflow-hidden min-h-0 mb-3 shrink-0 flex-shrink-0`}>
+        <div className={`${isRelated ? (isMobile ? 'h-[160px]' : 'md:h-[260px]') : (isMobile ? 'h-[180px]' : 'md:h-[340px]')} w-full relative product-image-container flex items-end justify-center bg-transparent rounded-lg overflow-visible min-h-0 mb-3 shrink-0 flex-shrink-0`}>
           {product.image ? (
             <img
               
