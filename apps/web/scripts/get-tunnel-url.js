@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { resolveDevPort } = require('./resolve-dev-port');
 
 const logFile = path.join(__dirname, '../tunnel-output.log');
 
@@ -9,7 +10,8 @@ console.log('🚇 Միացնում եմ Cloudflare Tunnel...\n');
 // Ստեղծել log file
 const writeStream = fs.createWriteStream(logFile, { flags: 'w' });
 
-const tunnel = spawn('npx', ['--yes', 'cloudflared', 'tunnel', '--url', 'http://localhost:3000'], {
+const devPort = resolveDevPort();
+const tunnel = spawn('npx', ['--yes', 'cloudflared', 'tunnel', '--url', `http://localhost:${devPort}`], {
   stdio: ['inherit', 'pipe', 'pipe'],
   shell: true
 });
