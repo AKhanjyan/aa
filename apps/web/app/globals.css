@@ -284,13 +284,9 @@
     box-shadow: 0 8px 32px rgba(0, 209, 255, 0.15);
   }
 
-  /* Image container - allows overflow on hover for home page */
+  /* Image container - always visible so the scaled image is never clipped
+     while shrinking back on hover-out (caused the top-of-bottle "jump"). */
   .product-image-container {
-    overflow: hidden;
-    transition: overflow 0.3s ease-out, padding 0.3s ease-out;
-  }
-
-  .product-card-hover:hover .product-image-container {
     overflow: visible;
   }
 
@@ -313,12 +309,6 @@
     transform: scale(2.4) translateY(-10px);
     filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
     z-index: 10;
-  }
-
-  /* Compact cards (shop page & related products) - allow overflow so image can go over border */
-  .product-card-compact:hover .product-image-container {
-    overflow: visible;
-    padding: 8px;
   }
 
   .product-image-hover {
