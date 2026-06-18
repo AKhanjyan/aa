@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+
 // Currency utilities and exchange rates
 export const CURRENCIES = {
   USD: { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
@@ -31,13 +33,13 @@ async function getCurrencyRates(): Promise<Record<string, number>> {
       const rates = await response.json();
       currencyRatesCache = rates;
       currencyRatesCacheTime = Date.now();
-      console.log('✅ [CURRENCY] Currency rates loaded:', rates);
+      logger.log('[CURRENCY] Currency rates loaded:', rates);
       return rates;
     } else {
-      console.error('❌ [CURRENCY] API returned error:', response.status, response.statusText);
+      logger.error('[CURRENCY] API returned error:', response.status, response.statusText);
     }
   } catch (error) {
-    console.error('❌ [CURRENCY] Failed to fetch currency rates:', error);
+    logger.error('[CURRENCY] Failed to fetch currency rates:', error);
   }
 
   // Return default rates on error
@@ -83,7 +85,7 @@ export function setStoredCurrency(currency: CurrencyCode): void {
     localStorage.setItem(CURRENCY_STORAGE_KEY, currency);
     window.dispatchEvent(new Event('currency-updated'));
   } catch (error) {
-    console.error('Failed to save currency:', error);
+    logger.error('[CURRENCY] Failed to save currency preference:', error);
   }
 }
 
@@ -147,18 +149,6 @@ export function formatPrice(price: number, currency: CurrencyCode = 'AMD'): stri
     maximumFractionDigits,
   }).format(convertedPrice);
   
-  // Debug logging (always enabled to help debug currency conversion)
-  if (typeof window !== 'undefined') {
-    console.log(`💱 [formatPrice] ${price} AMD → ${convertedPrice.toFixed(4)} ${currency}`, {
-      amdRate,
-      targetRate,
-      usdPrice: usdPrice.toFixed(4),
-      convertedPrice: convertedPrice.toFixed(4),
-      cache: currencyRatesCache,
-      price,
-    });
-  }
-  
   return formatted;
 }
 
@@ -202,8 +192,7 @@ export async function initializeCurrencyRates(forceReload: boolean = false): Pro
     currencyRatesCacheTime = 0;
   }
   
-  const rates = await getCurrencyRates();
-  console.log('✅ [CURRENCY] Currency rates initialized:', rates);
+  await getCurrencyRates();
 }
 
 export function convertPrice(price: number, fromCurrency: CurrencyCode, toCurrency: CurrencyCode): number {

@@ -31,10 +31,18 @@ export async function handleAmeriabankCallback(searchParams: URLSearchParams): P
     return { redirect: `${failRedirect}?reason=missing_params` };
   }
 
-  const order = await db.order.findUnique({
-    where: { id: opaque },
-    include: { payments: true },
-  });
+  // Backward compatible resolution:
+  // - older inits stored opaque = order.id
+  // - new inits store opaque = order.number (Pxxx) to expose merchant order number to bank context
+  const order =
+    (await db.order.findFirst({
+      where: { id: opaque },
+      include: { payments: true },
+    })) ??
+    (await db.order.findFirst({
+      where: { number: opaque },
+      include: { payments: true },
+    }));
 
   if (!order) {
     return { redirect: `${failRedirect}?reason=order_not_found` };

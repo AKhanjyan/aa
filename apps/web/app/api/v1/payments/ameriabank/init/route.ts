@@ -115,7 +115,8 @@ export async function POST(req: NextRequest) {
       Currency: currencyCode,
       Description: `Order ${order.number}`,
       BackURL: backUrl,
-      Opaque: order.id,
+      // Send merchant-facing order reference (Pxxx) to bank callback context.
+      Opaque: order.number,
       lang: lang === "hy" ? "am" : lang === "ru" ? "ru" : "en",
     });
 

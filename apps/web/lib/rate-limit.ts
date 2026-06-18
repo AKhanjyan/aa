@@ -3,11 +3,13 @@
  * Uses Upstash Redis when UPSTASH_REDIS_REST_* are set; otherwise in-memory Map.
  */
 
+import { logger } from "@/lib/logger";
 import { getUpstashRedis } from "@/lib/upstash-redis";
 
 const WINDOW_MS = 60_000; // 1 minute
 
 const REDIS_KEY_PREFIX = "bba:rl:";
+const isProduction = process.env.NODE_ENV === "production";
 
 interface MemoryEntry {
   count: number;
@@ -86,13 +88,15 @@ export async function checkRateLimit(
   limit: number,
   pathLabel: string
 ): Promise<number | null> {
+  if (!isProduction) return null;
+
   if (!getUpstashRedis()) {
     return checkRateLimitMemory(request, limit, pathLabel);
   }
   try {
     return await checkRateLimitRedis(request, limit, pathLabel);
   } catch (err) {
-    console.error("[rate-limit] Redis error, using in-memory fallback", err);
+    logger.error("[rate-limit] Redis error, using in-memory fallback", err);
     return checkRateLimitMemory(request, limit, pathLabel);
   }
 }
