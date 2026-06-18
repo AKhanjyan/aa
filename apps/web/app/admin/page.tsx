@@ -45,6 +45,7 @@ interface TopProduct {
   sku: string;
   totalQuantity: number;
   totalRevenue: number;
+  currency: string;
   orderCount: number;
   image?: string | null;
 }
@@ -540,7 +541,7 @@ export default function AdminPanel() {
               ) : (
                 topProducts.map((product, index) => (
                   <div
-                    key={product.variantId}
+                    key={`${product.variantId}-${product.currency}`}
                     className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                     onClick={() => router.push(`/admin/products/${product.productId}`)}
                   >
@@ -567,7 +568,7 @@ export default function AdminPanel() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-gray-900">
-                        {formatCurrency(product.totalRevenue, 'USD')}
+                        {formatCurrency(product.totalRevenue, product.currency)}
                       </p>
                     </div>
                   </div>
@@ -641,7 +642,7 @@ export default function AdminPanel() {
         {/* Quick Actions */}
         <Card className="p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('admin.dashboard.quickActions')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             <ProductPageButton
               variant="outline"
               onClick={() => router.push('/admin/products/add')}
@@ -654,8 +655,8 @@ export default function AdminPanel() {
                   </svg>
                 </div>
                 <div className="text-left min-w-0">
-                  <p className="font-medium text-gray-900 whitespace-nowrap">{t('admin.dashboard.addProduct')}</p>
-                  <p className="text-xs text-gray-500 whitespace-nowrap">{t('admin.dashboard.createNewProduct')}</p>
+                  <p className="font-medium text-gray-900 leading-tight break-words">{t('admin.dashboard.addProduct')}</p>
+                  <p className="text-xs text-gray-500 leading-tight break-words">{t('admin.dashboard.createNewProduct')}</p>
                 </div>
               </div>
             </ProductPageButton>
@@ -671,8 +672,8 @@ export default function AdminPanel() {
                   </svg>
                 </div>
                 <div className="text-left min-w-0">
-                  <p className="font-medium text-gray-900 whitespace-nowrap">{t('admin.dashboard.manageUsers')}</p>
-                  <p className="text-xs text-gray-500 whitespace-nowrap">{t('admin.dashboard.viewAllUsers')}</p>
+                  <p className="font-medium text-gray-900 leading-tight break-words">{t('admin.dashboard.manageUsers')}</p>
+                  <p className="text-xs text-gray-500 leading-tight break-words">{t('admin.dashboard.viewAllUsers')}</p>
                 </div>
               </div>
             </ProductPageButton>
@@ -689,8 +690,8 @@ export default function AdminPanel() {
                   </svg>
                 </div>
                 <div className="text-left min-w-0">
-                  <p className="font-medium text-gray-900 whitespace-nowrap">{t('admin.dashboard.settings')}</p>
-                  <p className="text-xs text-gray-500 whitespace-nowrap">{t('admin.dashboard.configureSystem')}</p>
+                  <p className="font-medium text-gray-900 leading-tight break-words">{t('admin.dashboard.settings')}</p>
+                  <p className="text-xs text-gray-500 leading-tight break-words">{t('admin.dashboard.configureSystem')}</p>
                 </div>
               </div>
             </ProductPageButton>
