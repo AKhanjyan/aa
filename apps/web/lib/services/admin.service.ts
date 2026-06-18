@@ -3683,6 +3683,11 @@ class AdminService {
     // Get all order items with their variants
     const orderItems = await db.orderItem.findMany({
       include: {
+        order: {
+          select: {
+            currency: true,
+          },
+        },
         variant: {
           include: {
             product: {
@@ -3708,6 +3713,7 @@ class AdminService {
         sku: string;
         totalQuantity: number;
         totalRevenue: number;
+        currency: string;
         orderCount: number;
         image?: string | null;
       }
@@ -3723,24 +3729,27 @@ class AdminService {
       const translation = translations[0];
       const title = translation?.title || "Unknown Product";
       const sku = item.variant.sku || item.sku || "N/A";
+      const currency = item.order.currency || "AMD";
       const image = product && Array.isArray(product.media) && product.media.length > 0
         ? (product.media[0] as any)?.url || null
         : null;
+      const productStatsKey = `${variantId}:${currency}`;
 
-      if (!productStats.has(variantId)) {
-        productStats.set(variantId, {
+      if (!productStats.has(productStatsKey)) {
+        productStats.set(productStatsKey, {
           variantId,
           productId,
           title,
           sku,
           totalQuantity: 0,
           totalRevenue: 0,
+          currency,
           orderCount: 0,
           image,
         });
       }
 
-      const stats = productStats.get(variantId)!;
+      const stats = productStats.get(productStatsKey)!;
       stats.totalQuantity += item.quantity;
       stats.totalRevenue += item.total;
       stats.orderCount += 1;
