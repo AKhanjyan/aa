@@ -114,7 +114,8 @@ export async function POST(req: NextRequest) {
       description: `Order ${order.number}`,
       callback_url: callbackUrl,
       webhook_url: webhookUrl,
-      external_order_id: order.id,
+      // Merchant-facing order identifier sent to provider context.
+      external_order_id: order.number,
     });
 
     await db.payment.update({

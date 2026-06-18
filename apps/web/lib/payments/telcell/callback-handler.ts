@@ -36,8 +36,9 @@ const TELCELL_CURRENCY_TO_OUR: Record<string, string> = { "51": "AMD", "֏": "AM
 
 /**
  * Resolve order from callback params. Doc: issuer_id = «код заказа в системе магазина».
- * We send issuer_id = base64(order.id). Telcell may echo back plain order id (not base64) — try id(raw) first.
- * Then id(decoded), number(decoded), number(raw). Fallback: sum + currency (51 → AMD).
+ * New flow sends issuer_id = base64(order.number) (Pxxx).
+ * Backward compatibility: old flow used base64(order.id).
+ * Try number(decoded/raw) first, then id(raw/decoded). Fallback: sum + currency (51 → AMD).
  */
 async function findOrderByTelcellCallback(
   issuerIdRaw: string,
@@ -46,18 +47,6 @@ async function findOrderByTelcellCallback(
 ): Promise<OrderWithPayments | null> {
   const decoded = decodeIssuerId(issuerIdRaw);
   const orderCurrency = TELCELL_CURRENCY_TO_OUR[currency] ?? currency;
-
-  const byIdRaw = await db.order.findFirst({
-    where: { id: issuerIdRaw },
-    include: { payments: true },
-  });
-  if (byIdRaw) return byIdRaw as OrderWithPayments;
-
-  const byIdDecoded = await db.order.findFirst({
-    where: { id: decoded },
-    include: { payments: true },
-  });
-  if (byIdDecoded) return byIdDecoded as OrderWithPayments;
 
   const byNumberDecoded = await db.order.findFirst({
     where: { number: decoded },
@@ -72,6 +61,18 @@ async function findOrderByTelcellCallback(
     });
     if (byNumberRaw) return byNumberRaw as OrderWithPayments;
   }
+
+  const byIdRaw = await db.order.findFirst({
+    where: { id: issuerIdRaw },
+    include: { payments: true },
+  });
+  if (byIdRaw) return byIdRaw as OrderWithPayments;
+
+  const byIdDecoded = await db.order.findFirst({
+    where: { id: decoded },
+    include: { payments: true },
+  });
+  if (byIdDecoded) return byIdDecoded as OrderWithPayments;
 
   const sumNum = parseFloat(sum);
   if (Number.isFinite(sumNum) && orderCurrency) {

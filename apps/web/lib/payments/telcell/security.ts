@@ -56,7 +56,7 @@ export function verifyTelcellResultChecksum(
  * REDIRECT_URL is configured with Telcell; Telcell appends params (e.g. issuer_id, order) when redirecting.
  */
 export function buildTelcellRedirectUrl(input: {
-  orderId: string;
+  orderReference: string;
   orderTotal: number;
   productDescription: string;
   validDays?: number;
@@ -65,7 +65,9 @@ export function buildTelcellRedirectUrl(input: {
   const config = getConfig();
   const price = String(Math.round(input.orderTotal));
   const product = Buffer.from(input.productDescription, "utf8").toString("base64");
-  const issuerId = Buffer.from(input.orderId, "utf8").toString("base64");
+  // issuer_id is merchant order code in Telcell docs.
+  // We send our public order number (Pxxx), not internal DB id.
+  const issuerId = Buffer.from(input.orderReference, "utf8").toString("base64");
   const validDays = String(input.validDays ?? 1);
   const lang = input.lang ?? "am";
 

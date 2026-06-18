@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
 
     const langParam = TELCELL_LANG_MAP[lang] ?? "am";
     const redirectUrl = buildTelcellRedirectUrl({
-      orderId: order.id,
+      orderReference: order.number,
       orderTotal: total,
       productDescription: `Order ${order.number}`,
       validDays: 1,

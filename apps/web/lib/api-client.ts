@@ -198,10 +198,8 @@ class ApiClient {
     }
   }
 
-  async get<T>(endpoint: string, options?: RequestOptions, retryCount = 0): Promise<T> {
+  async get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
     const url = this.buildUrl(endpoint, options?.params);
-    const maxRetries = 3;
-    const retryDelay = 1000; // 1 second
     // Reduced timeout for faster failure - 10 seconds for product details, 15 seconds for other requests
     const timeout = endpoint.includes('/products/') ? 10000 : 15000;
     
@@ -284,14 +282,6 @@ class ApiClient {
     }
 
     if (!response.ok) {
-      // Retry on 429 (Too Many Requests) errors
-      if (response.status === 429 && retryCount < maxRetries) {
-        const delay = retryDelay * (retryCount + 1); // Exponential backoff
-        logger.warn(`⚠️ [API CLIENT] Rate limited, retrying in ${delay}ms... (attempt ${retryCount + 1}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        return this.get<T>(endpoint, options, retryCount + 1);
-      }
-
       let errorText = '';
       let errorData: any = null;
       const isUnauthorized = response.status === 401;
