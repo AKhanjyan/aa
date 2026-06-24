@@ -784,10 +784,12 @@
       "expiresAtDescription": "Ամսաթիվ և ժամ, երբ կուպոնը դադարում է վավեր լինել",
       "quantity": "Քանակ",
       "quantityDescription": "Կուպոնի օգտագործման առավելագույն քանակը",
-      "discountType": "Զեղչի տիպ",
+      "discountType": "Զեղչի տեսակ",
       "discountTypeDescription": "Ընտրեք տոկոսային կամ ֆիքսված գումար",
-      "discountValue": "Զեղչի արժեք",
-      "discountValueDescription": "Զեղչի չափը (տոկոս)",
+      "discountValue": "Արժեք",
+      "discountValueDescription": "Զեղչի չափը",
+      "discountValuePercentDescription": "Զեղչի չափը (տոկոս)",
+      "discountValueFixedDescription": "Զեղչի չափը (AMD)",
       "selectUsers": "Ընտրել օգտատերեր",
       "selectUsersDescription": "Ընտրեք օգտատերեր, որոնք կարող են օգտագործել այս կուպոնը (դատարկ = բոլոր օգտատերերը)",
       "active": "Ակտիվ",
@@ -795,7 +797,7 @@
     },
     "discount": {
       "percent": "Տոկոս",
-      "fixed": "Ֆիքսված գումար"
+      "fixed": "Ֆիքս գումար (AMD)"
     },
     "status": {
       "used": "օգտագործված",
