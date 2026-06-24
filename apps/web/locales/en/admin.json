@@ -795,8 +795,10 @@
       "quantityDescription": "Maximum number of times the coupon can be used",
       "discountType": "Discount Type",
       "discountTypeDescription": "Choose percentage or fixed amount",
-      "discountValue": "Discount Value",
-      "discountValueDescription": "Discount amount (percentage)",
+      "discountValue": "Value",
+      "discountValueDescription": "Discount amount",
+      "discountValuePercentDescription": "Discount amount (percentage)",
+      "discountValueFixedDescription": "Discount amount (AMD)",
       "selectUsers": "Select Users",
       "selectUsersDescription": "Select users who can use this coupon (empty = all users)",
       "active": "Active",
@@ -804,7 +806,7 @@
     },
     "discount": {
       "percent": "Percent",
-      "fixed": "Fixed amount"
+      "fixed": "Fixed amount (AMD)"
     },
     "status": {
       "used": "used",
