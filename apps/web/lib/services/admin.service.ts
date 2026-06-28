@@ -612,6 +612,8 @@ class AdminService {
         customerLastName: lastName,
         customerId: customer?.id || null,
         itemsCount: order.items.length,
+        discountAmount: Number((order as { discountAmount?: number }).discountAmount) || 0,
+        couponCode: (order as { couponCode?: string | null }).couponCode ?? null,
         createdAt: order.createdAt.toISOString(),
         hasEhdmReceipt: !!order.ehdmReceipt,
       };
@@ -790,6 +792,7 @@ class AdminService {
       subtotal: order.subtotal || 0,
       shippingAmount: order.shippingAmount || 0,
       discountAmount: order.discountAmount || 0,
+      couponCode: order.couponCode || null,
       taxAmount: order.taxAmount || 0,
       totals: {
         subtotal: Number(order.subtotal),

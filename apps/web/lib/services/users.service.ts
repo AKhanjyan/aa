@@ -329,7 +329,19 @@ class UsersService {
     });
 
     // Get recent orders (last 5)
-    const recentOrders = orders.slice(0, 5).map((order: { id: string; number: string; status: string; paymentStatus: string; fulfillmentStatus: string; total: number; currency: string | null; createdAt: Date; items: Array<unknown> }) => ({
+    const recentOrders = orders.slice(0, 5).map((order: {
+      id: string;
+      number: string;
+      status: string;
+      paymentStatus: string;
+      fulfillmentStatus: string;
+      total: number;
+      currency: string | null;
+      discountAmount: number;
+      couponCode: string | null;
+      createdAt: Date;
+      items: Array<unknown>;
+    }) => ({
       id: order.id,
       number: order.number,
       status: order.status,
@@ -337,6 +349,8 @@ class UsersService {
       fulfillmentStatus: order.fulfillmentStatus,
       total: order.total,
       currency: order.currency,
+      discountAmount: Number(order.discountAmount) || 0,
+      couponCode: order.couponCode ?? null,
       itemsCount: order.items.length,
       createdAt: order.createdAt.toISOString(),
     }));

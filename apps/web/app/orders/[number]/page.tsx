@@ -66,6 +66,7 @@ interface Order {
   status: string;
   paymentStatus: string;
   fulfillmentStatus: string;
+  couponCode?: string | null;
   items: OrderItem[];
   totals: {
     subtotal: number;
@@ -394,23 +395,12 @@ export default function OrderPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('orders.orderSummary.title')}</h2>
               <div className="space-y-4 mb-6">
                 {(() => {
-                  // Use order.totals.subtotal and subtract discount to get discounted subtotal
-                  // (like checkout uses cart.totals.subtotal which is already discounted)
-                  // Order totals.subtotal is non-discounted, discount is stored separately
-                  const originalSubtotal = order.totals?.subtotal || 0;
+                  const subtotal = order.totals?.subtotal || 0;
                   const discount = order.totals?.discount || 0;
-                  // Calculate discounted subtotal: original - discount
-                  // If discount is 0, items might already be discounted, so use items total
-                  const subtotal = discount > 0 
-                    ? originalSubtotal - discount
-                    : order.items.reduce((sum, item) => sum + item.total, 0);
-                  // Use shipping price from API if available, convert from AMD to USD like checkout does
-                  // Otherwise use order.totals.shipping (already converted)
-                  const shipping = shippingPrice !== null 
+                  const shipping = shippingPrice !== null
                     ? shippingPrice
                     : (order.totals?.shipping || 0);
-                  // Calculate total the same way checkout does: subtotal + shipping
-                  const total = subtotal + shipping;
+                  const total = order.totals?.total ?? subtotal - discount + shipping;
 
                   return (
                     <>
@@ -419,8 +409,11 @@ export default function OrderPage() {
                         <span>{formatPrice(subtotal, currency)}</span>
                       </div>
                       {discount > 0 && (
-                        <div className="flex justify-between text-gray-600">
-                          <span>{t('orders.orderSummary.discount')}</span>
+                        <div className="flex justify-between text-green-700">
+                          <span>
+                            {t('checkout.summary.discount')}
+                            {order.couponCode ? ` (${order.couponCode})` : ''}
+                          </span>
                           <span>-{formatPrice(discount, currency)}</span>
                         </div>
                       )}
@@ -435,9 +428,17 @@ export default function OrderPage() {
                         </span>
                       </div>
                       <div className="border-t border-white/20 pt-4">
-                        <div className="flex justify-between text-lg font-bold text-gray-900">
-                          <span>{t('orders.orderSummary.total')}</span>
-                          <span>{formatPrice(total, currency)}</span>
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                          <span className="text-lg font-bold text-gray-900">{t('orders.orderSummary.total')}</span>
+                          <div className="flex flex-wrap items-baseline justify-end gap-x-2 gap-y-0.5">
+                            <span className="text-lg font-bold text-gray-900">{formatPrice(total, currency)}</span>
+                            {discount > 0 && (
+                              <span className="text-sm font-medium text-green-700">
+                                {t('checkout.summary.discount')}: -{formatPrice(discount, currency)}
+                                {order.couponCode ? ` (${order.couponCode})` : ''}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </>
