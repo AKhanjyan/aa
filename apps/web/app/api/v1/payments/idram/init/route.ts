@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@white-shop/db";
 import { isIdramConfigured, buildIdramFormData } from "@/lib/payments/idram";
+import { buildPaymentPurposeDescription } from "@/lib/payments/payment-purpose-description";
 
 const PAYMENT_PROVIDER = "idram";
 
@@ -123,7 +124,7 @@ export async function POST(req: NextRequest) {
     const { formAction, formData } = buildIdramFormData({
       orderNumber: order.number,
       amount,
-      description: `Order ${order.number}`,
+      description: buildPaymentPurposeDescription(order),
       lang: lang === "hy" ? "am" : lang,
       email: order.customerEmail ?? undefined,
     });

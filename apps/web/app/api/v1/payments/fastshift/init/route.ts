@@ -6,6 +6,7 @@ import {
   generateFastshiftOrderGuid,
   getConfig,
 } from "@/lib/payments/fastshift";
+import { buildPaymentPurposeDescription } from "@/lib/payments/payment-purpose-description";
 import { parseBody, fastshiftInitBodySchema } from "@/lib/validate";
 import { validateOrigin } from "@/lib/csrf";
 
@@ -111,7 +112,7 @@ export async function POST(req: NextRequest) {
     const { redirectUrl, orderNumber: fastshiftOrderNumber } = await registerOrder({
       order_number: orderGuid,
       amount: Math.round(total),
-      description: `Order ${order.number}`,
+      description: buildPaymentPurposeDescription(order),
       callback_url: callbackUrl,
       webhook_url: webhookUrl,
       // Merchant-facing order identifier sent to provider context.

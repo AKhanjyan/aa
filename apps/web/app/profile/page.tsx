@@ -69,6 +69,7 @@ interface OrderDetails {
   status: string;
   paymentStatus: string;
   fulfillmentStatus: string;
+  couponCode?: string | null;
   items: OrderItem[];
   totals: {
     subtotal: number;
@@ -92,6 +93,45 @@ interface OrderDetails {
   }>;
   createdAt: string;
   updatedAt: string;
+}
+
+type ProfileOrderListItem = {
+  id: string;
+  number: string;
+  status: string;
+  paymentStatus: string;
+  fulfillmentStatus: string;
+  total: number;
+  currency: string;
+  discountAmount?: number;
+  couponCode?: string | null;
+  itemsCount: number;
+  createdAt: string;
+};
+
+function ProfileOrderListPrice({
+  total,
+  discountAmount,
+  couponCode,
+  currency,
+}: {
+  total: number;
+  discountAmount?: number;
+  couponCode?: string | null;
+  currency: string;
+}) {
+  const code = (currency || 'AMD') as CurrencyCode;
+  return (
+    <div className="flex flex-wrap items-baseline justify-end gap-x-2 gap-y-0.5">
+      <p className="text-lg font-bold text-gray-900">{formatPrice(total, code)}</p>
+      {(discountAmount ?? 0) > 0 && (
+        <p className="text-xs font-medium text-green-700">
+          -{formatPrice(discountAmount ?? 0, code)}
+          {couponCode ? ` (${couponCode})` : ''}
+        </p>
+      )}
+    </div>
+  );
 }
 
 function ProfilePageContent() {
@@ -155,32 +195,12 @@ function ProfilePageContent() {
       addressesCount: number;
       ordersByStatus: Record<string, number>;
     };
-    recentOrders: Array<{
-      id: string;
-      number: string;
-      status: string;
-      paymentStatus: string;
-      fulfillmentStatus: string;
-      total: number;
-      currency: string;
-      itemsCount: number;
-      createdAt: string;
-    }>;
+    recentOrders: Array<ProfileOrderListItem>;
   } | null>(null);
   const [dashboardLoading, setDashboardLoading] = useState(false);
 
   // Orders
-  const [orders, setOrders] = useState<Array<{
-    id: string;
-    number: string;
-    status: string;
-    paymentStatus: string;
-    fulfillmentStatus: string;
-    total: number;
-    currency: string;
-    itemsCount: number;
-    createdAt: string;
-  }>>([]);
+  const [orders, setOrders] = useState<Array<ProfileOrderListItem>>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersPage, setOrdersPage] = useState(1);
   const [ordersMeta, setOrdersMeta] = useState<{
@@ -296,17 +316,7 @@ function ProfilePageContent() {
           addressesCount: number;
           ordersByStatus: Record<string, number>;
         };
-        recentOrders: Array<{
-          id: string;
-          number: string;
-          status: string;
-          paymentStatus: string;
-          fulfillmentStatus: string;
-          total: number;
-          currency: string;
-          itemsCount: number;
-          createdAt: string;
-        }>;
+        recentOrders: Array<ProfileOrderListItem>;
       }>('/api/v1/users/dashboard');
       console.log('✅ [PROFILE] Dashboard data loaded:', data);
       setDashboardData(data);
@@ -950,9 +960,12 @@ function ProfilePageContent() {
                             </p>
                           </div>
                           <div className="text-right ml-4">
-                            <p className="text-lg font-bold text-gray-900">
-                              {formatPrice(order.total, (order.currency || 'AMD') as CurrencyCode)}
-                            </p>
+                            <ProfileOrderListPrice
+                              total={order.total}
+                              discountAmount={order.discountAmount}
+                              couponCode={order.couponCode}
+                              currency={order.currency}
+                            />
                             <p className="text-xs text-gray-500 mt-1">{t('profile.dashboard.viewDetails')}</p>
                           </div>
                         </div>
@@ -1212,9 +1225,12 @@ function ProfilePageContent() {
                       </p>
                     </div>
                     <div className="text-right ml-4">
-                      <p className="text-lg font-bold text-gray-900">
-                        {formatPrice(order.total, (order.currency || 'AMD') as CurrencyCode)}
-                      </p>
+                      <ProfileOrderListPrice
+                        total={order.total}
+                        discountAmount={order.discountAmount}
+                        couponCode={order.couponCode}
+                        currency={order.currency}
+                      />
                       <p className="text-xs text-gray-500 mt-1">{t('profile.dashboard.viewDetails')}</p>
                     </div>
                   </div>
@@ -1560,18 +1576,12 @@ function ProfilePageContent() {
                         <div className="space-y-4 mb-6">
                           {selectedOrder.totals ? (
                             (() => {
-                              // Calculate subtotal: original subtotal minus discount
-                              const originalSubtotal = selectedOrder.totals.subtotal || 0;
+                              const subtotal = selectedOrder.totals.subtotal || 0;
                               const discount = selectedOrder.totals.discount || 0;
-                              const subtotal = discount > 0 
-                                ? originalSubtotal - discount
-                                : selectedOrder.items.reduce((sum, item) => sum + item.total, 0);
-                              // Use shipping price from API if available, otherwise use order totals
-                              const shipping = shippingPrice !== null 
+                              const shipping = shippingPrice !== null
                                 ? shippingPrice
                                 : (selectedOrder.totals.shipping || 0);
-                              // Calculate total: subtotal + shipping
-                              const total = subtotal + shipping;
+                              const total = selectedOrder.totals.total ?? subtotal - discount + shipping;
 
                               return (
                                 <>
@@ -1580,8 +1590,11 @@ function ProfilePageContent() {
                                     <span>{formatPrice(subtotal, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}</span>
                                   </div>
                                   {discount > 0 && (
-                                    <div className="flex justify-between text-gray-600">
-                                      <span>{t('profile.orderDetails.discount')}</span>
+                                    <div className="flex justify-between text-green-700">
+                                      <span>
+                                        {t('checkout.summary.discount')}
+                                        {selectedOrder.couponCode ? ` (${selectedOrder.couponCode})` : ''}
+                                      </span>
                                       <span>-{formatPrice(discount, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}</span>
                                     </div>
                                   )}
@@ -1590,9 +1603,19 @@ function ProfilePageContent() {
                                     <span>{formatPrice(shipping, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}</span>
                                   </div>
                                   <div className="border-t border-gray-200 pt-4">
-                                    <div className="flex justify-between text-lg font-bold text-gray-900">
-                                      <span>{t('profile.orderDetails.total')}</span>
-                                      <span>{formatPrice(total, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}</span>
+                                    <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                                      <span className="text-lg font-bold text-gray-900">{t('profile.orderDetails.total')}</span>
+                                      <div className="flex flex-wrap items-baseline justify-end gap-x-2 gap-y-0.5">
+                                        <span className="text-lg font-bold text-gray-900">
+                                          {formatPrice(total, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}
+                                        </span>
+                                        {discount > 0 && (
+                                          <span className="text-sm font-medium text-green-700">
+                                            {t('checkout.summary.discount')}: -{formatPrice(discount, (selectedOrder.totals.currency || 'AMD') as CurrencyCode)}
+                                            {selectedOrder.couponCode ? ` (${selectedOrder.couponCode})` : ''}
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </>

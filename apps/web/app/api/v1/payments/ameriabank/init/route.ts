@@ -9,6 +9,7 @@ import {
   toAmeriaOrderId,
   AMERIA_CURRENCY_MAP,
 } from "@/lib/payments/ameriabank";
+import { buildPaymentPurposeDescription } from "@/lib/payments/payment-purpose-description";
 
 const PAYMENT_PROVIDER = "ameriabank";
 
@@ -113,7 +114,8 @@ export async function POST(req: NextRequest) {
       OrderID: ameriaOrderId,
       Amount: order.total,
       Currency: currencyCode,
-      Description: `Order ${order.number}`,
+      // Shown on bank pay page as purpose/comment (նպատակ).
+      Description: buildPaymentPurposeDescription(order),
       BackURL: backUrl,
       // Send merchant-facing order reference (Pxxx) to bank callback context.
       Opaque: order.number,

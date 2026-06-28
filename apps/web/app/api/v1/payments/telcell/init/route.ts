@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@white-shop/db";
 import { isTelcellConfigured, buildTelcellRedirectUrl, TELCELL_LANG_MAP } from "@/lib/payments/telcell";
+import { buildPaymentPurposeDescription } from "@/lib/payments/payment-purpose-description";
 
 const PAYMENT_PROVIDER = "telcell";
 
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest) {
     const redirectUrl = buildTelcellRedirectUrl({
       orderReference: order.number,
       orderTotal: total,
-      productDescription: `Order ${order.number}`,
+      productDescription: buildPaymentPurposeDescription(order),
       validDays: 1,
       lang: langParam,
     });

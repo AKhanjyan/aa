@@ -25,6 +25,8 @@ interface Order {
   customerLastName?: string;
   customerId?: string | null;
   itemsCount: number;
+  discountAmount?: number;
+  couponCode?: string | null;
   createdAt: string;
   hasEhdmReceipt?: boolean;
 }
@@ -922,7 +924,15 @@ export default function OrdersPage() {
                           <div className="mt-1 text-xs text-blue-600">{t('admin.orders.viewOrderDetails')}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {formatCurrency(order.total, order.currency)}
+                          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                            <span>{formatCurrency(order.total, order.currency)}</span>
+                            {(order.discountAmount ?? 0) > 0 && (
+                              <span className="text-xs font-medium text-green-700">
+                                -{formatPrice(order.discountAmount ?? 0, (order.currency || 'AMD') as CurrencyCode)}
+                                {order.couponCode ? ` (${order.couponCode})` : ''}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {order.itemsCount}
