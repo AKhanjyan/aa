@@ -693,7 +693,14 @@ export default function OrderDetailPage() {
             </div>
             <div className="p-4">
               {order.ehdmReceipt != null ? (
-                <EhdmReceiptBlock receipt={order.ehdmReceipt} orderNumber={order.number} variant="full" />
+                <EhdmReceiptBlock
+                  receipt={order.ehdmReceipt}
+                  orderNumber={order.number}
+                  discountAmount={order.totals?.discount ?? order.discountAmount ?? 0}
+                  couponCode={order.couponCode}
+                  currency={currency}
+                  variant="full"
+                />
               ) : (
                 <p className="text-gray-500 py-4">{t('admin.orders.orderDetails.fiscalReceiptNotCreated')}</p>
               )}

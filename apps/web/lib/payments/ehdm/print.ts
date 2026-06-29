@@ -9,11 +9,51 @@ import type {
 
 const MODE_SALE_WITH_ITEMS = 2;
 const GOOD_NAME_MAX_LENGTH = 30;
+/** EHDM: monetary coupon/order discount on line total — (price × qty) − additionalDiscount */
+const EHDM_ADDITIONAL_DISCOUNT_TYPE_MONETARY = 16;
 
 export type OrderWithItemsAndPayments = Order & {
   items: OrderItem[];
   payments?: Payment[];
 };
+
+function roundEhdmMoney(amount: number): number {
+  return Math.round(amount * 100) / 100;
+}
+
+/**
+ * Split order-level coupon discount across product lines proportional to line totals.
+ * Last line absorbs rounding remainder so allocations sum exactly to couponDiscount.
+ */
+function allocateCouponDiscountAcrossLines(
+  lineTotals: number[],
+  couponDiscount: number
+): number[] {
+  if (couponDiscount <= 0 || lineTotals.length === 0) {
+    return lineTotals.map(() => 0);
+  }
+
+  const subtotal = lineTotals.reduce((sum, total) => sum + total, 0);
+  if (subtotal <= 0) {
+    return lineTotals.map(() => 0);
+  }
+
+  const cappedDiscount = Math.min(couponDiscount, subtotal);
+  const allocations: number[] = [];
+  let allocated = 0;
+
+  for (let i = 0; i < lineTotals.length; i++) {
+    if (i === lineTotals.length - 1) {
+      allocations.push(roundEhdmMoney(cappedDiscount - allocated));
+      continue;
+    }
+    const share = roundEhdmMoney((cappedDiscount * lineTotals[i]) / subtotal);
+    allocations.push(share);
+    allocated += share;
+  }
+
+  return allocations;
+}
 
 /**
  * Build EHDM /print request body from order and config.
@@ -28,8 +68,14 @@ export function buildPrintBody(
     order.payments?.some((p) => p.provider === "cash_on_delivery") ?? false;
 
   const items: EhdmPrintItem[] = [];
+  const couponDiscount = Number(order.discountAmount) || 0;
+  const couponAllocations = allocateCouponDiscountAcrossLines(
+    order.items.map((item) => Number(item.total)),
+    couponDiscount
+  );
 
-  for (const item of order.items) {
+  for (let i = 0; i < order.items.length; i++) {
+    const item = order.items[i];
     const quantity = Number(item.quantity);
     const unitPrice =
       quantity > 0 ? Number(item.total) / quantity : Number(item.price);
@@ -37,15 +83,21 @@ export function buildPrintBody(
       0,
       GOOD_NAME_MAX_LENGTH
     );
-    items.push({
+    const printItem: EhdmPrintItem = {
       dep: config.dep,
       adgCode: config.defaultAdgCode,
       goodCode: item.sku || "0",
       goodName,
       quantity,
       unit: config.defaultUnit,
-      price: Math.round(unitPrice * 10) / 10,
-    });
+      price: roundEhdmMoney(unitPrice),
+    };
+    const lineCouponDiscount = couponAllocations[i] ?? 0;
+    if (lineCouponDiscount > 0) {
+      printItem.additionalDiscount = lineCouponDiscount;
+      printItem.additionalDiscountType = EHDM_ADDITIONAL_DISCOUNT_TYPE_MONETARY;
+    }
+    items.push(printItem);
   }
 
   if (config.shippingEnabled && order.shippingAmount != null && Number(order.shippingAmount) > 0) {

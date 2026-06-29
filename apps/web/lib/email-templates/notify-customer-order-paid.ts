@@ -19,6 +19,10 @@ function mapToDetails(order: {
   customerEmail: string | null;
   customerPhone: string | null;
   customerLocale: string;
+  subtotal: number;
+  discountAmount: number;
+  shippingAmount: number;
+  couponCode: string | null;
   total: number;
   currency: string | null;
   shippingAddress: unknown;
@@ -43,6 +47,10 @@ function mapToDetails(order: {
     customerEmail: order.customerEmail ?? "",
     customerPhone: order.customerPhone,
     customerLocale: order.customerLocale,
+    subtotal: order.subtotal,
+    discountAmount: order.discountAmount,
+    shippingAmount: order.shippingAmount,
+    couponCode: order.couponCode,
     total: order.total,
     currency: order.currency ?? "AMD",
     shippingAddress: order.shippingAddress,

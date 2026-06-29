@@ -6,6 +6,8 @@ import { sendEmail } from "@/lib/email";
 import { resend } from "@/lib/resend";
 import {
   buildItemsRows,
+  buildOrderTotalsHtml,
+  buildOrderTotalsTextLines,
   escapeHtml,
   formatAddress,
   formatCustomerName,
@@ -44,6 +46,9 @@ function strings(locale: LocaleKey) {
       address: "Հասցե",
       deliveryDay: "Առաքման օր",
       items: "Պատվերի կազմ",
+      subtotal: "Ենթագումար",
+      discount: "Կուպոնի զեղչ",
+      shipping: "Առաքում",
       total: "Ընդամենը",
       cashNote:
         "Վճարումը կկատարվի կանխիկ կամ առաքման պահին, ինչպես ընտրել եք։",
@@ -65,6 +70,9 @@ function strings(locale: LocaleKey) {
       address: "Address",
       deliveryDay: "Delivery day",
       items: "Order items",
+      subtotal: "Subtotal",
+      discount: "Coupon discount",
+      shipping: "Shipping",
       total: "Total",
       cashNote: "Payment will be made in cash or on delivery as you selected.",
       ehdmHeading: "Electronic fiscal receipt (EHDM)",
@@ -85,6 +93,9 @@ function strings(locale: LocaleKey) {
       address: "Адрес",
       deliveryDay: "День доставки",
       items: "Состав заказа",
+      subtotal: "Промежуточный итог",
+      discount: "Скидка по купону",
+      shipping: "Доставка",
       total: "Итого",
       cashNote: "Оплата наличными или при получении, как вы выбрали.",
       ehdmHeading: "Электронный фискальный чек (EHDM)",
@@ -112,6 +123,12 @@ function buildCustomerOrderDetailSection(
   const pay = formatPaymentMethod(order.paymentMethod);
   const day = formatDeliveryDay(order.shippingAddress);
   const rows = buildItemsRows(order);
+  const totals = buildOrderTotalsHtml(order, {
+    subtotal: L.subtotal,
+    discount: L.discount,
+    shipping: L.shipping,
+    total: L.total,
+  });
   return `
       <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px;">
         <tr><td style="padding:6px 0;color:#64748b;width:130px;">${escapeHtml(L.orderNumber)}</td><td style="padding:6px 0;font-weight:600;">#${escapeHtml(order.number)}</td></tr>
@@ -131,7 +148,7 @@ function buildCustomerOrderDetailSection(
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
-      <div style="margin-top:16px;text-align:right;font-size:18px;font-weight:700;">${escapeHtml(L.total)}: ${formatMoney(order.total)} ${escapeHtml(order.currency)}</div>`;
+      ${totals}`;
 }
 
 function buildEhdmBlock(ehdm: EhdmReceiptForEmail, L: ReturnType<typeof strings>): string {
@@ -207,7 +224,12 @@ function textLinesCash(
         `${i.productTitle} x${i.quantity} = ${formatMoney(i.total)} ${order.currency}`
     ),
     "",
-    `${L.total}: ${formatMoney(order.total)} ${order.currency}`,
+    ...buildOrderTotalsTextLines(order, {
+      subtotal: L.subtotal,
+      discount: L.discount,
+      shipping: L.shipping,
+      total: L.total,
+    }),
   ];
   return lines.join("\n");
 }
@@ -222,7 +244,12 @@ function textLinesPaid(
     L.paidSubject(order.number),
     "",
     `${L.orderNumber}: #${order.number}`,
-    `${L.total}: ${formatMoney(order.total)} ${order.currency}`,
+    ...buildOrderTotalsTextLines(order, {
+      subtotal: L.subtotal,
+      discount: L.discount,
+      shipping: L.shipping,
+      total: L.total,
+    }),
   ];
   if (ehdm) {
     lines.push("", L.ehdmHeading, `${L.receiptNo}: ${ehdm.receiptId}`);

@@ -452,6 +452,9 @@ export default function OrderPage() {
                   <EhdmReceiptBlock
                     receipt={order.ehdmReceipt}
                     orderNumber={order.number}
+                    discountAmount={order.totals?.discount ?? 0}
+                    couponCode={order.couponCode}
+                    currency={order.currency || 'AMD'}
                     variant="full"
                   />
                 </div>

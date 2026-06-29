@@ -25,6 +25,10 @@ export type EhdmReceiptData = {
 type Props = {
   receipt: EhdmReceiptData;
   orderNumber?: string;
+  /** Coupon discount sent to EHDM (additionalDiscountType 16). */
+  discountAmount?: number;
+  couponCode?: string | null;
+  currency?: string;
   /** Compact: less spacing, for sidebar. Full: full receipt layout. */
   variant?: "compact" | "full";
 };
@@ -50,6 +54,9 @@ function formatReceiptTime(unixSeconds: number | undefined): string {
 export function EhdmReceiptBlock({
   receipt,
   orderNumber,
+  discountAmount = 0,
+  couponCode,
+  currency = "AMD",
   variant = "full",
 }: Props) {
   const result = receipt.result;
@@ -161,11 +168,20 @@ export function EhdmReceiptBlock({
               {formatReceiptTime(result.time)}
             </div>
           )}
+          {discountAmount > 0 && (
+            <div>
+              <span className="text-gray-500">Զեղչ: </span>
+              <span className="font-medium text-green-700">
+                -{discountAmount.toFixed(2)} {currency}
+                {couponCode ? ` (${couponCode})` : ""}
+              </span>
+            </div>
+          )}
           {result?.total != null && (
             <div>
               <span className="text-gray-500">Ընդամենը: </span>
               <span className="font-semibold">
-                {Number(result.total).toFixed(2)} AMD
+                {Number(result.total).toFixed(2)} {currency}
               </span>
             </div>
           )}

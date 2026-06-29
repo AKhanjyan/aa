@@ -33,6 +33,9 @@ export type EhdmPrintItem = {
   price: number;
   discount?: number;
   discountType?: number;
+  /** Order/coupon discount on line total — EHDM additionalDiscountType 16 */
+  additionalDiscount?: number;
+  additionalDiscountType?: number;
 };
 
 export type EhdmPrintRequestBody = {
