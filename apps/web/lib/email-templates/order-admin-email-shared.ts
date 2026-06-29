@@ -18,12 +18,23 @@ export type OrderDetailsForAdminEmail = {
   number: string;
   customerEmail: string | null;
   customerPhone: string | null;
+  subtotal?: number;
+  discountAmount?: number;
+  shippingAmount?: number;
+  couponCode?: string | null;
   total: number;
   currency: string;
   shippingAddress: unknown;
   shippingMethod: string | null;
   paymentMethod: string | null;
   items: OrderItemForEmail[];
+};
+
+export type OrderTotalsLabels = {
+  subtotal: string;
+  discount: string;
+  shipping: string;
+  total: string;
 };
 
 export type OrderForAdminEmail = OrderDetailsForAdminEmail & {
@@ -137,6 +148,83 @@ export function buildItemsRows(order: OrderDetailsForAdminEmail): string {
     </tr>`
     )
     .join("");
+}
+
+function resolveOrderSubtotal(order: OrderDetailsForAdminEmail): number {
+  if (order.subtotal != null && Number.isFinite(order.subtotal)) {
+    return order.subtotal;
+  }
+  return order.items.reduce((sum, item) => sum + item.total, 0);
+}
+
+export function buildOrderTotalsHtml(
+  order: OrderDetailsForAdminEmail,
+  labels: OrderTotalsLabels
+): string {
+  const subtotal = resolveOrderSubtotal(order);
+  const discount = Number(order.discountAmount ?? 0);
+  const shipping = Number(order.shippingAmount ?? 0);
+  const couponCode = order.couponCode?.trim();
+  const currency = escapeHtml(order.currency);
+
+  const row = (label: string, value: string, valueColor = "#1e293b") =>
+    `<tr>
+      <td style="padding:6px 0;color:#64748b;text-align:right;">${escapeHtml(label)}</td>
+      <td style="padding:6px 0 6px 16px;text-align:right;font-weight:600;color:${valueColor};white-space:nowrap;">${value}</td>
+    </tr>`;
+
+  const rows = [row(labels.subtotal, `${formatMoney(subtotal)} ${currency}`)];
+
+  if (discount > 0) {
+    const discountLabel = couponCode
+      ? `${labels.discount} (${couponCode})`
+      : labels.discount;
+    rows.push(
+      row(
+        discountLabel,
+        `-${formatMoney(discount)} ${currency}`,
+        "#15803d"
+      )
+    );
+  }
+
+  if (shipping > 0) {
+    rows.push(row(labels.shipping, `${formatMoney(shipping)} ${currency}`));
+  }
+
+  rows.push(
+    `<tr>
+      <td style="padding:10px 0 0;color:#1e293b;text-align:right;font-size:16px;font-weight:700;">${escapeHtml(labels.total)}</td>
+      <td style="padding:10px 0 0 16px;text-align:right;font-size:18px;font-weight:700;color:#1e293b;white-space:nowrap;">${formatMoney(order.total)} ${currency}</td>
+    </tr>`
+  );
+
+  return `<table style="width:100%;max-width:280px;margin-left:auto;margin-top:16px;border-collapse:collapse;font-size:14px;">${rows.join("")}</table>`;
+}
+
+export function buildOrderTotalsTextLines(
+  order: OrderDetailsForAdminEmail,
+  labels: OrderTotalsLabels
+): string[] {
+  const subtotal = resolveOrderSubtotal(order);
+  const discount = Number(order.discountAmount ?? 0);
+  const shipping = Number(order.shippingAmount ?? 0);
+  const couponCode = order.couponCode?.trim();
+  const lines = [`${labels.subtotal}: ${formatMoney(subtotal)} ${order.currency}`];
+
+  if (discount > 0) {
+    const discountLabel = couponCode
+      ? `${labels.discount} (${couponCode})`
+      : labels.discount;
+    lines.push(`${discountLabel}: -${formatMoney(discount)} ${order.currency}`);
+  }
+
+  if (shipping > 0) {
+    lines.push(`${labels.shipping}: ${formatMoney(shipping)} ${order.currency}`);
+  }
+
+  lines.push(`${labels.total}: ${formatMoney(order.total)} ${order.currency}`);
+  return lines;
 }
 
 export function createdNoticeTextLine(

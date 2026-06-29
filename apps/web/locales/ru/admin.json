@@ -785,6 +785,9 @@
       "expiresAtDescription": "Дата и время, когда купон истекает",
       "quantity": "Количество",
       "quantityDescription": "Максимальное количество использований купона",
+      "remainingQuantity": "Осталось использований",
+      "remainingQuantityDescription": "Сколько использований осталось (уменьшается после успешного заказа)",
+      "usageSummary": "Осталось {remaining} / {total}",
       "discountType": "Тип скидки",
       "discountTypeDescription": "Выберите процент или фиксированную сумму",
       "discountValue": "Значение",
@@ -792,7 +795,7 @@
       "discountValuePercentDescription": "Размер скидки (процент)",
       "discountValueFixedDescription": "Размер скидки (AMD)",
       "selectUsers": "Выбрать пользователей",
-      "selectUsersDescription": "Выберите пользователей, которые могут использовать этот купон (пусто = все пользователи)",
+      "selectUsersDescription": "Выберите конкретных пользователей (если пусто — купон может использовать любой вошедший пользователь с кодом)",
       "active": "Активен",
       "singleUse": "Одноразовый"
     },
