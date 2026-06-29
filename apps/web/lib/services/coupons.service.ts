@@ -9,6 +9,7 @@ export interface CheckoutCouponValidationResult {
   discountType: "FIXED" | "PERCENT";
   discountValue: number;
   singleUse: boolean;
+  quantity: number;
 }
 
 interface CreateCouponInput {
@@ -43,6 +44,22 @@ class CouponsService {
       throw this.toProblem(400, "Validation Error", "Invalid coupon expiration date");
     }
     return date;
+  }
+
+  /** Unpaid, non-failed orders that hold a coupon until payment completes. */
+  private async countActiveCouponReservations(
+    couponCode: string,
+    userId?: string
+  ): Promise<number> {
+    return db.order.count({
+      where: {
+        couponCode: this.normalizeCode(couponCode),
+        paymentStatus: { notIn: ["paid", "failed"] },
+        status: { not: "cancelled" },
+        couponRedemption: null,
+        ...(userId ? { userId } : {}),
+      },
+    });
   }
 
   private calculateDiscountAmount(
@@ -342,6 +359,7 @@ class CouponsService {
     const coupon = await db.coupon.findUnique({
       where: { code: normalizedCode },
       include: {
+        _count: { select: { assignments: true } },
         assignments: {
           where: { userId: params.userId },
           take: 1,
@@ -358,17 +376,27 @@ class CouponsService {
       throw this.toProblem(400, "Invalid coupon", "Coupon is expired");
     }
 
-    if (coupon.remainingQuantity <= 0) {
+    const globalPending = await this.countActiveCouponReservations(coupon.code);
+    if (coupon.remainingQuantity - globalPending <= 0) {
       throw this.toProblem(400, "Invalid coupon", "Coupon usage limit reached");
     }
 
+    const isRestrictedToAssignedUsers = coupon._count.assignments > 0;
     const assignment = coupon.assignments[0];
-    if (!assignment || !assignment.isActive) {
+    if (isRestrictedToAssignedUsers && (!assignment || !assignment.isActive)) {
       throw this.toProblem(403, "Forbidden", "Coupon is not assigned to this user");
     }
 
-    if (coupon.singleUse && assignment.usedAt) {
-      throw this.toProblem(400, "Invalid coupon", "Coupon is already used");
+    if (coupon.singleUse && coupon.quantity <= 1) {
+      const [paidUseCount, userPending] = await Promise.all([
+        db.couponRedemption.count({
+          where: { couponId: coupon.id, userId: params.userId },
+        }),
+        this.countActiveCouponReservations(coupon.code, params.userId),
+      ]);
+      if (paidUseCount + userPending > 0) {
+        throw this.toProblem(400, "Invalid coupon", "Coupon is already used");
+      }
     }
 
     const discountAmount = this.calculateDiscountAmount(
@@ -384,10 +412,94 @@ class CouponsService {
       discountType: coupon.discountType as "FIXED" | "PERCENT",
       discountValue: coupon.discountValue,
       singleUse: coupon.singleUse,
+      quantity: coupon.quantity,
     };
   }
 
-  async redeemCouponInCheckout(tx: CouponTxClient, params: {
+  /**
+   * Redeem coupon at checkout for cash-on-delivery (success page flow).
+   */
+  async redeemCouponInCheckout(
+    tx: CouponTxClient,
+    params: {
+      couponValidation: CheckoutCouponValidationResult;
+      userId: string;
+      orderId: string;
+    }
+  ): Promise<void> {
+    await this.redeemCouponOnPayment(tx, params);
+  }
+
+  /**
+   * Finalize coupon redemption after online payment is confirmed (idempotent per order).
+   */
+  async redeemCouponForPaidOrder(orderId: string): Promise<void> {
+    const existing = await db.couponRedemption.findUnique({
+      where: { orderId },
+      select: { id: true },
+    });
+    if (existing) {
+      return;
+    }
+
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        userId: true,
+        couponCode: true,
+        paymentStatus: true,
+        discountAmount: true,
+        subtotal: true,
+      },
+    });
+
+    if (
+      !order?.couponCode ||
+      !order.userId ||
+      order.paymentStatus !== "paid" ||
+      order.discountAmount <= 0
+    ) {
+      return;
+    }
+
+    const coupon = await db.coupon.findUnique({
+      where: { code: this.normalizeCode(order.couponCode) },
+      select: {
+        id: true,
+        code: true,
+        discountType: true,
+        discountValue: true,
+        singleUse: true,
+        quantity: true,
+        isActive: true,
+      },
+    });
+
+    if (!coupon?.isActive) {
+      return;
+    }
+
+    const couponValidation: CheckoutCouponValidationResult = {
+      couponId: coupon.id,
+      code: coupon.code,
+      discountAmount: order.discountAmount,
+      discountType: coupon.discountType as "FIXED" | "PERCENT",
+      discountValue: coupon.discountValue,
+      singleUse: coupon.singleUse,
+      quantity: coupon.quantity,
+    };
+
+    await db.$transaction((tx) =>
+      this.redeemCouponOnPayment(tx, {
+        couponValidation,
+        userId: order.userId!,
+        orderId: order.id,
+      })
+    );
+  }
+
+  private async redeemCouponOnPayment(tx: CouponTxClient, params: {
     couponValidation: CheckoutCouponValidationResult;
     userId: string;
     orderId: string;
@@ -409,23 +521,50 @@ class CouponsService {
       throw this.toProblem(400, "Invalid coupon", "Coupon is no longer available");
     }
 
-    const assignmentUpdate = await tx.couponAssignment.updateMany({
-      where: {
-        couponId: params.couponValidation.couponId,
-        userId: params.userId,
-        isActive: true,
-        ...(params.couponValidation.singleUse ? { usedAt: null } : {}),
-      },
-      data: {
-        useCount: { increment: 1 },
-        ...(params.couponValidation.singleUse
-          ? { usedAt: now }
-          : {}),
-      },
+    const enforceSingleUsePerUser =
+      params.couponValidation.singleUse && params.couponValidation.quantity <= 1;
+
+    const restrictedAssignmentCount = await tx.couponAssignment.count({
+      where: { couponId: params.couponValidation.couponId },
     });
 
-    if (assignmentUpdate.count === 0) {
-      throw this.toProblem(400, "Invalid coupon", "Coupon is no longer valid for this user");
+    if (restrictedAssignmentCount > 0) {
+      const assignmentUpdate = await tx.couponAssignment.updateMany({
+        where: {
+          couponId: params.couponValidation.couponId,
+          userId: params.userId,
+          isActive: true,
+          ...(enforceSingleUsePerUser ? { useCount: 0 } : {}),
+        },
+        data: {
+          useCount: { increment: 1 },
+          ...(enforceSingleUsePerUser ? { usedAt: now } : {}),
+        },
+      });
+
+      if (assignmentUpdate.count === 0) {
+        throw this.toProblem(400, "Invalid coupon", "Coupon is no longer valid for this user");
+      }
+    } else {
+      await tx.couponAssignment.upsert({
+        where: {
+          couponId_userId: {
+            couponId: params.couponValidation.couponId,
+            userId: params.userId,
+          },
+        },
+        create: {
+          couponId: params.couponValidation.couponId,
+          userId: params.userId,
+          useCount: 1,
+          ...(enforceSingleUsePerUser ? { usedAt: now } : {}),
+        },
+        update: {
+          useCount: { increment: 1 },
+          isActive: true,
+          ...(enforceSingleUsePerUser ? { usedAt: now } : {}),
+        },
+      });
     }
 
     await tx.couponRedemption.create({

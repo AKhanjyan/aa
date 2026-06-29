@@ -7,9 +7,11 @@ import { after } from "next/server";
 import { printReceiptForOrder } from "@/lib/payments/ehdm";
 import { notifyAdminOrderPaid } from "@/lib/email-templates/notify-admin-order-paid";
 import { notifyCustomerAfterPaidOrder } from "@/lib/email-templates/notify-customer-order-paid";
+import { couponsService } from "@/lib/services/coupons.service";
 
 export function scheduleAfterSuccessfulOnlinePayment(orderId: string): void {
   after(async () => {
+    await couponsService.redeemCouponForPaidOrder(orderId);
     const r = await printReceiptForOrder(orderId);
     if (!r.ok) {
       console.error("[EHDM] printReceiptForOrder", orderId, r.error);

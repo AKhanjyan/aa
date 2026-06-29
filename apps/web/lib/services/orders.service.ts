@@ -1,6 +1,7 @@
 import { db } from "@white-shop/db";
 import { scheduleCheckoutOrderEmails } from "@/lib/email-templates/schedule-checkout-emails";
 import { couponsService, type CheckoutCouponValidationResult } from "@/lib/services/coupons.service";
+import { isCashLikePaymentMethod } from "@/lib/payments/constants";
 
 /**
  * Get next order number (P100, P101, ...) and increment in DB (transaction).
@@ -559,7 +560,11 @@ class OrdersService {
             },
           });
 
-          if (couponValidation && userId) {
+          if (
+            couponValidation &&
+            userId &&
+            isCashLikePaymentMethod(paymentMethod)
+          ) {
             await couponsService.redeemCouponInCheckout(tx, {
               couponValidation,
               userId,

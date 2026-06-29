@@ -70,7 +70,7 @@ export default function AdminCouponsPage() {
     quantity: 1,
     discountType: 'PERCENT' as 'PERCENT' | 'FIXED',
     discountValue: 10,
-    singleUse: true,
+    singleUse: false,
     isActive: true,
     userIds: [] as string[],
   });
@@ -157,7 +157,7 @@ export default function AdminCouponsPage() {
         quantity: 1,
         discountType: 'PERCENT',
         discountValue: 10,
-        singleUse: true,
+        singleUse: false,
         isActive: true,
         userIds: [],
       });
@@ -391,6 +391,11 @@ export default function AdminCouponsPage() {
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="font-semibold">{coupon.name} ({coupon.code})</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {t('admin.coupons.fields.usageSummary')
+                            .replace('{remaining}', String(coupon.remainingQuantity))
+                            .replace('{total}', String(coupon.quantity))}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
@@ -708,6 +713,14 @@ export default function AdminCouponsPage() {
                   value={editingCoupon.quantity}
                   onChange={(e) => setEditingCoupon({ ...editingCoupon, quantity: Number(e.target.value) })}
                 />
+                <p className="text-xs text-gray-500">{t('admin.coupons.fields.quantityDescription')}</p>
+              </div>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.remainingQuantity')}</label>
+                <p className="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700">
+                  {editingCoupon.remainingQuantity}
+                </p>
+                <p className="text-xs text-gray-500">{t('admin.coupons.fields.remainingQuantityDescription')}</p>
               </div>
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.discountValue')}</label>

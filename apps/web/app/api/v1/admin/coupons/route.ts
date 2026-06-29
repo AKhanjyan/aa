@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       isActive: body.isActive !== false,
       discountType: body.discountType,
       discountValue: Number(body.discountValue),
-      singleUse: body.singleUse !== false,
+      singleUse: body.singleUse === true,
       userIds: Array.isArray(body.userIds) ? body.userIds : [],
     });
 
