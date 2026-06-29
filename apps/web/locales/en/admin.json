@@ -798,8 +798,10 @@
       "usageSummary": "{remaining} of {total} remaining",
       "discountType": "Discount Type",
       "discountTypeDescription": "Choose percentage or fixed amount",
-      "discountValue": "Discount Value",
-      "discountValueDescription": "Discount amount (percentage)",
+      "discountValue": "Value",
+      "discountValueDescription": "Discount amount",
+      "discountValuePercentDescription": "Discount amount (percentage)",
+      "discountValueFixedDescription": "Discount amount (AMD)",
       "selectUsers": "Select Users",
       "selectUsersDescription": "Select specific users (leave empty so any logged-in user with the code can use it)",
       "active": "Active",
@@ -807,7 +809,7 @@
     },
     "discount": {
       "percent": "Percent",
-      "fixed": "Fixed amount"
+      "fixed": "Fixed amount (AMD)"
     },
     "status": {
       "used": "used",

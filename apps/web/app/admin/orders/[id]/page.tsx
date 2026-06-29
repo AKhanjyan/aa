@@ -22,6 +22,7 @@ interface OrderDetails {
   subtotal: number;
   shippingAmount: number;
   discountAmount: number;
+  couponCode?: string | null;
   taxAmount: number;
   totals?: {
     subtotal: number;
@@ -368,9 +369,17 @@ export default function OrderDetailPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.orders.orderDetails.total')}</p>
-                <p className="mt-1 text-base font-semibold text-gray-900">
-                  {formatPrice(order.totals?.total ?? order.total, currency)}
-                </p>
+                <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                  <span className="text-base font-semibold text-gray-900">
+                    {formatPrice(order.totals?.total ?? order.total, currency)}
+                  </span>
+                  {(order.totals?.discount ?? order.discountAmount ?? 0) > 0 && (
+                    <span className="text-sm font-medium text-green-700">
+                      {t('checkout.summary.discount')}: -{formatPrice(order.totals?.discount ?? order.discountAmount, currency)}
+                      {order.couponCode ? ` (${order.couponCode})` : ''}
+                    </span>
+                  )}
+                </div>
               </div>
               <div>
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('admin.orders.orderDetails.status')}</p>
@@ -608,12 +617,11 @@ export default function OrderDetailPage() {
                   </tbody>
                   <tfoot>
                     {(() => {
-                      const originalSubtotal = order.totals?.subtotal ?? order.subtotal ?? 0;
+                      const subtotal = order.totals?.subtotal ?? order.subtotal ?? 0;
                       const discount = order.totals?.discount ?? order.discountAmount ?? 0;
-                      const sub = discount > 0 ? originalSubtotal - discount : order.items.reduce((sum, i) => sum + (i.total || 0), 0);
                       const baseShipping = order.shippingMethod === 'pickup' ? 0 : (order.totals?.shipping ?? order.shippingAmount ?? 0);
                       const ship = baseShipping === 0 && deliveryPrice !== null ? deliveryPrice : baseShipping;
-                      const tot = sub + ship;
+                      const tot = order.totals?.total ?? order.total ?? subtotal - discount + ship;
                       return (
                         <>
                           <tr className="bg-gray-100/80 border-t-2 border-gray-200">
@@ -625,8 +633,17 @@ export default function OrderDetailPage() {
                           </tr>
                           <tr className="bg-gray-100/80">
                             <td colSpan={5} className="px-4 py-2.5 text-right text-gray-600">{t('checkout.summary.subtotal')}</td>
-                            <td className="px-4 py-2.5 text-right font-medium text-gray-900">{formatPrice(sub, currency)}</td>
+                            <td className="px-4 py-2.5 text-right font-medium text-gray-900">{formatPrice(subtotal, currency)}</td>
                           </tr>
+                          {discount > 0 && (
+                            <tr className="bg-gray-100/80">
+                              <td colSpan={5} className="px-4 py-2.5 text-right text-green-700">
+                                {t('checkout.summary.discount')}
+                                {order.couponCode ? ` (${order.couponCode})` : ''}
+                              </td>
+                              <td className="px-4 py-2.5 text-right font-medium text-green-700">-{formatPrice(discount, currency)}</td>
+                            </tr>
+                          )}
                           <tr className="bg-gray-100/80">
                             <td colSpan={5} className="px-4 py-2.5 text-right text-gray-600">{t('checkout.summary.shipping')}</td>
                             <td className="px-4 py-2.5 text-right font-medium text-gray-900">

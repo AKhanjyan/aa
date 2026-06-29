@@ -787,10 +787,12 @@
       "remainingQuantity": "Մնացած օգտագործում",
       "remainingQuantityDescription": "Քանակը, որն այլևս կարող է օգտագործվել (նվազում է հաջող պատվերից հետո)",
       "usageSummary": "Մնացել է {remaining} / {total}",
-      "discountType": "Զեղչի տիպ",
+      "discountType": "Զեղչի տեսակ",
       "discountTypeDescription": "Ընտրեք տոկոսային կամ ֆիքսված գումար",
-      "discountValue": "Զեղչի արժեք",
-      "discountValueDescription": "Զեղչի չափը (տոկոս)",
+      "discountValue": "Արժեք",
+      "discountValueDescription": "Զեղչի չափը",
+      "discountValuePercentDescription": "Զեղչի չափը (տոկոս)",
+      "discountValueFixedDescription": "Զեղչի չափը (AMD)",
       "selectUsers": "Ընտրել օգտատերեր",
       "selectUsersDescription": "Ընտրեք կոնկրետ օգտատերեր (դատարկ թողնելու դեպքում կուպոնը կարող է օգտագործել ցանկացած մուտք գործած օգտատեր, ով ունի կոդը)",
       "active": "Ակտիվ",
@@ -798,7 +800,7 @@
     },
     "discount": {
       "percent": "Տոկոս",
-      "fixed": "Ֆիքսված գումար"
+      "fixed": "Ֆիքս գումար (AMD)"
     },
     "status": {
       "used": "օգտագործված",

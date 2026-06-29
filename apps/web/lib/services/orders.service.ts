@@ -761,6 +761,8 @@ class OrdersService {
         fulfillmentStatus: string;
         total: number;
         currency: string;
+        discountAmount: number;
+        couponCode: string | null;
         createdAt: Date;
         items: Array<{ id: string }>;
       }) => ({
@@ -771,6 +773,8 @@ class OrdersService {
         fulfillmentStatus: order.fulfillmentStatus,
         total: order.total,
         currency: order.currency,
+        discountAmount: Number(order.discountAmount) || 0,
+        couponCode: order.couponCode ?? null,
         createdAt: order.createdAt,
         itemsCount: order.items.length,
       })),
@@ -958,6 +962,7 @@ class OrdersService {
         total: Number(order.total),
         currency: order.currency,
       },
+      couponCode: order.couponCode || null,
       customer: {
         email: order.customerEmail || undefined,
         phone: order.customerPhone || undefined,

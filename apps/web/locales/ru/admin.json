@@ -790,8 +790,10 @@
       "usageSummary": "Осталось {remaining} / {total}",
       "discountType": "Тип скидки",
       "discountTypeDescription": "Выберите процент или фиксированную сумму",
-      "discountValue": "Размер скидки",
-      "discountValueDescription": "Размер скидки (процент)",
+      "discountValue": "Значение",
+      "discountValueDescription": "Размер скидки",
+      "discountValuePercentDescription": "Размер скидки (процент)",
+      "discountValueFixedDescription": "Размер скидки (AMD)",
       "selectUsers": "Выбрать пользователей",
       "selectUsersDescription": "Выберите конкретных пользователей (если пусто — купон может использовать любой вошедший пользователь с кодом)",
       "active": "Активен",
@@ -799,7 +801,7 @@
     },
     "discount": {
       "percent": "Процент",
-      "fixed": "Фиксированная сумма"
+      "fixed": "Фиксированная сумма (AMD)"
     },
     "status": {
       "used": "использован",

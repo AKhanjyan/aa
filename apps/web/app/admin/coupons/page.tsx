@@ -46,6 +46,74 @@ interface UsersResponse {
   data: AdminUser[];
 }
 
+type CouponDiscountType = 'FIXED' | 'PERCENT';
+
+interface CouponDiscountFieldsProps {
+  discountType: CouponDiscountType;
+  discountValue: number;
+  onDiscountTypeChange: (type: CouponDiscountType) => void;
+  onDiscountValueChange: (value: number) => void;
+  t: (key: string) => string;
+}
+
+function validateCouponDiscount(
+  discountType: CouponDiscountType,
+  discountValue: number,
+  t: (key: string) => string
+): string | null {
+  if (!Number.isFinite(discountValue) || discountValue <= 0) {
+    return t('admin.coupons.errors.discountInvalid') || 'Discount must be greater than 0';
+  }
+  if (discountType === 'PERCENT' && discountValue > 100) {
+    return t('admin.coupons.errors.discountPercentTooHigh') || 'Percent discount cannot exceed 100%';
+  }
+  return null;
+}
+
+function CouponDiscountFields({
+  discountType,
+  discountValue,
+  onDiscountTypeChange,
+  onDiscountValueChange,
+  t,
+}: CouponDiscountFieldsProps) {
+  const isPercent = discountType === 'PERCENT';
+
+  return (
+    <>
+      <div className="space-y-1">
+        <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.discountType')}</label>
+        <select
+          className="w-full border rounded px-3 py-2 bg-white"
+          value={discountType}
+          onChange={(e) => onDiscountTypeChange(e.target.value as CouponDiscountType)}
+        >
+          <option value="PERCENT">{t('admin.coupons.discount.percent')}</option>
+          <option value="FIXED">{t('admin.coupons.discount.fixed')}</option>
+        </select>
+        <p className="text-xs text-gray-500">{t('admin.coupons.fields.discountTypeDescription')}</p>
+      </div>
+      <div className="space-y-1">
+        <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.discountValue')}</label>
+        <input
+          className="w-full border rounded px-3 py-2"
+          type="number"
+          min={0.01}
+          step={isPercent ? 1 : 0.01}
+          max={isPercent ? 100 : undefined}
+          value={discountValue}
+          onChange={(e) => onDiscountValueChange(Number(e.target.value))}
+        />
+        <p className="text-xs text-gray-500">
+          {isPercent
+            ? t('admin.coupons.fields.discountValuePercentDescription')
+            : t('admin.coupons.fields.discountValueFixedDescription')}
+        </p>
+      </div>
+    </>
+  );
+}
+
 export default function AdminCouponsPage() {
   const { t } = useTranslation();
   const { isLoggedIn, isAdmin, isLoading } = useAuth();
@@ -137,12 +205,9 @@ export default function AdminCouponsPage() {
       setError(t('admin.coupons.errors.quantityInvalid') || 'Quantity must be greater than 0');
       return;
     }
-    if (!Number.isFinite(newCoupon.discountValue) || newCoupon.discountValue <= 0) {
-      setError(t('admin.coupons.errors.discountInvalid') || 'Discount must be greater than 0');
-      return;
-    }
-    if (newCoupon.discountType === 'PERCENT' && newCoupon.discountValue > 100) {
-      setError(t('admin.coupons.errors.discountPercentTooHigh') || 'Percent discount cannot exceed 100%');
+    const discountError = validateCouponDiscount(newCoupon.discountType, newCoupon.discountValue, t);
+    if (discountError) {
+      setError(discountError);
       return;
     }
 
@@ -266,6 +331,16 @@ export default function AdminCouponsPage() {
 
   const handleUpdateCoupon = async () => {
     if (!editingCoupon) return;
+
+    const discountError = validateCouponDiscount(
+      editingCoupon.discountType,
+      editingCoupon.discountValue,
+      t
+    );
+    if (discountError) {
+      setError(discountError);
+      return;
+    }
 
     setSaving(true);
     setError(null);
@@ -491,14 +566,19 @@ export default function AdminCouponsPage() {
                   <input className="w-full border rounded px-3 py-2" type="number" min={1} value={newCoupon.quantity} onChange={(e) => setNewCoupon((p) => ({ ...p, quantity: Number(e.target.value) }))} />
                   <p className="text-xs text-gray-500">{t('admin.coupons.fields.quantityDescription')}</p>
                 </div>
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.discountValue')}</label>
-                  <div className="flex items-center gap-2">
-                    <input className="w-full border rounded px-3 py-2" type="number" min={0} max={100} value={newCoupon.discountValue} onChange={(e) => setNewCoupon((p) => ({ ...p, discountValue: Number(e.target.value) }))} />
-                    <span className="text-gray-600 whitespace-nowrap">%</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{t('admin.coupons.fields.discountValueDescription')}</p>
-                </div>
+                <CouponDiscountFields
+                  discountType={newCoupon.discountType}
+                  discountValue={newCoupon.discountValue}
+                  onDiscountTypeChange={(discountType) => {
+                    setNewCoupon((p) => ({ ...p, discountType }));
+                    setError(null);
+                  }}
+                  onDiscountValueChange={(discountValue) => {
+                    setNewCoupon((p) => ({ ...p, discountValue }));
+                    setError(null);
+                  }}
+                  t={t}
+                />
               </div>
               <div className="flex gap-5 text-sm">
                 <label className="flex items-center gap-2"><input type="checkbox" checked={newCoupon.singleUse} onChange={(e) => setNewCoupon((p) => ({ ...p, singleUse: e.target.checked }))} />{t('admin.coupons.fields.singleUse')}</label>
@@ -722,20 +802,19 @@ export default function AdminCouponsPage() {
                 </p>
                 <p className="text-xs text-gray-500">{t('admin.coupons.fields.remainingQuantityDescription')}</p>
               </div>
-              <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700">{t('admin.coupons.fields.discountValue')}</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    className="w-full border rounded px-3 py-2"
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={editingCoupon.discountValue}
-                    onChange={(e) => setEditingCoupon({ ...editingCoupon, discountValue: Number(e.target.value) })}
-                  />
-                  <span className="text-gray-600 whitespace-nowrap">%</span>
-                </div>
-              </div>
+              <CouponDiscountFields
+                discountType={editingCoupon.discountType}
+                discountValue={editingCoupon.discountValue}
+                onDiscountTypeChange={(discountType) => {
+                  setEditingCoupon({ ...editingCoupon, discountType });
+                  setError(null);
+                }}
+                onDiscountValueChange={(discountValue) => {
+                  setEditingCoupon({ ...editingCoupon, discountValue });
+                  setError(null);
+                }}
+                t={t}
+              />
             </div>
             <div className="flex gap-5 text-sm mt-4">
               <label className="flex items-center gap-2">
