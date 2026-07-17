@@ -2,8 +2,8 @@ import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import { db } from "@white-shop/db";
 
-/** Session TTL: JWT expiry (P0 Security 2.2). Prefer 24h; set JWT_EXPIRES_IN in env to override. */
-const DEFAULT_JWT_EXPIRES_IN = "24h";
+/** Session TTL: JWT expiry (P0 Security 2.2). Default 1y; set JWT_EXPIRES_IN in env to override. */
+const DEFAULT_JWT_EXPIRES_IN = "365d";
 
 export interface RegisterData {
   email?: string;

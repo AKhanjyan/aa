@@ -10,7 +10,7 @@
 
 ### Պրովայդեր
 - **Auth:** Սեփական իրականացում (JWT + Neon PostgreSQL).
-- **Session:** JWT token (Bearer) — TTL `JWT_EXPIRES_IN` (default 24h). Token-ը client-ում պահվում է localStorage-ում; API-ն ստուգում է `Authorization: Bearer <token>`.
+- **Session:** JWT token (Bearer) — TTL `JWT_EXPIRES_IN` (default 365d / 1 տարի). Token-ը պահվում է HttpOnly cookie-ում (`auth_token`); API-ն ստուգում է cookie կամ `Authorization: Bearer <token>`։
 
 ### Որտեղ է ստուգվում
 - **API routes:** `lib/middleware/auth.ts` — `authenticateToken(request)` (ստուգում է JWT, blacklist, user in DB). Admin route-ներում լրացուցիչ `requireAdmin(user)`.
