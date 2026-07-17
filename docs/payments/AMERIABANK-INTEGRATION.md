@@ -88,7 +88,7 @@ vPOS-ը աշխատում է **ISO 4217 numeric** արժեքներով.
 | ClientID | string | Yes | Merchant ID |
 | Username | string | Yes | Merchant user |
 | Password | string | Yes | Merchant password |
-| OrderID | **integer** | Yes | **Միայն ամբողջ թիվ.** Ներքին order id-ից hash/number փոխարկել (օր. 1–999999999) |
+| OrderID | **integer** | Yes | **Միայն ամբողջ թիվ.** `order.number`-ից (P374 → 374) |
 | Amount | number | Yes | Գումար |
 | Currency | string | No | 051 / 978 / 840 / 643 |
 | Description | string | Yes | Օր. "Order #12345" |
@@ -98,7 +98,7 @@ vPOS-ը աշխատում է **ISO 4217 numeric** արժեքներով.
 | Timeout | integer | No | Session վայրկյան (max 1200, default 1200) |
 
 **Կարևոր.**  
-- `OrderID` — API-ն սպասում է **integer**. Եթե ձեր order id-ը string/UUID է, փոխարկեք ամբողջ թվի (օր. stable hash `% 1000000000`), որպեսզի նույն order-ը միշտ նույն OrderID ունենա.  
+- `OrderID` — API-ն սպասում է **integer**. Մեր `order.number`-ից (`P374`) վերցնում ենք թվային մասը (`374`), որպեսզի բանկի SMS/statement-ում երևա իրական համարը (առանց `P` prefix-ի)։  
 - `Opaque` — չխառնել OrderID-ի հետ. Opaque = ձեր ներքին order id (string), callback-ում `opaque` param-ով կգա և կօգտագործեք DB-ում order գտնելու համար.
 
 ### 5.2 Response (JSON)
@@ -274,7 +274,7 @@ Callback handler-ը GET-ով ստանում է query params, կանչում GetP
 ## 13. Checklist — նոր նախագծում Ameriabank միացնելիս
 
 - [ ] Env: `AMERIA_TEST_MODE`, test/live credentials, `APP_URL`.
-- [ ] OrderID — integer; Opaque — ձեր order id (string) callback-ում order գտնելու համար.
+- [ ] OrderID — integer from order.number (P374 → 374); Opaque — order.number (Pxxx) callback-ում order գտնելու համար.
 - [ ] InitPayment success = `ResponseCode === 1` (number).
 - [ ] Redirect Pay page: `{baseUrl}/Payments/Pay?id={PaymentID}&lang={lang}`.
 - [ ] BackURL handler: **մի trust միայն URL.** Միշտ **GetPaymentDetails(paymentID)**.
