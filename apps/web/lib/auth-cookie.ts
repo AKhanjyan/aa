@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const AUTH_COOKIE_NAME = "auth_token";
-const DEFAULT_AUTH_COOKIE_MAX_AGE_SECONDS = 24 * 60 * 60;
+const DEFAULT_AUTH_COOKIE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
 function parseJwtExpiresInToSeconds(value: string | undefined): number {
   if (!value) return DEFAULT_AUTH_COOKIE_MAX_AGE_SECONDS;
