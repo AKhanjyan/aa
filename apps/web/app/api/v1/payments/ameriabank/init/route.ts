@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
 
     const currencyCode =
       AMERIA_CURRENCY_MAP[order.currency] || AMERIA_CURRENCY_MAP.AMD;
-    const ameriaOrderId = toAmeriaOrderId(order.id);
+    const ameriaOrderId = toAmeriaOrderId(order.number);
 
     const initRes = await initPayment({
       OrderID: ameriaOrderId,

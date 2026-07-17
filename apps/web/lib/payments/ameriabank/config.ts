@@ -34,13 +34,15 @@ export function isAmeriaConfigured(): boolean {
   return Boolean(c.clientId && c.username && c.password);
 }
 
-/** Generate unique integer OrderID for vPOS (doc requires integer). */
-export function toAmeriaOrderId(orderId: string): number {
-  let hash = 0;
-  for (let i = 0; i < orderId.length; i++) {
-    const c = orderId.charCodeAt(i);
-    hash = (hash << 5) - hash + c;
-    hash = hash & 0x7fffffff;
+/**
+ * Convert merchant order number (P374) to vPOS OrderID (integer only).
+ * Strips leading "P" so bank SMS/statement shows the real number, not a hash.
+ */
+export function toAmeriaOrderId(orderNumber: string): number {
+  const digits = orderNumber.trim().replace(/^P/i, "");
+  const parsed = Number.parseInt(digits, 10);
+  if (!Number.isFinite(parsed) || parsed < 1) {
+    throw new Error(`Invalid Ameriabank OrderID from order number: ${orderNumber}`);
   }
-  return hash % 1000000000 || 1;
+  return parsed;
 }
