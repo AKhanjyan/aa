@@ -27,9 +27,25 @@ export async function printReceiptForOrder(orderId: string): Promise<{
     return { ok: false, error: "EHDM not configured" };
   }
 
+  const orderInclude = {
+    items: {
+      include: {
+        variant: {
+          include: {
+            product: {
+              include: { labels: true },
+            },
+          },
+        },
+      },
+    },
+    payments: true,
+    ehdmReceipt: true,
+  } as const;
+
   const order = await db.order.findUnique({
     where: { id: orderId },
-    include: { items: true, payments: true, ehdmReceipt: true },
+    include: orderInclude,
   });
 
   if (!order) {
@@ -50,7 +66,7 @@ export async function printReceiptForOrder(orderId: string): Promise<{
   for (let attempt = 1; attempt <= EHDM_RECEIPT_MAX_ATTEMPTS; attempt++) {
     const currentOrder = await db.order.findUnique({
       where: { id: orderId },
-      include: { items: true, payments: true, ehdmReceipt: true },
+      include: orderInclude,
     });
     if (currentOrder?.ehdmReceipt) {
       return {

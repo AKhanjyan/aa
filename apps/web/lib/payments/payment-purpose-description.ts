@@ -1,4 +1,4 @@
-/** Conservative max length for PSP purpose/description fields. */
+/** Max length for PSP purpose/description fields. */
 export const PAYMENT_PURPOSE_MAX_LENGTH = 255;
 
 export type PaymentPurposeOrder = {
@@ -23,13 +23,14 @@ function truncatePurpose(value: string): string {
   return value.slice(0, PAYMENT_PURPOSE_MAX_LENGTH);
 }
 
+/** Same display as orders UI: Պատվեր #P473 */
 function buildOrderNumberLine(orderNumber: string): string {
-  return `number ${orderNumber.trim().toLowerCase()}`;
+  return `Պատվեր #${orderNumber.trim()}`;
 }
 
 /**
- * Build payment purpose text for bank/PSP / 3DS description fields.
- * ASCII-only (no Armenian) — 3DS pages often mangle UTF-8 as "????".
+ * Build payment purpose text for bank/PSP description fields.
+ * Uses the real order number (e.g. P473) as shown in orders — UTF-8 OK.
  * Payment amount is shown separately by the bank; do not repeat total here.
  */
 export function buildPaymentPurposeDescription(
@@ -38,12 +39,12 @@ export function buildPaymentPurposeDescription(
   const orderNumberLine = buildOrderNumberLine(order.number);
   const couponCode = order.couponCode?.trim();
   const discountAmount = Number(order.discountAmount ?? 0);
-  const currency = (order.currency?.trim() || "AMD").toLowerCase();
+  const currency = (order.currency?.trim() || "AMD").toUpperCase();
 
   if (!couponCode || !Number.isFinite(discountAmount) || discountAmount <= 0) {
     return truncatePurpose(orderNumberLine);
   }
 
-  const couponLine = `cupon ${couponCode} zexch ${formatAmount(discountAmount)} ${currency}`;
+  const couponLine = `Կուպոն ${couponCode} զեղչ ${formatAmount(discountAmount)} ${currency}`;
   return truncatePurpose(`${orderNumberLine}\r\n${couponLine}`);
 }
