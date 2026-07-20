@@ -5028,6 +5028,7 @@ function AddProductPageContent() {
 
                       <div className="mt-4 flex justify-end gap-2">
                         <ProductPageButton
+                          type="button"
                           variant="outline"
                           onClick={() => {
                             // Add new empty variant
@@ -5056,6 +5057,7 @@ function AddProductPageContent() {
                           {t('admin.products.add.addVariant') || 'Add'}
                         </ProductPageButton>
                         <ProductPageButton
+                          type="button"
                           onClick={() => {
                             // Convert generated variants to formData.variants structure
                             // This will be handled in handleSubmit
@@ -5077,6 +5079,7 @@ function AddProductPageContent() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-gray-900">{t('admin.products.add.productLabels')}</h2>
                 <ProductPageButton
+                  type="button"
                   variant="outline"
                   onClick={addLabel}
                   className="px-4 py-2 text-sm"
@@ -5098,6 +5101,7 @@ function AddProductPageContent() {
                           {t('admin.products.add.label').replace('{index}', (index + 1).toString())}
                         </h3>
                         <ProductPageButton
+                          type="button"
                           variant="outline"
                           onClick={() => removeLabel(index)}
                           className="px-3 py-1 text-xs text-red-600 border-red-300 hover:bg-red-50"
