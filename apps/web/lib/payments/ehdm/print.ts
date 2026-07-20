@@ -1,4 +1,4 @@
-import type { Order, OrderItem, Payment } from "@prisma/client";
+import type { Order, OrderItem, Payment, ProductLabel } from "@prisma/client";
 import { getConfig } from "./config";
 import { ehdmPost } from "./client";
 import type {
@@ -9,13 +9,46 @@ import type {
 
 const MODE_SALE_WITH_ITEMS = 2;
 const GOOD_NAME_MAX_LENGTH = 30;
+const PRODUCT_LABEL_TYPE_TEXT = "text";
 /** EHDM: monetary coupon/order discount on line total — (price × qty) − additionalDiscount */
 const EHDM_ADDITIONAL_DISCOUNT_TYPE_MONETARY = 16;
 
+export type OrderItemWithProductLabels = OrderItem & {
+  variant?: {
+    product?: {
+      labels?: ProductLabel[];
+    } | null;
+  } | null;
+};
+
 export type OrderWithItemsAndPayments = Order & {
-  items: OrderItem[];
+  items: OrderItemWithProductLabels[];
   payments?: Payment[];
 };
+
+/**
+ * Text label values from product card (admin Labels → Արժեք), e.g. "0.33Լ".
+ */
+function getTextLabelValues(item: OrderItemWithProductLabels): string[] {
+  const labels = item.variant?.product?.labels ?? [];
+  return labels
+    .filter(
+      (label) =>
+        label.type === PRODUCT_LABEL_TYPE_TEXT && Boolean(label.value?.trim())
+    )
+    .map((label) => label.value.trim());
+}
+
+/** goodName = productTitle + label values, truncated to EHDM limit. */
+function buildGoodName(
+  productTitle: string,
+  labelValues: string[]
+): string {
+  const title = (productTitle || "Product").trim() || "Product";
+  const suffix = labelValues.join(" ").trim();
+  const combined = suffix ? `${title} ${suffix}` : title;
+  return combined.slice(0, GOOD_NAME_MAX_LENGTH);
+}
 
 function roundEhdmMoney(amount: number): number {
   return Math.round(amount * 100) / 100;
@@ -79,9 +112,9 @@ export function buildPrintBody(
     const quantity = Number(item.quantity);
     const unitPrice =
       quantity > 0 ? Number(item.total) / quantity : Number(item.price);
-    const goodName = (item.productTitle || "Product").slice(
-      0,
-      GOOD_NAME_MAX_LENGTH
+    const goodName = buildGoodName(
+      item.productTitle,
+      getTextLabelValues(item)
     );
     const printItem: EhdmPrintItem = {
       dep: config.dep,
