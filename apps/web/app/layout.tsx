@@ -15,11 +15,53 @@ const montserrat = Montserrat({
   weight: ['300', '400', '500', '700', '900'],
 });
 
+const SITE_URL = (
+  process.env.APP_URL ??
+  process.env.NEXT_PUBLIC_APP_URL ??
+  'https://borboraqua.am'
+).replace(/\/$/, '');
+
+const SITE_TITLE = 'BORBOR AQUA';
+const SITE_DESCRIPTION = 'Modern e-commerce platform';
+
 export const metadata: Metadata = {
-  title: 'BORBOR AQUA',
-  description: 'Modern e-commerce platform',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_TITLE}`,
+  },
+  description: SITE_DESCRIPTION,
   icons: {
-    icon: '/icon.svg',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'hy_AM',
+    alternateLocale: ['en_US', 'ru_RU'],
+    url: SITE_URL,
+    siteName: SITE_TITLE,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: SITE_TITLE,
+        type: 'image/png',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: ['/og-image.png'],
   },
 };
 
