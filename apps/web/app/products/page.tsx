@@ -33,6 +33,7 @@ interface Product {
   categories?: string[] | null; // All category titles
   price: number;
   compareAtPrice: number | null;
+  discountPercent?: number | null;
   image: string | null;
   inStock: boolean;
   minimumOrderQuantity?: number;
@@ -78,6 +79,7 @@ function trimProductForGrid(p: {
   price?: number;
   compareAtPrice?: number | null;
   originalPrice?: number | null;
+  discountPercent?: number | null;
   image?: string | null;
   inStock?: boolean;
   minimumOrderQuantity?: number;
@@ -98,6 +100,7 @@ function trimProductForGrid(p: {
     categories: p.categories ?? null,
     price: p.price ?? 0,
     compareAtPrice: p.compareAtPrice ?? p.originalPrice ?? null,
+    discountPercent: p.discountPercent ?? null,
     image: p.image ?? null,
     inStock: p.inStock ?? true,
     minimumOrderQuantity: p.minimumOrderQuantity ?? 1,
@@ -170,6 +173,7 @@ async function getProducts(params: GetProductsParams): Promise<ProductsResponse>
         sizes?.trim() ?? '',
         'listOnly',
         'labels-v1',
+        'discount-badge-v1',
       ],
       { revalidate: PRODUCTS_PAGE_REVALIDATE }
     )();

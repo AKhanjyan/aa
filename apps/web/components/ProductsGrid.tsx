@@ -19,6 +19,7 @@ interface Product {
   categories?: string[] | null; // All category titles
   price: number;
   compareAtPrice: number | null;
+  discountPercent?: number | null;
   image: string | null;
   inStock: boolean;
   minimumOrderQuantity?: number;
@@ -261,6 +262,7 @@ export function ProductsGrid({ products, sortBy = 'default' }: ProductsGridProps
     inStock: product.inStock,
     brand: product.brand,
     labels: product.labels,
+    discountPercent: product.discountPercent ?? null,
   });
 
   // Show all products (pagination is handled by the products page)

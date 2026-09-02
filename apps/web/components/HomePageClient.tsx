@@ -48,7 +48,6 @@ const img13 = "/assets/home/img13.svg";
 const img14 = "/assets/home/img14.svg";
 
 const zovcIconeWebp = "/assets/home/zovcIcone.webp";
-const imgPetraHookahLounge = "/assets/home/BORBOR-AQUA-CLIENTS-PETRA-B.jpg";
 const imgBabylonRestaurant = "/assets/home/BORBOR-AQUA-CLIENTS-BABYLON.jpg";
 // Shared configuration for "Trusted By" logos (used on both desktop and mobile)
 const TRUSTED_BY_LOGOS = [
@@ -56,7 +55,6 @@ const TRUSTED_BY_LOGOS = [
   { src: kaiserLogo, alt: 'Partner Logo 2' },
   { src: imgLogo1, alt: 'Partner Logo 3' },
   { src: zovcIconeWebp, alt: 'Partner Logo 4' },
-  { src: imgPetraHookahLounge, alt: 'Petra Hookah Lounge' },
   { src: imgBabylonRestaurant, alt: 'Babylon Restaurant' },
 ];
 const TRUSTED_BY_COUNT = TRUSTED_BY_LOGOS.length;
@@ -85,6 +83,7 @@ interface Product {
   categories?: string[]; // All category titles (when listOnly)
   categorySlugs?: string[];
   price: number;
+  discountPercent?: number | null;
   image: string | null;
   inStock: boolean;
   minimumOrderQuantity?: number;
@@ -1295,16 +1294,6 @@ export function HomePageClient({
             }`}
             aria-label={t('home.trustedBy.showFifthPartner')}
           />
-          <button
-            type="button"
-            onClick={() => setTrustedByIndex(5)}
-            className={`rounded-full transition-all duration-300 ${
-              trustedByIndex === 5
-                ? 'bg-[#00d1ff] h-[8px] w-[20px]'
-                : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
-            }`}
-            aria-label={t('home.trustedBy.showSixthPartner')}
-          />
         </div>
 
         {/* Tablet: Pagination dots only (728px - xl) */}
@@ -1358,16 +1347,6 @@ export function HomePageClient({
                 : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
             }`}
             aria-label={t('home.trustedBy.showFifthPartner')}
-          />
-          <button
-            type="button"
-            onClick={() => setTrustedByIndex(5)}
-            className={`rounded-full transition-all duration-300 ${
-              trustedByIndex === 5
-                ? 'bg-[#00d1ff] h-[8px] w-[20px]'
-                : 'bg-white size-[8px] hover:bg-[#00d1ff]/50'
-            }`}
-            aria-label={t('home.trustedBy.showSixthPartner')}
           />
         </div>
 
@@ -1926,16 +1905,6 @@ export function HomePageClient({
                     : 'bg-gray-400 size-[8px] lg:size-[10px] hover:bg-[#00d1ff]/60 cursor-pointer'
                 }`}
                 aria-label={t('home.trustedBy.showFifthPartner')}
-              />
-              <button
-                type="button"
-                onClick={() => setTrustedByIndex(5)}
-                className={`rounded-[9999px] transition-all duration-300 ${
-                  trustedByIndex === 5
-                    ? 'bg-[#00d1ff] h-[8px] w-[19px] lg:h-[10px] lg:w-[24px]'
-                    : 'bg-gray-400 size-[8px] lg:size-[10px] hover:bg-[#00d1ff]/60 cursor-pointer'
-                }`}
-                aria-label={t('home.trustedBy.showSixthPartner')}
               />
             </div>
           </div>

@@ -950,6 +950,23 @@ export interface FeaturedProduct {
     name: string;
   } | null;
   labels?: ProductLabel[];
+  /** Applied discount percent (product/category/brand/global). Same as product page badge. */
+  discountPercent?: number | null;
+}
+
+const DISCOUNT_BADGE_SIZE_CLASS = 'w-9 h-9 md:w-11 md:h-11';
+const DISCOUNT_BADGE_TEXT_CLASS = 'text-[10px] md:text-xs';
+const DISCOUNT_BADGE_POSITION_CLASS = 'absolute top-2 right-2 md:top-3 md:right-3 z-30';
+
+function ProductDiscountBadge({ discountPercent }: { discountPercent: number }) {
+  return (
+    <div
+      className={`${DISCOUNT_BADGE_POSITION_CLASS} ${DISCOUNT_BADGE_SIZE_CLASS} bg-blue-600 text-white rounded-full flex items-center justify-center ${DISCOUNT_BADGE_TEXT_CLASS} font-bold shadow-[0_2px_8px_rgba(37,99,235,0.3)] pointer-events-none`}
+      aria-hidden
+    >
+      -{discountPercent}%
+    </div>
+  );
 }
 
 interface FeaturedProductCardProps {
@@ -990,6 +1007,10 @@ export function FeaturedProductCard({
   isRelated = false,
 }: FeaturedProductCardProps) {
   const hasLabels = Array.isArray(product.labels) && product.labels.length > 0;
+  const discountPercent =
+    typeof product.discountPercent === 'number' && product.discountPercent > 0
+      ? product.discountPercent
+      : null;
 
   if (isMobile) {
     // Extract volume from title or subtitle (e.g., "0.5L", "0.33L", "0.25L")
@@ -1019,6 +1040,7 @@ export function FeaturedProductCard({
           </div>
         </div>
         {hasLabels && <ProductLabels labels={product.labels!} />}
+        {discountPercent !== null && <ProductDiscountBadge discountPercent={discountPercent} />}
 
         {/* Rounded Card with Price, Volume, and Add Button */}
         <div className="absolute bg-[rgba(123,201,236,0.2)] inset-[59%_0_1%_0] rounded-[20px] h-[40%] w-[98%] left-[1%] overflow-hidden z-10">
@@ -1066,6 +1088,7 @@ export function FeaturedProductCard({
           </div>
         </div>
         {hasLabels && <ProductLabels labels={product.labels!} />}
+        {discountPercent !== null && <ProductDiscountBadge discountPercent={discountPercent} />}
         <div className="absolute bg-[rgba(123,201,236,0.2)] inset-[58%_0_1%_0] rounded-[20px] h-[40%] w-[98%] left-[1%] overflow-hidden z-10">
           <div className="absolute flex flex-col font-['Inter:Bold',sans-serif] font-bold left-[12px] top-[14px] right-[35px] justify-start leading-[0] text-left text-black overflow-hidden">
             <p className="leading-[20px] break-words w-full line-clamp-2" style={{ fontSize: 'clamp(14px, 3.5vw, 18px)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{product.title}</p>
@@ -1107,6 +1130,7 @@ export function FeaturedProductCard({
             <div className="w-full h-full bg-gray-300 rounded-lg" />
           )}
           {hasLabels && <ProductLabels labels={product.labels!} />}
+          {discountPercent !== null && <ProductDiscountBadge discountPercent={discountPercent} />}
         </div>
         {/* Content Section - fixed height so card does not grow with title length */}
         <div className="w-full flex flex-col gap-[30px] px-[8px] pb-[8px] relative min-h-0 min-w-0 shrink-0">
@@ -1154,6 +1178,7 @@ export function FeaturedProductCard({
           <div className="w-full h-full bg-gray-300 rounded-lg" />
         )}
         {hasLabels && <ProductLabels labels={product.labels!} />}
+        {discountPercent !== null && <ProductDiscountBadge discountPercent={discountPercent} />}
       </div>
       <div className="w-full flex flex-col gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] px-[14px] lg:px-[14px] md:px-[16px] sm:px-[16px] pb-[14px] lg:pb-[14px] md:pb-[16px] sm:pb-[16px] min-h-0 min-w-0 shrink-0">
         <div className="flex flex-row items-end justify-between gap-2 w-full min-w-0 h-[48px] overflow-hidden">
@@ -1186,6 +1211,7 @@ export function FeaturedProductCard({
           <div className="w-full h-full bg-gray-300 rounded-lg" />
         )}
         {hasLabels && <ProductLabels labels={product.labels!} />}
+        {discountPercent !== null && <ProductDiscountBadge discountPercent={discountPercent} />}
       </div>
       {/* Content Section - fixed height so card does not grow with title length */}
       <div className="w-full flex flex-col gap-[14px] lg:gap-[14px] md:gap-[16px] sm:gap-[16px] px-[14px] lg:px-[14px] md:px-[16px] sm:px-[16px] pb-[14px] lg:pb-[14px] md:pb-[16px] sm:pb-[16px] min-h-0 min-w-0 shrink-0">
