@@ -341,6 +341,7 @@ export function RelatedProducts({ categorySlug, currentProductId }: RelatedProdu
       defaultVariantId: product.defaultVariantId || null,
       brand: product.brand || null,
       labels: product.labels,
+      discountPercent: product.discountPercent ?? null,
     };
   };
 

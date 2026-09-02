@@ -784,6 +784,8 @@ class ProductsService {
             ? { id: product.brand.id, name: brandTranslation?.name || "" }
             : null,
           price: finalPrice,
+          originalPrice: appliedDiscount > 0 ? originalPrice : null,
+          discountPercent: appliedDiscount > 0 ? appliedDiscount : null,
           image,
           inStock: (variant?.stock || 0) > 0,
           position: (product as any).position ?? null,

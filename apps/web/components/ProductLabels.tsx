@@ -115,9 +115,3 @@ export const ProductLabels: React.FC<ProductLabelsProps> = ({ labels }) => {
     </div>
   );
 };
-
-
-
-
-
-
